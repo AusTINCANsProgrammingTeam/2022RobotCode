@@ -13,9 +13,9 @@ public class ExampleCommand extends CommandBase {
   private final ExampleSubsystem m_subsystem;
 
   /**
-   * Creates a new ExampleCommand.
+   // Creates a new ExampleCommand.
    *
-   * @param subsystem The subsystem used by this command.
+   * @param subsystem //The subsystem used by this command.
    */
   public ExampleCommand(ExampleSubsystem subsystem) {
     m_subsystem = subsystem;
