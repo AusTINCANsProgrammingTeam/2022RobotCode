@@ -13,6 +13,9 @@ package frc.robot;
 //constants are needed, to reduce verbosity.
 
 public final class Constants {
+
+    // *** Values to be changed, these are placeholder values for now ***
+    
     public static final int kDriveRightFront = 13;
     public static final int kDriveRightMiddle = 14;
     public static final int kDriveRightRear = 15;
