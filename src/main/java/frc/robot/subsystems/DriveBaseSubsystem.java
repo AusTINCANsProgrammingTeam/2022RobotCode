@@ -23,6 +23,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_driverJoystick = joystick;
     
     m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax(), m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
+    m_differentialDrive.setRightSideInverted(true); // need to invert the right side (no longer does it by default in 2022)
     m_motorControllers[Constants.kDriveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.kDriveLeftFront);
     
   }

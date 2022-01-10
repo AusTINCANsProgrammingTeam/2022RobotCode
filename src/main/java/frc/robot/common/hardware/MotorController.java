@@ -12,7 +12,7 @@ public class MotorController {
     private String mName;
     private CANSparkMax mSparkMax;
     private CANEncoder mEncoder;             // deprecated, need to fix
-    private CANPIDController mPIDController; // deprecated
+    private CANPIDController mPIDController; // deprecated, need to fix
     
     // PID
     private double mP;
