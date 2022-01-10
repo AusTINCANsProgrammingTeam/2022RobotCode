@@ -12,9 +12,19 @@ package frc.robot;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
+
+// TODO: Swap placeholder motor IDs & Button Ports and Numbers for real ones 
 public final class Constants {
-    public static final int kMotorOneID = 11;
-    public static final int kMotorTwoID = 12;
-    public static final int kMotorThreeID = 13;
-    public static final double kMotorSpeed = 0.5;
+    // Intake Contstants 
+    public static final int kIntakeMotorOneID = 11;
+    public static final int kIntakeMotorTwoID = 12;
+    public static final double kIntakeMotorSpeed = 0.25;
+
+    //Hopper Constants
+    public static final int kHopperMotorThreeID = 13;
+    public static final double kHopperMotorSpeed = 0.25;
+    
+    //Joystick Constants
+    public static final int kPortNumber = 0;
+    public static final int kJoystickButtonNumber = 0;
 }
