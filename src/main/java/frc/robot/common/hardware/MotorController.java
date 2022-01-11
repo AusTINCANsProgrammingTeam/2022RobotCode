@@ -1,8 +1,8 @@
 package frc.robot.common.hardware;
 
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,14 +11,15 @@ public class MotorController {
     
     private String mName;
     private CANSparkMax mSparkMax;
-    private CANEncoder mEncoder;             // deprecated, need to fix
-    private CANPIDController mPIDController; // deprecated, need to fix
+    private RelativeEncoder mEncoder;            
+    private SparkMaxPIDController mPIDController;
     
     // PID
     private double mP;
     private double mI;
     private double mD;
 
+    // default constructor
     public MotorController(String name, int deviceID) {
         mName = name;
         mSparkMax = new CANSparkMax(deviceID, MotorType.kBrushless);
@@ -26,6 +27,7 @@ public class MotorController {
         mEncoder = mSparkMax.getEncoder();
         mSparkMax.restoreFactoryDefaults();
     }
+
 
     public MotorController(String name, int deviceID, int smartCurrentLimit, boolean... enablePid) {
         this(name, deviceID); // intializes CANSparkMax and Encoder
@@ -47,11 +49,11 @@ public class MotorController {
         return mSparkMax;
     }
 
-    public CANEncoder getEncoder() {
+    public RelativeEncoder getEncoder() {
         return mEncoder;
     }
 
-    public CANPIDController getPID() {
+    public SparkMaxPIDController getPID() {
         return mPIDController;
     }
 
@@ -64,7 +66,7 @@ public class MotorController {
         SmartDashboard.putNumber(mName+" D Value", mD);
     }
 
-    /*
+    /** 
      * Updates the Smart Dashboard and checks the PID values to determine if update is needed
      */
     public void updateSmartDashboard() {
@@ -84,7 +86,5 @@ public class MotorController {
             }
         }
     }
-
-    
 
 }

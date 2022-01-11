@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.DriveBaseSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DriveBaseTeleopCommand extends CommandBase {
@@ -22,11 +21,11 @@ public class DriveBaseTeleopCommand extends CommandBase {
 
   @Override
   public void execute() {
-    //m_subsystem.driveFunction();
+    m_subsystem.arcadeDrive();
   }
   @Override
   public void end(boolean interrupted) {
-    //m_subsystem.stopMotorsFunction();
+  m_subsystem.stopMotorsFunction();
   }
 
   // Returns true when the command should end.

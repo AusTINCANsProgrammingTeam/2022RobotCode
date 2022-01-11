@@ -16,13 +16,18 @@ public final class Constants {
 
     // *** Values to be changed, these are placeholder values for now ***
     
+    
+    // Constants for wheel motors
+
+    // Actual IDs on robot, used to activate the right motors
     public static final int kDriveRightFront = 13;
     public static final int kDriveRightMiddle = 14;
     public static final int kDriveRightRear = 15;
     public static final int kDriveLeftFront = 1;
     public static final int kDriveLeftMiddle = 2;
     public static final int kDriveLeftRear = 16;
-
+    
+    // This is used for organizational purposes (Note numbers 0-5 to distinguish between the 6 motors)
     public static final int kDriveLeftFrontIndex = 0;
     public static final int kDriveLeftMiddleIndex = 1;
     public static final int kDriveLeftRearIndex = 2;
@@ -31,4 +36,12 @@ public final class Constants {
     public static final int kDriveRightRearIndex = 5;
 
     public static final int kDriveBaseCurrentLimit = 40;
+
+    //Controller constants
+
+    public static final int kJoystickPort = 0;
+    public static final int kLeftJoystickAxisX = 0;
+    public static final int kLeftJoystickAxisY = 1;
+    public static final int kRightJoystickAxisX = 2;
+    public static final int kRightJoystickAxisY = 3;
 }
