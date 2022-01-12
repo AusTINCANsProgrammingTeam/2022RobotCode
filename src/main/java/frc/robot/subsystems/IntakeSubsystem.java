@@ -15,22 +15,23 @@ import com.revrobotics.CANSparkMaxLowLevel;
 public class IntakeSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private CANSparkMax m_intakeMotorController1 = new CANSparkMax(Constants.kIntakeMotorOneID, CANSparkMaxLowLevel.MotorType.kBrushless);
-  private CANSparkMax m_intakeMotorController2 = new CANSparkMax(Constants.kIntakeMotorTwoID, CANSparkMaxLowLevel.MotorType.kBrushless);
-
-  public void IntakeController(){
-
-  }
+  private CANSparkMax m_intakeMotorController1;
+  private CANSparkMax m_intakeMotorController2;
   
-  public void IntakeSwitch(boolean on){
+  public IntakeSubsystem() {
+    m_intakeMotorController1 = new CANSparkMax(Constants.kIntakeMotorOneID, CANSparkMaxLowLevel.MotorType.kBrushless);
+    m_intakeMotorController2 = new CANSparkMax(Constants.kIntakeMotorTwoID, CANSparkMaxLowLevel.MotorType.kBrushless);
     m_intakeMotorController2.follow(m_intakeMotorController1, false);
-    
+  }
+
+  public void IntakeSwitch(boolean on){    
     if (on){
       m_intakeMotorController1.set(Constants.kIntakeMotorSpeed);
     } else {
       m_intakeMotorController1.set(0);
     }
   }
+  
 
   public void ForwardIntake(){
     m_intakeMotorController1.setInverted(false);

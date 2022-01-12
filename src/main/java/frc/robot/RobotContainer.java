@@ -26,8 +26,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final HopperSubsystem mHopperSubsystem = new HopperSubsystem();
   private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
-
-  // private final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
+  private final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
   private JoystickButton[] mButtons = new JoystickButton[11];
   private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
   private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
@@ -36,8 +35,10 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
-    configureButtonBindings();
-    
+    for (int i = 1; i < mButtons.length; i++) {
+      mButtons[i] = new JoystickButton(mDriverJoystick, i);
+    }
+    configureButtonBindings();    
   }
 
   /**
@@ -47,9 +48,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    mButtons[Constants.kLeftBumperButton].whenPressed(mIntakeForwardCommand);
-    mButtons[Constants.kRightBumperButton].whenPressed(mIntakeReverseCommand);
-    // mButtons[Constants.kAButton].whilePressed(mHopperCommand);
+    mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
+    mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
+    mButtons[Constants.kAButton].whileHeld(mHopperCommand);
   }
 
   /**
