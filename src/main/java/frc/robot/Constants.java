@@ -29,5 +29,6 @@ public final class Constants {
     
     //Joystick Constants
     public static final int kPortNumber = 0;
-    public static final int kJoystickButtonNumber = 0;
+    public static final int kAButton = 1;
+    public static final int kBButton = 2;
 }
