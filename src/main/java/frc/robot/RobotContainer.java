@@ -45,7 +45,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    
+    // TODO: figure out if we want to use whenPressed or WhileHeld
+    mButtons[Constants.kLeftBumperButton].whenPressed(mIntakeForwardCommand);
+    mButtons[Constants.kRightBumperButton].whenPressed(mIntakeReverseCommand);
   }
 
   /**
