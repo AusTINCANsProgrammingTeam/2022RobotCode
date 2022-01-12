@@ -24,21 +24,13 @@ public final class Constants {
     public static final int kHopperMotorThreeID = 13;
     public static final double kHopperMotorSpeed = 0.25;
     
-    //Shooter Constants
-    public static final int kShooterMotorID = 14;
-    
     //Joystick Constants
     public static final int kPortNumber = 0;
-<<<<<<< HEAD
+
     public static final int kJoystickButtonNumber = 1;
     public static final int kJoystickButtonNumberTwo = 2;
-=======
-    public static final int kAButton = 1;
     public static final int kBButton = 2;
-<<<<<<< HEAD
->>>>>>> c565d2bd2cea5987d283e47d385a07951e524347
-=======
-    public static final int kRightBumperButton = 5;
-    public static final int kLeftBumperButton = 6;
->>>>>>> 3e293150f0bc827323c45d3b23dfa630828301ca
+    public static final int kAButton = 1; // Button for hopper
+    public static final int kRightBumperButton = 5; // Button for intake 
+    public static final int kLeftBumperButton = 6; // Button to reverse intake
 }

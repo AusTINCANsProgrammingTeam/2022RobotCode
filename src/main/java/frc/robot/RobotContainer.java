@@ -14,6 +14,7 @@ import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
+import frc.robot.commands.HopperCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -30,6 +31,7 @@ public class RobotContainer {
   private JoystickButton[] mButtons = new JoystickButton[11];
   private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
   private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
+  private HopperCommand mHopperCommand = new HopperCommand(mHopperSubsystem);
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -45,7 +47,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    
+    mButtons[Constants.kLeftBumperButton].whenPressed(mIntakeForwardCommand);
+    mButtons[Constants.kRightBumperButton].whenPressed(mIntakeReverseCommand);
+    // mButtons[Constants.kAButton].whilePressed(mHopperCommand);
   }
 
   /**
