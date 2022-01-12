@@ -24,9 +24,6 @@ public final class Constants {
     public static final int kHopperMotorThreeID = 13;
     public static final double kHopperMotorSpeed = 0.25;
     
-    //Shooter Constants
-    public static final int kShooterMotorID = 14;
-    
     //Joystick Constants
     public static final int kPortNumber = 0;
     public static final int kAButton = 1;
