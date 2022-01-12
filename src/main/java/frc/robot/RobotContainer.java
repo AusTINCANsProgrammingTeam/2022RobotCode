@@ -22,7 +22,6 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DriveBaseSubsystem m_DriveBaseSubsystem = new DriveBaseSubsystem(m_driverJoystick);
 
-  private final Joystick m_driverJoystick = new Joystick(Constants.kJoystickPort);
 
   // subsystems
   private final DriveBaseSubsystem m_driveBaseSubsystem = new DriveBaseSubsystem(m_driverJoystick);
