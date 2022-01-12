@@ -35,5 +35,10 @@ public final class Constants {
 =======
     public static final int kAButton = 1;
     public static final int kBButton = 2;
+<<<<<<< HEAD
 >>>>>>> c565d2bd2cea5987d283e47d385a07951e524347
+=======
+    public static final int kRightBumperButton = 5;
+    public static final int kLeftBumperButton = 6;
+>>>>>>> 3e293150f0bc827323c45d3b23dfa630828301ca
 }
