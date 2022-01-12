@@ -26,10 +26,10 @@ public class RobotContainer {
   private final HopperSubsystem mHopperSubsystem = new HopperSubsystem();
   private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
 
-  private final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
+  // private final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
   private JoystickButton[] mButtons = new JoystickButton[11];
-  private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand();
-  private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand();
+  private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
+  private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
