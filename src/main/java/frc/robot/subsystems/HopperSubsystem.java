@@ -14,8 +14,7 @@ public class HopperSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private CANSparkMax m_hopperController = new CANSparkMax(Constants.kHopperMotorThreeID, CANSparkMaxLowLevel.MotorType.kBrushless);
-  private CANSparkMax m_shoooterMotorController = new CANSparkMax(Constants.kShooterMotorID, CANSparkMaxLowLevel.MotorType.kBrushless);
-  
+    
   public void HopperSwitch(boolean on) {
     if (on) {
       m_hopperController.set(Constants.kHopperMotorSpeed);
