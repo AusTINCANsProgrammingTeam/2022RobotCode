@@ -48,29 +48,31 @@ public class DriveBaseSubsystem extends SubsystemBase {
     for(int i = 0; i < m_motorControllers.length; i++) {
       m_motorControllers[i].updateSmartDashboard();
     }
-
+ 
   }
-  //Normal Arcade Drive
+
+  // Normal Arcade Drive
   public void arcadeDrive() {
     m_differentialDrive.arcadeDrive( m_driverJoystick.getRawAxis(Constants.kLeftJoystickAxisY), m_driverJoystick.getRawAxis(Constants.kRightJoystickAxisY));
   }
-  //Arcade Drive where you can only move forwards and backwards
+  // Arcade Drive where you can only move forwards and backwards
   public void arcadeDrive(double rotation) {
     m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kLeftJoystickAxisY), rotation);
   }
 
-  //@Override
-  //public void simulationPeriodic() {
-    //Currently serves no purpose}
+  // @Override
+  // public void simulationPeriodic() {
+  //   // Currently serves no purpose
+  // }
 
-  //public void driveFunction() {
-    //Currently serves no purpose}
-
+  // public void driveFunction() {
+  //   // currently serves no purpose
+  // }
 
   public void stopMotorsFunction() {
-    //Calls Arcade Drive with a zero to both speed and rotation in order to stop the motors
+    // Calls Arcade Drive with a zero to both speed and rotation in order to stop the motors
     m_differentialDrive.arcadeDrive(0.0, 0.0);
   }
 
-  // NOTE: for later, we can add tankDrive functions as an extra
+  // TODO: we can add tankDrive functions as an extra later
 }

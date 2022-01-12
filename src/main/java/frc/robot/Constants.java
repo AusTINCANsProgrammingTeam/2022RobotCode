@@ -4,28 +4,25 @@
 
 package frc.robot;
 
+// The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
+// constants. This class should not be used for any other purpose. All constants should be declared
+// globally (i.e. public static). Do not put anything functional in this class.
 
-//The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
-//constants. This class should not be used for any other purpose. All constants should be declared
-//globally (i.e. public static). Do not put anything functional in this class.
-
-//<p>It is advised to statically import this class (or one of its inner classes) wherever the
-//constants are needed, to reduce verbosity.
+// <p>It is advised to statically import this class (or one of its inner classes) wherever the
+// constants are needed, to reduce verbosity.
 
 public final class Constants {
-
-    // *** Values to be changed, these are placeholder values for now ***
-    
-    
+        
     // Constants for wheel motors
 
     // Actual IDs on robot, used to activate the right motors
-    public static final int kDriveRightFront = 13;
-    public static final int kDriveRightMiddle = 14;
-    public static final int kDriveRightRear = 15;
-    public static final int kDriveLeftFront = 1;
-    public static final int kDriveLeftMiddle = 2;
-    public static final int kDriveLeftRear = 16;
+    // TODO: Values to be changed, these are placeholder values for now
+    public static final int kDriveRightFront = 0;
+    public static final int kDriveRightMiddle = 0;
+    public static final int kDriveRightRear = 0;
+    public static final int kDriveLeftFront = 0;
+    public static final int kDriveLeftMiddle = 0;
+    public static final int kDriveLeftRear = 0;
     
     // This is used for organizational purposes (Note numbers 0-5 to distinguish between the 6 motors)
     public static final int kDriveLeftFrontIndex = 0;

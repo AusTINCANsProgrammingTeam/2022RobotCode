@@ -30,7 +30,7 @@ public class MotorController {
 
 
     public MotorController(String name, int deviceID, int smartCurrentLimit, boolean... enablePid) {
-        this(name, deviceID); // intializes CANSparkMax and Encoder
+        this(name, deviceID);                               // intializes CANSparkMax and Encoder
         mSparkMax.setSmartCurrentLimit(smartCurrentLimit);  // set smartCurrentLimit
 
         // If enablePid has any number of booleans greater than 0 we are enabling pid
@@ -66,11 +66,9 @@ public class MotorController {
         SmartDashboard.putNumber(mName+" D Value", mD);
     }
 
-    /** 
-     * Updates the Smart Dashboard and checks the PID values to determine if update is needed
-     */
+    // Updates the Smart Dashboard and checks the PID values to determine if update is needed
     public void updateSmartDashboard() {
-        //The simulation crashes whenever .getEncoder() is called
+        // The simulation crashes whenever .getEncoder() is called
         if(mPIDController != null) {
             if (SmartDashboard.getNumber(mName + " P Value", mP) != mP) {
                 mP = SmartDashboard.getNumber(mName + " P Value", mP);
