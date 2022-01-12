@@ -31,4 +31,6 @@ public final class Constants {
     public static final int kPortNumber = 0;
     public static final int kAButton = 1;
     public static final int kBButton = 2;
+    public static final int kRightBumperButton = 5;
+    public static final int kLeftBumperButton = 6;
 }
