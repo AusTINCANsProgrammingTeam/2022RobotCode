@@ -7,10 +7,10 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ShooterSubsystem extends SubsystemBase {
-  private int AimMode; //0 is LOW, 1 is AUTO, 2 is LAUNCH, 3 is TARMAC
+  private int aimMode; //0 is LOW, 1 is AUTO, 2 is LAUNCH, 3 is TARMAC
 
   public ShooterSubsystem() {
-    AimMode = 1;
+    aimMode = 1;
   }
 
   public void adjustHood(double a) {
@@ -22,17 +22,17 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setAimMode(int m) {
-    AimMode = m;
+    aimMode = m;
   }
 
   public void cycleAimModeUp() {
-    AimMode++;
-    if(AimMode > 3){AimMode = 0;}
+    aimMode++;
+    if(aimMode > 3){aimMode = 0;}
   }
 
   public void cycleAimModeDown() {
-    AimMode--;
-    if(AimMode < 0){AimMode = 3;}
+    aimMode--;
+    if(aimMode < 0){aimMode = 3;}
   }
 
   public double getDistance() {
