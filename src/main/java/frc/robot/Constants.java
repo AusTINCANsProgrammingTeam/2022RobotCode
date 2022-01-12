@@ -31,4 +31,9 @@ public final class Constants {
     public static final int kAButton = 1; // Button for hopper
     public static final int kRightBumperButton = 5; // Button for intake 
     public static final int kLeftBumperButton = 6; // Button to reverse intake
+    
+    //Distance Calculation Constants
+    public static final double kLLHeight = 1.5; //Height of the limelight in ft from the carpet
+    public static final double kLLAngle = 30.0; //Angle that the limelight is mounted at
+
 }
