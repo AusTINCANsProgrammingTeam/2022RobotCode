@@ -24,7 +24,7 @@ public class IntakeSubsystem extends SubsystemBase {
   
   public void IntakeSwitch(boolean on){
     m_intakeMotorController2.follow(m_intakeMotorController1, false);
-
+    
     if (on){
       m_intakeMotorController1.set(Constants.kIntakeMotorSpeed);
     } else {
@@ -34,11 +34,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void ForwardIntake(){
     m_intakeMotorController1.setInverted(false);
-    m_intakeMotorController2.setInverted(false);
   }
 
   public void ReverseIntake(){
     m_intakeMotorController1.setInverted(true);
-    m_intakeMotorController2.setInverted(true);
   }
 }
