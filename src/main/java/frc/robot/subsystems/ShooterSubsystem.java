@@ -4,10 +4,14 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import java.lang.Math;
 
 public class ShooterSubsystem extends SubsystemBase {
   private int aimMode; //0 is LOW, 1 is AUTO, 2 is LAUNCH, 3 is TARMAC
+  private double ty; //Angle of target from Limelight, accessed via NetworkTables
 
   public ShooterSubsystem() {
     aimMode = 1;
@@ -37,7 +41,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double getDistance() {
     //Uses Limelight to find distance to High Goal
-    return 0.0; //Return distance in feet
+    ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
+    return (8.8 - Constants.kLLHeight) / Math.tan(ty + Constants.kLLAngle); //Return distance in feet
   }
 
   public void prime() {
