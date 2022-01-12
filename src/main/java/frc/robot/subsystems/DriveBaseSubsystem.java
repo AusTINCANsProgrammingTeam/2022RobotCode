@@ -16,6 +16,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private final Joystick m_driverJoystick;
   private final MotorController[] m_motorControllers = new MotorController[6];
   private final DifferentialDrive m_differentialDrive;
+
   
   public DriveBaseSubsystem(Joystick joystick) {  
     m_driverJoystick = joystick;
@@ -54,24 +55,34 @@ public class DriveBaseSubsystem extends SubsystemBase {
   // Normal Arcade Drive
   public void arcadeDrive() {
     m_differentialDrive.arcadeDrive( m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
+
   }
-  // Arcade Drive where you can only move forwards and backwards
+
+  public void tankDrive() {
+    m_differentialDrive.tankDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
+  }
+  // Arcade Drive where you can only move forwards and backwards for testing
   public void arcadeDrive(double rotation) {
     m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), rotation);
   }
 
-  // @Override
-  // public void simulationPeriodic() {
-  //   // Currently serves no purpose
-  // }
+  
 
-  // public void driveFunction() {
-  //   // currently serves no purpose
-  // }
+  @Override
+  public void simulationPeriodic() {
+     // Currently serves no purpose
+   }
+   public void driveFunction() {
+     // currently serves no purpose
+   }
 
-  public void stopMotorsFunction() {
+  public void ADstopMotorsFunction() {
     // Calls Arcade Drive with a zero to both speed and rotation in order to stop the motors
     m_differentialDrive.arcadeDrive(0.0, 0.0);
+  }
+
+  public void TDstopMotorsFunction() {
+    m_differentialDrive.tankDrive(0.0, 0.0);
   }
 
   // TODO: we can add tankDrive functions as an extra later

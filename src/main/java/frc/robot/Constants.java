@@ -35,8 +35,8 @@ public final class Constants {
     public static final int kDriveBaseCurrentLimit = 40;
 
     //Controller constants
-
     public static final int kDBJoystickPort = 0;
+
     public static final int kDBLeftJoystickAxisX = 0;
     public static final int kDBLeftJoystickAxisY = 1;
     public static final int kDBRightJoystickAxisX = 2;

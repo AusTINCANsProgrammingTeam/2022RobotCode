@@ -23,11 +23,13 @@ public class DriveBaseTeleopCommand extends CommandBase {
   @Override
   public void execute() {
     m_subsystem.arcadeDrive();
+    m_subsystem.tankDrive();
   }
+
   
   @Override
   public void end(boolean interrupted) {
-  m_subsystem.stopMotorsFunction();
+  m_subsystem.ADstopMotorsFunction();
   }
 
   @Override
