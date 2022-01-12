@@ -7,7 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HopperSubsystem; 
 
-public class IntakeForwardCommand extends CommandBase {
+public class HopperCommand extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
   private final HopperSubsystem m_hopperSubsystem;
   public IntakeForwardCommand(HopperSubsystem hopperSubsystem) {
