@@ -52,11 +52,11 @@ public class DriveBaseSubsystem extends SubsystemBase {
   }
   //Normal Arcade Drive
   public void arcadeDrive() {
-    m_differentialDrive.arcadeDrive( m_driverJoystick.getRawAxis(Constants.kLeftJoystickAxisY), m_driverJoystick.getRawAxis(Constants.kRightJoystickAxisY));
+    m_differentialDrive.arcadeDrive( m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
   }
   //Arcade Drive where you can only move forwards and backwards
   public void arcadeDrive(double rotation) {
-    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kLeftJoystickAxisY), rotation);
+    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), rotation);
   }
 
   //@Override

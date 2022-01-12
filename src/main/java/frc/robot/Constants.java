@@ -39,9 +39,9 @@ public final class Constants {
 
     //Controller constants
 
-    public static final int kJoystickPort = 0;
-    public static final int kLeftJoystickAxisX = 0;
-    public static final int kLeftJoystickAxisY = 1;
-    public static final int kRightJoystickAxisX = 2;
-    public static final int kRightJoystickAxisY = 3;
+    public static final int kDBJoystickPort = 0;
+    public static final int kDBLeftJoystickAxisX = 0;
+    public static final int kDBLeftJoystickAxisY = 1;
+    public static final int kDBRightJoystickAxisX = 2;
+    public static final int kDBRightJoystickAxisY = 3;
 }
