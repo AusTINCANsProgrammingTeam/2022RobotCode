@@ -38,4 +38,3 @@ public class HopperCommand extends CommandBase {
     return false;
   }
 }
-© 2022
