@@ -9,9 +9,11 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeForwardCommand extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
-  public IntakeForwardCommand() {
+  private final IntakeSubsystem m_intakeSubsystem;
+  public IntakeForwardCommand(IntakeSubsystem intakeSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(IntakeSubsystem); 
+    addRequirements(intakeSubsystem); 
+    m_intakeSubsystem = intakeSubsystem;
   }
 
   // Called when the command is initially scheduled.
