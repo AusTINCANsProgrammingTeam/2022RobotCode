@@ -16,8 +16,8 @@ public class HopperSubsystem extends SubsystemBase {
   private CANSparkMax m_hopperController = new CANSparkMax(Constants.kHopperMotorThreeID, CANSparkMaxLowLevel.MotorType.kBrushless);
   private CANSparkMax m_shoooterMotorController = new CANSparkMax(Constants.kShooterMotorID, CANSparkMaxLowLevel.MotorType.kBrushless);
   
-  public void HopperSwitch() {
-    if (m_shoooterMotorController.get() != 0.0) {
+  public void HopperSwitch(boolean on) {
+    if (on) {
       m_hopperController.set(Constants.kHopperMotorSpeed);
     } else {
       m_hopperController.set(0.0);
