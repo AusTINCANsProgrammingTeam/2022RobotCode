@@ -11,7 +11,6 @@ import java.lang.Math;
 
 public class ShooterSubsystem extends SubsystemBase {
   private int aimMode; //0 is LOW, 1 is AUTO, 2 is LAUNCH, 3 is TARMAC
-  private double ty; //Angle of target from Limelight, accessed via NetworkTables
 
   public ShooterSubsystem() {
     aimMode = 1;
@@ -38,11 +37,13 @@ public class ShooterSubsystem extends SubsystemBase {
     aimMode--;
     if(aimMode < 0){aimMode = 3;}
   }
-
+  public double getTY() {
+    //Gets TY, the vertical angle of the target from the limelight
+    return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
+  }
   public double getDistance() {
     //Uses Limelight to find distance to High Goal
-    ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
-    return (8.8 - Constants.kLLHeight) / Math.tan(ty + Constants.kLLAngle); //Return distance in feet
+    return (Constants.kGoalHeight - Constants.kLLHeight) / Math.tan(getTY() + Constants.kLLAngle); //Return distance in feet
   }
 
   public void prime() {
