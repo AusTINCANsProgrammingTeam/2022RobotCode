@@ -6,6 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.HopperSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 
@@ -16,8 +18,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-
   private RobotContainer m_robotContainer;
+  private IntakeSubsystem m_intakeSubsystem;
+  private HopperSubsystem m_hopperSubsystem;
 
   
    // This function is run when the robot is first started up and should be used for any
@@ -28,6 +31,8 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    m_intakeSubsystem = new IntakeSubsystem();
+    m_hopperSubsystem = new HopperSubsystem();
   }
 
    // This function is called every robot packet, no matter the mode. Use this for items like
