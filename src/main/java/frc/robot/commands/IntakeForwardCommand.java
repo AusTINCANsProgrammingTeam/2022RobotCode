@@ -19,6 +19,7 @@ public class IntakeForwardCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_intakeSubsystem.ForwardIntake();
     m_intakeSubsystem.IntakeSwitch(true);
   }
 

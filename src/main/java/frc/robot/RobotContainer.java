@@ -15,6 +15,8 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.HopperCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a

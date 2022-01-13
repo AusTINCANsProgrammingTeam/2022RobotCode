@@ -8,13 +8,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** Add your docs here. */
 public class HopperSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private CANSparkMax m_hopperController;
-  
+
   public HopperSubsystem() {
     m_hopperController = new CANSparkMax(Constants.kHopperMotorThreeID, CANSparkMaxLowLevel.MotorType.kBrushless);
   }
@@ -22,17 +23,11 @@ public class HopperSubsystem extends SubsystemBase {
   public void HopperSwitch(boolean on) {
     if (on) {
       m_hopperController.set(Constants.kHopperMotorSpeed);
+      SmartDashboard.putNumber("Hopper Motor Speed", Constants.kHopperMotorSpeed);
     } else {
       m_hopperController.set(0.0);
+      SmartDashboard.putNumber("Hopper Motor Speed", 0);
     }
   }
 
 }
-
-  /*
-  @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
-  }
-  */

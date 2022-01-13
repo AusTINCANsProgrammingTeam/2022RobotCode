@@ -19,6 +19,7 @@ public class IntakeReverseCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_intakeSubsystem.ReverseIntake();
     m_intakeSubsystem.IntakeSwitch(true);
   }
 

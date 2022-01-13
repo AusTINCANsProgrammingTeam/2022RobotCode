@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 /** Add your docs here. */
@@ -27,17 +28,22 @@ public class IntakeSubsystem extends SubsystemBase {
   public void IntakeSwitch(boolean on){    
     if (on){
       m_intakeMotorController1.set(Constants.kIntakeMotorSpeed);
+      SmartDashboard.putNumber("Intake Motor Speed", Constants.kIntakeMotorSpeed);
     } else {
       m_intakeMotorController1.set(0);
+      SmartDashboard.putNumber("Intake Motor Speed", 0);
     }
   }
   
 
   public void ForwardIntake(){
     m_intakeMotorController1.setInverted(false);
+    SmartDashboard.putString("Intake Motor Direction", "Forward");
+
   }
 
   public void ReverseIntake(){
     m_intakeMotorController1.setInverted(true);
+    SmartDashboard.putString("Intake Motor Direction", "Reverse");
   }
 }
