@@ -9,17 +9,17 @@ import frc.robot.subsystems.HopperSubsystem;
 
 public class HopperCommand extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
-  private final HopperSubsystem m_hopperSubsystem;
+  private final HopperSubsystem mHopperSubsystem;
   public HopperCommand(HopperSubsystem hopperSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(hopperSubsystem); 
-    m_hopperSubsystem = hopperSubsystem;
+    mHopperSubsystem = hopperSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_hopperSubsystem.HopperSwitch(true);
+    mHopperSubsystem.HopperSwitch(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -29,7 +29,7 @@ public class HopperCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_hopperSubsystem.HopperSwitch(false);
+    mHopperSubsystem.HopperSwitch(false);
   }
 
   // Returns true when the command should end.

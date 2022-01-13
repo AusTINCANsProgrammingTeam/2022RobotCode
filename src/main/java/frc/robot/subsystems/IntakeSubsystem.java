@@ -16,34 +16,34 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class IntakeSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private CANSparkMax m_intakeMotorController1;
-  private CANSparkMax m_intakeMotorController2;
+  private CANSparkMax mIntakeMotorController1;
+  private CANSparkMax mIntakeMotorController2;
   
   public IntakeSubsystem() {
-    m_intakeMotorController1 = new CANSparkMax(Constants.kIntakeMotorOneID, CANSparkMaxLowLevel.MotorType.kBrushless);
-    m_intakeMotorController2 = new CANSparkMax(Constants.kIntakeMotorTwoID, CANSparkMaxLowLevel.MotorType.kBrushless);
-    m_intakeMotorController2.follow(m_intakeMotorController1, false);
+    mIntakeMotorController1 = new CANSparkMax(Constants.kIntakeMotorOneID, CANSparkMaxLowLevel.MotorType.kBrushless);
+    mIntakeMotorController2 = new CANSparkMax(Constants.kIntakeMotorTwoID, CANSparkMaxLowLevel.MotorType.kBrushless);
+    mIntakeMotorController2.follow(mIntakeMotorController1, false);
   }
 
   public void IntakeSwitch(boolean on){    
     if (on){
-      m_intakeMotorController1.set(Constants.kIntakeMotorSpeed);
+      mIntakeMotorController1.set(Constants.kIntakeMotorSpeed);
       SmartDashboard.putNumber("Intake Motor Speed", Constants.kIntakeMotorSpeed);
     } else {
-      m_intakeMotorController1.set(0);
+      mIntakeMotorController1.set(0);
       SmartDashboard.putNumber("Intake Motor Speed", 0);
     }
   }
   
 
   public void ForwardIntake(){
-    m_intakeMotorController1.setInverted(false);
+    mIntakeMotorController1.setInverted(false);
     SmartDashboard.putString("Intake Motor Direction", "Forward");
 
   }
 
   public void ReverseIntake(){
-    m_intakeMotorController1.setInverted(true);
+    mIntakeMotorController1.setInverted(true);
     SmartDashboard.putString("Intake Motor Direction", "Reverse");
   }
 }

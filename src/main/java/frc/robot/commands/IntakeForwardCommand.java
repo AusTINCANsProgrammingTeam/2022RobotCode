@@ -9,18 +9,18 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeForwardCommand extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
-  private final IntakeSubsystem m_intakeSubsystem;
+  private final IntakeSubsystem mIntakeSubsystem;
   public IntakeForwardCommand(IntakeSubsystem intakeSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intakeSubsystem); 
-    m_intakeSubsystem = intakeSubsystem;
+    mIntakeSubsystem = intakeSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_intakeSubsystem.ForwardIntake();
-    m_intakeSubsystem.IntakeSwitch(true);
+    mIntakeSubsystem.ForwardIntake();
+    mIntakeSubsystem.IntakeSwitch(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -30,7 +30,7 @@ public class IntakeForwardCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_intakeSubsystem.IntakeSwitch(false);
+    mIntakeSubsystem.IntakeSwitch(false);
   }
 
   // Returns true when the command should end.
