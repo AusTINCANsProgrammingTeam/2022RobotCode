@@ -14,8 +14,15 @@ package frc.robot;
  */
 public final class Constants {
     //Distance calculation constants
-    public static final double kLLHeight = 1.5; //Height of the limelight in ft from the carpet
-    public static final double kLLAngle = 30.0; //Angle that the limelight is mounted at
+    public static final double kLLHeight = 0.0; //Height of the limelight in ft from the carpet
+    public static final double kLLAngle = 0.0; //Angle that the limelight is mounted at
     public static final double kGoalHeight = 8.8; //Height of the goal in ft from the carpet
+    //Preset aim constants
+    public static final int kLOWRPM = 0; //RPM that the LOW aimMode winds to
+    public static final double kLOWAngle = 0.0; //Angle that the LOW aimMode adjusts to
+    public static final int kLAUNCHRPM = 0; //RPM that the LAUNCH aimMode winds to
+    public static final double kLAUNCHAngle = 0.0; //Angle that the LAUNCH aimMode adjusts to
+    public static final int kTARMACRPM = 0; //RPM that the TARMAC aimMode winds to
+    public static final double kTARMACAngle = 0.0; //Angle that the TARMAC aimMode adjusts to
 
 }
