@@ -5,10 +5,16 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
+import frc.robot.subsystems.HopperSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.commands.IntakeForwardCommand;
+import frc.robot.commands.IntakeReverseCommand;
+import frc.robot.commands.HopperCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -18,14 +24,21 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-
+  private final HopperSubsystem mHopperSubsystem = new HopperSubsystem();
+  private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
+  private final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
+  private JoystickButton[] mButtons = new JoystickButton[11];
+  private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
+  private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
+  private HopperCommand mHopperCommand = new HopperCommand(mHopperSubsystem);
+  
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
-    configureButtonBindings();
+    for (int i = 1; i < mButtons.length; i++) {
+      mButtons[i] = new JoystickButton(mDriverJoystick, i);
+    }
+    configureButtonBindings();    
   }
 
   /**
@@ -34,7 +47,11 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
+    mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
+    mButtons[Constants.kAButton].whileHeld(mHopperCommand);
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -42,7 +59,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    return null;
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    
   }
 }

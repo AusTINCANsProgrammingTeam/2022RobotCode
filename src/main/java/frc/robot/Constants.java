@@ -18,4 +18,22 @@ public final class Constants {
     public static final double kLLAngle = 30.0; //Angle that the limelight is mounted at
     public static final double kGoalHeight = 8.8; //Height of the goal in ft from the carpet
 
+
+    // TODO: Swap placeholder motor IDs & Button Ports and Numbers for real ones 
+    // Intake Contstants 
+    public static final int kIntakeMotorOneID = 11;
+    public static final int kIntakeMotorTwoID = 12;
+    public static final double kIntakeMotorSpeed = 0.25;
+
+    //Hopper Constants
+    public static final int kHopperMotorThreeID = 13;
+    public static final double kHopperMotorSpeed = 0.25;
+    
+    //Joystick Constants
+    public static final int kPortNumber = 0;
+    public static final int kJoystickButtonNumberOne = 1;
+    public static final int kJoystickButtonNumberTwo = 2;
+    public static final int kAButton = 1; // Button for hopper
+    public static final int kRightBumperButton = 5; // Button for intake 
+    public static final int kLeftBumperButton = 6; // Button to reverse intake
 }
