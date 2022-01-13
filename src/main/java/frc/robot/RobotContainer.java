@@ -19,8 +19,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Joystick m_driverJoystick = new Joystick(Constants.kDBJoystickPort);
+
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final DriveBaseSubsystem m_DriveBaseSubsystem = new DriveBaseSubsystem(m_driverJoystick);
+  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
 
   // subsystems
@@ -30,9 +31,6 @@ public class RobotContainer {
   // commands
   private final DriveBaseTeleopCommand m_driveBaseTeleopCommand = new DriveBaseTeleopCommand(m_driveBaseSubsystem);
   
-
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-  private final DriveBaseTeleopCommand m_DriveBaseSubsystemTeleopCommand = new DriveBaseTeleopCommand(m_DriveBaseSubsystem);
 
   // The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
