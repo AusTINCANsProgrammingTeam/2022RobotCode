@@ -50,16 +50,19 @@ public class ShooterSubsystem extends SubsystemBase {
     //Check what aimMode is active, gets distance if AUTO, winds flywheel, adjusts hood correspondingly
     switch(aimMode){
       case 0: //Case for LOW mode, winds flywheel to preset RPM and adjusts hood to preset angle
-      
+        adjustHood(Constants.kLOWAngle);
+        windFlywheel(Constants.kLOWRPM);
       break;
       case 1: //Case for AUTO mode, calculates trajectory and winds flywheel/adjusts hood to a dynamic state
 
       break;
       case 2: //Case for LAUNCH mode, winds flywheel to preset RPM and adjusts hood to preset angle
-
+        adjustHood(Constants.kLAUNCHAngle);
+        windFlywheel(Constants.kLAUNCHRPM);
       break;
       case 3: //Case for TARMAC mode, winds flywheel to preset RPM and adjusts hood to preset angle
-
+        adjustHood(Constants.kTARMACAngle);
+        windFlywheel(Constants.kTARMACRPM);
       break;
     }
   }

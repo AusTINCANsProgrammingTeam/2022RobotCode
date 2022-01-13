@@ -15,7 +15,6 @@ package frc.robot;
 
 // TODO: Swap placeholder motor IDs & Button Ports and Numbers for real ones 
 public final class Constants {
-<<<<<<< HEAD
     // Intake Contstants 
     public static final int kIntakeMotorOneID = 11;
     public static final int kIntakeMotorTwoID = 12;
@@ -32,13 +31,18 @@ public final class Constants {
     public static final int kAButton = 1; // Button for hopper
     public static final int kRightBumperButton = 5; // Button for intake 
     public static final int kLeftBumperButton = 6; // Button to reverse intake
-    
-    //Distance Calculation Constants
-=======
+
     //Distance calculation constants
->>>>>>> 2ab3622 (Improved for readability)
     public static final double kLLHeight = 1.5; //Height of the limelight in ft from the carpet
     public static final double kLLAngle = 30.0; //Angle that the limelight is mounted at
+
     public static final double kGoalHeight = 8.8; //Height of the goal in ft from the carpet
+    //Preset aim constants
+    public static final int kLOWRPM = 0; //RPM that the LOW aimMode winds to
+    public static final double kLOWAngle = 0.0; //Angle that the LOW aimMode adjusts to
+    public static final int kLAUNCHRPM = 0; //RPM that the LAUNCH aimMode winds to
+    public static final double kLAUNCHAngle = 0.0; //Angle that the LAUNCH aimMode adjusts to
+    public static final int kTARMACRPM = 0; //RPM that the TARMAC aimMode winds to
+    public static final double kTARMACAngle = 0.0; //Angle that the TARMAC aimMode adjusts to
 
 }
