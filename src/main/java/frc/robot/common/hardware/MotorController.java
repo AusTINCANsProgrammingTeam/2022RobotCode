@@ -57,6 +57,15 @@ public class MotorController {
         return mPIDController;
     }
 
+    // sets speed of motor
+    public void setSpeed(double speed) {
+        mSparkMax.set(speed);
+    }
+
+    // set follow
+
+    // set inverted
+
     public void setPID() {
         mPIDController.setP(mP);
         mPIDController.setI(mI);
