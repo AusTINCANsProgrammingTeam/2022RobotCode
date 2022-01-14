@@ -30,4 +30,14 @@ public class HopperSubsystem extends SubsystemBase {
     }
   }
 
+  public void ForwardHopper() {
+    mHopperController.setInverted(false);
+    SmartDashboard.putString("Hopper Motor Direction", "Forward");
+  }
+
+  public void ReverseHopper() {
+    mHopperController.setInverted(true);
+    SmartDashboard.putString("Hopper Motor Direction", "Reverse");
+  }
+
 }

@@ -5,23 +5,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IntakeSubsystem; 
+import frc.robot.subsystems.HopperSubsystem; 
 
-public class IntakeForwardCommand extends CommandBase {
+public class HopperReverseCommand extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
-  private final IntakeSubsystem mIntakeSubsystem;
+  private final HopperSubsystem mHopperSubsystem;
   
-  public IntakeForwardCommand(IntakeSubsystem intakeSubsystem) {
+  public HopperReverseCommand(HopperSubsystem hopperSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intakeSubsystem); 
-    mIntakeSubsystem = intakeSubsystem;
+    addRequirements(hopperSubsystem); 
+    mHopperSubsystem = hopperSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mIntakeSubsystem.ForwardIntake();
-    mIntakeSubsystem.IntakeSwitch(true);
+    mHopperSubsystem.HopperSwitch(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -31,7 +30,7 @@ public class IntakeForwardCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    mIntakeSubsystem.IntakeSwitch(false);
+    mHopperSubsystem.HopperSwitch(false);
   }
 
   // Returns true when the command should end.

@@ -14,7 +14,8 @@ import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
-import frc.robot.commands.HopperCommand;
+import frc.robot.commands.HopperForwardCommand;
+import frc.robot.commands.HopperReverseCommand;
 
  // This class is where the bulk of the robot should be declared. Since Command-based is a
  // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -39,8 +40,9 @@ public class RobotContainer {
   private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
   private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
   private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
-  private HopperCommand mHopperCommand = new HopperCommand(mHopperSubsystem);
-  
+  private HopperForwardCommand mHopperForwardCommand = new HopperForwardCommand(mHopperSubsystem);
+  private HopperReverseCommand mHopperReverseCommand = new HopperReverseCommand(mHopperSubsystem);
+
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
     // Configure the button bindings
@@ -57,7 +59,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
     mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
-    mButtons[Constants.kAButton].whileHeld(mHopperCommand);
+    mButtons[Constants.kXButton].whileHeld(mHopperForwardCommand);
+    mButtons[Constants.kBButton].whileHeld(mHopperReverseCommand);
   }
 
   // Use this to pass the autonomous command to the main {@link Robot} class.
