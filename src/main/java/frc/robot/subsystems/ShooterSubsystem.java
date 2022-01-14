@@ -12,7 +12,10 @@ import com.revrobotics.REVLibError;
 
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkMaxRelativeEncoder;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
+
 import org.opencv.core.Mat;
 import com.revrobotics.RelativeEncoder;
 import frc.robot.common.hardware.MotorController;
@@ -21,6 +24,11 @@ public class ShooterSubsystem extends SubsystemBase {
   private int aimMode; //0 is LOW, 1 is AUTO, 2 is LAUNCH, 3 is TARMAC
   private MotorController shooter_motorController;
   private MotorController hood_motorController;
+  private SparkMaxPIDController KShooterController;
+  private SparkMaxPIDController KHoodController;
+  private RelativeEncoder KShooterEncoder;
+  private RelativeEncoder KHoodEncoder;
+
 
 
   
@@ -28,12 +36,15 @@ public class ShooterSubsystem extends SubsystemBase {
   public ShooterSubsystem() {
     aimMode = 1;
     shooter_motorController = new MotorController("Shooter", Constants.KShooterID);
-    SparkMaxPIDController KShooterController = shooter_motorController.getPID();
-    RelativeEncoder KShooterEncoder = shooter_motorController.getEncoder();
+    KShooterController = shooter_motorController.getPID();
+    KShooterEncoder = shooter_motorController.getEncoder();
     hood_motorController = new MotorController("Hood", Constants.KHoodID);
-    SparkMaxPIDController KHoodControler = hood_motorController.getPID();
-    RelativeEncoder KHoodEncoder = shooter_motorController.getEncoder();
+    KHoodController = hood_motorController.getPID();
+    KHoodEncoder = shooter_motorController.getEncoder();
 
+
+
+    
   }
 
   public void adjustHood(double a) {
@@ -42,6 +53,11 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void windFlywheel(int rpm) {
+    KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
+    
+    
+    
+    
 
     //Winds Flywheel using PID control to passed rpm
   }
@@ -78,7 +94,7 @@ public class ShooterSubsystem extends SubsystemBase {
     double Velocity1 = Math.abs(x/(Math.cos(Math.toRadians(Fangle))*t));
     double Velocity2 = Math.abs((y-y0+(g/2.0)*(Math.pow(t, 2)))/(Math.sin( Math.toRadians(Fangle) ) *t ));
     double []VandA = new double[2];
-    VandA[0] = Velocity1*2;
+    VandA[0] = FlywheelBallConversion(Velocity1);
     VandA[1] = Fangle;
     return VandA;
 
@@ -86,6 +102,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double FlywheelBallConversion(double KBallSpeed){
     return KBallSpeed*2;
+    //Convert from Ft/Second of the ball into RPM
 
   }
 
