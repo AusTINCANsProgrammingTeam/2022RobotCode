@@ -8,19 +8,41 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import java.lang.Math;
+import com.revrobotics.REVLibError;
+
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkMaxRelativeEncoder;
+import com.revrobotics.CANSparkMax;
+import org.opencv.core.Mat;
+import com.revrobotics.RelativeEncoder;
+import frc.robot.common.hardware.MotorController;
 
 public class ShooterSubsystem extends SubsystemBase {
   private int aimMode; //0 is LOW, 1 is AUTO, 2 is LAUNCH, 3 is TARMAC
+  private MotorController shooter_motorController;
+  private MotorController hood_motorController;
+
+
+  
 
   public ShooterSubsystem() {
     aimMode = 1;
+    shooter_motorController = new MotorController("Shooter", Constants.KShooterID);
+    SparkMaxPIDController KShooterController = shooter_motorController.getPID();
+    RelativeEncoder KShooterEncoder = shooter_motorController.getEncoder();
+    hood_motorController = new MotorController("Hood", Constants.KHoodID);
+    SparkMaxPIDController KHoodControler = hood_motorController.getPID();
+    RelativeEncoder KHoodEncoder = shooter_motorController.getEncoder();
+
   }
 
   public void adjustHood(double a) {
+
     //Adjusts Hood using PID control to passed angle a
   }
 
   public void windFlywheel(int rpm) {
+
     //Winds Flywheel using PID control to passed rpm
   }
 
@@ -45,6 +67,27 @@ public class ShooterSubsystem extends SubsystemBase {
     //Uses Limelight to find distance to High Goal
     return (Constants.kGoalHeight - Constants.kLLHeight) / Math.tan(getTY() + Constants.kLLAngle); //Return distance in feet
   }
+  public double[] ProjectilePrediction(double y0, double x0, double y, double x, double g, double t){
+    /**Fangle =math.degrees(math.atan((y-y0+1/2*g*(t**2))/x))
+    velcocity1 = abs(x/(math.cos(math.radians(Fangle))*t))
+    velcocity2 = abs((y-y0+(g/2.0)*(t**2))/(math.sin(math.radians(Fangle))*t))
+    return Fangle, velcocity1, velcocity2
+    */
+    x = x +1;
+    double Fangle = Math.toDegrees(Math.atan((y-y0+1/2*g*(Math.pow(t, 2)))/x));
+    double Velocity1 = Math.abs(x/(Math.cos(Math.toRadians(Fangle))*t));
+    double Velocity2 = Math.abs((y-y0+(g/2.0)*(Math.pow(t, 2)))/(Math.sin( Math.toRadians(Fangle) ) *t ));
+    double []VandA = new double[2];
+    VandA[0] = Velocity1*2;
+    VandA[1] = Fangle;
+    return VandA;
+
+  }
+
+  public double FlywheelBallConversion(double KBallSpeed){
+    return KBallSpeed*2;
+
+  }
 
   public void prime() {
     //Check what aimMode is active, gets distance if AUTO, winds flywheel, adjusts hood correspondingly
@@ -54,6 +97,14 @@ public class ShooterSubsystem extends SubsystemBase {
         windFlywheel(Constants.kLOWRPM);
       break;
       case 1: //Case for AUTO mode, calculates trajectory and winds flywheel/adjusts hood to a dynamic state
+        adjustHood(ProjectilePrediction(Constants.KShooterHeight, 0, Constants.KHighHeight, getDistance(), 32,Constants.KAirboneTime )[1]);
+
+        windFlywheel((int)(Math.ceil(ProjectilePrediction(Constants.KShooterHeight, 0, Constants.KHighHeight, getDistance(), 32,Constants.KAirboneTime )[0])));
+          
+
+        
+
+
 
       break;
       case 2: //Case for LAUNCH mode, winds flywheel to preset RPM and adjusts hood to preset angle
