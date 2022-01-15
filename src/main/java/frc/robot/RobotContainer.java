@@ -24,8 +24,6 @@ import frc.robot.commands.HopperCommand;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-
-
   private final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
   private JoystickButton[] mButtons = new JoystickButton[11];
 
