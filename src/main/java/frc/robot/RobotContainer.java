@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import io.github.oblarg.oblog.Logger;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.HopperCommand;
@@ -47,6 +48,8 @@ public class RobotContainer {
       mButtons[i] = new JoystickButton(mDriverJoystick, i);
     }
     configureButtonBindings();    
+
+    //Logger.configureLoggingAndConfig(mDriveBaseSubsystem, false);
   }
 
   // Use this method to define your button->command mappings. Buttons can be created by

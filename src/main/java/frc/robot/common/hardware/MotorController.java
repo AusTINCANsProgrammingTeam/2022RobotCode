@@ -5,7 +5,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class MotorController {
     
@@ -36,9 +35,9 @@ public class MotorController {
         // If enablePid has any number of booleans greater than 0 we are enabling pid
         if (enablePid.length > 0)
         {
-            mP = SmartDashboard.getNumber(mName + " P Value", 1.0);
-            mI = SmartDashboard.getNumber(mName + " I Value", 0.0);
-            mD = SmartDashboard.getNumber(mName + " D Value", 0.0);
+            mP = 1;
+            mI = 0;
+            mD = 0;
             mPIDController = mSparkMax.getPIDController();
             setPID();
         }
@@ -61,28 +60,12 @@ public class MotorController {
         mPIDController.setP(mP);
         mPIDController.setI(mI);
         mPIDController.setD(mD);
-        SmartDashboard.putNumber(mName+" P Value", mP);
-        SmartDashboard.putNumber(mName+" I Value", mI);
-        SmartDashboard.putNumber(mName+" D Value", mD);
+       
     }
 
     // Updates the Smart Dashboard and checks the PID values to determine if update is needed
     public void updateSmartDashboard() {
-        // The simulation crashes whenever .getEncoder() is called
-        if(mPIDController != null) {
-            if (SmartDashboard.getNumber(mName + " P Value", mP) != mP) {
-                mP = SmartDashboard.getNumber(mName + " P Value", mP);
-                mPIDController.setP(mP);
-            }
-            if (SmartDashboard.getNumber(mName + " I Value", mI) != mI) {
-                mI = SmartDashboard.getNumber(mName + " I Value", mI);
-                mPIDController.setI(mI);
-            }
-            if (SmartDashboard.getNumber(mName + " D Value", mD) != mD) {
-                mD = SmartDashboard.getNumber(mName + " D Value", mD);
-                mPIDController.setD(mD);
-            }
-        }
+
     }
 
 }

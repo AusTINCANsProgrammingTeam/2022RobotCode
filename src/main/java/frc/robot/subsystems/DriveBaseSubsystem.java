@@ -6,12 +6,14 @@ package frc.robot.subsystems;
 
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 
-public class DriveBaseSubsystem extends SubsystemBase {
+public class DriveBaseSubsystem extends SubsystemBase implements Loggable{
 
   private final Joystick m_driverJoystick;
   private final MotorController[] m_motorControllers = new MotorController[6];
@@ -83,10 +85,12 @@ public class DriveBaseSubsystem extends SubsystemBase {
   }
 
   // TODO: return actual speeds
+  @Log
   public double getLeftSpeed() {
     return 0.0;
   }
-
+  
+  @Log
   public double getRightSpeed() {
     return 0.0;
   }
