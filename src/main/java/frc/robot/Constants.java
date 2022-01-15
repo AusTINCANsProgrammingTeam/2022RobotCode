@@ -40,14 +40,6 @@ public final class Constants {
 
     public static final int kDriveBaseCurrentLimit = 40;
 
-    //Controller constants
-    //public static final int kDBJoystickPort = 0;
-
-    public static final int kDBLeftJoystickAxisX = 0;
-    public static final int kDBLeftJoystickAxisY = 1;
-    public static final int kDBRightJoystickAxisX = 2;
-    public static final int kDBRightJoystickAxisY = 3;
-
     // Intake Contstants 
     public static final int kIntakeMotorOneID = 11;
     public static final int kIntakeMotorTwoID = 12;
@@ -56,7 +48,13 @@ public final class Constants {
     //Hopper Constants
     public static final int kHopperMotorThreeID = 13;
     public static final double kHopperMotorSpeed = 0.25;
-    
+
+    //Controller constants
+    public static final int kDBLeftJoystickAxisX = 0;
+    public static final int kDBLeftJoystickAxisY = 1;
+    public static final int kDBRightJoystickAxisX = 2;
+    public static final int kDBRightJoystickAxisY = 3;
+
     //Joystick Constants
     public static final int kPortNumber = 0;
     public static final int kJoystickButtonNumberOne = 1;
