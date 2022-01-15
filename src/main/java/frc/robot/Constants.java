@@ -23,12 +23,12 @@ public final class Constants {
   
     // Actual IDs on robot, used to activate the right motors
     // TODO: Values to be changed, these are placeholder values for now
-    public static final int kDriveRightFront = 0;
-    public static final int kDriveRightMiddle = 0;
-    public static final int kDriveRightRear = 0;
-    public static final int kDriveLeftFront = 0;
-    public static final int kDriveLeftMiddle = 0;
-    public static final int kDriveLeftRear = 0;
+    public static final int kDriveRightFront = 6;
+    public static final int kDriveRightMiddle = 1;
+    public static final int kDriveRightRear = 2;
+    public static final int kDriveLeftFront = 3;
+    public static final int kDriveLeftMiddle = 4;
+    public static final int kDriveLeftRear = 5;
     
     // This is used for organizational purposes (Note numbers 0-5 to distinguish between the 6 motors)
     public static final int kDriveLeftFrontIndex = 0;
@@ -40,14 +40,6 @@ public final class Constants {
 
     public static final int kDriveBaseCurrentLimit = 40;
 
-    //Controller constants
-    public static final int kDBJoystickPort = 0;
-
-    public static final int kDBLeftJoystickAxisX = 0;
-    public static final int kDBLeftJoystickAxisY = 1;
-    public static final int kDBRightJoystickAxisX = 2;
-    public static final int kDBRightJoystickAxisY = 3;
-
     // Intake Contstants 
     public static final int kIntakeMotorOneID = 11;
     public static final int kIntakeMotorTwoID = 12;
@@ -56,7 +48,13 @@ public final class Constants {
     //Hopper Constants
     public static final int kHopperMotorThreeID = 13;
     public static final double kHopperMotorSpeed = 0.25;
-    
+
+    //Controller constants
+    public static final int kDBLeftJoystickAxisX = 0;
+    public static final int kDBLeftJoystickAxisY = 1;
+    public static final int kDBRightJoystickAxisX = 2;
+    public static final int kDBRightJoystickAxisY = 3;
+
     //Joystick Constants
     public static final int kPortNumber = 0;
     public static final int kJoystickButtonNumberOne = 1;

@@ -16,6 +16,7 @@ import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.HopperCommand;
 
+
  // This class is where the bulk of the robot should be declared. Since Command-based is a
  // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  // perieodic methods (other than the scheduler calls). Instead, the structure of the robot (including
@@ -66,5 +67,10 @@ public class RobotContainer {
     return null;
     // An ExampleCommand will run in autonomous
     
+  }
+
+  // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way
+  public DriveBaseSubsystem getDriveBase() {
+    return mDriveBaseSubsystem;
   }
 }
