@@ -20,8 +20,8 @@ public class TabDriveBase {
         // gets the DriveBase tab, if it doesn't exist, create it with the name "DriveBase"
         ShuffleboardTab dtTab = Shuffleboard.getTab("DriveBase");
 
-        sbLeftWheelSpeed = dtTab.add("Left Wheel Speed", 0).withSize(2, 2).withPosition(1, 2).getEntry();
-        sbRightWheelSpeed = dtTab.add("Right Wheel Speed", 0).withSize(2, 2).withPosition(3, 2).getEntry();
+        sbLeftWheelSpeed = dtTab.add("Left Wheel Speed", 0).withSize(2, 2).withPosition(0, 0).getEntry();
+        sbRightWheelSpeed = dtTab.add("Right Wheel Speed", 0).withSize(2, 2).withPosition(3, 0).getEntry();
 
         
     }
@@ -29,12 +29,11 @@ public class TabDriveBase {
     public void periodic() {
         // contantly update the board
         
-        // TODO: call back to DriveBaseSubsystem to send back information, implement getter methods
         double leftSpeed = mDriveBaseSubsystem.getLeftSpeed();
         double rightSpeed = mDriveBaseSubsystem.getRightSpeed();
 
         sbLeftWheelSpeed.setDouble(leftSpeed);
-        sbRightWheelSpeed.setDouble(leftSpeed);
+        sbRightWheelSpeed.setDouble(rightSpeed);
         
     }
 }
