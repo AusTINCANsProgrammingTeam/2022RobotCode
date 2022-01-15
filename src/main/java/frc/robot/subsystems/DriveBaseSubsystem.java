@@ -82,6 +82,14 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_differentialDrive.arcadeDrive(0.0, 0.0);
   }
 
+  public double getLeftSpeed() {
+    return 0.0;
+  }
+
+  public double getRightSpeed() {
+    return 0.0;
+  }
+
 
   // TODO: we can add more tankDrive co functions as extras later
 }
