@@ -55,6 +55,8 @@ public class RobotContainer {
   String trajectoryJSON = "deploy/Test.wpilib.json";
   Trajectory trajectory = new Trajectory();
   
+  // multiple trajectory projects
+  
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
     // Configure the button bindings

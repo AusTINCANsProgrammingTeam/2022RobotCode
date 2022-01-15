@@ -32,19 +32,21 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.kDriveRightRearIndex] = new MotorController("Differential Right Rear", Constants.kDriveRightRear);
 
     // inverses right side motors (2022 wpilib doesn't default it to be inverted for differential drive)
-    m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax().setInverted(true);
-    m_motorControllers[Constants.kDriveRightMiddleIndex].getSparkMax().setInverted(true);
-    m_motorControllers[Constants.kDriveRightRearIndex].getSparkMax().setInverted(true);
+    m_motorControllers[Constants.kDriveRightFrontIndex].setInverted(true);
+    m_motorControllers[Constants.kDriveRightMiddleIndex].setInverted(true);
+    m_motorControllers[Constants.kDriveRightRearIndex].setInverted(true);
 
     //Forces middle and rear motors of each side to follow the first
-    m_motorControllers[Constants.kDriveLeftRearIndex].getSparkMax().follow(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax());
-    m_motorControllers[Constants.kDriveLeftMiddleIndex].getSparkMax().follow(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax());
-    m_motorControllers[Constants.kDriveRightRearIndex].getSparkMax().follow(m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
-    m_motorControllers[Constants.kDriveRightMiddleIndex].getSparkMax().follow(m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
+    m_motorControllers[Constants.kDriveLeftRearIndex].setFollow(m_motorControllers[Constants.kDriveLeftFrontIndex]);
+    m_motorControllers[Constants.kDriveLeftMiddleIndex].setFollow(m_motorControllers[Constants.kDriveLeftFrontIndex]);
+    m_motorControllers[Constants.kDriveRightRearIndex].setFollow(m_motorControllers[Constants.kDriveRightFrontIndex]);
+    m_motorControllers[Constants.kDriveRightMiddleIndex].setFollow(m_motorControllers[Constants.kDriveRightFrontIndex]);
   }
 
   @Override
   public void periodic() {
+    // acradeDrive(); // with this method, delete drivebaseteleopcommand
+
     // Update the smart dashboard in here, runs a for loop so it does it for every motor
     for(int i = 0; i < m_motorControllers.length; i++) {
       m_motorControllers[i].updateSmartDashboard();

@@ -63,8 +63,14 @@ public class MotorController {
     }
 
     // set follow
+    public void setFollow(MotorController m) {
+        mSparkMax.follow(m.getSparkMax());
+    }
 
     // set inverted
+    public void setInverted(boolean b) {
+        mSparkMax.setInverted(b);
+    }
 
     public void setPID() {
         mPIDController.setP(mP);
