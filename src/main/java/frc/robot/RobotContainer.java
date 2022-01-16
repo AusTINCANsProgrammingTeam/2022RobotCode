@@ -12,52 +12,66 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.HopperCommand;
+import frc.robot.commands.Shooter.ShooterModeCycleDown;
+import frc.robot.commands.Shooter.ShooterModeCycleUp;
+import frc.robot.commands.Shooter.ShooterPrimary;
 
- // This class is where the bulk of the robot should be declared. Since Command-based is a
- // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- // perieodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- // subsystems, commands, and button mappings) should be declared here.
+// This class is where the bulk of the robot should be declared. Since Command-based is a
+// "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+// perieodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+// subsystems, commands, and button mappings) should be declared here.
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-
   private final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
   private JoystickButton[] mButtons = new JoystickButton[11];
-
 
   // subsystems
   private final DriveBaseSubsystem mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
   private final HopperSubsystem mHopperSubsystem = new HopperSubsystem();
   private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
-
+  private final ShooterSubsystem mShooterSubsystem = new ShooterSubsystem();
 
   // commands
   private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
   private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
   private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
   private HopperCommand mHopperCommand = new HopperCommand(mHopperSubsystem);
-  
+  private ShooterModeCycleDown mShooterModeCycleDown = new ShooterModeCycleDown(mShooterSubsystem);
+  private ShooterModeCycleUp mShooterModeCycleUp = new ShooterModeCycleUp(mShooterSubsystem);
+  private ShooterPrimary mShooterPrimary = new ShooterPrimary(mShooterSubsystem);
+
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
     // Configure the button bindings
     for (int i = 1; i < mButtons.length; i++) {
       mButtons[i] = new JoystickButton(mDriverJoystick, i);
     }
-    configureButtonBindings();    
+    configureButtonBindings();
   }
 
-  // Use this method to define your button->command mappings. Buttons can be created by
+  // Use this method to define your button->command mappings. Buttons can be
+  // created by
   // instantiating a {@link GenericHID} or one of its subclasses ({@link
-  // edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
+  // edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
+  // it to a {@link
   // edu.wpi.first.wpilibj2.command.button.JoystickButton}.
   private void configureButtonBindings() {
+
+    // Intake
     mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
     mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
     mButtons[Constants.kAButton].whileHeld(mHopperCommand);
+
+    // Shooter
+    mButtons[Constants.kXButton].whenPressed(mShooterPrimary);
+    mButtons[Constants.kUpButton].whenPressed(mShooterModeCycleUp);
+    mButtons[Constants.kDownButton].whenPressed(mShooterModeCycleDown);
   }
 
   // Use this to pass the autonomous command to the main {@link Robot} class.
@@ -65,6 +79,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return null;
     // An ExampleCommand will run in autonomous
-    
+
   }
 }

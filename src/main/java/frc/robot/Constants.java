@@ -67,6 +67,9 @@ public final class Constants {
     public static final int kAButton = 1; // Button for hopper
     public static final int kRightBumperButton = 5; // Button for intake
     public static final int kLeftBumperButton = 6; // Button to reverse intake
+    public static final int kXButton = 3; // Button for Shooter
+    public static final int kUpButton = 0; // Button for shooting Mode
+    public static final int kDownButton = 0; // Button for shooting mode
 
     // Distance calculation constants
     public static final double kLLHeight = 1.5; // Height of the limelight in ft from the carpet
@@ -81,11 +84,12 @@ public final class Constants {
     public static final int kTARMACRPM = 0; // RPM that the TARMAC aimMode winds to
     public static final double kTARMACAngle = 0.0; // Angle that the TARMAC aimMode adjusts to
 
-    // Shooter Domain
+    // Shooter Constants
     public static final int KShooterID = 1; // ID of the shooter
     public static final int KHoodID = 2; // ID of the hood;
     public static final double KShooterHeight = 3;
     public static final double KHighHeight = 8.8;
     public static final double KLowHeight = 5.8;
     public static final double KAirboneTime = 1.2;
+    public static final double KGravity = 32;
 }
