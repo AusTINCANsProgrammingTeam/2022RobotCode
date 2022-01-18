@@ -45,7 +45,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // acradeDrive(); // with this method, delete drivebaseteleopcommand
+    //  acradeDrive(); // with this method, delete drivebaseteleopcommand
+    
 
     // Update the smart dashboard in here, runs a for loop so it does it for every motor
     for(int i = 0; i < m_motorControllers.length; i++) {
@@ -82,6 +83,16 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public void stopMotorsFunction() {
     // Calls Arcade Drive with a zero to both speed and rotation in order to stop the motors
     m_differentialDrive.arcadeDrive(0.0, 0.0);
+  }
+
+  // return speed of left side motors
+  public double getLeftSpeed() {
+    return m_motorControllers[Constants.kDriveLeftFrontIndex].getSpeed();
+  }
+
+  // return speed of right side motors
+  public double getRightSpeed() {
+    return 0.0;
   }
 
 
