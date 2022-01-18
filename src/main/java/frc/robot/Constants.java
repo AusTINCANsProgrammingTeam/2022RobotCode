@@ -33,7 +33,9 @@ public final class Constants {
     public static final int kDriveRightRearIndex = 5;
 
     public static final int kDriveBaseCurrentLimit = 40;
-
+    //Pathweaver constants
+    public static final double kRamseteB = 2;
+    public static final double kRamseteZeta = 0.7;
     //Controller constants
     public static final int kDBJoystickPort = 0;
 
