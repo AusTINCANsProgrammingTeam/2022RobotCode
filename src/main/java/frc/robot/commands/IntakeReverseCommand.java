@@ -31,6 +31,7 @@ public class IntakeReverseCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     mIntakeSubsystem.IntakeSwitch(false);
+
   }
 
   // Returns true when the command should end.

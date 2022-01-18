@@ -21,6 +21,7 @@ public class HopperReverseCommand extends CommandBase {
   @Override
   public void initialize() {
     mHopperSubsystem.HopperSwitch(true);
+    mHopperSubsystem.ReverseHopper();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

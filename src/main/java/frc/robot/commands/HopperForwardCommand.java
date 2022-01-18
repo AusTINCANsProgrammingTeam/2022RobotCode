@@ -21,6 +21,7 @@ public class HopperForwardCommand extends CommandBase {
   @Override
   public void initialize() {
     mHopperSubsystem.HopperSwitch(true);
+    mHopperSubsystem.ForwardHopper();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
