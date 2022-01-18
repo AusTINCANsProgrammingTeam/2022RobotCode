@@ -8,11 +8,11 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ShooterPrimary extends CommandBase {
+public class ShooterPrime extends CommandBase {
   private ShooterSubsystem m_ShooterSubsystem;
 
   /** Creates a new ShooterPrimary. */
-  public ShooterPrimary(ShooterSubsystem shooterSubsystem) {
+  public ShooterPrime(ShooterSubsystem shooterSubsystem) {
     addRequirements(shooterSubsystem);
     m_ShooterSubsystem = shooterSubsystem;
 

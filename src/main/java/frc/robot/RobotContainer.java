@@ -18,7 +18,7 @@ import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.HopperCommand;
 import frc.robot.commands.Shooter.ShooterModeCycleDown;
 import frc.robot.commands.Shooter.ShooterModeCycleUp;
-import frc.robot.commands.Shooter.ShooterPrimary;
+import frc.robot.commands.Shooter.ShooterPrime;
 
 // This class is where the bulk of the robot should be declared. Since Command-based is a
 // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -44,7 +44,7 @@ public class RobotContainer {
   private HopperCommand mHopperCommand = new HopperCommand(mHopperSubsystem);
   private ShooterModeCycleDown mShooterModeCycleDown = new ShooterModeCycleDown(mShooterSubsystem);
   private ShooterModeCycleUp mShooterModeCycleUp = new ShooterModeCycleUp(mShooterSubsystem);
-  private ShooterPrimary mShooterPrimary = new ShooterPrimary(mShooterSubsystem);
+  private ShooterPrime mShooterPrimary = new ShooterPrime(mShooterSubsystem);
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {

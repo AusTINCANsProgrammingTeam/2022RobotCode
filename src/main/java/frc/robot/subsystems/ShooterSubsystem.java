@@ -69,7 +69,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double getTY() {
     // Gets TY, the vertical angle of the target from the limelight
-    return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
+    return Math.toDegrees(NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0));
   }
 
   public double getDistance() {
