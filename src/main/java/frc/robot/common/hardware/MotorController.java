@@ -72,6 +72,16 @@ public class MotorController {
         mSparkMax.setInverted(b);
     }
 
+    // get speeds of wheel side
+    public double getWheelSpeed() {
+        return mEncoder.getVelocity();
+    }
+
+    // get boolean for whether if it's inverted
+    public boolean isInverted() {
+        return mSparkMax.getInverted();
+    }
+
     public void setPID() {
         mPIDController.setP(mP);
         mPIDController.setI(mI);
