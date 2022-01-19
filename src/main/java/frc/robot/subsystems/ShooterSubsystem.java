@@ -9,11 +9,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import java.lang.Math;
 import com.revrobotics.REVLibError;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+
 import org.opencv.core.Mat;
 import com.revrobotics.RelativeEncoder;
 import frc.robot.common.hardware.MotorController;
@@ -26,26 +32,48 @@ public class ShooterSubsystem extends SubsystemBase {
   private SparkMaxPIDController KHoodController;
   private RelativeEncoder KShooterEncoder;
   private RelativeEncoder KHoodEncoder;
+  private MotorController cargo_motorController;
+  private SparkMaxPIDController kCargoController;
+  private RelativeEncoder kCargoEncoder;
 
   public ShooterSubsystem() {
+
     aimMode = 1;
+    cargo_motorController = new MotorController("Shooter Cargo", Constants.KShooterCargoID);
+    kCargoController = cargo_motorController.getPID();
+    kCargoEncoder = cargo_motorController.getEncoder();
+
     shooter_motorController = new MotorController("Shooter", Constants.KShooterID);
     KShooterController = shooter_motorController.getPID();
     KShooterEncoder = shooter_motorController.getEncoder();
     hood_motorController = new MotorController("Hood", Constants.KHoodID);
     KHoodController = hood_motorController.getPID();
     KHoodEncoder = shooter_motorController.getEncoder();
+
   }
 
   public void adjustHood(double a) {
-    double kNumOfRotation = a * 2;
+    KHoodController.setReference(a, CANSparkMax.ControlType.kPosition);
 
     // Adjusts Hood using PID control to passed angle a
-    KHoodController.setReference(kNumOfRotation, CANSparkMax.ControlType.kPosition);
   }
 
   public void windFlywheel(int rpm) {
-    KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
+
+    double kGearRationRPM = rpm * (Constants.KGearRatioIn / Constants.KGearRatioOut);
+    KShooterController.setReference(kGearRationRPM, CANSparkMax.ControlType.kVelocity);
+    while (true) {
+
+      double KFlywheelspeed = KShooterEncoder.getVelocity();
+      if (KFlywheelspeed == rpm) {
+        // Run the last wheel
+        kCargoController.setReference(Constants.kCargoRotation, CANSparkMax.ControlType.kPosition);
+
+        break;
+      }
+
+    }
+
     // Winds Flywheel using PID control to passed rpm
   }
 
@@ -79,23 +107,27 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double[] ProjectilePrediction(double y0, double x0, double y, double x, double g, double t) {
+    /**
+     * Fangle =math.degrees(math.atan((y-y0+1/2*g*(t**2))/x))
+     * velcocity1 = abs(x/(math.cos(math.radians(Fangle))*t))
+     * velcocity2 = abs((y-y0+(g/2.0)*(t**2))/(math.sin(math.radians(Fangle))*t))
+     * return Fangle, velcocity1, velcocity2
+     */
     x = x + 1;
-    y = y + 0.4;
-
     double Fangle = Math.toDegrees(Math.atan((y - y0 + 1 / 2 * g * (Math.pow(t, 2))) / x));
     double Velocity1 = Math.abs(x / (Math.cos(Math.toRadians(Fangle)) * t));
+    double Velocity2 = Math.abs((y - y0 + (g / 2.0) * (Math.pow(t, 2))) / (Math.sin(Math.toRadians(Fangle)) * t));
     double[] VandA = new double[2];
-    VandA[0] = FlywheelBallConversion(Velocity1);
+    VandA[0] = UnitConversion(Velocity1, Constants.KGearDiametter);
     VandA[1] = Fangle;
     return VandA;
 
   }
 
-  public double FlywheelBallConversion(double KBallSpeed) {
-    return KBallSpeed * 2;
+  public double UnitConversion(double KBallSpeed, double GearDiametter) {
+    double KFlywheelrpm = ((KBallSpeed * 12) / Constants.KGearDiametter) * Constants.KBallFlywheelratio;
+    return KFlywheelrpm;
     // Convert from Ft/Second of the ball into RPM
-    // Convert From Ball Speed to required FlyWheel Speed
-    // Convert from required Flywheel speed to motor speed (Gear Ratio)
 
   }
 
@@ -110,11 +142,12 @@ public class ShooterSubsystem extends SubsystemBase {
         break;
       case 1: // Case for AUTO mode, calculates trajectory and winds flywheel/adjusts hood to
               // a dynamic state
-        adjustHood(ProjectilePrediction(Constants.KShooterHeight, 0, Constants.KHighHeight, getDistance(), 32,
-            Constants.KAirboneTime)[1]);
+        adjustHood(ProjectilePrediction(Constants.KShooterHeight, 0, Constants.KHighHeight, getDistance(),
+            Constants.KGravity, Constants.KAirboneTime)[1]);
+
         windFlywheel((int) (Math.ceil(ProjectilePrediction(Constants.KShooterHeight, 0, Constants.KHighHeight,
-            getDistance(), Constants.KGravity, Constants.KAirboneTime)[0])));
-        // Maybe break it down in the future for visibility
+            getDistance(), 32, Constants.KAirboneTime)[0])));
+
         break;
       case 2: // Case for LAUNCH mode, winds flywheel to preset RPM and adjusts hood to preset
               // angle

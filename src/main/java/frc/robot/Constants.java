@@ -4,20 +4,12 @@
 
 package frc.robot;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide
- * numerical or boolean
- * constants. This class should not be used for any other purpose. All constants
- * should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>
- * It is advised to statically import this class (or one of its inner classes)
- * wherever the
- * constants are needed, to reduce verbosity.
- */
+// The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
+// constants. This class should not be used for any other purpose. All constants should be declared
+// globally (i.e. public static). Do not put anything functional in this class.
 
-// TODO: Swap placeholder motor IDs & Button Ports and Numbers for real ones
+// <p>It is advised to statically import this class (or one of its inner classes) wherever the
+// constants are needed, to reduce verbosity.
 
 public final class Constants {
 
@@ -67,9 +59,9 @@ public final class Constants {
     public static final int kAButton = 1; // Button for hopper
     public static final int kRightBumperButton = 5; // Button for intake
     public static final int kLeftBumperButton = 6; // Button to reverse intake
-    public static final int kXButton = 3; // Button for Shooter
-    public static final int kUpButton = 0; // Button for shooting Mode
-    public static final int kDownButton = 0; // Button for shooting mode
+    public static final int kXbutton = 3; // Button for Shooter
+    public static final int kDownbutton = 4; // Button for shooter mode
+    public static final int kUpbutton = 5; // Button for shooter mode
 
     // Distance calculation constants
     public static final double kLLHeight = 1.5; // Height of the limelight in ft from the carpet
@@ -84,12 +76,18 @@ public final class Constants {
     public static final int kTARMACRPM = 0; // RPM that the TARMAC aimMode winds to
     public static final double kTARMACAngle = 0.0; // Angle that the TARMAC aimMode adjusts to
 
-    // Shooter Constants
+    // Shooter Domain
     public static final int KShooterID = 1; // ID of the shooter
     public static final int KHoodID = 2; // ID of the hood;
     public static final double KShooterHeight = 3;
     public static final double KHighHeight = 8.8;
     public static final double KLowHeight = 5.8;
     public static final double KAirboneTime = 1.2;
-    public static final double KGravity = 32;
+    public static final double KGravity = 32.0;
+    public static final double KGearRatioIn = 34;
+    public static final double KGearRatioOut = 14;
+    public static final double KGearDiametter = 4; // Gear diametter in inches
+    public static final double KBallFlywheelratio = 2;
+    public static final int KShooterCargoID = 6;
+    public static final double kCargoRotation = 3;
 }

@@ -4,21 +4,20 @@
 
 package frc.robot;
 
-import frc.robot.commands.DriveBaseTeleopCommand;
-import frc.robot.subsystems.DriveBaseSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import frc.robot.commands.DriveBaseTeleopCommand;
+import frc.robot.commands.HopperCommand;
+import frc.robot.commands.IntakeForwardCommand;
+import frc.robot.commands.IntakeReverseCommand;
+import frc.robot.commands.ShooterModeCycleDown;
+import frc.robot.commands.ShooterModeCycleUp;
+import frc.robot.commands.ShooterPrimary;
+import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.commands.IntakeForwardCommand;
-import frc.robot.commands.IntakeReverseCommand;
-import frc.robot.commands.HopperCommand;
-import frc.robot.commands.Shooter.ShooterModeCycleDown;
-import frc.robot.commands.Shooter.ShooterModeCycleUp;
-import frc.robot.commands.Shooter.ShooterPrimary;
 
 // This class is where the bulk of the robot should be declared. Since Command-based is a
 // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -69,9 +68,9 @@ public class RobotContainer {
     mButtons[Constants.kAButton].whileHeld(mHopperCommand);
 
     // Shooter
-    mButtons[Constants.kXButton].whenPressed(mShooterPrimary);
-    mButtons[Constants.kUpButton].whenPressed(mShooterModeCycleUp);
-    mButtons[Constants.kDownButton].whenPressed(mShooterModeCycleDown);
+    mButtons[Constants.kXbutton].whenPressed(mShooterPrimary);
+    mButtons[Constants.kUpbutton].whenPressed(mShooterModeCycleUp);
+    mButtons[Constants.kDownbutton].whenPressed(mShooterModeCycleDown);
   }
 
   // Use this to pass the autonomous command to the main {@link Robot} class.
@@ -81,4 +80,5 @@ public class RobotContainer {
     // An ExampleCommand will run in autonomous
 
   }
+
 }
