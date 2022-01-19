@@ -13,34 +13,46 @@ import frc.robot.common.hardware.MotorController;
 public class CDSSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private MotorController mCDSBeltController = new MotorController("CDS Belt Controller", Constants.kCDSMotorThreeID);
-  private MotorController mCDSWheelControllerOne = new MotorController("Main CDS Wheel Controller", Constants.kCDSMotorFourID);
-  private MotorController mCDSWheelControllerTwo = new MotorController("Follows CDS Wheel Controller", Constants.kCDSMotorFiveID);
-
-  //TODO: ADD FOLLOW
-
+  private MotorController mCDSBeltController;
+  private MotorController mCDSWheelControllerOne;
+  private MotorController mCDSWheelControllerTwo;
+  
   public CDSSubsystem() {
     mCDSBeltController = new MotorController("CDS Motor", Constants.kCDSMotorThreeID);
+    mCDSWheelControllerOne =  new MotorController("Main CDS Wheel Controller", Constants.kCDSMotorFourID);
+    mCDSWheelControllerTwo = new MotorController("Follows CDS Wheel Controller", Constants.kCDSMotorFiveID);
+    
+    mCDSWheelControllerTwo.getSparkMax().follow(mCDSWheelControllerOne.getSparkMax());
   }
 
   public void HopperSwitch(boolean on) {
     if (on) {
-      mCDSBeltController.getSparkMax().set(Constants.kCDSMotorSpeed);
-      SmartDashboard.putNumber("CDS Motor Speed", Constants.kCDSMotorSpeed);
+      double beltSmartSpeed = SmartDashboard.getNumber("Belt Speed", Constants.kCDSBeltSpeed);
+      double wheelSmartSpeed = SmartDashboard.getNumber("Wheel Speed", Constants.kCDSWheelSpeed);
+
+      mCDSBeltController.getSparkMax().set(beltSmartSpeed);
+      mCDSWheelControllerOne.getSparkMax().set(wheelSmartSpeed);
+      SmartDashboard.putNumber("CDS Belt Speed", Constants.kCDSBeltSpeed);
+      SmartDashboard.putNumber("CDS Wheel Speed", Constants.kCDSWheelSpeed);
     } else {
       mCDSBeltController.getSparkMax().set(0.0);
+      mCDSWheelControllerOne.getSparkMax().set(0.0);
       SmartDashboard.putNumber("CDS Motor Speed", 0);
     }
   }
 
   public void ForwardCDS() {
     mCDSBeltController.getSparkMax().setInverted(false);
-    SmartDashboard.putString("CDS Motor Direction", "Forward");
+    mCDSWheelControllerOne.getSparkMax().setInverted(false);
+    SmartDashboard.putString("CDS Belt Direction", "Forward");
+    SmartDashboard.putString("CDS Wheel Direction", "Forward");
   }
 
   public void ReverseCDS() {
     mCDSBeltController.getSparkMax().setInverted(true);
-    SmartDashboard.putString("CDS Motor Direction", "Reverse");
+    mCDSWheelControllerOne.getSparkMax().setInverted(true);
+    SmartDashboard.putString("CDS Belt Direction", "Reverse");
+    SmartDashboard.putString("CDS Wheel Direction", "Reverse");
   }
 
 }

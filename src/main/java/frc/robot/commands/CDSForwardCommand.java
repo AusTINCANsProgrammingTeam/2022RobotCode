@@ -21,7 +21,7 @@ public class CDSForwardCommand extends CommandBase {
   @Override
   public void initialize() {
     mCDSSubsystem.HopperSwitch(true);
-    mCDSSubsystem.ForwardHopper();
+    mCDSSubsystem.ForwardCDS();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

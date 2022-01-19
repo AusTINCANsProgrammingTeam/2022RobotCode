@@ -54,7 +54,9 @@ public final class Constants {
     public static final int kCDSMotorThreeID = 13;
     public static final int kCDSMotorFourID = 14;
     public static final int kCDSMotorFiveID = 15;
-    public static final double kCDSMotorSpeed = 0.25;
+
+    public static final double kCDSWheelSpeed = 0.25;
+    public static final double kCDSBeltSpeed = 0.25;
     
     //Joystick Constants
     public static final int kPortNumber = 0;

@@ -20,8 +20,8 @@ public class CDSReverseCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    mCDSSubsystem.ReverseCDS();
     mCDSSubsystem.HopperSwitch(true);
-    mCDSSubsystem.ReverseHopper();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

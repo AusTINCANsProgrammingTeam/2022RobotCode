@@ -17,14 +17,20 @@ public class IntakeSubsystem extends SubsystemBase {
   // here. Call these from Commands.
   
   private MotorController mIntakeMotorControllerOne;
+  private MotorController mIntakeMotorControllerTwo;
 
   public IntakeSubsystem() {
-    mIntakeMotorControllerOne = new MotorController("Main Intake Motor", Constants.kIntakeMotorOneID);
+    mIntakeMotorControllerOne = new MotorController("Intake Motor One", Constants.kIntakeMotorOneID);
+    mIntakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.kIntakeMotorTwoID);
+
+    mIntakeMotorControllerTwo.getSparkMax().follow(mIntakeMotorControllerTwo.getSparkMax());
   }
 
   public void IntakeSwitch(boolean on){    
     if (on){
-      mIntakeMotorControllerOne.getSparkMax().set(Constants.kIntakeMotorSpeed);
+      double intakeSmartSpeed = SmartDashboard.getNumber("Belt Speed", Constants.kCDSBeltSpeed);
+      
+      mIntakeMotorControllerOne.getSparkMax().set(intakeSmartSpeed);
       SmartDashboard.putNumber("Intake Motor Speed", Constants.kIntakeMotorSpeed);
     } else {
       mIntakeMotorControllerOne.getSparkMax().set(0);
@@ -32,7 +38,6 @@ public class IntakeSubsystem extends SubsystemBase {
     }
   }
   
-
   public void ForwardIntake(){
     mIntakeMotorControllerOne.getSparkMax().setInverted(false);
     SmartDashboard.putString("Intake Motor Direction", "Forward");
