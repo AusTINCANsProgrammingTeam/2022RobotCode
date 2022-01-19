@@ -13,29 +13,33 @@ import frc.robot.common.hardware.MotorController;
 public class CDSSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private MotorController mCDSController = new MotorController("CDS Motor", Constants.kCDSMotorThreeID);
+  private MotorController mCDSBeltController = new MotorController("CDS Belt Controller", Constants.kCDSMotorThreeID);
+  private MotorController mCDSWheelControllerOne = new MotorController("Main CDS Wheel Controller", Constants.kCDSMotorFourID);
+  private MotorController mCDSWheelControllerTwo = new MotorController("Follows CDS Wheel Controller", Constants.kCDSMotorFiveID);
+
+  //TODO: ADD FOLLOW
 
   public CDSSubsystem() {
-    mCDSController = new MotorController("CDS Motor", Constants.kCDSMotorThreeID);
+    mCDSBeltController = new MotorController("CDS Motor", Constants.kCDSMotorThreeID);
   }
 
   public void HopperSwitch(boolean on) {
     if (on) {
-      mCDSController.getSparkMax().set(Constants.kCDSMotorSpeed);
+      mCDSBeltController.getSparkMax().set(Constants.kCDSMotorSpeed);
       SmartDashboard.putNumber("CDS Motor Speed", Constants.kCDSMotorSpeed);
     } else {
-      mCDSController.getSparkMax().set(0.0);
+      mCDSBeltController.getSparkMax().set(0.0);
       SmartDashboard.putNumber("CDS Motor Speed", 0);
     }
   }
 
-  public void ForwardHopper() {
-    mCDSController.getSparkMax().setInverted(false);
+  public void ForwardCDS() {
+    mCDSBeltController.getSparkMax().setInverted(false);
     SmartDashboard.putString("CDS Motor Direction", "Forward");
   }
 
-  public void ReverseHopper() {
-    mCDSController.getSparkMax().setInverted(true);
+  public void ReverseCDS() {
+    mCDSBeltController.getSparkMax().setInverted(true);
     SmartDashboard.putString("CDS Motor Direction", "Reverse");
   }
 
