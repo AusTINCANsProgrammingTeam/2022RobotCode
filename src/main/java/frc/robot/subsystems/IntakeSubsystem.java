@@ -40,11 +40,12 @@ public class IntakeSubsystem extends SubsystemBase {
   public void ForwardIntake(){
     mIntakeMotorControllerOne.getSparkMax().setInverted(false);
     SmartDashboard.putString("Intake Motor Direction", "Forward");
-
   }
 
   public void ReverseIntake(){
     mIntakeMotorControllerOne.getSparkMax().setInverted(true);
     SmartDashboard.putString("Intake Motor Direction", "Reverse");
   }
+
+  
 }
