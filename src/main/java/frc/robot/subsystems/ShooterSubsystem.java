@@ -19,7 +19,7 @@ import com.revrobotics.RelativeEncoder;
 import frc.robot.common.hardware.MotorController;
 
 public class ShooterSubsystem extends SubsystemBase {
-  private int aimMode; // 0 is LOW, 1 is AUTO, 2 is LAUNCH, 3 is TARMAC
+  private int aimMode; // 0 is LOW, 1 is AUTO, 2 is LAUNCH, 3 is TARMAC, 4 is TEST
   private MotorController shooter_motorController;
   private MotorController hood_motorController;
   private SparkMaxPIDController KShooterController;
@@ -29,24 +29,25 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public ShooterSubsystem() {
     aimMode = 1;
-    shooter_motorController = new MotorController("Shooter", Constants.KShooterID);
+    //Motor initialization
+    shooter_motorController = new MotorController("Shooter", Constants.kShooterID);
     KShooterController = shooter_motorController.getPID();
     KShooterEncoder = shooter_motorController.getEncoder();
-    hood_motorController = new MotorController("Hood", Constants.KHoodID);
+    hood_motorController = new MotorController("Hood", Constants.kHoodID);
     KHoodController = hood_motorController.getPID();
-    KHoodEncoder = shooter_motorController.getEncoder();
+    KHoodEncoder = hood_motorController.getEncoder();
   }
 
   public void adjustHood(double a) {
     double kNumOfRotation = a * 2;
 
-    // Adjusts Hood using PID control to passed angle a
+    // Adjusts hood using PID control to passed angle a
     KHoodController.setReference(kNumOfRotation, CANSparkMax.ControlType.kPosition);
   }
 
   public void windFlywheel(int rpm) {
     KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
-    // Winds Flywheel using PID control to passed rpm
+    // Winds flywheel using PID control to passed rpm
   }
 
   public void setAimMode(int m) {
@@ -74,7 +75,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double getDistance() {
     // Uses Limelight to find distance to High Goal
-    return (Constants.kGoalHeight - Constants.kLLHeight) / Math.tan(getTY() + Constants.kLLAngle); // Return distance in
+    return (Constants.kHighHeight - Constants.kLLHeight) / Math.tan(getTY() + Constants.kLLAngle); // Return distance in
                                                                                                    // feet
   }
 
@@ -108,23 +109,23 @@ public class ShooterSubsystem extends SubsystemBase {
         adjustHood(Constants.kLOWAngle);
         windFlywheel(Constants.kLOWRPM);
         break;
-      case 1: // Case for AUTO mode, calculates trajectory and winds flywheel/adjusts hood to
-              // a dynamic state
-        adjustHood(ProjectilePrediction(Constants.KShooterHeight, 0, Constants.KHighHeight, getDistance(), 32,
-            Constants.KAirboneTime)[1]);
-        windFlywheel((int) (Math.ceil(ProjectilePrediction(Constants.KShooterHeight, 0, Constants.KHighHeight,
-            getDistance(), Constants.KGravity, Constants.KAirboneTime)[0])));
+      case 1: // Case for AUTO mode, calculates trajectory and winds flywheel/adjusts hood to a dynamic state
+        adjustHood(ProjectilePrediction(Constants.kShooterHeight, 0, Constants.kHighHeight, getDistance(), 32,
+            Constants.kAirboneTime)[1]);
+        windFlywheel((int) (Math.ceil(ProjectilePrediction(Constants.kShooterHeight, 0, Constants.kHighHeight,
+            getDistance(), Constants.kGravity, Constants.kAirboneTime)[0])));
         // Maybe break it down in the future for visibility
         break;
-      case 2: // Case for LAUNCH mode, winds flywheel to preset RPM and adjusts hood to preset
-              // angle
+      case 2: // Case for LAUNCH mode, winds flywheel to preset RPM and adjusts hood to preset angle
         adjustHood(Constants.kLAUNCHAngle);
         windFlywheel(Constants.kLAUNCHRPM);
         break;
-      case 3: // Case for TARMAC mode, winds flywheel to preset RPM and adjusts hood to preset
-              // angle
+      case 3: // Case for TARMAC mode, winds flywheel to preset RPM and adjusts hood to preset angle
         adjustHood(Constants.kTARMACAngle);
         windFlywheel(Constants.kTARMACRPM);
+        break;
+      case 4: //Case for TEST mode, just takes an RPM from shuffleboard and winds
+        windFlywheel(200);
         break;
     }
   }
