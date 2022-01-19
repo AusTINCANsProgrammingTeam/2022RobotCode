@@ -19,14 +19,14 @@ import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
-// This class is where the bulk of the robot should be declared. Since Command-based is a
-// "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
-// perieodic methods (other than the scheduler calls). Instead, the structure of the robot (including
-// subsystems, commands, and button mappings) should be declared here.
+
+ // This class is where the bulk of the robot should be declared. Since Command-based is a
+ // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ // perieodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ // subsystems, commands, and button mappings) should be declared here.
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-
   private final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
   private JoystickButton[] mButtons = new JoystickButton[11];
 
@@ -81,4 +81,8 @@ public class RobotContainer {
 
   }
 
+  // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way
+  public DriveBaseSubsystem getDriveBase() {
+    return mDriveBaseSubsystem;
+  }
 }
