@@ -50,9 +50,9 @@ public final class Constants {
     public static final double kIntakeMotorSpeed = 0.25;
 
     //Hopper Constants
-    public static final int kHopperMotorThreeIndex = 0;
-    public static final int kHopperMotorThreeID = 13;
-    public static final double kHopperMotorSpeed = 0.25;
+    public static final int kCDSMotorThreeIndex = 0;
+    public static final int kCDSMotorThreeID = 13;
+    public static final double kCDSMotorSpeed = 0.25;
     
     //Joystick Constants
     public static final int kPortNumber = 0;

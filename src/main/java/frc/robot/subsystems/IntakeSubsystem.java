@@ -17,13 +17,9 @@ public class IntakeSubsystem extends SubsystemBase {
   // here. Call these from Commands.
   
   private MotorController mIntakeMotorControllerOne;
-  private MotorController mIntakeMotorControllerTwo;
-  
+
   public IntakeSubsystem() {
     mIntakeMotorControllerOne = new MotorController("Main Intake Motor", Constants.kIntakeMotorOneID);
-    mIntakeMotorControllerTwo = new MotorController("Follower Intake Motor", Constants.kIntakeMotorTwoID);
-
-    mIntakeMotorControllerTwo.getSparkMax().follow(mIntakeMotorControllerOne.getSparkMax());
   }
 
   public void IntakeSwitch(boolean on){    

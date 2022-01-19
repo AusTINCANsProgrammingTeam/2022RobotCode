@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-import frc.robot.subsystems.HopperSubsystem;
+import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
-import frc.robot.commands.HopperForwardCommand;
-import frc.robot.commands.HopperReverseCommand;
+import frc.robot.commands.CDSForwardCommand;
+import frc.robot.commands.CDSReverseCommand;
 
  // This class is where the bulk of the robot should be declared. Since Command-based is a
  // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -32,7 +32,7 @@ public class RobotContainer {
 
   // subsystems
   private final DriveBaseSubsystem mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
-  private final HopperSubsystem mHopperSubsystem = new HopperSubsystem();
+  private final CDSSubsystem mCDSSubsystem = new CDSSubsystem();
   private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
 
 
@@ -40,8 +40,8 @@ public class RobotContainer {
   private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
   private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
   private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
-  private HopperForwardCommand mHopperForwardCommand = new HopperForwardCommand(mHopperSubsystem);
-  private HopperReverseCommand mHopperReverseCommand = new HopperReverseCommand(mHopperSubsystem);
+  private CDSForwardCommand mCDSForwardCommand = new CDSForwardCommand(mCDSSubsystem);
+  private CDSReverseCommand mCDSReverseCommand = new CDSReverseCommand(mCDSSubsystem);
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
@@ -59,8 +59,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
     mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
-    mButtons[Constants.kXButton].whileHeld(mHopperForwardCommand);
-    mButtons[Constants.kBButton].whileHeld(mHopperReverseCommand);
+    mButtons[Constants.kXButton].whileHeld(mCDSForwardCommand);
+    mButtons[Constants.kBButton].whileHeld(mCDSReverseCommand);
   }
 
   // Use this to pass the autonomous command to the main {@link Robot} class.

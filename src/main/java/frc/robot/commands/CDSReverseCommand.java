@@ -5,23 +5,23 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.HopperSubsystem; 
+import frc.robot.subsystems.CDSSubsystem; 
 
-public class HopperForwardCommand extends CommandBase {
+public class CDSReverseCommand extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
-  private final HopperSubsystem mHopperSubsystem;
+  private final CDSSubsystem mCDSSubsystem;
   
-  public HopperForwardCommand(HopperSubsystem hopperSubsystem) {
-    //Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(hopperSubsystem); 
-    mHopperSubsystem = hopperSubsystem;
+  public CDSReverseCommand(CDSSubsystem CDSSubsystem) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(CDSSubsystem); 
+    mCDSSubsystem = CDSSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mHopperSubsystem.HopperSwitch(true);
-    mHopperSubsystem.ForwardHopper();
+    mCDSSubsystem.HopperSwitch(true);
+    mCDSSubsystem.ReverseHopper();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -31,7 +31,7 @@ public class HopperForwardCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    mHopperSubsystem.HopperSwitch(false);
+    mCDSSubsystem.HopperSwitch(false);
   }
 
   // Returns true when the command should end.
