@@ -43,7 +43,7 @@ public class RobotContainer {
   private HopperCommand mHopperCommand = new HopperCommand(mHopperSubsystem);
   private ShooterModeCycleDown mShooterModeCycleDown = new ShooterModeCycleDown(mShooterSubsystem);
   private ShooterModeCycleUp mShooterModeCycleUp = new ShooterModeCycleUp(mShooterSubsystem);
-  private ShooterPrimary mShooterPrimary = new ShooterPrimary(mShooterSubsystem);
+  private ShooterPrime mShooterPrimary = new ShooterPrime(mShooterSubsystem);
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
