@@ -4,9 +4,13 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
+
 import java.lang.Math;
 import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkMax;
@@ -35,8 +39,10 @@ public class ShooterSubsystem extends SubsystemBase {
   private MotorController cargo_motorController;
   private SparkMaxPIDController kCargoController;
   private RelativeEncoder kCargoEncoder;
-
+  private int shooterRPM;
+  private NetworkTableEntry sbShooterRPM;
   public ShooterSubsystem() {
+    sbShooterRPM = RobotContainer.debugTab.add("shooterRPM", 0).getEntry();
 
     aimMode = 1;
     cargo_motorController = new MotorController("Shooter Cargo", Constants.KShooterCargoID);
@@ -165,6 +171,7 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    shooterRPM = sbShooterRPM.getDouble(0.0));
   }
 
 }
