@@ -38,20 +38,20 @@ public final class Constants {
     public static final int kDriveRightMiddleIndex = 4;
     public static final int kDriveRightRearIndex = 5;
 
-    public static final int driveBaseCurrentLimit = 40;
+    public static final int kDriveBaseCurrentLimit = 40;
 
     // Intake Contstants 
-    public static final int intakeMotorOneIndex = 0;
-    public static final int intakeMotorTwoIndex = 1;
-    public static final int intakeMotorOneID = 11;
-    public static final int intakeMotorTwoID = 12;
-    public static final double intakeMotorSpeed = 0.25;
+    public static final int kIntakeMotorOneIndex = 0;
+    public static final int kIntakeMotorTwoIndex = 1;
+    public static final int kIntakeMotorOneID = 11;
+    public static final int kIntakeMotorTwoID = 12;
+    public static final double kIntakeMotorSpeed = 0.25;
 
     //CDS Constants
-    public static final int CDSMotorThreeIndex = 0;
-    public static final int CDSMotorThreeID = 13;
-    public static final int CDSMotorFourID = 14;
-    public static final int CDSMotorFiveID = 15;
+    public static final int kCDSMotorThreeIndex = 0;
+    public static final int kCDSMotorThreeID = 13;
+    public static final int kCDSMotorFourID = 14;
+    public static final int kCDSMotorFiveID = 15;
 
     public static final double kCDSWheelSpeed = 0.25;
     public static final double kCDSBeltSpeed = 0.25;
@@ -63,11 +63,11 @@ public final class Constants {
     public static final int kDBRightJoystickAxisY = 3;
 
     //Joystick Constants
-    public static final int portNumber = 0;
-    public static final int joystickButtonNumberOne = 1;
-    public static final int joystickButtonNumberTwo = 2;
-    public static final int BButton = 2; // Button for hopper
-    public static final int XButton = 3; // Button for reverse hopper
-    public static final int rightBumperButton = 5; // Button for intake 
-    public static final int leftBumperButton = 6;  // Button to reverse intake
+    public static final int kPortNumber = 0;
+    public static final int kJoystickButtonNumberOne = 1;
+    public static final int kJoystickButtonNumberTwo = 2;
+    public static final int kBButton = 2; // Button for hopper
+    public static final int kXButton = 3; // Button for reverse hopper
+    public static final int kRightBumperButton = 5; // Button for intake 
+    public static final int kLeftBumperButton = 6;  // Button to reverse intake
 }

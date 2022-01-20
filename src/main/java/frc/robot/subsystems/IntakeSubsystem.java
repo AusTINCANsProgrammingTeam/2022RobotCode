@@ -20,18 +20,18 @@ public class IntakeSubsystem extends SubsystemBase {
   private MotorController intakeMotorControllerTwo;
 
   public IntakeSubsystem() {
-    intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID);
-    intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.intakeMotorTwoID);
+    intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.kIntakeMotorOneID);
+    intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.kIntakeMotorTwoID);
 
     intakeMotorControllerTwo.getSparkMax().follow(intakeMotorControllerTwo.getSparkMax());
   }
 
   public void IntakeSwitch(boolean on){    
     if (on){
-      double intakeSmartSpeed = SmartDashboard.getNumber("Belt Speed", Constants.CDSBeltSpeed);
+      double intakeSmartSpeed = SmartDashboard.getNumber("Belt Speed", Constants.kCDSBeltSpeed);
       
       intakeMotorControllerOne.getSparkMax().set(intakeSmartSpeed);
-      SmartDashboard.putNumber("Intake Motor Speed", Constants.intakeMotorSpeed);
+      SmartDashboard.putNumber("Intake Motor Speed", Constants.kIntakeMotorSpeed);
     } else {
       intakeMotorControllerOne.getSparkMax().set(0);
       SmartDashboard.putNumber("Intake Motor Speed", 0);

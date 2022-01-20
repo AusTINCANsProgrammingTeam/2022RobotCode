@@ -18,22 +18,22 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSWheelControllerTwo;
   
   public CDSSubsystem() {
-    CDSBeltController = new MotorController("CDS Motor", Constants.CDSMotorThreeID);
-    CDSWheelControllerOne =  new MotorController("Main CDS Wheel Controller", Constants.CDSMotorFourID);
-    CDSWheelControllerTwo = new MotorController("Follows CDS Wheel Controller", Constants.CDSMotorFiveID);
+    CDSBeltController = new MotorController("CDS Motor", Constants.kCDSMotorThreeID);
+    CDSWheelControllerOne =  new MotorController("Main CDS Wheel Controller", Constants.kCDSMotorFourID);
+    CDSWheelControllerTwo = new MotorController("Follows CDS Wheel Controller", Constants.kCDSMotorFiveID);
     
     CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax());
   }
 
   public void HopperSwitch(boolean on) {
     if (on) {
-      double beltSmartSpeed = SmartDashboard.getNumber("Belt Speed", Constants.CDSBeltSpeed);
-      double wheelSmartSpeed = SmartDashboard.getNumber("Wheel Speed", Constants.CDSWheelSpeed);
+      double beltSmartSpeed = SmartDashboard.getNumber("Belt Speed", Constants.kCDSBeltSpeed);
+      double wheelSmartSpeed = SmartDashboard.getNumber("Wheel Speed", Constants.kCDSWheelSpeed);
 
       CDSBeltController.getSparkMax().set(beltSmartSpeed);
       CDSWheelControllerOne.getSparkMax().set(wheelSmartSpeed);
-      SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
-      SmartDashboard.putNumber("CDS Wheel Speed", Constants.CDSWheelSpeed);
+      SmartDashboard.putNumber("CDS Belt Speed", Constants.kCDSBeltSpeed);
+      SmartDashboard.putNumber("CDS Wheel Speed", Constants.kCDSWheelSpeed);
     } else {
       CDSBeltController.getSparkMax().set(0.0);
       CDSWheelControllerOne.getSparkMax().set(0.0);
