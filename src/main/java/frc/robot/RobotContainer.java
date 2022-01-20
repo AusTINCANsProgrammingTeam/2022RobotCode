@@ -17,6 +17,7 @@ import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
 
+
  // This class is where the bulk of the robot should be declared. Since Command-based is a
  // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  // perieodic methods (other than the scheduler calls). Instead, the structure of the robot (including
@@ -24,8 +25,6 @@ import frc.robot.commands.CDSReverseCommand;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-
-
   private final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
   private JoystickButton[] mButtons = new JoystickButton[11];
 
@@ -69,5 +68,11 @@ public class RobotContainer {
     return null;
     // An ExampleCommand will run in autonomous
     
+  }
+}
+
+  // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way
+  public DriveBaseSubsystem getDriveBase() {
+    return mDriveBaseSubsystem;
   }
 }
