@@ -35,6 +35,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private MotorController cargo_motorController;
   private SparkMaxPIDController kCargoController;
   private RelativeEncoder kCargoEncoder;
+  private int currentRPM;
 
   public ShooterSubsystem() {
 
@@ -59,22 +60,24 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void windFlywheel(int rpm) {
-
-    double kGearRationRPM = rpm * (Constants.kGearRatioIn / Constants.kGearRatioOut);
-    KShooterController.setReference(kGearRationRPM, CANSparkMax.ControlType.kVelocity);
-    while (true) {
-
-      double KFlywheelspeed = KShooterEncoder.getVelocity();
-      if (KFlywheelspeed == rpm) {
-        // Run the last wheel
-        kCargoController.setReference(Constants.kCargoRotation, CANSparkMax.ControlType.kPosition);
-
-        break;
-      }
-
-    }
-
     // Winds Flywheel using PID control to passed rpm
+    double kGearRationRPM = rpm * (Constants.kGearRatioIn / Constants.kGearRatioOut);
+    currentRPM = rpm;
+    KShooterController.setReference(kGearRationRPM, CANSparkMax.ControlType.kVelocity);
+  }
+
+  public void shoot() { //uncomment when merged; missing MotorController method
+    /*cargo_motorController.setSpeed(1.0);
+    Thread.sleep(200);
+    cargo_motorController.setSpeed(0.0);*/
+  }
+
+  public boolean wheelReady(){
+    double flywheelSpeed = KShooterEncoder.getVelocity();
+    if (flywheelSpeed > currentRPM - 15 && flywheelSpeed < currentRPM + 15) {
+      return true;
+    }
+    return false;
   }
 
   public void setAimMode(int m) {
@@ -113,7 +116,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * velcocity2 = abs((y-y0+(g/2.0)*(t**2))/(math.sin(math.radians(Fangle))*t))
      * return Fangle, velcocity1, velcocity2
      */
-    x = x + 1;
+    x = x + 1; // Applies an offset to target goal center
     double Fangle = Math.toDegrees(Math.atan((y - y0 + 1 / 2 * g * (Math.pow(t, 2))) / x));
     double Velocity1 = Math.abs(x / (Math.cos(Math.toRadians(Fangle)) * t));
     double Velocity2 = Math.abs((y - y0 + (g / 2.0) * (Math.pow(t, 2))) / (Math.sin(Math.toRadians(Fangle)) * t));
