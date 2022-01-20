@@ -66,7 +66,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public void arcadeDrive() {
     m_differentialDrive.arcadeDrive( m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), 
                                       m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
-
   }
 
   // Arcade Drive where you can only move forwards and backwards for testing
@@ -122,5 +121,5 @@ public class DriveBaseSubsystem extends SubsystemBase {
   
   
 
-  // TODO: we can add more tankDrive co functions as extras later
+  // TODO: we can add more tanrive co functions as extras later
 }

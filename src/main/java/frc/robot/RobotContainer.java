@@ -29,6 +29,13 @@ import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.HopperCommand;
 import com.revrobotics.SparkMaxPIDController;
 
+import frc.robot.subsystems.CDSSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.commands.IntakeForwardCommand;
+import frc.robot.commands.IntakeReverseCommand;
+import frc.robot.commands.CDSForwardCommand;
+import frc.robot.commands.CDSReverseCommand;
+
 
  // This class is where the bulk of the robot should be declared. Since Command-based is a
  // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -37,13 +44,15 @@ import com.revrobotics.SparkMaxPIDController;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+
+
   private final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
   private JoystickButton[] mButtons = new JoystickButton[11];
 
 
   // subsystems
   private final DriveBaseSubsystem mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
-  private final HopperSubsystem mHopperSubsystem = new HopperSubsystem();
+  private final CDSSubsystem mCDSSubsystem = new CDSSubsystem();
   private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
 
 
@@ -54,10 +63,11 @@ public class RobotContainer {
   private HopperCommand mHopperCommand = new HopperCommand(mHopperSubsystem);
 
   // auton
-  private ArrayList<Trajectory> mTrajectories;
+  private ArrayList<Trajectory> mTrajectories;  // multiple trajectories
   
-  // TODO: create multiple trajectories
-  
+  private CDSForwardCommand mCDSForwardCommand = new CDSForwardCommand(mCDSSubsystem);
+  private CDSReverseCommand mCDSReverseCommand = new CDSReverseCommand(mCDSSubsystem);
+
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
     // Configure the button bindings
@@ -84,7 +94,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
     mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
-    mButtons[Constants.kAButton].whileHeld(mHopperCommand);
+    mButtons[Constants.kXButton].whileHeld(mCDSForwardCommand);
+    mButtons[Constants.kBButton].whileHeld(mCDSReverseCommand);
   }
 
   public void initializeTrajectories() throws IOException {
@@ -139,6 +150,7 @@ public class RobotContainer {
     // An ExampleCommand will run in autonomous
     
   }
+
 
   // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way
   public DriveBaseSubsystem getDriveBase() {
