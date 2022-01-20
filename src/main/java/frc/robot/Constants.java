@@ -62,4 +62,30 @@ public final class Constants {
     public static final int kAButton = 1;           // Button for hopper
     public static final int kRightBumperButton = 5; // Button for intake 
     public static final int kLeftBumperButton = 6;  // Button to reverse intake
+    public static final int kXbutton = 3; // Button for Shooter
+    public static final int kDownbutton = 4; // Button for shooter mode
+    public static final int kUpbutton = 5; // Button for shooter mode
+
+    // Preset aim constants
+    public static final int kLOWRPM = 0; // RPM that the LOW aimMode winds to
+    public static final double kLOWAngle = 0.0; // Angle that the LOW aimMode adjusts to
+    public static final int kLAUNCHRPM = 0; // RPM that the LAUNCH aimMode winds to
+    public static final double kLAUNCHAngle = 0.0; // Angle that the LAUNCH aimMode adjusts to
+    public static final int kTARMACRPM = 0; // RPM that the TARMAC aimMode winds to
+    public static final double kTARMACAngle = 0.0; // Angle that the TARMAC aimMode adjusts to
+
+    // Shooter Domain
+    public static final int KShooterID = 1; // ID of the shooter
+    public static final int KHoodID = 2; // ID of the hood;
+    public static final double KShooterHeight = 3;
+    public static final double KHighHeight = 8.8;
+    public static final double KLowHeight = 5.8;
+    public static final double KAirboneTime = 1.2;
+    public static final double KGravity = 32.0;
+    public static final double KGearRatioIn = 34;
+    public static final double KGearRatioOut = 14;
+    public static final double KGearDiametter = 4; // Gear diametter in inches
+    public static final double KBallFlywheelratio = 2;
+    public static final int KShooterCargoID = 6;
+    public static final double kCargoRotation = 3;
 }
