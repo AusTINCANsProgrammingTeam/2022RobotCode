@@ -21,26 +21,26 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public DriveBaseSubsystem(Joystick joystick) {  
     driverJoystick = joystick;
     
-    differentialDrive = new DifferentialDrive(motorControllers[Constants.driveLeftFrontIndex].getSparkMax(), motorControllers[Constants.driveRightFrontIndex].getSparkMax());
+    differentialDrive = new DifferentialDrive(motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax(), motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
     
     // motor controllers
-    motorControllers[Constants.driveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.driveLeftFront);
-    motorControllers[Constants.driveLeftMiddleIndex] = new MotorController("Differential Left Middle", Constants.driveLeftMiddle);
-    motorControllers[Constants.driveLeftRearIndex] = new MotorController("Differential Left Rear", Constants.driveLeftRear);
-    motorControllers[Constants.driveRightFrontIndex] = new MotorController("Differential Right Front", Constants.driveRightFront);
-    motorControllers[Constants.driveRightMiddleIndex] = new MotorController("Differential Right Middle", Constants.driveRightMiddle);
-    motorControllers[Constants.driveRightRearIndex] = new MotorController("Differential Right Rear", Constants.driveRightRear);
+    motorControllers[Constants.kDriveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.kDriveLeftFront);
+    motorControllers[Constants.kDriveLeftMiddleIndex] = new MotorController("Differential Left Middle", Constants.kDriveLeftMiddle);
+    motorControllers[Constants.kDriveLeftRearIndex] = new MotorController("Differential Left Rear", Constants.kDriveLeftRear);
+    motorControllers[Constants.kDriveRightFrontIndex] = new MotorController("Differential Right Front", Constants.kDriveRightFront);
+    motorControllers[Constants.kDriveRightMiddleIndex] = new MotorController("Differential Right Middle", Constants.kDriveRightMiddle);
+    motorControllers[Constants.kDriveRightRearIndex] = new MotorController("Differential Right Rear", Constants.kDriveRightRear);
 
     // inverses right side motors (2022 wpilib doesn't default it to be inverted for differential drive)
-    motorControllers[Constants.driveRightFrontIndex].getSparkMax().setInverted(true);
-    motorControllers[Constants.driveRightMiddleIndex].getSparkMax().setInverted(true);
-    motorControllers[Constants.driveRightRearIndex].getSparkMax().setInverted(true);
+    motorControllers[Constants.kDriveRightFrontIndex].getSparkMax().setInverted(true);
+    motorControllers[Constants.kDriveRightMiddleIndex].getSparkMax().setInverted(true);
+    motorControllers[Constants.kDriveRightRearIndex].getSparkMax().setInverted(true);
 
     //Forces middle and rear motors of each side to follow the first
-    motorControllers[Constants.driveLeftRearIndex].getSparkMax().follow(motorControllers[Constants.driveLeftFrontIndex].getSparkMax());
-    motorControllers[Constants.driveLeftMiddleIndex].getSparkMax().follow(motorControllers[Constants.driveLeftFrontIndex].getSparkMax());
-    motorControllers[Constants.driveRightRearIndex].getSparkMax().follow(motorControllers[Constants.driveRightFrontIndex].getSparkMax());
-    motorControllers[Constants.driveRightMiddleIndex].getSparkMax().follow(motorControllers[Constants.driveRightFrontIndex].getSparkMax());
+    motorControllers[Constants.kDriveLeftRearIndex].getSparkMax().follow(motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax());
+    motorControllers[Constants.kDriveLeftMiddleIndex].getSparkMax().follow(motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax());
+    motorControllers[Constants.kDriveRightRearIndex].getSparkMax().follow(motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
+    motorControllers[Constants.kDriveRightMiddleIndex].getSparkMax().follow(motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
   }
 
   @Override
@@ -54,18 +54,18 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // Normal Arcade Drive
   public void arcadeDrive() {
-    differentialDrive.arcadeDrive(driverJoystick.getRawAxis(Constants.DBLeftJoystickAxisY), driverJoystick.getRawAxis(Constants.DBRightJoystickAxisY));
+    differentialDrive.arcadeDrive(driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
 
   }
 
   // tank drive, not used but good to have
   public void tankDrive() {
-    differentialDrive.tankDrive(driverJoystick.getRawAxis(Constants.DBLeftJoystickAxisY), driverJoystick.getRawAxis(Constants.DBRightJoystickAxisY));
+    differentialDrive.tankDrive(driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
   }
 
   // Arcade Drive where you can only move forwards and backwards for testing
   public void arcadeDrive(double rotation) {
-    differentialDrive.arcadeDrive(driverJoystick.getRawAxis(Constants.DBLeftJoystickAxisY), rotation);
+    differentialDrive.arcadeDrive(driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), rotation);
   }
 
   @Override
