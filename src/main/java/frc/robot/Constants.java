@@ -41,13 +41,20 @@ public final class Constants {
     public static final int kDriveBaseCurrentLimit = 40;
 
     // Intake Contstants 
+    public static final int kIntakeMotorOneIndex = 0;
+    public static final int kIntakeMotorTwoIndex = 1;
     public static final int kIntakeMotorOneID = 11;
     public static final int kIntakeMotorTwoID = 12;
     public static final double kIntakeMotorSpeed = 0.25;
 
-    //Hopper Constants
-    public static final int kHopperMotorThreeID = 13;
-    public static final double kHopperMotorSpeed = 0.25;
+    //CDS Constants
+    public static final int kCDSMotorThreeIndex = 0;
+    public static final int kCDSMotorThreeID = 13;
+    public static final int kCDSMotorFourID = 14;
+    public static final int kCDSMotorFiveID = 15;
+
+    public static final double kCDSWheelSpeed = 0.25;
+    public static final double kCDSBeltSpeed = 0.25;
 
     //Controller constants
     public static final int kDBLeftJoystickAxisX = 0;
@@ -59,7 +66,8 @@ public final class Constants {
     public static final int kPortNumber = 0;
     public static final int kJoystickButtonNumberOne = 1;
     public static final int kJoystickButtonNumberTwo = 2;
-    public static final int kAButton = 1;           // Button for hopper
+    public static final int kBButton = 2; // Button for hopper
+    public static final int kXButton = 3; // Button for reverse hopper
     public static final int kRightBumperButton = 5; // Button for intake 
     public static final int kLeftBumperButton = 6;  // Button to reverse intake
 }
