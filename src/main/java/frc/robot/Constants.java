@@ -74,18 +74,20 @@ public final class Constants {
     public static final int kTARMACRPM = 0; // RPM that the TARMAC aimMode winds to
     public static final double kTARMACAngle = 0.0; // Angle that the TARMAC aimMode adjusts to
 
-    // Shooter Domain
-    public static final int KShooterID = 7; // motor ID of the shooter
-    public static final int KHoodID = 8; // motor ID of the hood;
-    public static final double KShooterHeight = 3;
-    public static final double KHighHeight = 8.8;
-    public static final double KLowHeight = 5.8;
-    public static final double KAirboneTime = 1.2;
-    public static final double KGravity = 32.0;
-    public static final double KGearRatioIn = 34;
-    public static final double KGearRatioOut = 14;
-    public static final double KGearDiametter = 4; // Gear diametter in inches
-    public static final double KBallFlywheelratio = 2;
-    public static final int KShooterCargoID = 9; //motor ID of the shooter cargo motor
+    // Shooter Constants
+    public static final int kShooterID = 7; // ID of the shooter
+    public static final int kHoodID = 8; // ID of the hood;
+    public static final double kShooterHeight = 3;
+    public static final double kHighHeight = 8.0 + 8.0/12.0; // Height of the high goal in ft from the carpet
+    public static final double kLowHeight = 5.0 + 7.75/12.0; // Height of the low goal in ft from the carpet
+    public static final double kAirboneTime = 1.2;
+    public static final double kGravity = 32;
+    public static final double kLLHeight = 1.5; // Height of the limelight in ft from the carpet
+    public static final double kLLAngle = 30.0; // Angle that the limelight is mounted at
+    public static final double kGearRatioIn = 34;
+    public static final double kGearRatioOut = 14;
+    public static final double kGearDiameter = 4; // Gear diametter in inches
+    public static final double kBallFlywheelratio = 2;
+    public static final int kShooterCargoID = 9;
     public static final double kCargoRotation = 3;
 }
