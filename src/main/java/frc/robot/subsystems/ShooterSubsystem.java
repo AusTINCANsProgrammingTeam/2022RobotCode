@@ -175,7 +175,7 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    shooterRPM = sbShooterRPM.getDouble(0.0));
+    shooterRPM = sbShooterRPM.getDouble(0.0);
   }
 
 }
