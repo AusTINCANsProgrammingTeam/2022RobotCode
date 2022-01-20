@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.HopperSubsystem;
+import frc.robot.commands.DriveBaseTeleopCommand;
+import frc.robot.subsystems.Tabs.TabContainer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 
@@ -24,7 +24,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  
+  private TabContainer m_tabContainer;
+
   // This function is run when the robot is first started up and should be used for any
   // initialization code.
    
@@ -32,7 +33,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-  
+    m_robotContainer = new RobotContainer();
+    m_tabContainer = new TabContainer(m_robotContainer.getDriveBase());
   }
 
    // This function is called every robot packet, no matter the mode. Use this for items like
@@ -43,6 +45,8 @@ public class Robot extends TimedRobot {
   
   @Override
   public void robotPeriodic() {
+    m_tabContainer.periodic();
+
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic

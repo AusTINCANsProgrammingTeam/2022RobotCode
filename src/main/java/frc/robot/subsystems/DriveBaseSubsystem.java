@@ -9,28 +9,31 @@ import frc.robot.common.hardware.MotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
-
-
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 
 
 public class DriveBaseSubsystem extends SubsystemBase {
 
   private final Joystick m_driverJoystick;
-  private final MotorController[] m_motorControllers = new MotorController[6];
+  private final MotorController[] m_motorControllers;
   private final DifferentialDrive m_differentialDrive;
-  private final Gyro m_gyro;
+  //public static ADIS16448_IMU m_gyro; Non-native gyro, might use later
+  public static ADXRS450_Gyro m_gyro;
   private final DifferentialDriveOdometry m_odometry;
   
 
   public DriveBaseSubsystem(Joystick joystick) {  
     m_driverJoystick = joystick;
+    m_motorControllers = new MotorController[4];
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
-    m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax(), m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
+    m_gyro = new ADXRS450_Gyro();
+    m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax(), 
+                                          m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
     
+
     // motor controllers
     m_motorControllers[Constants.kDriveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.kDriveLeftFront);
     m_motorControllers[Constants.kDriveLeftRearIndex] = new MotorController("Differential Left Rear", Constants.kDriveLeftRear);
@@ -65,6 +68,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   }
 
   // Arcade Drive where you can only move forwards and backwards for testing
+  //TODO: Make a command to switch modes (only if we actually want this)
   public void arcadeDrive(double rotation) {
     m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), rotation);
   }
@@ -75,7 +79,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
                                   m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
   }
 
-  public void arcadeDriveVolts(double leftVolts, double rightVolts) {
+  public void setAutonVolts(double leftVolts, double rightVolts) {
     m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax().setVoltage(leftVolts);
     m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax().setVoltage(rightVolts);
     m_differentialDrive.feed();

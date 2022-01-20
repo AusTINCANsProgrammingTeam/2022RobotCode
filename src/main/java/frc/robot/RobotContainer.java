@@ -20,12 +20,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.HopperCommand;
+import com.revrobotics.SparkMaxPIDController;
+
 
  // This class is where the bulk of the robot should be declared. Since Command-based is a
  // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -34,8 +36,6 @@ import frc.robot.commands.HopperCommand;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-
-
   private final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
   private JoystickButton[] mButtons = new JoystickButton[11];
 
@@ -58,7 +58,7 @@ public class RobotContainer {
   String trajectoryJSON = "deploy/Test.wpilib.json";
   Trajectory trajectory = new Trajectory();
   
-  // multiple trajectory projects
+  // TODO: create multiple trajectories
   
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
@@ -66,7 +66,9 @@ public class RobotContainer {
     for (int i = 1; i < mButtons.length; i++) {
       mButtons[i] = new JoystickButton(mDriverJoystick, i);
     }
-    configureButtonBindings();    
+    configureButtonBindings();
+    
+    mDriveBaseSubsystem.setDefaultCommand(mDriveBaseTeleopCommand);
   }
 
   // Use this method to define your button->command mappings. Buttons can be created by
@@ -79,25 +81,7 @@ public class RobotContainer {
     mButtons[Constants.kAButton].whileHeld(mHopperCommand);
   }
 
-  //Ramsete Command for Pathweaver
-  RamseteCommand ramseteCommand =
-        new RamseteCommand(
-            trajectory,
-            mDriveBaseSubsystem::getPose,
-            new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta), //Fix these constants by
-            //characterizing the robot
-            new SimpleMotorFeedforward(
-                Constants.ksVolts,
-                Constants.kvVoltSecondsPerMeter,
-                Constants.kaVoltSecondsSquaredPerMeter),
-            Constants.kDriveKinematics,
-            
-            mDriveBaseSubsystem::getWheelSpeeds,
-            new PIDController(Constants.kPDriveVel, 0, 0),
-            new PIDController(Constants.kPDriveVel, 0, 0),
-            //RamseteCommand passes volts to the callback
-            mDriveBaseSubsystem::arcadeDriveVolts,
-            mDriveBaseSubsystem);
+  
             
   // Use this to pass the autonomous command to the main {@link Robot} class.
   // @return the command to run in autonomous
@@ -110,9 +94,37 @@ public class RobotContainer {
       DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
     }
 
-    
-    return null;
+    //Ramsete Command for Pathweaver
+    RamseteCommand ramseteCommand =
+    new RamseteCommand(
+        trajectory,
+        mDriveBaseSubsystem::getPose,
+        new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta), //Fix these constants by
+        //characterizing the robot
+        new SimpleMotorFeedforward(
+            Constants.ksVolts,
+            Constants.kvVoltSecondsPerMeter,
+            Constants.kaVoltSecondsSquaredPerMeter),
+        Constants.kDriveKinematics,
+        
+        mDriveBaseSubsystem::getWheelSpeeds,
+        new SparkMaxPIDController(Constants.kPDriveVel, 0, 0),
+        new SparkMaxPIDController(Constants.kPDriveVel, 0, 0),
+        //RamseteCommand passes volts to the callback
+        mDriveBaseSubsystem::setAutonVolts,
+        mDriveBaseSubsystem);
+      return null;
+
     // An ExampleCommand will run in autonomous
     
+  }
+
+  // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way
+  public DriveBaseSubsystem getDriveBase() {
+    return mDriveBaseSubsystem;
+  }
+
+  public DriveBaseTeleopCommand getDefaulDriveCommand() {
+    return mDriveBaseTeleopCommand;
   }
 }
