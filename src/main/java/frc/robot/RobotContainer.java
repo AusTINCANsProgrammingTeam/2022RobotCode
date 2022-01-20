@@ -25,7 +25,9 @@ import frc.robot.commands.CDSReverseCommand;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
+
+
+  private final Joystick mDriverJoystick = new Joystick(Constants.portNumber);
   private JoystickButton[] mButtons = new JoystickButton[11];
 
 
@@ -56,10 +58,10 @@ public class RobotContainer {
   // edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
   // edu.wpi.first.wpilibj2.command.button.JoystickButton}.
   private void configureButtonBindings() {
-    mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
-    mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
-    mButtons[Constants.kXButton].whileHeld(mCDSForwardCommand);
-    mButtons[Constants.kBButton].whileHeld(mCDSReverseCommand);
+    mButtons[Constants.leftBumperButton].whileHeld(mIntakeForwardCommand);
+    mButtons[Constants.rightBumperButton].whileHeld(mIntakeReverseCommand);
+    mButtons[Constants.XButton].whileHeld(mCDSForwardCommand);
+    mButtons[Constants.BButton].whileHeld(mCDSReverseCommand);
   }
 
   // Use this to pass the autonomous command to the main {@link Robot} class.
