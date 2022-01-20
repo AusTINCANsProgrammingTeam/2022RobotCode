@@ -75,8 +75,8 @@ public final class Constants {
     public static final double kTARMACAngle = 0.0; // Angle that the TARMAC aimMode adjusts to
 
     // Shooter Domain
-    public static final int KShooterID = 1; // ID of the shooter
-    public static final int KHoodID = 2; // ID of the hood;
+    public static final int KShooterID = 7; // motor ID of the shooter
+    public static final int KHoodID = 8; // motor ID of the hood;
     public static final double KShooterHeight = 3;
     public static final double KHighHeight = 8.8;
     public static final double KLowHeight = 5.8;
@@ -86,6 +86,6 @@ public final class Constants {
     public static final double KGearRatioOut = 14;
     public static final double KGearDiametter = 4; // Gear diametter in inches
     public static final double KBallFlywheelratio = 2;
-    public static final int KShooterCargoID = 6;
+    public static final int KShooterCargoID = 9; //motor ID of the shooter cargo motor
     public static final double kCargoRotation = 3;
 }
