@@ -2,16 +2,17 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class ShooterModeCycleDown extends CommandBase {
-  /** Creates a new ShooterModeCycleDown. */
+import edu.wpi.first.wpilibj2.command.CommandBase;
+
+public class ShooterPrime extends CommandBase {
   private ShooterSubsystem m_ShooterSubsystem;
 
-  public ShooterModeCycleDown(ShooterSubsystem shooterSubsystem) {
+  /** Creates a new ShooterPrimary. */
+  public ShooterPrime(ShooterSubsystem shooterSubsystem) {
     addRequirements(shooterSubsystem);
     m_ShooterSubsystem = shooterSubsystem;
 
@@ -21,7 +22,8 @@ public class ShooterModeCycleDown extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_ShooterSubsystem.cycleAimModeDown();
+    m_ShooterSubsystem.prime();
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,6 +39,6 @@ public class ShooterModeCycleDown extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

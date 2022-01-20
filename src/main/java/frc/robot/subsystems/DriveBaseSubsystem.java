@@ -21,8 +21,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public DriveBaseSubsystem(Joystick joystick) {  
     m_driverJoystick = joystick;
     
-    m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax(), m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
-    
     // motor controllers
     m_motorControllers[Constants.kDriveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.kDriveLeftFront);
     m_motorControllers[Constants.kDriveLeftMiddleIndex] = new MotorController("Differential Left Middle", Constants.kDriveLeftMiddle);
@@ -41,6 +39,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.kDriveLeftMiddleIndex].getSparkMax().follow(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax());
     m_motorControllers[Constants.kDriveRightRearIndex].getSparkMax().follow(m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
     m_motorControllers[Constants.kDriveRightMiddleIndex].getSparkMax().follow(m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
+
+    m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax(), m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
   }
 
   @Override
@@ -80,6 +80,15 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public void stopMotorsFunction() {
     // Calls Arcade Drive with a zero to both speed and rotation in order to stop the motors
     m_differentialDrive.arcadeDrive(0.0, 0.0);
+  }
+
+  // TODO: return actual speeds
+  public double getLeftSpeed() {
+    return 0.0;
+  }
+
+  public double getRightSpeed() {
+    return 0.0;
   }
 
 
