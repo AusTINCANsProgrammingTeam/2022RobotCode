@@ -30,8 +30,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers = new MotorController[4];
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
     m_gyro = new ADXRS450_Gyro();
-    m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax(), 
-                                          m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
     
 
     // motor controllers
@@ -47,6 +45,10 @@ public class DriveBaseSubsystem extends SubsystemBase {
     //Forces middle and rear motors of each side to follow the first
     m_motorControllers[Constants.kDriveLeftRearIndex].setFollow(m_motorControllers[Constants.kDriveLeftFrontIndex]);
     m_motorControllers[Constants.kDriveRightRearIndex].setFollow(m_motorControllers[Constants.kDriveRightFrontIndex]);
+
+    // differential drive
+    m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax(), 
+                                          m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
   }
 
   @Override

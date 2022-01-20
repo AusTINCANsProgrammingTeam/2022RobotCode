@@ -9,7 +9,8 @@ import frc.robot.subsystems.DriveBaseSubsystem;
 
 import java.io.IOException;
 import java.nio.file.Path;
-
+import java.util.ArrayList;
+import java.util.Scanner;
 
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
@@ -53,10 +54,7 @@ public class RobotContainer {
   private HopperCommand mHopperCommand = new HopperCommand(mHopperSubsystem);
 
   // auton
-
-  // for pathfinding
-  String trajectoryJSON = "deploy/Test.wpilib.json";
-  Trajectory trajectory = new Trajectory();
+  private ArrayList<Trajectory> mTrajectories;
   
   // TODO: create multiple trajectories
   
@@ -66,8 +64,16 @@ public class RobotContainer {
     for (int i = 1; i < mButtons.length; i++) {
       mButtons[i] = new JoystickButton(mDriverJoystick, i);
     }
+
     configureButtonBindings();
     
+    try {
+      initializeTrajectories();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
     mDriveBaseSubsystem.setDefaultCommand(mDriveBaseTeleopCommand);
   }
 
@@ -81,23 +87,38 @@ public class RobotContainer {
     mButtons[Constants.kAButton].whileHeld(mHopperCommand);
   }
 
-  
+  public void initializeTrajectories() throws IOException {
+    String trajectoryJSON = "deploy/One.wpilib.json";
+    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+    Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    mTrajectories.add(trajectory);
+
+    trajectoryJSON = "deploy/Two.wpilib.json";
+    trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+    trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    mTrajectories.add(trajectory);
+
+    trajectoryJSON = "deploy/Three.wpilib.json";
+    trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+    trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    mTrajectories.add(trajectory);
+
+    trajectoryJSON = "deploy/Four.wpilib.json";
+    trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+    trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    mTrajectories.add(trajectory);
+  }
+
+  private int trajectoryIndex = 0;
             
   // Use this to pass the autonomous command to the main {@link Robot} class.
   // @return the command to run in autonomous
   public Command getAutonomousCommand() {
 
-    try {
-      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-      trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-    } catch (IOException ex) {
-      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-    }
-
     //Ramsete Command for Pathweaver
     RamseteCommand ramseteCommand =
     new RamseteCommand(
-        trajectory,
+        mTrajectories.get(trajectoryIndex++),
         mDriveBaseSubsystem::getPose,
         new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta), //Fix these constants by
         //characterizing the robot
