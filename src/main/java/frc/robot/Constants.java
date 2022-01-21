@@ -14,8 +14,6 @@ package frc.robot;
  */
 public final class Constants {
     //Distance calculation constants
-    public static final double kLLHeight = 1.5; //Height of the limelight in ft from the carpet
-    public static final double kLLAngle = 30.0; //Angle that the limelight is mounted at
     public static final double kGoalHeight = 8.8; //Height of the goal in ft from the carpet
   
     // TODO: Swap placeholder motor IDs & Button Ports and Numbers for real ones 

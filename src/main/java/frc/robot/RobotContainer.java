@@ -28,8 +28,7 @@ import frc.robot.subsystems.ShooterSubsystem;
  // subsystems, commands, and button mappings) should be declared here.
 
 public class RobotContainer {
-  public static ShuffleboardTab debugTab;
-
+  public static ShuffleboardTab debugTab = Shuffleboard.getTab("debug");
   // The robot's subsystems and commands are defined here...
   private final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
   private JoystickButton[] mButtons = new JoystickButton[11];
@@ -51,7 +50,6 @@ public class RobotContainer {
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
-    debugTab = Shuffleboard.getTab("debug");
     // Configure the button bindings
     for (int i = 1; i < mButtons.length; i++) {
       mButtons[i] = new JoystickButton(mDriverJoystick, i);

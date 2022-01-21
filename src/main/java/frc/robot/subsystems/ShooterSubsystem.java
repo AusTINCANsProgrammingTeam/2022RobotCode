@@ -47,14 +47,14 @@ public class ShooterSubsystem extends SubsystemBase {
     sbShooterRPM = RobotContainer.debugTab.add("shooterRPM", 0).getEntry();
 
     aimMode = 1;
-    cargo_motorController = new MotorController("Shooter Cargo", Constants.KShooterCargoID);
+    cargo_motorController = new MotorController("Shooter Cargo", Constants.kShooterCargoID);
     kCargoController = cargo_motorController.getPID();
     kCargoEncoder = cargo_motorController.getEncoder();
 
-    shooter_motorController = new MotorController("Shooter", Constants.KShooterID);
+    shooter_motorController = new MotorController("Shooter", Constants.kShooterID);
     KShooterController = shooter_motorController.getPID();
     KShooterEncoder = shooter_motorController.getEncoder();
-    hood_motorController = new MotorController("Hood", Constants.KHoodID);
+    hood_motorController = new MotorController("Hood", Constants.kHoodID);
     KHoodController = hood_motorController.getPID();
     KHoodEncoder = shooter_motorController.getEncoder();
 
@@ -128,14 +128,14 @@ public class ShooterSubsystem extends SubsystemBase {
     double Velocity1 = Math.abs(x / (Math.cos(Math.toRadians(Fangle)) * t));
     double Velocity2 = Math.abs((y - y0 + (g / 2.0) * (Math.pow(t, 2))) / (Math.sin(Math.toRadians(Fangle)) * t));
     double[] VandA = new double[2];
-    VandA[0] = UnitConversion(Velocity1, Constants.KGearDiametter);
+    VandA[0] = UnitConversion(Velocity1, Constants.kGearDiameter);
     VandA[1] = Fangle;
     return VandA;
 
   }
 
   public double UnitConversion(double KBallSpeed, double GearDiametter) {
-    double KFlywheelrpm = ((KBallSpeed * 12) / Constants.KGearDiametter) * Constants.KBallFlywheelratio;
+    double KFlywheelrpm = ((KBallSpeed * 12) / Constants.kGearDiameter) * Constants.kBallFlywheelratio;
     return KFlywheelrpm;
     // Convert from Ft/Second of the ball into RPM
 
@@ -152,11 +152,11 @@ public class ShooterSubsystem extends SubsystemBase {
         break;
       case 1: // Case for AUTO mode, calculates trajectory and winds flywheel/adjusts hood to
               // a dynamic state
-        adjustHood(ProjectilePrediction(Constants.KShooterHeight, 0, Constants.KHighHeight, getDistance(),
-            Constants.KGravity, Constants.KAirboneTime)[1]);
+        adjustHood(ProjectilePrediction(Constants.kShooterHeight, 0, Constants.kHighHeight, getDistance(),
+            Constants.kGravity, Constants.kAirboneTime)[1]);
 
-        windFlywheel((int) (Math.ceil(ProjectilePrediction(Constants.KShooterHeight, 0, Constants.KHighHeight,
-            getDistance(), 32, Constants.KAirboneTime)[0])));
+        windFlywheel((int) (Math.ceil(ProjectilePrediction(Constants.kShooterHeight, 0, Constants.kHighHeight,
+            getDistance(), 32, Constants.kAirboneTime)[0])));
 
         break;
       case 2: // Case for LAUNCH mode, winds flywheel to preset RPM and adjusts hood to preset
@@ -175,7 +175,8 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    shooterRPM = sbShooterRPM.getDouble(0.0);
-  }
+    shooterRPM = sbShooterRPM.getNumber(Integer.valueOf(shooterRPM)).intValue();
+    //System.out.println("shooterRPM is "+shooterRPM);
 
+  }
 }
