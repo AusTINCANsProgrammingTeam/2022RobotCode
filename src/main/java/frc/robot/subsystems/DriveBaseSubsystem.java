@@ -9,10 +9,11 @@ import frc.robot.common.hardware.MotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import com.revrobotics.CANSparkMax;
 
 
 public class DriveBaseSubsystem extends SubsystemBase {
@@ -98,6 +99,14 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public void stopMotorsFunction() {
     // Calls Arcade Drive with a zero to both speed and rotation in order to stop the motors
     m_differentialDrive.arcadeDrive(0.0, 0.0);
+  }
+
+  public CANSparkMax getRightMotor() {
+    return m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax();
+  }
+
+  public CANSparkMax getLeftMotor() {
+    return m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax();
   }
 
   // return speed of left side motors

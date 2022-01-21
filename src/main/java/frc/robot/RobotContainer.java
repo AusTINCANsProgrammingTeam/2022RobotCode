@@ -10,24 +10,18 @@ import frc.robot.subsystems.DriveBaseSubsystem;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import frc.robot.subsystems.HopperSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.commands.IntakeForwardCommand;
-import frc.robot.commands.IntakeReverseCommand;
-import frc.robot.commands.HopperCommand;
-import com.revrobotics.SparkMaxPIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -60,7 +54,6 @@ public class RobotContainer {
   private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
   private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
   private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
-  private HopperCommand mHopperCommand = new HopperCommand(mHopperSubsystem);
 
   // auton
   private ArrayList<Trajectory> mTrajectories;  // multiple trajectories
@@ -132,16 +125,17 @@ public class RobotContainer {
         mTrajectories.get(trajectoryIndex++),
         mDriveBaseSubsystem::getPose,
         new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta), //Fix these constants by
-        //characterizing the robot
+                                                                            //characterizing the robot
         new SimpleMotorFeedforward(
             Constants.ksVolts,
             Constants.kvVoltSecondsPerMeter,
             Constants.kaVoltSecondsSquaredPerMeter),
+
         Constants.kDriveKinematics,
         
         mDriveBaseSubsystem::getWheelSpeeds,
-        new SparkMaxPIDController(Constants.kPDriveVel, 0, 0),
-        new SparkMaxPIDController(Constants.kPDriveVel, 0, 0),
+        new PIDController(1, 0, 0),
+        new PIDController(1, 0, 0),
         //RamseteCommand passes volts to the callback
         mDriveBaseSubsystem::setAutonVolts,
         mDriveBaseSubsystem);

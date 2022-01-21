@@ -3,8 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
-
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -45,12 +44,11 @@ public final class Constants {
 
     //TODO: Calibrate robot with correct values - These are just placeholers
     //Note: below comments might not be entirely accurate
-    public static final double ksVolts = 0.22; //Volts
-    public static final double kvVoltSecondsPerMeter = 1.98; //Velocity
+    public static final double ksVolts = 0.22;                     //Volts
+    public static final double kvVoltSecondsPerMeter = 1.98;       //Velocity
     public static final double kaVoltSecondsSquaredPerMeter = 0.2; //Accelleration
-    public static final double kPDriveVel = 8.5; //Velocity
-    public static final DifferentialDriveKinematics kDriveKinematics =
-        new DifferentialDriveKinematics(0.5); // Replace 0.5 with track width in meters
+    public static final double kPDriveVel = 8.5;                   //Velocity
+    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(0.5);    // Replace 0.5 with track width in meters
 
     
     //Controller constants
