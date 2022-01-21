@@ -47,7 +47,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public void periodic() {
     // Update the smart dashboard in here, runs a for loop so it does it for every motor
     for(int i = 0; i < m_motorControllers.length; i++) {
-      m_motorControllers[i].updateSmartDashboard();
+   //   m_motorControllers[i].updateSmartDashboard();
     }
  
   }

@@ -31,19 +31,19 @@ public class RobotContainer {
   private JoystickButton[] mButtons = new JoystickButton[11];
 
   // subsystems
-  private final DriveBaseSubsystem mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
+/*  private final DriveBaseSubsystem mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
   private final HopperSubsystem mHopperSubsystem = new HopperSubsystem();
-  private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
+  private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem(); */
   private final ShooterSubsystem mShooterSubsystem = new ShooterSubsystem();
 
   // commands
-  private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
+ /* private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
   private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
   private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
   private HopperCommand mHopperCommand = new HopperCommand(mHopperSubsystem);
   private ShooterModeCycleDown mShooterModeCycleDown = new ShooterModeCycleDown(mShooterSubsystem);
-  private ShooterModeCycleUp mShooterModeCycleUp = new ShooterModeCycleUp(mShooterSubsystem);
-  private ShooterPrime mShooterPrimary = new ShooterPrime(mShooterSubsystem);
+  private ShooterModeCycleUp mShooterModeCycleUp = new ShooterModeCycleUp(mShooterSubsystem); */
+  private ShooterPrime mShooterPrime = new ShooterPrime(mShooterSubsystem); 
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
@@ -63,14 +63,14 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Intake
-    mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
-    mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
-    mButtons[Constants.kAButton].whileHeld(mHopperCommand);
+ //   mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
+ //   mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
+ //   mButtons[Constants.kAButton].whileHeld(mHopperCommand);
 
     // Shooter
-    mButtons[Constants.kXbutton].whenPressed(mShooterPrimary);
-    mButtons[Constants.kUpbutton].whenPressed(mShooterModeCycleUp);
-    mButtons[Constants.kDownbutton].whenPressed(mShooterModeCycleDown);
+    mButtons[Constants.kXbutton].whenPressed(mShooterPrime);
+ //   mButtons[Constants.kUpbutton].whenPressed(mShooterModeCycleUp);
+ //   mButtons[Constants.kDownbutton].whenPressed(mShooterModeCycleDown);
   }
 
   // Use this to pass the autonomous command to the main {@link Robot} class.
@@ -82,7 +82,7 @@ public class RobotContainer {
   }
 
   // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way
-  public DriveBaseSubsystem getDriveBase() {
+ /* public DriveBaseSubsystem getDriveBase() {
     return mDriveBaseSubsystem;
-  }
+  } */
 }

@@ -22,13 +22,13 @@ public class ShooterPrime extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_ShooterSubsystem.prime();
 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    m_ShooterSubsystem.windFlywheelTest(3600); //CHANGED FOR TESTING
   }
 
   // Called once the command ends or is interrupted.
@@ -40,10 +40,10 @@ public class ShooterPrime extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_ShooterSubsystem.wheelReady()){
-      m_ShooterSubsystem.shoot();
-      return true;
-    }
+ //   if(m_ShooterSubsystem.wheelReady()){
+ //     m_ShooterSubsystem.shoot();
+ //     return true;
+ //   }
     return false;
   }
 }

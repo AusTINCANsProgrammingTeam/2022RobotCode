@@ -22,7 +22,7 @@ public class ShooterPrimary extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_ShooterSubsystem.prime();
+    m_ShooterSubsystem.windFlywheelTest(32); //CHANGED FOR TESTING 
 
   }
 

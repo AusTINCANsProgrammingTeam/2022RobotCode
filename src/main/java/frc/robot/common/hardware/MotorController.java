@@ -23,9 +23,11 @@ public class MotorController {
     public MotorController(String name, int deviceID) {
         mName = name;
         mSparkMax = new CANSparkMax(deviceID, MotorType.kBrushless);
-
+        mPIDController = mSparkMax.getPIDController();
+        setPID();
         mEncoder = mSparkMax.getEncoder();
         mSparkMax.restoreFactoryDefaults();
+
     }
 
 
@@ -65,8 +67,11 @@ public class MotorController {
         SmartDashboard.putNumber(mName+" I Value", mI);
         SmartDashboard.putNumber(mName+" D Value", mD);
     }
+    public void setSpeed(double speed) {
+        mSparkMax.set(speed);
+    }
 
-    // Updates the Smart Dashboard and checks the PID values to determine if update is needed
+  /*  // Updates the Smart Dashboard and checks the PID values to determine if update is needed
     public void updateSmartDashboard() {
         // The simulation crashes whenever .getEncoder() is called
         if(mPIDController != null) {
@@ -83,6 +88,6 @@ public class MotorController {
                 mPIDController.setD(mD);
             }
         }
-    }
+    }*/
 
 }

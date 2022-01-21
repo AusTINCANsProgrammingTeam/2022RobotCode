@@ -23,6 +23,7 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import org.opencv.core.Mat;
 import com.revrobotics.RelativeEncoder;
 import frc.robot.common.hardware.MotorController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterSubsystem extends SubsystemBase {
   private int aimMode; // 0 is LOW, 1 is AUTO, 2 is LAUNCH, 3 is TARMAC, 4 is TEST
@@ -40,21 +41,26 @@ public class ShooterSubsystem extends SubsystemBase {
   public ShooterSubsystem() {
 
     aimMode = 1;
-    cargo_motorController = new MotorController("Shooter Cargo", Constants.kShooterCargoID);
-    kCargoController = cargo_motorController.getPID();
-    kCargoEncoder = cargo_motorController.getEncoder();
+  //  cargo_motorController = new MotorController("Shooter Cargo", Constants.kShooterCargoID);
+ //   kCargoController = cargo_motorController.getPID();
+  //  kCargoEncoder = cargo_motorController.getEncoder();
 
     shooter_motorController = new MotorController("Shooter", Constants.kShooterID);
+
     KShooterController = shooter_motorController.getPID();
     KShooterEncoder = shooter_motorController.getEncoder();
-    hood_motorController = new MotorController("Hood", Constants.kHoodID);
-    KHoodController = hood_motorController.getPID();
-    KHoodEncoder = shooter_motorController.getEncoder();
+ //   hood_motorController = new MotorController("Hood", Constants.kHoodID);
+ //   KHoodController = hood_motorController.getPID();
+ //   KHoodEncoder = shooter_motorController.getEncoder();
 
+  }
+  public void windFlywheelTest(int rpm){
+   //shooter_motorController.setSpeed(0.1);
+   SmartDashboard.putNumber("error number",(double)KShooterController.setReference((double)rpm, CANSparkMax.ControlType.kVelocity).ordinal());
   }
 
   public void adjustHood(double a) {
-    KHoodController.setReference(a, CANSparkMax.ControlType.kPosition);
+ //   KHoodController.setReference(a, CANSparkMax.ControlType.kPosition);
 
     // Adjusts Hood using PID control to passed angle a
   }

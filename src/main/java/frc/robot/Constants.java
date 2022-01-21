@@ -36,7 +36,7 @@ public final class Constants {
     public static final int kDriveBaseCurrentLimit = 40;
 
     // Intake Contstants 
-    public static final int kIntakeMotorOneID = 11;
+    public static final int kIntakeMotorOneID = 9;
     public static final int kIntakeMotorTwoID = 12;
     public static final double kIntakeMotorSpeed = 0.25;
 
@@ -57,7 +57,7 @@ public final class Constants {
     public static final int kAButton = 1;           // Button for hopper
     public static final int kRightBumperButton = 5; // Button for intake 
     public static final int kLeftBumperButton = 6;  // Button to reverse intake
-    public static final int kXbutton = 3; // Button for Shooter
+    public static final int kXbutton = 1; // Button for Shooter
     public static final int kDownbutton = 4; // Button for shooter mode
     public static final int kUpbutton = 5; // Button for shooter mode
 
@@ -70,7 +70,7 @@ public final class Constants {
     public static final double kTARMACAngle = 0.0; // Angle that the TARMAC aimMode adjusts to
 
     // Shooter Constants
-    public static final int kShooterID = 7; // ID of the shooter
+    public static final int kShooterID = 11; // ID of the shooter
     public static final int kHoodID = 8; // ID of the hood;
     public static final double kShooterHeight = 3;
     public static final double kHighHeight = 8.0 + 8.0/12.0; // Height of the high goal in ft from the carpet
@@ -83,6 +83,6 @@ public final class Constants {
     public static final double kGearRatioOut = 14;
     public static final double kGearDiameter = 4; // Gear diametter in inches
     public static final double kBallFlywheelratio = 2;
-    public static final int kShooterCargoID = 9;
+    public static final int kShooterCargoID = 7;
     public static final double kCargoRotation = 3;
 }
