@@ -10,11 +10,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class DriveBaseTeleopCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
-  private final DriveBaseSubsystem m_subsystem;
+  private final DriveBaseSubsystem subsystem;
 
   public DriveBaseTeleopCommand(DriveBaseSubsystem s) {
     addRequirements(s);
-    m_subsystem = s;
+    subsystem = s;
   }
 
   @Override
@@ -22,12 +22,12 @@ public class DriveBaseTeleopCommand extends CommandBase {
 
   @Override
   public void execute() {
-    m_subsystem.arcadeDrive();
+    subsystem.arcadeDrive();
   }
   
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.stopMotorsFunction();
+    subsystem.stopMotorsFunction();
   }
 
   @Override

@@ -27,28 +27,28 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
 
-  private final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
-  private JoystickButton[] mButtons = new JoystickButton[11];
+  private final Joystick driverJoystick = new Joystick(Constants.portNumber);
+  private JoystickButton[] buttons = new JoystickButton[11];
 
 
   // subsystems
-  private final DriveBaseSubsystem mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
-  private final CDSSubsystem mCDSSubsystem = new CDSSubsystem();
-  private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
+  private final DriveBaseSubsystem driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick);
+  private final CDSSubsystem CDSSubsystem = new CDSSubsystem();
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
 
   // commands
-  private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
-  private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
-  private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
-  private CDSForwardCommand mCDSForwardCommand = new CDSForwardCommand(mCDSSubsystem);
-  private CDSReverseCommand mCDSReverseCommand = new CDSReverseCommand(mCDSSubsystem);
+  private final DriveBaseTeleopCommand driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
+  private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
+  private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
+  private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
     // Configure the button bindings
-    for (int i = 1; i < mButtons.length; i++) {
-      mButtons[i] = new JoystickButton(mDriverJoystick, i);
+    for (int i = 1; i < buttons.length; i++) {
+      buttons[i] = new JoystickButton(driverJoystick, i);
     }
     configureButtonBindings();    
   }
@@ -58,23 +58,21 @@ public class RobotContainer {
   // edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
   // edu.wpi.first.wpilibj2.command.button.JoystickButton}.
   private void configureButtonBindings() {
-    mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
-    mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
-    mButtons[Constants.kXButton].whileHeld(mCDSForwardCommand);
-    mButtons[Constants.kBButton].whileHeld(mCDSReverseCommand);
+    buttons[Constants.leftBumperButton].whileHeld(intakeForwardCommand);
+    buttons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
+    buttons[Constants.XButton].whileHeld(CDSForwardCommand);
+    buttons[Constants.BButton].whileHeld(CDSReverseCommand);
   }
 
   // Use this to pass the autonomous command to the main {@link Robot} class.
   // @return the command to run in autonomous
   public Command getAutonomousCommand() {
     return null;
-    // An ExampleCommand will run in autonomous
-    
+    // An ExampleCommand will run in autonomous 
   }
-
 
   // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way
   public DriveBaseSubsystem getDriveBase() {
-    return mDriveBaseSubsystem;
+    return driveBaseSubsystem;
   }
 }
