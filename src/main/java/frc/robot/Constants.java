@@ -23,12 +23,12 @@ public final class Constants {
   
     // Actual IDs on robot, used to activate the right motors
     // TODO: Values to be changed, these are placeholder values for now
-    public static final int driveRightFront = 6;
-    public static final int driveRightMiddle = 1;
-    public static final int driveRightRear = 2;
-    public static final int driveLeftFront = 3;
-    public static final int driveLeftMiddle = 4;
-    public static final int driveLeftRear = 5;
+    public static final int driveRightFront = 21;
+    public static final int driveRightMiddle = 22;
+    public static final int driveRightRear = 23;
+    public static final int driveLeftFront = 24;
+    public static final int driveLeftMiddle = 25;
+    public static final int driveLeftRear = 26;
     
     // This is used for organizational purposes (Note numbers 0-5 to distinguish between the 6 motors)
     public static final int driveLeftFrontIndex = 0;
@@ -41,21 +41,15 @@ public final class Constants {
     public static final int driveBaseCurrentLimit = 40;
 
     // Intake Contstants 
-    public static final int intakeMotorOneIndex = 0;
-    public static final int intakeMotorTwoIndex = 1;
     public static final int intakeMotorOneID = 11;
-    public static final int intakeMotorTwoID = 12;
-    public static final double intakeMotorSpeed = 0.25;
+    public static final int intakeWheelOneID = 3;
+    public static final int intakeWheelTwoID = 4;
+    public static final double intakeMotorSpeed = 0.70;
 
     //CDS Constants
-    public static final int CDSMotorThreeIndex = 0;
-    public static final int CDSMotorThreeID = 13;
-    public static final int CDSMotorFourID = 14;
-    public static final int CDSMotorFiveID = 15;
-
-    public static final double CDSWheelSpeed = 0.25;
-    public static final double CDSBeltSpeed = 0.25;
-
+    public static final int CDSBeltID = 100;
+    public static final int CDSMotorID = 101;
+    public static final double CDSBeltSpeed = 0.70;
     public static final int ballSensorChannel = 0;
 
     //Controller constants
