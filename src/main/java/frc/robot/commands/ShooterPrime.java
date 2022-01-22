@@ -22,18 +22,20 @@ public class ShooterPrime extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_ShooterSubsystem.windFlywheelTest(3600);
 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_ShooterSubsystem.windFlywheelTest(3600); //CHANGED FOR TESTING
+   //CHANGED FOR TESTING
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_ShooterSubsystem.windFlywheelTest(0);
 
   }
 

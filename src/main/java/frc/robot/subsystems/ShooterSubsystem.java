@@ -45,8 +45,8 @@ public class ShooterSubsystem extends SubsystemBase {
  //   kCargoController = cargo_motorController.getPID();
   //  kCargoEncoder = cargo_motorController.getEncoder();
 
-    shooter_motorController = new MotorController("Shooter", Constants.kShooterID);
 
+    shooter_motorController = new MotorController("Shooter", Constants.kShooterID, 40, true);
     KShooterController = shooter_motorController.getPID();
     KShooterEncoder = shooter_motorController.getEncoder();
  //   hood_motorController = new MotorController("Hood", Constants.kHoodID);
@@ -56,8 +56,15 @@ public class ShooterSubsystem extends SubsystemBase {
   }
   public void windFlywheelTest(int rpm){
    //shooter_motorController.setSpeed(0.1);
-   SmartDashboard.putNumber("error number",(double)KShooterController.setReference((double)rpm, CANSparkMax.ControlType.kVelocity).ordinal());
-  }
+   //SmartDashboard.putNumber("run",1.0);
+      if (rpm ==0){
+        shooter_motorController.getPID().setReference(0, CANSparkMax.ControlType.kVoltage);
+      }
+      else{
+      shooter_motorController.getPID().setReference((double)rpm, CANSparkMax.ControlType.kVelocity);
+      //shooter_motorController.updateSmartDashboard();
+      }
+    }
 
   public void adjustHood(double a) {
  //   KHoodController.setReference(a, CANSparkMax.ControlType.kPosition);
@@ -174,6 +181,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("RPM", shooter_motorController.getEncoder().getVelocity());
     // This method will be called once per scheduler run
   }
 

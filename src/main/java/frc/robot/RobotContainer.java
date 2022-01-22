@@ -68,7 +68,7 @@ public class RobotContainer {
  //   mButtons[Constants.kAButton].whileHeld(mHopperCommand);
 
     // Shooter
-    mButtons[Constants.kXbutton].whenPressed(mShooterPrime);
+    mButtons[Constants.kXbutton].whileHeld(mShooterPrime);
  //   mButtons[Constants.kUpbutton].whenPressed(mShooterModeCycleUp);
  //   mButtons[Constants.kDownbutton].whenPressed(mShooterModeCycleDown);
   }
