@@ -106,28 +106,30 @@ public class RobotContainer {
   // @return the command to run in autonomous
   public Command getAutonomousCommand() {
 
-    // //Ramsete Command for Pathweaver
-    // RamseteCommand ramseteCommand =
-    // new RamseteCommand(
-    //     mTrajectories[trajectoryIndex++],
-    //     mDriveBaseSubsystem::getPose,
-    //     new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta), //Fix these constants by
-    //                                                                         //characterizing the robot
-    //     new SimpleMotorFeedforward(
-    //         Constants.ksVolts,
-    //         Constants.kvVoltSecondsPerMeter,
-    //         Constants.kaVoltSecondsSquaredPerMeter),
+    //Ramsete Command for Pathweaver
+    RamseteCommand ramseteCommand =
+    new RamseteCommand(
+        mTrajectories[trajectoryIndex],
+        mDriveBaseSubsystem::getPose,
+        new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta), //Fix these constants by
+                                                                            //characterizing the robot
+        new SimpleMotorFeedforward(
+            Constants.ksVolts,
+            Constants.kvVoltSecondsPerMeter,
+            Constants.kaVoltSecondsSquaredPerMeter),
 
-    //     Constants.kDriveKinematics,
+        Constants.kDriveKinematics,
         
-    //     mDriveBaseSubsystem::getWheelSpeeds,
-    //     new PIDController(1, 0, 0),
-    //     new PIDController(1, 0, 0),
-    //     //RamseteCommand passes volts to the callback
-    //     mDriveBaseSubsystem::setAutonVolts,
-    //     mDriveBaseSubsystem);
+        mDriveBaseSubsystem::getWheelSpeeds,
+        new PIDController(1, 0, 0),
+        new PIDController(1, 0, 0),
+        //RamseteCommand passes volts to the callback
+        mDriveBaseSubsystem::setAutonVolts,
+        mDriveBaseSubsystem);
         
-    return null;
+    mDriveBaseSubsystem.resetOdometry(mTrajectories[trajectoryIndex].getInitialPose());
+
+    return ramseteCommand.andThen(() -> mDriveBaseSubsystem.setAutonVolts(0,0));
   }
 
 
@@ -136,7 +138,4 @@ public class RobotContainer {
     return mDriveBaseSubsystem;
   }
 
-  public DriveBaseTeleopCommand getDefaulDriveCommand() {
-    return mDriveBaseTeleopCommand;
-  }
 }

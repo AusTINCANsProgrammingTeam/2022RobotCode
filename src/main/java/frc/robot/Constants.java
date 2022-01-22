@@ -25,13 +25,13 @@ public final class Constants {
     // Actual IDs on robot, used to activate the right motors
     // TODO: Values to be changed, these are placeholder values for now
     // Might be reversed
-    public static final int kDriveRightFront = 15;
-    public static final int kDriveRightRear = 14;
-    public static final int kDriveLeftFront = 1;
-    public static final int kDriveLeftRear = 0;
+    public static final int kDriveRightFront = 1;
+    public static final int kDriveRightRear = 2;
+    public static final int kDriveLeftFront = 3;
+    public static final int kDriveLeftRear = 4;
     
     // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
-    public static final int kDriveLeftFrontIndex = 0;
+    public static final  int kDriveLeftFrontIndex = 0;
     public static final int kDriveLeftRearIndex = 1;
     public static final int kDriveRightFrontIndex = 2;
     public static final int kDriveRightRearIndex = 3;

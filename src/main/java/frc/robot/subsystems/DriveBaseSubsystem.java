@@ -23,14 +23,17 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private final DifferentialDrive m_differentialDrive;
   //public static ADIS16448_IMU m_gyro; Non-native gyro, might use later
   public static ADXRS450_Gyro m_gyro;
-  //private final DifferentialDriveOdometry m_odometry;
+  private final DifferentialDriveOdometry m_odometry;
+
+  // TODO: make left side encoder
+  // TODO: make right side encoder
   
 
   public DriveBaseSubsystem(Joystick joystick) {  
     m_driverJoystick = joystick;
     m_motorControllers = new MotorController[4];
-    //m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
-    //m_gyro = new ADXRS450_Gyro();
+    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
+    m_gyro = new ADXRS450_Gyro();
     
 
     // motor controllers
@@ -71,7 +74,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // Arcade Drive where you can only move forwards and backwards for testing
   //TODO: Make a command to switch modes (only if we actually want this)
-  public void arcadeDrivedos(double rotation) {
+  public void arcadeDrive(double rotation) {
     //m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), rotation);
   }
 
@@ -111,21 +114,31 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // return speed of left side motors
   public double getLeftSpeed() {
-    return m_motorControllers[Constants.kDriveLeftFrontIndex].getWheelSpeed();
+    return m_motorControllers[Constants.kDriveLeftFrontIndex].getSpeed();
   }
 
   // return speed of right side motors
   public double getRightSpeed() {
-    return m_motorControllers[Constants.kDriveRightFrontIndex].getWheelSpeed();
+    return m_motorControllers[Constants.kDriveRightFrontIndex].getSpeed();
   }
 
-  // public Pose2d getPose() {
-  //   return m_odometry.getPoseMeters();
-  // }
+  public Pose2d getPose() {
+    return m_odometry.getPoseMeters();
+  }
 
-  // public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-  //   return new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
-  // }
+  public void resetOdometry(Pose2d pose) {
+    //reset encoders here
+    resetEncoders();
+    m_odometry.resetPosition(pose, m_gyro.getRotation2d());
+  }
+
+  private void resetEncoders() {
+    
+  }
+  
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
+  }
   
 
   // TODO: we can add more tankdrive co functions as extras later
