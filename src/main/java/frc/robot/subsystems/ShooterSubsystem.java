@@ -183,6 +183,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("RPM", shooter_motorController.getEncoder().getVelocity());
     // This method will be called once per scheduler run
+    shooter_motorController.updateSmartDashboard();
   }
 
 }
