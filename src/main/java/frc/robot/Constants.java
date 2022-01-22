@@ -24,10 +24,10 @@ public final class Constants {
   
     // Actual IDs on robot, used to activate the right motors
     // TODO: Values to be changed, these are placeholder values for now
-    public static final int kDriveRightFront = 1;
-    public static final int kDriveRightRear = 2;
-    public static final int kDriveLeftFront = 3;
-    public static final int kDriveLeftRear = 4;
+    public static final int kDriveRightFront = 21;
+    public static final int kDriveRightRear = 22;
+    public static final int kDriveLeftFront = 23;
+    public static final int kDriveLeftRear = 24;
     
     // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
     public static final int kDriveLeftFrontIndex = 0;
@@ -63,17 +63,17 @@ public final class Constants {
     public static final int intakeMotorOneIndex = 0;
     public static final int intakeMotorTwoIndex = 1;
     public static final int intakeMotorOneID = 11;
-    public static final int intakeMotorTwoID = 12;
-    public static final double intakeMotorSpeed = 0.25;
+    public static final int intakeMotorTwoID = 28;
+    public static final double intakeMotorSpeed = 0.70;
 
     //CDS Constants
     public static final int CDSMotorThreeIndex = 0;
     public static final int CDSMotorThreeID = 3;
-    public static final int CDSMotorFourID = 14;
-    public static final int CDSMotorFiveID = 15;
+    public static final int CDSMotorFourID = 4;
+    public static final int CDSMotorFiveID = 27;
 
-    public static final double CDSWheelSpeed = 0.25;
-    public static final double CDSBeltSpeed = 0.25;
+    public static final double CDSWheelSpeed = 0.70;
+    public static final double CDSBeltSpeed = 0.70;
 
     public static final int ballSensorChannel = 0;
 
@@ -81,8 +81,8 @@ public final class Constants {
     public static final int portNumber = 0;
     public static final int joysticbuttonNumberOne = 1;
     public static final int joysticbuttonNumberTwo = 2;
-    public static final int BButton = 2; // Button for hopper
-    public static final int XButton = 3; // Button for reverse hopper
+    public static final int AButton = 2; // Button for hopper
+    public static final int BButton = 3; // Button for reverse hopper
     public static final int rightBumperButton = 5; // Button for intake 
     public static final int leftBumperButton = 6;  // Button to reverse intake
 }

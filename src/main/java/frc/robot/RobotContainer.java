@@ -46,7 +46,7 @@ public class RobotContainer {
 
   // subsystems
  // private final DriveBaseSubsystem driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick);
-  private final CDSSubsystem CDSSubsystem = new CDSSubsystem();
+ // private final CDSSubsystem CDSSubsystem = new CDSSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
 
@@ -58,8 +58,8 @@ public class RobotContainer {
   // auton
  // private ArrayList<Trajectory> mTrajectories;  // multiple trajectories
   
-  private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
+  //private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+  //private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
@@ -87,8 +87,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     buttons[Constants.leftBumperButton].whileHeld(intakeForwardCommand);
     buttons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
-    buttons[Constants.XButton].whileHeld(CDSForwardCommand);
-    buttons[Constants.BButton].whileHeld(CDSReverseCommand);
+   // buttons[Constants.AButton].whileHeld(CDSForwardCommand);
+    //buttons[Constants.BButton].whileHeld(CDSReverseCommand);
   }
 
   /*public void initializeTrajectories() throws IOException {

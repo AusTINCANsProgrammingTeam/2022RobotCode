@@ -18,12 +18,18 @@ public class IntakeSubsystem extends SubsystemBase {
   
   private MotorController intakeMotorControllerOne;
   private MotorController intakeMotorControllerTwo;
+  private MotorController CDSWheelControllerOne;
+  private MotorController CDSWheelControllerTwo;
 
   public IntakeSubsystem() {
-    intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID);
-    intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.intakeMotorTwoID);
+    intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID, 40);
+    intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.intakeMotorTwoID, 40);
+    CDSWheelControllerOne =  new MotorController("Main CDS Wheel Controller", Constants.CDSMotorThreeID, 40);
+    CDSWheelControllerTwo = new MotorController("Follows CDS Wheel Controller", Constants.CDSMotorFourID, 40);
 
-    intakeMotorControllerTwo.getSparkMax().follow(intakeMotorControllerTwo.getSparkMax());
+    CDSWheelControllerOne.getSparkMax().follow(intakeMotorControllerOne.getSparkMax(), true);
+    CDSWheelControllerTwo.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
+    intakeMotorControllerTwo.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
   }
 
   public void IntakeSwitch(boolean on){    
