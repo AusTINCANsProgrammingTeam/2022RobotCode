@@ -32,8 +32,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public DriveBaseSubsystem(Joystick joystick) {  
     m_driverJoystick = joystick;
     m_motorControllers = new MotorController[4];
-    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
     m_gyro = new ADXRS450_Gyro();
+    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
+    
     
 
     // motor controllers
