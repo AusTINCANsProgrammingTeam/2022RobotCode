@@ -23,14 +23,14 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private final DifferentialDrive m_differentialDrive;
   //public static ADIS16448_IMU m_gyro; Non-native gyro, might use later
   public static ADXRS450_Gyro m_gyro;
-  private final DifferentialDriveOdometry m_odometry;
+  //private final DifferentialDriveOdometry m_odometry;
   
 
   public DriveBaseSubsystem(Joystick joystick) {  
     m_driverJoystick = joystick;
     m_motorControllers = new MotorController[4];
-    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
-    m_gyro = new ADXRS450_Gyro();
+    //m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
+    //m_gyro = new ADXRS450_Gyro();
     
 
     // motor controllers
@@ -71,8 +71,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // Arcade Drive where you can only move forwards and backwards for testing
   //TODO: Make a command to switch modes (only if we actually want this)
-  public void arcadeDrive(double rotation) {
-    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), rotation);
+  public void arcadeDrivedos(double rotation) {
+    //m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), rotation);
   }
 
   // tank drive, not used but good to have
@@ -119,13 +119,13 @@ public class DriveBaseSubsystem extends SubsystemBase {
     return m_motorControllers[Constants.kDriveRightFrontIndex].getWheelSpeed();
   }
 
-  public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
-  }
+  // public Pose2d getPose() {
+  //   return m_odometry.getPoseMeters();
+  // }
 
-  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
-  }
+  // public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+  //   return new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
+  // }
   
 
   // TODO: we can add more tankdrive co functions as extras later
