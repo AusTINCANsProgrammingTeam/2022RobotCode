@@ -9,79 +9,67 @@ import frc.robot.Constants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.common.hardware.MotorController;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.AnalogTrigger;
 
 /** Add your docs here. */
 public class CDSSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private MotorController CDSBeltController;
-  private MotorController CDSWheelControllerOne;
-  private MotorController CDSWheelControllerTwo;
+  private MotorController CDSMotorController2;
+
   private DigitalInput intitalBallSensor;
   private DigitalInput middleBallSensor;
   private DigitalInput finalBallSensor;
   private int ballCount = 0;
-  
+ 
+  //TODO: Figure out what CDS motor is for
   public CDSSubsystem() {
-    CDSBeltController = new MotorController("CDS Motor", Constants.CDSMotorThreeID);
-    CDSWheelControllerOne =  new MotorController("Main CDS Wheel Controller", Constants.CDSMotorFourID);
-    CDSWheelControllerTwo = new MotorController("Follows CDS Wheel Controller", Constants.CDSMotorFiveID);
-    
+    CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID);
+    CDSMotorController2 = new MotorController("CDS Motor 2", Constants.CDSMotorID);
+   
     intitalBallSensor = new DigitalInput(Constants.ballSensorChannel);
     middleBallSensor = new DigitalInput(Constants.ballSensorChannel);
     finalBallSensor = new DigitalInput(Constants.ballSensorChannel);
-
-    CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax());
   }
 
   public void CDSSwitch(boolean on) {
     if (on) {
-      double beltSmartSpeed = SmartDashboard.getNumber("Belt Speed", Constants.CDSBeltSpeed);
-      double wheelSmartSpeed = SmartDashboard.getNumber("Wheel Speed", Constants.CDSWheelSpeed);
-
-      CDSBeltController.getSparkMax().set(beltSmartSpeed);
-      CDSWheelControllerOne.getSparkMax().set(wheelSmartSpeed);
+      CDSBeltController.getSparkMax().set(Constants.CDSBeltSpeed);
       SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
-      SmartDashboard.putNumber("CDS Wheel Speed", Constants.CDSWheelSpeed);
     } else {
       CDSBeltController.getSparkMax().set(0.0);
-      CDSWheelControllerOne.getSparkMax().set(0.0);
       SmartDashboard.putNumber("CDS Motor Speed", 0);
     }
   }
 
   public void ForwardCDS() {
-    CDSBeltController.getSparkMax().setInverted(false);
-    CDSWheelControllerOne.getSparkMax().setInverted(false);
+    CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
     SmartDashboard.putString("CDS Belt Direction", "Forward");
-    SmartDashboard.putString("CDS Wheel Direction", "Forward");
   }
 
   public void ReverseCDS() {
-    CDSBeltController.getSparkMax().setInverted(true);
-    CDSWheelControllerOne.getSparkMax().setInverted(true);
+    CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
     SmartDashboard.putString("CDS Belt Direction", "Reverse");
-    SmartDashboard.putString("CDS Wheel Direction", "Reverse");
   }
 
   public boolean getDirection() {
     // true = inverted, false = forward
+    if (CDSBeltController.getSparkMax().get() > 0) {
+      return false;
+    } else {
     return CDSBeltController.getSparkMax().getInverted();
+    }
   }
 
   public boolean getInitialSensorStatus(){
     return intitalBallSensor.get();
   }
-
   public boolean getMiddleSensorStatus(){
     return middleBallSensor.get();
   }
-
   public boolean getFinalSensorStatus(){
     return finalBallSensor.get();
   }
-
   public void indexBall() {
     boolean initialSensorStatus = getInitialSensorStatus();
     boolean finalSensorStatus = getFinalSensorStatus();
@@ -91,7 +79,6 @@ public class CDSSubsystem extends SubsystemBase {
       } else {
         ballCount--;
       }
-
       if (ballCount > 2) {
         this.ReverseCDS();
         // TODO: Determine how long to run this for (convert back to going normal direction)
@@ -100,7 +87,6 @@ public class CDSSubsystem extends SubsystemBase {
       ballCount--;
     }
   }
-
   public int getBallCount() {
     return ballCount;
   }

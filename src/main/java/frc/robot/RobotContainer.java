@@ -36,7 +36,6 @@ public class RobotContainer {
   private final CDSSubsystem CDSSubsystem = new CDSSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
-
   // commands
   private final DriveBaseTeleopCommand driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
   private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
@@ -60,8 +59,6 @@ public class RobotContainer {
   private void configureButtonBindings() {
     buttons[Constants.leftBumperButton].whileHeld(intakeForwardCommand);
     buttons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
-    buttons[Constants.XButton].whileHeld(CDSForwardCommand);
-    buttons[Constants.BButton].whileHeld(CDSReverseCommand);
   }
 
   // Use this to pass the autonomous command to the main {@link Robot} class.

@@ -17,13 +17,17 @@ public class IntakeSubsystem extends SubsystemBase {
   // here. Call these from Commands.
   
   private MotorController intakeMotorControllerOne;
-  private MotorController intakeMotorControllerTwo;
+  private MotorController CDSWheelControllerOne;
+  private MotorController CDSWheelControllerTwo;
 
   public IntakeSubsystem() {
     intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID);
-    intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.intakeMotorTwoID);
+    CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.intakeWheelOneID, 40);
+    CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.intakeWheelTwoID, 40);
 
-    intakeMotorControllerTwo.getSparkMax().follow(intakeMotorControllerTwo.getSparkMax());
+    // Remove invert=true parameter if wheels aren't running correctly
+    CDSWheelControllerOne.getSparkMax().follow(intakeMotorControllerOne.getSparkMax(), true);
+    CDSWheelControllerTwo.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
   }
 
   public void IntakeSwitch(boolean on){    
@@ -39,12 +43,12 @@ public class IntakeSubsystem extends SubsystemBase {
   }
   
   public void ForwardIntake(){
-    intakeMotorControllerOne.getSparkMax().setInverted(false);
+    intakeMotorControllerOne.getSparkMax().set(Constants.intakeMotorSpeed);
     SmartDashboard.putString("Intake Motor Direction", "Forward");
   }
 
   public void ReverseIntake(){
-    intakeMotorControllerOne.getSparkMax().setInverted(true);
+    intakeMotorControllerOne.getSparkMax().set(-Constants.intakeMotorSpeed);
     SmartDashboard.putString("Intake Motor Direction", "Reverse");
   }
 
