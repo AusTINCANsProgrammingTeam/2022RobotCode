@@ -4,8 +4,14 @@
 
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.subsystems.Tabs.TabContainer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -19,9 +25,9 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   private TabContainer m_tabContainer;
-  
-   // This function is run when the robot is first started up and should be used for any
-   // initialization code.
+
+  // This function is run when the robot is first started up and should be used for any
+  // initialization code.
    
   @Override
   public void robotInit() {
@@ -45,6 +51,8 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+
+    // schedule driverbaseteleop command
     CommandScheduler.getInstance().run();
   }
 
