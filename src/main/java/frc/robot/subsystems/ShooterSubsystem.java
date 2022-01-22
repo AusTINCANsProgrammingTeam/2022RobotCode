@@ -110,28 +110,19 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double[] ProjectilePrediction(double y0, double x0, double y, double x, double g, double t) {
-    /**
-     * Fangle =math.degrees(math.atan((y-y0+1/2*g*(t**2))/x))
-     * velcocity1 = abs(x/(math.cos(math.radians(Fangle))*t))
-     * velcocity2 = abs((y-y0+(g/2.0)*(t**2))/(math.sin(math.radians(Fangle))*t))
-     * return Fangle, velcocity1, velcocity2
-     */
     x = x + 1; // Applies an offset to target goal center
-    double Fangle = Math.toDegrees(Math.atan((y - y0 + 1 / 2 * g * (Math.pow(t, 2))) / x));
-    double Velocity1 = Math.abs(x / (Math.cos(Math.toRadians(Fangle)) * t));
-    double Velocity2 = Math.abs((y - y0 + (g / 2.0) * (Math.pow(t, 2))) / (Math.sin(Math.toRadians(Fangle)) * t));
-    double[] VandA = new double[2];
-    VandA[0] = UnitConversion(Velocity1, Constants.kGearDiameter);
-    VandA[1] = Fangle;
-    return VandA;
+    double hoodAngle = Math.toDegrees(Math.atan((y - y0 + 1 / 2 * g * (Math.pow(t, 2))) / x)); //Finds angle to shoot at
+    double velocity = Math.abs(x / (Math.cos(Math.toRadians(hoodAngle)) * t)); //Finds velocity in feet per second to shoot at
+    double[] returnArray = new double[2];
+    returnArray[0] = UnitConversion(velocity, Constants.kGearDiameter); //Converts FPS to RPM
+    returnArray[1] = hoodAngle;
+    return returnArray;
 
   }
 
   public double UnitConversion(double KBallSpeed, double GearDiameter) {
-    double KFlywheelrpm = ((KBallSpeed * 12) / Constants.kGearDiameter) * Constants.kBallFlywheelratio;
-    return KFlywheelrpm;
-    // Convert from Ft/Second of the ball into RPM
-
+    // Convert from FPS of the ball into RPM
+    return (((KBallSpeed * 12) / Constants.kGearDiameter) * Constants.kBallFlywheelratio) * 2;
   }
 
   public void prime() {
@@ -160,8 +151,8 @@ public class ShooterSubsystem extends SubsystemBase {
         adjustHood(Constants.kTARMACAngle);
         windFlywheel(Constants.kTARMACRPM);
         break;
-      case 4: //Case for TEST mode, just takes an RPM from shuffleboard and winds
-        windFlywheel(200);
+      case 4: //Case for TEST mode, just takes an RPM and winds
+        windFlywheel(3000);
         break;
     }
   }
