@@ -7,8 +7,8 @@ package frc.robot.subsystems;
 //import edu.wpi.first.wpilibj2.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
+import frc.robot.common.hardware.MotorController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 
@@ -16,29 +16,38 @@ import com.revrobotics.CANSparkMaxLowLevel;
 public class IntakeSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private CANSparkMax m_intakeMotorController1;
-  private CANSparkMax m_intakeMotorController2;
   
+  private MotorController intakeMotorControllerOne;
+  private MotorController intakeMotorControllerTwo;
+
   public IntakeSubsystem() {
-    m_intakeMotorController1 = new CANSparkMax(Constants.kIntakeMotorOneID, CANSparkMaxLowLevel.MotorType.kBrushless);
-    m_intakeMotorController2 = new CANSparkMax(Constants.kIntakeMotorTwoID, CANSparkMaxLowLevel.MotorType.kBrushless);
-    m_intakeMotorController2.follow(m_intakeMotorController1, false);
+    intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.kIntakeMotorOneID);
+    intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.kIntakeMotorTwoID);
+
+    intakeMotorControllerTwo.getSparkMax().follow(intakeMotorControllerTwo.getSparkMax());
   }
 
   public void IntakeSwitch(boolean on){    
     if (on){
-      m_intakeMotorController1.set(Constants.kIntakeMotorSpeed);
+      double intakeSmartSpeed = SmartDashboard.getNumber("Belt Speed", Constants.kCDSBeltSpeed);
+      
+      intakeMotorControllerOne.getSparkMax().set(intakeSmartSpeed);
+      SmartDashboard.putNumber("Intake Motor Speed", Constants.kIntakeMotorSpeed);
     } else {
-      m_intakeMotorController1.set(0);
+      intakeMotorControllerOne.getSparkMax().set(0);
+      SmartDashboard.putNumber("Intake Motor Speed", 0);
     }
   }
   
-
   public void ForwardIntake(){
-    m_intakeMotorController1.setInverted(false);
+    intakeMotorControllerOne.getSparkMax().setInverted(false);
+    SmartDashboard.putString("Intake Motor Direction", "Forward");
   }
 
   public void ReverseIntake(){
-    m_intakeMotorController1.setInverted(true);
+    intakeMotorControllerOne.getSparkMax().setInverted(true);
+    SmartDashboard.putString("Intake Motor Direction", "Reverse");
   }
+
+  
 }
