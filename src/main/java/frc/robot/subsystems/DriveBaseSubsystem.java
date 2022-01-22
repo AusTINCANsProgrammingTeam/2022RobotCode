@@ -65,7 +65,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // Normal Arcade Drive
   public void arcadeDrive() {
-    m_differentialDrive.arcadeDrive( m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), 
+    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), 
                                       m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
   }
 
@@ -124,11 +124,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(m_motorControllers[Constants.kDriveLeftFrontIndex].getWheelSpeed(), 
-                                              m_motorControllers[Constants.kDriveRightFrontIndex].getWheelSpeed());
+    return new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
   }
   
-  
 
-  // TODO: we can add more tanrive co functions as extras later
+  // TODO: we can add more tankdrive co functions as extras later
 }
