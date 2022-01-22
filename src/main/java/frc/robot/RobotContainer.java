@@ -46,16 +46,16 @@ public class RobotContainer {
 
   // subsystems
   private final DriveBaseSubsystem mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
-  // private final CDSSubsystem mCDSSubsystem = new CDSSubsystem();
-  // private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
+  private final CDSSubsystem mCDSSubsystem = new CDSSubsystem();
+  private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
 
 
   // commands
   private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
-  // private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
-  // private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
-  // private CDSForwardCommand mCDSForwardCommand = new CDSForwardCommand(mCDSSubsystem);
-  // private CDSReverseCommand mCDSReverseCommand = new CDSReverseCommand(mCDSSubsystem);
+  private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
+  private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
+  private CDSForwardCommand mCDSForwardCommand = new CDSForwardCommand(mCDSSubsystem);
+  private CDSReverseCommand mCDSReverseCommand = new CDSReverseCommand(mCDSSubsystem);
 
   // auton
   private Trajectory[] mTrajectories;  // multiple trajectories
@@ -86,10 +86,10 @@ public class RobotContainer {
   // edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
   // edu.wpi.first.wpilibj2.command.button.JoystickButton}.
   private void configureButtonBindings() {
-    // mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
-    // mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
-    // mButtons[Constants.kXButton].whileHeld(mCDSForwardCommand);
-    // mButtons[Constants.kBButton].whileHeld(mCDSReverseCommand);
+    mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
+    mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
+    mButtons[Constants.kXButton].whileHeld(mCDSForwardCommand);
+    mButtons[Constants.kBButton].whileHeld(mCDSReverseCommand);
   }
 
   private void initializeTrajectories() throws IOException {
