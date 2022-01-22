@@ -68,7 +68,7 @@ public final class Constants {
 
     //CDS Constants
     public static final int CDSMotorThreeIndex = 0;
-    public static final int CDSMotorThreeID = 13;
+    public static final int CDSMotorThreeID = 3;
     public static final int CDSMotorFourID = 14;
     public static final int CDSMotorFiveID = 15;
 
