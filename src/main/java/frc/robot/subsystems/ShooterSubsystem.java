@@ -4,9 +4,13 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
+
 import java.lang.Math;
 import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkMax;
@@ -25,7 +29,7 @@ import com.revrobotics.RelativeEncoder;
 import frc.robot.common.hardware.MotorController;
 
 public class ShooterSubsystem extends SubsystemBase {
-  private int aimMode; // 0 is LOW, 1 is AUTO, 2 is LAUNCH, 3 is TARMAC, 4 is TEST
+  private int aimMode; // 0 is LOW, 1 is AUTO, 2 is LAUNCH, 3 is TARMAC
   private MotorController shooter_motorController;
   private MotorController hood_motorController;
   private SparkMaxPIDController KShooterController;
@@ -35,9 +39,12 @@ public class ShooterSubsystem extends SubsystemBase {
   private MotorController cargo_motorController;
   private SparkMaxPIDController kCargoController;
   private RelativeEncoder kCargoEncoder;
+  private int shooterRPM;
+  private NetworkTableEntry sbShooterRPM;
   private int currentRPM;
 
   public ShooterSubsystem() {
+    sbShooterRPM = RobotContainer.debugTab.add("shooterRPM", 0).getEntry();
 
     aimMode = 1;
     cargo_motorController = new MotorController("Shooter Cargo", Constants.kShooterCargoID);
@@ -105,7 +112,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double getDistance() {
     // Uses Limelight to find distance to High Goal
-    return (Constants.kHighHeight - Constants.kLLHeight) / Math.tan(getTY() + Constants.kLLAngle); // Return distance in
+    return (Constants.kGoalHeight - Constants.kLLHeight) / Math.tan(getTY() + Constants.kLLAngle); // Return distance in
                                                                                                    // feet
   }
 
@@ -143,11 +150,13 @@ public class ShooterSubsystem extends SubsystemBase {
             getDistance(), 32, Constants.kAirboneTime)[0])));
 
         break;
-      case 2: // Case for LAUNCH mode, winds flywheel to preset RPM and adjusts hood to preset angle
+      case 2: // Case for LAUNCH mode, winds flywheel to preset RPM and adjusts hood to preset
+              // angle
         adjustHood(Constants.kLAUNCHAngle);
         windFlywheel(Constants.kLAUNCHRPM);
         break;
-      case 3: // Case for TARMAC mode, winds flywheel to preset RPM and adjusts hood to preset angle
+      case 3: // Case for TARMAC mode, winds flywheel to preset RPM and adjusts hood to preset
+              // angle
         adjustHood(Constants.kTARMACAngle);
         windFlywheel(Constants.kTARMACRPM);
         break;
@@ -160,6 +169,7 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    //shooterRPM = sbShooterRPM.getDouble(0.0);
   }
 
 }
