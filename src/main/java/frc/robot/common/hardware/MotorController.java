@@ -92,9 +92,6 @@ public class MotorController {
         SmartDashboard.putNumber(mName+" I Value", mI);
         SmartDashboard.putNumber(mName+" D Value", mD);
     }
-    public void setSpeed(double speed) {
-        mSparkMax.set(speed);
-    }
 
    // Updates the Smart Dashboard and checks the PID values to determine if update is needed
     public void updateSmartDashboard() {
