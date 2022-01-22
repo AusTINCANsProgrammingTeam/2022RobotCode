@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import com.revrobotics.CANSparkMax;
+import edu.wpi.first.wpilibj.Encoder;
 
 
 public class DriveBaseSubsystem extends SubsystemBase {
@@ -24,12 +25,18 @@ public class DriveBaseSubsystem extends SubsystemBase {
   //public static ADIS16448_IMU m_gyro; Non-native gyro, might use later
   public static ADXRS450_Gyro m_gyro;
   private final DifferentialDriveOdometry m_odometry;
+  public static Encoder m_leftEncoder;
+  public static Encoder m_rightEncoder;
 
-  // TODO: make left side encoder
-  // TODO: make right side encoder
+  // Here are the encoders
+  
   
 
   public DriveBaseSubsystem(Joystick joystick) {  
+    m_leftEncoder = new Encoder(Constants.kLeftEncoderDIOone, Constants.kLeftEncoderDIOtwo, 
+    false, Encoder.EncodingType.k2X);
+    m_rightEncoder = new Encoder(Constants.kRightEncoderDIOone, Constants.kRightEncoderDIOtwo, 
+    false, Encoder.EncodingType.k2X);
     m_driverJoystick = joystick;
     m_motorControllers = new MotorController[4];
     m_gyro = new ADXRS450_Gyro();
@@ -127,15 +134,17 @@ public class DriveBaseSubsystem extends SubsystemBase {
     return m_odometry.getPoseMeters();
   }
 
+  public void resetEncoders() {
+    m_leftEncoder.reset();
+    m_rightEncoder.reset();
+  }
+
   public void resetOdometry(Pose2d pose) {
-    //reset encoders here
-    resetEncoders();
+    resetEncoders();  // reset encoders
     m_odometry.resetPosition(pose, m_gyro.getRotation2d());
   }
 
-  private void resetEncoders() {
-    
-  }
+  
   
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
