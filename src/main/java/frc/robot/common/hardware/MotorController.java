@@ -59,6 +59,31 @@ public class MotorController {
         return mPIDController;
     }
 
+    // sets speed of motor
+    public void setSpeed(double speed) {
+        mSparkMax.set(speed);
+    }
+
+    // set follow
+    public void setFollow(MotorController m) {
+        mSparkMax.follow(m.getSparkMax());
+    }
+
+    // set inverted
+    public void setInverted(boolean b) {
+        mSparkMax.setInverted(b);
+    }
+
+    // get speeds of wheel side
+    public double getWheelSpeed() {
+        return mEncoder.getVelocity();
+    }
+
+    // get boolean for whether if it's inverted
+    public boolean isInverted() {
+        return mSparkMax.getInverted();
+    }
+
     public void setPID() {
         mPIDController.setP(mP);
         mPIDController.setI(mI);
@@ -66,9 +91,6 @@ public class MotorController {
         SmartDashboard.putNumber(mName+" P Value", mP);
         SmartDashboard.putNumber(mName+" I Value", mI);
         SmartDashboard.putNumber(mName+" D Value", mD);
-    }
-    public void setSpeed(double speed) {
-        mSparkMax.set(speed);
     }
 
    // Updates the Smart Dashboard and checks the PID values to determine if update is needed

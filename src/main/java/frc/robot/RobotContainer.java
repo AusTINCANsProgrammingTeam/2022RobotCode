@@ -8,14 +8,12 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DriveBaseTeleopCommand;
-import frc.robot.commands.HopperCommand;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.ShooterModeCycleDown;
 import frc.robot.commands.ShooterModeCycleUp;
 import frc.robot.commands.ShooterPrime;
 import frc.robot.subsystems.DriveBaseSubsystem;
-import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
