@@ -6,9 +6,22 @@ package frc.robot;
 
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.subsystems.DriveBaseSubsystem;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -38,11 +51,15 @@ public class RobotContainer {
 
 
   // commands
-  private final DriveBaseTeleopCommand driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
-  private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
-  private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
-  private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
+  private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
+  private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
+  private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
+
+  // auton
+  private ArrayList<Trajectory> mTrajectories;  // multiple trajectories
+  
+  private CDSForwardCommand mCDSForwardCommand = new CDSForwardCommand(mCDSSubsystem);
+  private CDSReverseCommand mCDSReverseCommand = new CDSReverseCommand(mCDSSubsystem);
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
@@ -50,7 +67,17 @@ public class RobotContainer {
     for (int i = 1; i < buttons.length; i++) {
       buttons[i] = new JoystickButton(driverJoystick, i);
     }
-    configureButtonBindings();    
+
+    configureButtonBindings();
+    
+    try {
+      initializeTrajectories();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    mDriveBaseSubsystem.setDefaultCommand(mDriveBaseTeleopCommand);
   }
 
   // Use this method to define your button->command mappings. Buttons can be created by
@@ -64,15 +91,66 @@ public class RobotContainer {
     buttons[Constants.BButton].whileHeld(CDSReverseCommand);
   }
 
+  public void initializeTrajectories() throws IOException {
+    String trajectoryJSON = "deploy/One.wpilib.json";
+    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+    Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    mTrajectories.add(trajectory);
+
+    trajectoryJSON = "deploy/Two.wpilib.json";
+    trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+    trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    mTrajectories.add(trajectory);
+
+    trajectoryJSON = "deploy/Three.wpilib.json";
+    trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+    trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    mTrajectories.add(trajectory);
+
+    trajectoryJSON = "deploy/Four.wpilib.json";
+    trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+    trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    mTrajectories.add(trajectory);
+  }
+
+  private int trajectoryIndex = 0;
+            
   // Use this to pass the autonomous command to the main {@link Robot} class.
   // @return the command to run in autonomous
   public Command getAutonomousCommand() {
-    return null;
-    // An ExampleCommand will run in autonomous 
+
+    //Ramsete Command for Pathweaver
+    RamseteCommand ramseteCommand =
+    new RamseteCommand(
+        mTrajectories.get(trajectoryIndex++),
+        mDriveBaseSubsystem::getPose,
+        new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta), //Fix these constants by
+                                                                            //characterizing the robot
+        new SimpleMotorFeedforward(
+            Constants.ksVolts,
+            Constants.kvVoltSecondsPerMeter,
+            Constants.kaVoltSecondsSquaredPerMeter),
+
+        Constants.kDriveKinematics,
+        
+        mDriveBaseSubsystem::getWheelSpeeds,
+        new PIDController(1, 0, 0),
+        new PIDController(1, 0, 0),
+        //RamseteCommand passes volts to the callback
+        mDriveBaseSubsystem::setAutonVolts,
+        mDriveBaseSubsystem);
+      return null;
+
+    // An ExampleCommand will run in autonomous
+    
   }
 
   // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way
   public DriveBaseSubsystem getDriveBase() {
     return driveBaseSubsystem;
+  }
+
+  public DriveBaseTeleopCommand getDefaulDriveCommand() {
+    return mDriveBaseTeleopCommand;
   }
 }

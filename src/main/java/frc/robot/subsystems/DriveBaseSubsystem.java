@@ -9,63 +9,82 @@ import frc.robot.common.hardware.MotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import com.revrobotics.CANSparkMax;
 
 
 public class DriveBaseSubsystem extends SubsystemBase {
 
-  private final Joystick driverJoystick;
-  private final MotorController[] motorControllers = new MotorController[6];
-  private final DifferentialDrive differentialDrive;
-
+  private final Joystick m_driverJoystick;
+  private final MotorController[] m_motorControllers;
+  private final DifferentialDrive m_differentialDrive;
+  //public static ADIS16448_IMU m_gyro; Non-native gyro, might use later
+  public static ADXRS450_Gyro m_gyro;
+  private final DifferentialDriveOdometry m_odometry;
   
+
   public DriveBaseSubsystem(Joystick joystick) {  
-    driverJoystick = joystick;
+    m_driverJoystick = joystick;
+    m_motorControllers = new MotorController[4];
+    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
+    m_gyro = new ADXRS450_Gyro();
     
-    differentialDrive = new DifferentialDrive(motorControllers[Constants.driveLeftFrontIndex].getSparkMax(), motorControllers[Constants.driveRightFrontIndex].getSparkMax());
-    
+
     // motor controllers
-    motorControllers[Constants.driveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.driveLeftFront);
-    motorControllers[Constants.driveLeftMiddleIndex] = new MotorController("Differential Left Middle", Constants.driveLeftMiddle);
-    motorControllers[Constants.driveLeftRearIndex] = new MotorController("Differential Left Rear", Constants.driveLeftRear);
-    motorControllers[Constants.driveRightFrontIndex] = new MotorController("Differential Right Front", Constants.driveRightFront);
-    motorControllers[Constants.driveRightMiddleIndex] = new MotorController("Differential Right Middle", Constants.driveRightMiddle);
-    motorControllers[Constants.driveRightRearIndex] = new MotorController("Differential Right Rear", Constants.driveRightRear);
+    m_motorControllers[Constants.kDriveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.kDriveLeftFront);
+    m_motorControllers[Constants.kDriveLeftRearIndex] = new MotorController("Differential Left Rear", Constants.kDriveLeftRear);
+    m_motorControllers[Constants.kDriveRightFrontIndex] = new MotorController("Differential Right Front", Constants.kDriveRightFront);
+    m_motorControllers[Constants.kDriveRightRearIndex] = new MotorController("Differential Right Rear", Constants.kDriveRightRear);
 
     // inverses right side motors (2022 wpilib doesn't default it to be inverted for differential drive)
-    motorControllers[Constants.driveRightFrontIndex].getSparkMax().setInverted(true);
-    motorControllers[Constants.driveRightMiddleIndex].getSparkMax().setInverted(true);
-    motorControllers[Constants.driveRightRearIndex].getSparkMax().setInverted(true);
+    m_motorControllers[Constants.kDriveRightFrontIndex].setInverted(true);
+    m_motorControllers[Constants.kDriveRightRearIndex].setInverted(true);
 
     //Forces middle and rear motors of each side to follow the first
-    motorControllers[Constants.driveLeftRearIndex].getSparkMax().follow(motorControllers[Constants.driveLeftFrontIndex].getSparkMax());
-    motorControllers[Constants.driveLeftMiddleIndex].getSparkMax().follow(motorControllers[Constants.driveLeftFrontIndex].getSparkMax());
-    motorControllers[Constants.driveRightRearIndex].getSparkMax().follow(motorControllers[Constants.driveRightFrontIndex].getSparkMax());
-    motorControllers[Constants.driveRightMiddleIndex].getSparkMax().follow(motorControllers[Constants.driveRightFrontIndex].getSparkMax());
+    m_motorControllers[Constants.kDriveLeftRearIndex].setFollow(m_motorControllers[Constants.kDriveLeftFrontIndex]);
+    m_motorControllers[Constants.kDriveRightRearIndex].setFollow(m_motorControllers[Constants.kDriveRightFrontIndex]);
+
+    // differential drive
+    m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax(), 
+                                          m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
   }
 
   @Override
   public void periodic() {
+    arcadeDrive();  // periodically runs the arcadeDrive function, avoid scheduling the command
+
     // Update the smart dashboard in here, runs a for loop so it does it for every motor
-    for(int i = 0; i < motorControllers.length; i++) {
-      motorControllers[i].updateSmartDashboard();
+    for(int i = 0; i < m_motorControllers.length; i++) {
+      m_motorControllers[i].updateSmartDashboard();
     }
  
   }
 
   // Normal Arcade Drive
   public void arcadeDrive() {
-    differentialDrive.arcadeDrive(driverJoystick.getRawAxis(Constants.DBLeftJoystickAxisY), driverJoystick.getRawAxis(Constants.DBRightJoystickAxisY));
+    m_differentialDrive.arcadeDrive( m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), 
+                                      m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
+  }
 
+  // Arcade Drive where you can only move forwards and backwards for testing
+  //TODO: Make a command to switch modes (only if we actually want this)
+  public void arcadeDrive(double rotation) {
+    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), rotation);
   }
 
   // tank drive, not used but good to have
   public void tankDrive() {
-    differentialDrive.tankDrive(driverJoystick.getRawAxis(Constants.DBLeftJoystickAxisY), driverJoystick.getRawAxis(Constants.DBRightJoystickAxisY));
+    m_differentialDrive.tankDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), 
+                                  m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
   }
 
-  // Arcade Drive where you can only move forwards and backwards for testing
-  public void arcadeDrive(double rotation) {
-    differentialDrive.arcadeDrive(driverJoystick.getRawAxis(Constants.DBLeftJoystickAxisY), rotation);
+  public void setAutonVolts(double leftVolts, double rightVolts) {
+    m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax().setVoltage(leftVolts);
+    m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax().setVoltage(rightVolts);
+    m_differentialDrive.feed();
   }
 
   @Override
@@ -79,18 +98,37 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   public void stopMotorsFunction() {
     // Calls Arcade Drive with a zero to both speed and rotation in order to stop the motors
-    differentialDrive.arcadeDrive(0.0, 0.0);
+    m_differentialDrive.arcadeDrive(0.0, 0.0);
   }
 
-  // TODO: return actual speeds
+  public CANSparkMax getRightMotor() {
+    return m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax();
+  }
+
+  public CANSparkMax getLeftMotor() {
+    return m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax();
+  }
+
+  // return speed of left side motors
   public double getLeftSpeed() {
-    return 0.0;
+    return m_motorControllers[Constants.kDriveLeftFrontIndex].getWheelSpeed();
   }
 
+  // return speed of right side motors
   public double getRightSpeed() {
-    return 0.0;
+    return m_motorControllers[Constants.kDriveRightFrontIndex].getWheelSpeed();
   }
 
+  public Pose2d getPose() {
+    return m_odometry.getPoseMeters();
+  }
+
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(m_motorControllers[Constants.kDriveLeftFrontIndex].getWheelSpeed(), 
+                                              m_motorControllers[Constants.kDriveRightFrontIndex].getWheelSpeed());
+  }
+  
+  
 
   // TODO: we can add more tanrive co functions as extras later
 }
