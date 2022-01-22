@@ -28,9 +28,9 @@ public class CDSSubsystem extends SubsystemBase {
     CDSWheelControllerOne =  new MotorController("Main CDS Wheel Controller", Constants.CDSMotorFourID);
     CDSWheelControllerTwo = new MotorController("Follows CDS Wheel Controller", Constants.CDSMotorFiveID);
     
-    intitalBallSensor = new DigitalInput(Constants.ballSensorChannel);
-    middleBallSensor = new DigitalInput(Constants.ballSensorChannel);
-    finalBallSensor = new DigitalInput(Constants.ballSensorChannel);
+    //intitalBallSensor = new DigitalInput(Constants.ballSensorChannel);
+    //middleBallSensor = new DigitalInput(Constants.ballSensorChannel);
+    //finalBallSensor = new DigitalInput(Constants.ballSensorChannel);
 
     CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax());
   }
@@ -65,7 +65,7 @@ public class CDSSubsystem extends SubsystemBase {
     SmartDashboard.putString("CDS Wheel Direction", "Reverse");
   }
 
-  public boolean getDirection() {
+  /*public boolean getDirection() {
     // true = inverted, false = forward
     return CDSBeltController.getSparkMax().getInverted();
   }
@@ -103,5 +103,5 @@ public class CDSSubsystem extends SubsystemBase {
 
   public int getBallCount() {
     return ballCount;
-  }
+  }*/
 }
