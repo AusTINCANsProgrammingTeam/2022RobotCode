@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import com.revrobotics.CANSparkMax;
+import edu.wpi.first.wpilibj.Encoder;
 
 
 public class DriveBaseSubsystem extends SubsystemBase {
@@ -24,13 +25,23 @@ public class DriveBaseSubsystem extends SubsystemBase {
   //public static ADIS16448_IMU m_gyro; Non-native gyro, might use later
   public static ADXRS450_Gyro m_gyro;
   private final DifferentialDriveOdometry m_odometry;
+  public static Encoder m_leftEncoder;
+  public static Encoder m_rightEncoder;
+
+  // Here are the encoders
+  
   
 
   public DriveBaseSubsystem(Joystick joystick) {  
+    m_leftEncoder = new Encoder(Constants.kLeftEncoderDIOone, Constants.kLeftEncoderDIOtwo, 
+    false, Encoder.EncodingType.k2X);
+    m_rightEncoder = new Encoder(Constants.kRightEncoderDIOone, Constants.kRightEncoderDIOtwo, 
+    false, Encoder.EncodingType.k2X);
     m_driverJoystick = joystick;
     m_motorControllers = new MotorController[4];
-    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
     m_gyro = new ADXRS450_Gyro();
+    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
+    
     
 
     // motor controllers
@@ -65,14 +76,14 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // Normal Arcade Drive
   public void arcadeDrive() {
-    m_differentialDrive.arcadeDrive( m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), 
+    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), 
                                       m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
   }
 
   // Arcade Drive where you can only move forwards and backwards for testing
   //TODO: Make a command to switch modes (only if we actually want this)
   public void arcadeDrive(double rotation) {
-    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), rotation);
+    //m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), rotation);
   }
 
   // tank drive, not used but good to have
@@ -111,24 +122,34 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // return speed of left side motors
   public double getLeftSpeed() {
-    return m_motorControllers[Constants.kDriveLeftFrontIndex].getWheelSpeed();
+    return m_motorControllers[Constants.kDriveLeftFrontIndex].getSpeed();
   }
 
   // return speed of right side motors
   public double getRightSpeed() {
-    return m_motorControllers[Constants.kDriveRightFrontIndex].getWheelSpeed();
+    return m_motorControllers[Constants.kDriveRightFrontIndex].getSpeed();
   }
 
   public Pose2d getPose() {
     return m_odometry.getPoseMeters();
   }
 
+  public void resetEncoders() {
+    m_leftEncoder.reset();
+    m_rightEncoder.reset();
+  }
+
+  public void resetOdometry(Pose2d pose) {
+    resetEncoders();  // reset encoders
+    m_odometry.resetPosition(pose, m_gyro.getRotation2d());
+  }
+
+  
+  
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(m_motorControllers[Constants.kDriveLeftFrontIndex].getWheelSpeed(), 
-                                              m_motorControllers[Constants.kDriveRightFrontIndex].getWheelSpeed());
+    return new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
   }
   
-  
 
-  // TODO: we can add more tanrive co functions as extras later
+  // TODO: we can add more tankdrive co functions as extras later
 }

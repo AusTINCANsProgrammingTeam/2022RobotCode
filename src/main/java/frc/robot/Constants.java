@@ -24,27 +24,36 @@ public final class Constants {
   
     // Actual IDs on robot, used to activate the right motors
     // TODO: Values to be changed, these are placeholder values for now
+    // Might be reversed
     public static final int kDriveRightFront = 1;
     public static final int kDriveRightRear = 2;
     public static final int kDriveLeftFront = 3;
     public static final int kDriveLeftRear = 4;
     
     // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
-    public static final int kDriveLeftFrontIndex = 0;
+    public static final  int kDriveLeftFrontIndex = 0;
     public static final int kDriveLeftRearIndex = 1;
     public static final int kDriveRightFrontIndex = 2;
     public static final int kDriveRightRearIndex = 3;
 
     public static final int kDriveBaseCurrentLimit = 40;
 
-
-    //Pathweaver constants
+    // Encoder constants
+    // TODO: Replace these with the correct ports
+    public static final int kLeftEncoderDIOone = 0;
+    public static final int kLeftEncoderDIOtwo = 1;
+    public static final int kRightEncoderDIOone = 2;
+    public static final int kRightEncoderDIOtwo = 3;
+    
+    // Pathweaver constants
     public static final double kRamseteB = 2; //Convergence, larger values are more aggressive
     public static final double kRamseteZeta = 0.7; //Damping, larger values offer more damping
 
-    //TODO: Calibrate robot with correct values - These are just placeholers
-    //Note: below comments might not be entirely accurate
-    public static final double ksVolts = 0.22;                     //Volts
+    // TODO: Calibrate robot with correct values - These are just placeholers
+    // Note: below comments might not be entirely accurate
+    public static final double ksVolts = 0.22;                
+    
+    // Volts
     public static final double kvVoltSecondsPerMeter = 1.98;       //Velocity
     public static final double kaVoltSecondsSquaredPerMeter = 0.2; //Accelleration
     public static final double kPDriveVel = 8.5;                   //Velocity

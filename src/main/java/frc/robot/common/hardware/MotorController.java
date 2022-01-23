@@ -73,7 +73,7 @@ public class MotorController {
     }
 
     // get speeds of wheel side
-    public double getWheelSpeed() {
+    public double getSpeed() {
         return mEncoder.getVelocity();
     }
 
