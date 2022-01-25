@@ -63,11 +63,11 @@ public final class Constants {
     public static final int kUpbutton = 5; // Button for shooter mode
 
     // Preset aim constants
-    public static final int kLOWRPM = 0; // RPM that the LOW aimMode winds to
+    public static final double kLOWRPM = 0.0; // RPM that the LOW aimMode winds to
     public static final double kLOWAngle = 0.0; // Angle that the LOW aimMode adjusts to
-    public static final int kLAUNCHRPM = 0; // RPM that the LAUNCH aimMode winds to
+    public static final double kLAUNCHRPM = 0.0; // RPM that the LAUNCH aimMode winds to
     public static final double kLAUNCHAngle = 0.0; // Angle that the LAUNCH aimMode adjusts to
-    public static final int kTARMACRPM = 0; // RPM that the TARMAC aimMode winds to
+    public static final double kTARMACRPM = 0.0; // RPM that the TARMAC aimMode winds to
     public static final double kTARMACAngle = 0.0; // Angle that the TARMAC aimMode adjusts to
 
     // Shooter Constants

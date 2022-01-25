@@ -41,7 +41,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private RelativeEncoder kCargoEncoder;
   private int shooterRPM;
   private NetworkTableEntry sbShooterRPM;
-  private int currentRPM;
+  private double currentRPM;
 
   public ShooterSubsystem() {
     sbShooterRPM = RobotContainer.debugTab.add("shooterRPM", 0).getEntry();
@@ -70,11 +70,11 @@ public class ShooterSubsystem extends SubsystemBase {
     // Adjusts Hood using PID control to passed angle a
   }
 
-  public void windFlywheel(int rpm) {
+  public void windFlywheel(double rpm) {
     // Winds Flywheel using PID control to passed rpm
     // double adjustedRPM = rpm * (Constants.kGearRatioIn / Constants.kGearRatioOut); TODO: reconsider using this
     currentRPM = rpm;
-    KShooterController.setReference((double)rpm, CANSparkMax.ControlType.kVelocity);
+    KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
   }
 
   public void shoot() { //TODO: uncomment when merged; missing MotorController method
@@ -165,7 +165,7 @@ public class ShooterSubsystem extends SubsystemBase {
         windFlywheel(Constants.kTARMACRPM);
         break;
       case 4: //Case for TEST mode, just takes an RPM and winds
-        windFlywheel(3000);
+        windFlywheel(3000.0);
         break;
     }
   }
