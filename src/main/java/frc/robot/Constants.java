@@ -50,7 +50,9 @@ public final class Constants {
     public static final int CDSBeltID = 100;
     public static final int CDSMotorID = 101;
     public static final double CDSBeltSpeed = 0.70;
-    public static final int ballSensorChannel = 0;
+    public static final int initialBallSensorChannel = 0;
+    public static final int middleBallSensorChannel = 1;
+    public static final int finalBallSensorChannel = 2;
 
     //Controller constants
     public static final int DBLeftJoystickAxisX = 0;
