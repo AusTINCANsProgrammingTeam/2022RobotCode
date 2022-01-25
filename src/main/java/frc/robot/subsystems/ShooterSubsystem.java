@@ -29,7 +29,7 @@ import com.revrobotics.RelativeEncoder;
 import frc.robot.common.hardware.MotorController;
 
 public class ShooterSubsystem extends SubsystemBase {
-  private int aimMode; // 0 is LOW, 1 is AUTO, 2 is LAUNCH, 3 is TARMAC
+  private int aimMode; // 0 is LOW, 1 is AUTO, 2 is LAUNCH, 3 is TARMAC, 4 is TEST
   private MotorController shooter_motorController;
   private MotorController hood_motorController;
   private SparkMaxPIDController KShooterController;
