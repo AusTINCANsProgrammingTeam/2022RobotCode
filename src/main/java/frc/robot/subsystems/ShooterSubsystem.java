@@ -46,14 +46,18 @@ public class ShooterSubsystem extends SubsystemBase {
   public ShooterSubsystem() {
     sbShooterRPM = RobotContainer.debugTab.add("shooterRPM", 0).getEntry();
 
-    aimMode = 1;
+    aimMode = 4;
     cargo_motorController = new MotorController("Shooter Cargo", Constants.kShooterCargoID);
     kCargoController = cargo_motorController.getPID();
     kCargoEncoder = cargo_motorController.getEncoder();
 
-    shooter_motorController = new MotorController("Shooter", Constants.kShooterID);
+    shooter_motorController = new MotorController("Shooter", Constants.kShooterID, 40, true);
     KShooterController = shooter_motorController.getPID();
     KShooterEncoder = shooter_motorController.getEncoder();
+    KShooterController.setP(6e-4);
+    KShooterController.setI(1e-6);
+    KShooterController.setD(0.0);
+
     hood_motorController = new MotorController("Hood", Constants.kHoodID);
     KHoodController = hood_motorController.getPID();
     KHoodEncoder = shooter_motorController.getEncoder();
@@ -68,12 +72,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void windFlywheel(int rpm) {
     // Winds Flywheel using PID control to passed rpm
-    double kGearRationRPM = rpm * (Constants.kGearRatioIn / Constants.kGearRatioOut);
+    // double adjustedRPM = rpm * (Constants.kGearRatioIn / Constants.kGearRatioOut); TODO: reconsider using this
     currentRPM = rpm;
-    KShooterController.setReference(kGearRationRPM, CANSparkMax.ControlType.kVelocity);
+    KShooterController.setReference((double)rpm, CANSparkMax.ControlType.kVelocity);
   }
 
-  public void shoot() { //uncomment when merged; missing MotorController method
+  public void shoot() { //TODO: uncomment when merged; missing MotorController method
     /*cargo_motorController.setSpeed(1.0);
     Thread.sleep(200);
     cargo_motorController.setSpeed(0.0);*/
@@ -112,7 +116,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double getDistance() {
     // Uses Limelight to find distance to High Goal
-    return (Constants.kGoalHeight - Constants.kLLHeight) / Math.tan(getTY() + Constants.kLLAngle); // Return distance in
+    return (Constants.kHighHeight - Constants.kLLHeight) / Math.tan(getTY() + Constants.kLLAngle); // Return distance in
                                                                                                    // feet
   }
 
