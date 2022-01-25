@@ -14,7 +14,7 @@ import com.revrobotics.CANSparkMaxLowLevel;
  */
 public class HopperSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
-  // here. Call these PIDfrom Commands.
+  // here. Call these from Commands.
   private CANSparkMax m_hopperController;
   
   public HopperSubsystem() {
