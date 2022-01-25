@@ -35,15 +35,17 @@ public class ShooterPrime extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_ShooterSubsystem.windFlywheel(0);
+    if (!interrupted){
+      //TODO: uncomment when cargoMotor exists 
+      //m_ShooterSubsystem.shoot()
+    }
+    m_ShooterSubsystem.windFlywheel(0); //TODO: Look at this again, we don't want our flywheel to instantly switch off in the end
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     if(m_ShooterSubsystem.wheelReady()){
-      //TODO: uncomment when cargoMotor exists 
-      //m_ShooterSubsystem.shoot();
       return true;
     }
     return false;
