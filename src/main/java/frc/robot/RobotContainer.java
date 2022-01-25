@@ -46,20 +46,21 @@ public class RobotContainer {
 
   // subsystems
   private final DriveBaseSubsystem mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
-  private final CDSSubsystem mCDSSubsystem = new CDSSubsystem();
-  private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
+  // private final CDSSubsystem mCDSSubsystem = new CDSSubsystem();
+  // private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
 
 
   // commands
   private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
-  private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
-  private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
-  private CDSForwardCommand mCDSForwardCommand = new CDSForwardCommand(mCDSSubsystem);
-  private CDSReverseCommand mCDSReverseCommand = new CDSReverseCommand(mCDSSubsystem);
+  // private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
+  // private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
+  // private CDSForwardCommand mCDSForwardCommand = new CDSForwardCommand(mCDSSubsystem);
+  // private CDSReverseCommand mCDSReverseCommand = new CDSReverseCommand(mCDSSubsystem);
 
   // auton
-  private Trajectory[] mTrajectories;  // multiple trajectories
-  private int trajectoryIndex = 0;
+  // private Trajectory[] mTrajectories;  // multiple trajectories
+  // private int trajectoryIndex = 0;
+  private Trajectory trajectory;
 
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
@@ -86,20 +87,25 @@ public class RobotContainer {
   // edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
   // edu.wpi.first.wpilibj2.command.button.JoystickButton}.
   private void configureButtonBindings() {
-    mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
-    mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
-    mButtons[Constants.kXButton].whileHeld(mCDSForwardCommand);
-    mButtons[Constants.kBButton].whileHeld(mCDSReverseCommand);
+    // mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
+    // mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
+    // mButtons[Constants.kXButton].whileHeld(mCDSForwardCommand);
+    // mButtons[Constants.kBButton].whileHeld(mCDSReverseCommand);
   }
 
   private void initializeTrajectories() throws IOException {
-    String[] trajectoryJSON = {"One.wpilib.json", "Two.wpilib.json", "Three.wpilib.json", "Four.wpilib.json"};  // add new trajectories manually
-    mTrajectories = new Trajectory[trajectoryJSON.length];
-    for(int i = 0; i < trajectoryJSON.length; i++) {
-      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON[i]);
-      Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-      mTrajectories[i] = trajectory;
-    }
+    // String[] trajectoryJSON = {"One.wpilib.json", "Two.wpilib.json", "Three.wpilib.json", "Four.wpilib.json"};  // add new trajectories manually
+    // mTrajectories = new Trajectory[trajectoryJSON.length];
+    // for(int i = 0; i < trajectoryJSON.length; i++) {
+    //   Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON[i]);
+    //   Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    //   mTrajectories[i] = trajectory;
+    // }
+
+    // to test auton with just a one straight path
+    String trajectoryJSON = "Straight.wpilib.json";
+    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+    trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
   }
             
   // Use this to pass the autonomous command to the main {@link Robot} class.
@@ -109,10 +115,10 @@ public class RobotContainer {
     //Ramsete Command for Pathweaver
     RamseteCommand ramseteCommand =
     new RamseteCommand(
-        mTrajectories[trajectoryIndex],
+        trajectory,
         mDriveBaseSubsystem::getPose,
-        new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta), //Fix these constants by
-                                                                            //characterizing the robot
+        new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta), // Fix these constants by
+                                                                            // characterizing the robot
         new SimpleMotorFeedforward(
             Constants.ksVolts,
             Constants.kvVoltSecondsPerMeter,
@@ -127,7 +133,7 @@ public class RobotContainer {
         mDriveBaseSubsystem::setAutonVolts,
         mDriveBaseSubsystem);
         
-    mDriveBaseSubsystem.resetOdometry(mTrajectories[trajectoryIndex].getInitialPose());
+    mDriveBaseSubsystem.resetOdometry(trajectory.getInitialPose());
 
     return ramseteCommand.andThen(() -> mDriveBaseSubsystem.setAutonVolts(0,0));
   }
