@@ -22,15 +22,15 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private final MotorController[] m_motorControllers;
   private final DifferentialDrive m_differentialDrive;
   //public static ADIS16448_IMU m_gyro; Non-native gyro, might use later
-  public static ADXRS450_Gyro m_gyro;
-  private final DifferentialDriveOdometry m_odometry;
+  //public static ADXRS450_Gyro m_gyro;
+  //private final DifferentialDriveOdometry m_odometry;
   
 
   public DriveBaseSubsystem(Joystick joystick) {  
     m_driverJoystick = joystick;
-    m_motorControllers = new MotorController[4];
-    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
-    m_gyro = new ADXRS450_Gyro();
+    m_motorControllers = new MotorController[4];    
+    //m_gyro = new ADXRS450_Gyro();
+    //m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
     
 
     // motor controllers
@@ -120,7 +120,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
   }
 
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+    //return m_odometry.getPoseMeters();
+    return null;
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
