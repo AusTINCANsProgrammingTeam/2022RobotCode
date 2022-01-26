@@ -66,4 +66,19 @@ public final class Constants {
     public static final int kAButton = 1;           // Button for hopper
     public static final int kRightBumperButton = 5; // Button for intake 
     public static final int kLeftBumperButton = 6;  // Button to reverse intake
+
+    //RobotSim Constaints
+    public static final int kDriveSimRightFront = 1;
+    public static final int kDriveSimRightMiddle = 2;
+    public static final int kDriveSimRightRear = 3;
+    public static final int kDriveSimLeftFront = 4;
+    public static final int kDriveSimLeftMiddle = 5;
+    public static final int kDriveSimLeftRear = 6;
+
+    public static final int kDriveSimRightFrontIndex = 0;
+    public static final int kDriveSimRightMiddleIndex = 1;
+    public static final int kDriveSimRightRearIndex = 2;
+    public static final int kDriveSimLeftFrontIndex = 3;
+    public static final int kDriveSimLeftMiddleIndex = 4;
+    public static final int kDriveSimLeftRearIndex = 5;
 }

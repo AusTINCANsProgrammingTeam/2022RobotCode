@@ -7,8 +7,10 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
 
 
 public class DriveBaseSubsystem extends SubsystemBase {
@@ -20,7 +22,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
   
   public DriveBaseSubsystem(Joystick joystick) {  
     m_driverJoystick = joystick;
-    
+
+
     // motor controllers
     m_motorControllers[Constants.kDriveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.kDriveLeftFront);
     m_motorControllers[Constants.kDriveLeftMiddleIndex] = new MotorController("Differential Left Middle", Constants.kDriveLeftMiddle);
