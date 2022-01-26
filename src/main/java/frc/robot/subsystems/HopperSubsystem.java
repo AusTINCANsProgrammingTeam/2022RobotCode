@@ -10,7 +10,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 
 /** Add your docs here.
- * Im sorry if this code is unreadable but deal with it
  */
 public class HopperSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem

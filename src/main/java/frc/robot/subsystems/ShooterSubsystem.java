@@ -116,7 +116,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double getDistance() {
     // Uses Limelight to find distance to High Goal
-    return (Constants.kHighHeight - Constants.kLLHeight) / Math.tan(getTY() + Constants.kLLAngle); // Return distance in
+    return (Constants.kHighHeight - Constants.kLLHeight) / Math.tan(Math.toRadians((getTY() + Constants.kLLAngle))); // Return distance in
                                                                                                    // feet
   }
 
