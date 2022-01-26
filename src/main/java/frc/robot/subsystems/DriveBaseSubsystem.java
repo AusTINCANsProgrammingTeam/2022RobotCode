@@ -22,7 +22,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private final Joystick m_driverJoystick;
   private final MotorController[] m_motorControllers;
   private final DifferentialDrive m_differentialDrive;
-  //public static ADIS16448_IMU m_gyro; Non-native gyro, might use later
+  //public static ADIS16448_IMU m_gyro; //Non-native gyro, might use later
   public static ADXRS450_Gyro m_gyro;
   private final DifferentialDriveOdometry m_odometry;
   public static Encoder m_leftEncoder;
