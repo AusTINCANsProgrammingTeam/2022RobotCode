@@ -34,7 +34,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void IntakeSwitch(boolean on){    
     if (on){
-      double intakeSmartSpeed = .25; //SmartDashboard.getNumber("Belt Speed", Constants.CDSBeltSpeed);
+      double intakeSmartSpeed = .50; //SmartDashboard.getNumber("Belt Speed", Constants.CDSBeltSpeed);
       
       intakeMotorControllerOne.getSparkMax().set(intakeSmartSpeed);
       SmartDashboard.putNumber("Intake Motor Speed", Constants.intakeMotorSpeed);
