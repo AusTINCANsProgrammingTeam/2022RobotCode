@@ -44,12 +44,12 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public void ForwardCDS() {
-    CDSBeltController.getSparkMax().setInverted(false);
+    CDSBeltController.getSparkMax().set(Constants.CDSBeltSpeed);
     SmartDashboard.putString("CDS Belt Direction", "Forward");
   }
 
   public void ReverseCDS() {
-    CDSBeltController.getSparkMax().setInverted(true);
+    CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
     SmartDashboard.putString("CDS Belt Direction", "Reverse");
   }
 
