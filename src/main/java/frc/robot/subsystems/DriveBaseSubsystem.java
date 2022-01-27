@@ -15,6 +15,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.I2C;
+import com.kauailabs.navx.frc.AHRS;
 
 
 public class DriveBaseSubsystem extends SubsystemBase {
@@ -23,13 +25,13 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private final MotorController[] m_motorControllers;
   private final DifferentialDrive m_differentialDrive;
   //public static ADIS16448_IMU m_gyro; //Non-native gyro, might use later
-  public static ADXRS450_Gyro m_gyro;
+  //public static ADXRS450_Gyro m_gyro;
+  private AHRS m_gyro;
   private final DifferentialDriveOdometry m_odometry;
-  public static Encoder m_leftEncoder;
-  public static Encoder m_rightEncoder;
 
   // Here are the encoders
-  
+  public static Encoder m_leftEncoder;
+  public static Encoder m_rightEncoder;
   
 
   public DriveBaseSubsystem(Joystick joystick) {  
@@ -39,9 +41,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
     false, Encoder.EncodingType.k2X);
     m_driverJoystick = joystick;
     m_motorControllers = new MotorController[4];
-    m_gyro = new ADXRS450_Gyro();
-    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
-    
+    //m_gyro = new ADIS16448_IMU();
+    m_gyro = new AHRS(I2C.Port.kMXP);
+    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d()); 
     
 
     // motor controllers
