@@ -109,7 +109,7 @@ public final class Constants {
     public static final double kAirboneTime = 1.2;
     public static final double kGravity = 32;
     public static final double kLLHeight = 10.0/12.0; // Height of the limelight in ft from the carpet
-    public static final double kLLAngle = 29.0; // Angle that the limelight is mounted at
+    public static final double kLLAngle = 29.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as exact as possible
     public static final double kGearRatioIn = 34;
     public static final double kGearRatioOut = 14;
     public static final double kGearDiameter = 4; // Gear diameter in inches
