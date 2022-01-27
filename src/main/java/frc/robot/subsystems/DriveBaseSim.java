@@ -28,42 +28,52 @@ public class DriveBaseSim extends SubsystemBase {
   static final double KaAngular = 0.3;
   // Create the simulation model of our drivetrain.
   DifferentialDrivetrainSim m_driveSim = new DifferentialDrivetrainSim(DCMotor.getNEO(2), 7.29, 7.5, 60.0, Units.inchesToMeters(3), 0.7112, VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005));
-  private final DifferentialDrivetrainSim m_dDifferentialDrivetrainSim;
+  private final DifferentialDrivetrainSim m_DifferentialDrivetrainSim;
   /** Creates a new DriveBaseSim. */
   public DriveBaseSim(Joystick joystick) {
     m_driverJoystick = joystick;
 
-    // motor controllers
-    m_motorControllers[Constants.kDriveLeftFrontIndex] = new MotorController("DifferentialSim Left Front", Constants.kDriveSimLeftFront);
-    m_motorControllers[Constants.kDriveLeftMiddleIndex] = new MotorController("DifferentialSim Left Middle", Constants.kDriveSimLeftMiddle);
-    m_motorControllers[Constants.kDriveLeftRearIndex] = new MotorController("DifferentialSim Left Rear", Constants.kDriveSimLeftRear);
-    m_motorControllers[Constants.kDriveRightFrontIndex] = new MotorController("DifferentialSim Right Front", Constants.kDriveSimRightFront);
-    m_motorControllers[Constants.kDriveRightMiddleIndex] = new MotorController("DifferentialSim Right Middle", Constants.kDriveSimRightMiddle);
-    m_motorControllers[Constants.kDriveRightRearIndex] = new MotorController("DifferentialSim Right Rear", Constants.kDriveSimRightRear);
+    m_DifferentialDrivetrainSim = new DifferentialDrivetrainSim(
+      DCMotor.getNEO(2),       // 2 NEO motors on each side of the drivetrain.
+      7.29,                    // 7.29:1 gearing reduction.
+      7.5,                     // MOI of 7.5 kg m^2 (from CAD model).
+      60.0,                    // The mass of the robot is 60 kg.
+      Units.inchesToMeters(3), // The robot uses 3" radius wheels.
+      0.7112,                  // The track width is 0.7112 meters.
+      // The standard deviations for measurement noise: x and y: 0.001m heading: 0.001 rad  l and r velocity: 0.1m/s  l and r position: 0.005m
+      VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005));  }
 
-    // inverses right side motors
-    m_motorControllers[Constants.kDriveSimRightFrontIndex].getSparkMax().setInverted(true);
-    m_motorControllers[Constants.kDriveSimRightMiddleIndex].getSparkMax().setInverted(true);
-    m_motorControllers[Constants.kDriveSimRightRearIndex].getSparkMax().setInverted(true);
+        // Normal Arcade Drive
+  public void arcadeDrive() {
+    m_DifferentialDrivetrainSim.arcadeDriveSim(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
 
-    // middle and rear motors follow front
-    m_motorControllers[Constants.kDriveSimLeftRearIndex].getSparkMax().follow(m_motorControllers[Constants.kDriveSimLeftFrontIndex].getSparkMax());
-    m_motorControllers[Constants.kDriveSimLeftMiddleIndex].getSparkMax().follow(m_motorControllers[Constants.kDriveSimLeftFrontIndex].getSparkMax());
-    m_motorControllers[Constants.kDriveSimRightRearIndex].getSparkMax().follow(m_motorControllers[Constants.kDriveSimRightFrontIndex].getSparkMax());
-    m_motorControllers[Constants.kDriveSimRightMiddleIndex].getSparkMax().follow(m_motorControllers[Constants.kDriveSimRightFrontIndex].getSparkMax());
-
-    m_dDifferentialDrivetrainSim = DifferentialDrivetrainSim(m_motorControllers[Constants.kDriveSimLeftFrontIndex].getSparkMax(), m_motorControllers[Constants.kDriveSimRightFrontIndex].getSparkMax());
   }
 
+  // tank drive, not used but good to have
+  public void tankDrive() {
+    m_DifferentialDrivetrainSim.tankDriveSim(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
+  }
+
+  // Arcade Drive where you can only move forwards and backwards for testing
+  //public void arcadeDrive(double rotation) {
+  //  m_DifferentialDrivetrainSim.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), rotation);
+  //}
+
+  @Override
+  public void simulationPeriodic() {
+    // Currently serves no purpose
+  }
+
+  public void driveFunction() {
+    // currently serves no purpose
+  }
+
+  public void stopMotorsFunction() {
+    // Calls Arcade Drive with a zero to both speed and rotation in order to stop the motors
+    m_DifferentialDrivetrainSim.arcadeDrive(0.0, 0.0);
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    for(int i = 0; i < m_motorControllers.length; i++) {
-    m_motorControllers[i].updateSmartDashboard();
     }
   }
-
-  public edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim DifferentialDrivetrainSim(CANSparkMax canSparkMax, CANSparkMax canSparkMax2) {
-    ((Object) m_dDifferentialDrivetrainSim).DifferentialDrivetrainSim();
-  }
-}
