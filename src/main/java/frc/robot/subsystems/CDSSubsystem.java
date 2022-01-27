@@ -27,14 +27,16 @@ public class CDSSubsystem extends SubsystemBase {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID);
     CDSMotorController2 = new MotorController("CDS Motor 2", Constants.CDSMotorID);
    
-    intitalBallSensor = new DigitalInput(Constants.ballSensorChannel);
-    middleBallSensor = new DigitalInput(Constants.ballSensorChannel);
-    finalBallSensor = new DigitalInput(Constants.ballSensorChannel);
+    intitalBallSensor = new DigitalInput(Constants.initialBallSensorChannel);
+    middleBallSensor = new DigitalInput(Constants.middleBallSensorChannel);
+    finalBallSensor = new DigitalInput(Constants.finalBallSensorChannel);
   }
 
   public void CDSSwitch(boolean on) {
     if (on) {
-      CDSBeltController.getSparkMax().set(Constants.CDSBeltSpeed);
+      double beltSmartSpeed = SmartDashboard.getNumber("Belt Speed", Constants.CDSBeltSpeed);
+      
+      CDSBeltController.getSparkMax().set(beltSmartSpeed);
       SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
     } else {
       CDSBeltController.getSparkMax().set(0.0);
@@ -43,7 +45,7 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public void ForwardCDS() {
-    CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
+    CDSBeltController.getSparkMax().set(Constants.CDSBeltSpeed);
     SmartDashboard.putString("CDS Belt Direction", "Forward");
   }
 
@@ -57,7 +59,7 @@ public class CDSSubsystem extends SubsystemBase {
     if (CDSBeltController.getSparkMax().get() > 0) {
       return false;
     } else {
-    return CDSBeltController.getSparkMax().getInverted();
+    return true;
     }
   }
 
@@ -70,24 +72,27 @@ public class CDSSubsystem extends SubsystemBase {
   public boolean getFinalSensorStatus(){
     return finalBallSensor.get();
   }
-  public void indexBall() {
+
+  public void incrimentBalls() {
     boolean initialSensorStatus = getInitialSensorStatus();
-    boolean finalSensorStatus = getFinalSensorStatus();
-    if (!initialSensorStatus)  {
-      if (!this.getDirection()){
-        ballCount++;
-      } else {
+    if (!initialSensorStatus) {
+      if (this.getDirection()){
         ballCount--;
+      } else {
+        ballCount++;
       }
-      if (ballCount > 2) {
-        this.ReverseCDS();
-        // TODO: Determine how long to run this for (convert back to going normal direction)
+    }
+
+  }
+
+  public void expelBalls() {
+    if (ballCount > 2) {
+      this.ReverseCDS();
+      while (ballCount > 2) {
+        this.incrimentBalls();
       }
-    } else if (finalSensorStatus == false) {
-      ballCount--;
+      this.ForwardCDS();
     }
   }
-  public int getBallCount() {
-    return ballCount;
-  }
-}
+
+} //dont delete, for main method
