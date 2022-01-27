@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -44,10 +45,10 @@ public class ShooterSubsystem extends SubsystemBase {
   private double currentRPM;
 
   public ShooterSubsystem() {
-    sbShooterRPM = RobotContainer.debugTab.add("shooterRPM", 0).getEntry();
+//    sbShooterRPM = RobotContainer.debugTab.add("shooterRPM", 0).getEntry();
 
     aimMode = 4;
-    cargo_motorController = new MotorController("Shooter Cargo", Constants.kShooterCargoID);
+   /* cargo_motorController = new MotorController("Shooter Cargo", Constants.kShooterCargoID);
     kCargoController = cargo_motorController.getPID();
     kCargoEncoder = cargo_motorController.getEncoder();
 
@@ -61,7 +62,7 @@ public class ShooterSubsystem extends SubsystemBase {
     hood_motorController = new MotorController("Hood", Constants.kHoodID);
     KHoodController = hood_motorController.getPID();
     KHoodEncoder = shooter_motorController.getEncoder();
-
+*/
   }
 
   public void adjustHood(double a) {
@@ -111,7 +112,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double getTY() {
     // Gets TY, the vertical angle of the target from the limelight
-    return Math.toDegrees(NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0));
+    return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
   }
 
   public double getDistance() {
@@ -174,6 +175,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     //shooterRPM = sbShooterRPM.getDouble(0.0);
+    SmartDashboard.putNumber("dist", getDistance());
   }
 
 }

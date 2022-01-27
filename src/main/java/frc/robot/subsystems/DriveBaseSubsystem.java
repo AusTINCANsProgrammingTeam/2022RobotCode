@@ -39,7 +39,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     false, Encoder.EncodingType.k2X);
     m_driverJoystick = joystick;
     m_motorControllers = new MotorController[4];
-    m_gyro = new ADXRS450_Gyro();
+  //  m_gyro = new ADXRS450_Gyro();
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
     
     
