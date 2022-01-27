@@ -22,6 +22,10 @@ import edu.wpi.first.wpilibj.simulation.EncoderSim;
 public class DriveBaseSim extends SubsystemBase {
   private final Joystick m_driverJoystick;
   private final MotorController[] m_motorControllers = new MotorController[6];
+  static final double KvLinear = 1.98;
+  final double KaLinear = 0.2;
+  static final double KvAngular = 1.5;
+  static final double KaAngular = 0.3;
   // Create the simulation model of our drivetrain.
   DifferentialDrivetrainSim m_driveSim = new DifferentialDrivetrainSim(DCMotor.getNEO(2), 7.29, 7.5, 60.0, Units.inchesToMeters(3), 0.7112, VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005));
   private final DifferentialDrivetrainSim m_dDifferentialDrivetrainSim;
@@ -59,7 +63,7 @@ public class DriveBaseSim extends SubsystemBase {
     }
   }
 
-  public void DifferentialDrivetrainSim() {
-    m_dDifferentialDrivetrainSim.DifferentialDrivetrainSim();
+  public edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim DifferentialDrivetrainSim(CANSparkMax canSparkMax, CANSparkMax canSparkMax2) {
+    ((Object) m_dDifferentialDrivetrainSim).DifferentialDrivetrainSim();
   }
 }
