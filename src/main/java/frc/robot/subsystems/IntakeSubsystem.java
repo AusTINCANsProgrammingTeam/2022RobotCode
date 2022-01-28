@@ -21,8 +21,8 @@ public class IntakeSubsystem extends SubsystemBase {
   private MotorController intakeMotorControllerTwo;
 
   public IntakeSubsystem() {
-   /* intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.kIntakeMotorOneID);
-    intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.kIntakeMotorTwoID); */
+    intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.kIntakeMotorOneID);
+    intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.kIntakeMotorTwoID); 
 
     intakeMotorControllerTwo.getSparkMax().follow(intakeMotorControllerTwo.getSparkMax());
   }
