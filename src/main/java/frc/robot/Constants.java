@@ -54,7 +54,8 @@ public final class Constants {
     public static final double kvVoltSecondsPerMeter = 1.98;       //Velocity
     public static final double kaVoltSecondsSquaredPerMeter = 0.2; //Accelleration
     public static final double kPDriveVel = 8.5;                   //Velocity
-    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(0.5);    // Replace 0.5 with track width in meters
+    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(0.5);    
+    // TODO: Replace 0.5 with track width in meters
     
     //Controller constants
     public static final int kDBJoystickPort = 0;

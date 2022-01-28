@@ -131,6 +131,10 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public double getRightSpeed() {
     return m_motorControllers[Constants.kDriveRightFrontIndex].getSpeed();
   }
+  // return gyro info
+  public double getGyroAngle() {
+    return m_gyro.getAngle();
+  }
 
   public Pose2d getPose() {
     return m_odometry.getPoseMeters();
@@ -145,8 +149,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
     resetEncoders();  // reset encoders
     m_odometry.resetPosition(pose, m_gyro.getRotation2d());
   }
-
-  
   
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
