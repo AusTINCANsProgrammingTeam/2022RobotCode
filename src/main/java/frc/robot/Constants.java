@@ -42,6 +42,7 @@ public final class Constants {
 
     // Intake Contstants 
     public static final int intakeMotorOneID = 11;
+    public static final int intakeMotorTwoID = 12;
     public static final int intakeWheelOneID = 3;
     public static final int intakeWheelTwoID = 4;
     public static final double intakeMotorSpeed = 0.70;
@@ -61,9 +62,7 @@ public final class Constants {
     public static final int DBRightJoystickAxisY = 3;
 
     //Joystick Constants
-    public static final int portNumber = 0;
-    public static final int joysticbuttonNumberOne = 1;
-    public static final int joysticbuttonNumberTwo = 2;
+    public static final int portNumber = 0; //driver joystick
     public static final int BButton = 2; // Button for hopper
     public static final int XButton = 3; // Button for reverse hopper
     public static final int rightBumperButton = 5; // Button for intake 

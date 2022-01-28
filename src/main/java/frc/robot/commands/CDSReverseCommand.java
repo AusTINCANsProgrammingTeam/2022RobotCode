@@ -20,8 +20,7 @@ public class CDSReverseCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mCDSSubsystem.ReverseCDS();
-    mCDSSubsystem.CDSSwitch(true);
+    mCDSSubsystem.toggleCDS(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -31,7 +30,7 @@ public class CDSReverseCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    mCDSSubsystem.CDSSwitch(false);
+    mCDSSubsystem.stopCDS();
   }
 
   // Returns true when the command should end.

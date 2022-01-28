@@ -17,7 +17,7 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSBeltController;
   private MotorController CDSMotorController2;
 
-  private DigitalInput intitalBallSensor;
+  private DigitalInput initialBallSensor;
   private DigitalInput middleBallSensor;
   private DigitalInput finalBallSensor;
   private int ballCount = 0;
@@ -26,32 +26,29 @@ public class CDSSubsystem extends SubsystemBase {
   public CDSSubsystem() {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID);
     CDSMotorController2 = new MotorController("CDS Motor 2", Constants.CDSMotorID);
+
+    CDSMotorController2.getSparkMax().follow(CDSBeltController.getSparkMax());
    
-    intitalBallSensor = new DigitalInput(Constants.initialBallSensorChannel);
+    initialBallSensor = new DigitalInput(Constants.initialBallSensorChannel);
     middleBallSensor = new DigitalInput(Constants.middleBallSensorChannel);
     finalBallSensor = new DigitalInput(Constants.finalBallSensorChannel);
   }
+  
+  public void stopCDS() {
+    CDSBeltController.getSparkMax().set(0.0);
+    SmartDashboard.putNumber("CDS Belt Speed", 0.0);
+  }
 
-  public void CDSSwitch(boolean on) {
-    if (on) {
-      double beltSmartSpeed = SmartDashboard.getNumber("Belt Speed", Constants.CDSBeltSpeed);
-      
-      CDSBeltController.getSparkMax().set(beltSmartSpeed);
-      SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
+  public void toggleCDS (boolean reverse) {
+    if (reverse) {
+      CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
+      SmartDashboard.putString("CDS Belt Direction", "Forward");
+      SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
     } else {
-      CDSBeltController.getSparkMax().set(0.0);
-      SmartDashboard.putNumber("CDS Motor Speed", 0);
+      CDSBeltController.getSparkMax().set(Constants.CDSBeltSpeed);
+      SmartDashboard.putString("CDS Belt Direction", "Reverse");
+      SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
     }
-  }
-
-  public void ForwardCDS() {
-    CDSBeltController.getSparkMax().set(Constants.CDSBeltSpeed);
-    SmartDashboard.putString("CDS Belt Direction", "Forward");
-  }
-
-  public void ReverseCDS() {
-    CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
-    SmartDashboard.putString("CDS Belt Direction", "Reverse");
   }
 
   public boolean getDirection() {
@@ -63,35 +60,32 @@ public class CDSSubsystem extends SubsystemBase {
     }
   }
 
-  public boolean getInitialSensorStatus(){
-    return intitalBallSensor.get();
-  }
-  public boolean getMiddleSensorStatus(){
-    return middleBallSensor.get();
-  }
-  public boolean getFinalSensorStatus(){
-    return finalBallSensor.get();
+  public boolean[] getBeamBreakStatus() {
+    boolean initialStatus = initialBallSensor.get();
+    boolean middleStatus = middleBallSensor.get();
+    boolean finalStatus = finalBallSensor.get();
+    boolean[] beamBreakArray = {initialStatus, middleStatus, finalStatus};
+    return beamBreakArray;
   }
 
   public void incrimentBalls() {
-    boolean initialSensorStatus = getInitialSensorStatus();
-    if (!initialSensorStatus) {
+    boolean[] beamBreakStatuses = this.getBeamBreakStatus();
+    if (!beamBreakStatuses[0]) {
       if (this.getDirection()){
         ballCount--;
       } else {
         ballCount++;
       }
     }
-
   }
 
   public void expelBalls() {
     if (ballCount > 2) {
-      this.ReverseCDS();
+      this.toggleCDS(true);
       while (ballCount > 2) {
         this.incrimentBalls();
       }
-      this.ForwardCDS();
+      this.toggleCDS(false);
     }
   }
 

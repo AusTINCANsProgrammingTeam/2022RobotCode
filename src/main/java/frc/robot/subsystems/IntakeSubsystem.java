@@ -23,35 +23,30 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public IntakeSubsystem() {
     intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID);
+    intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.intakeMotorTwoID);
     CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.intakeWheelOneID, 40);
     CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.intakeWheelTwoID, 40);
 
     // Remove invert=true parameter if wheels aren't running correctly
     CDSWheelControllerOne.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
     CDSWheelControllerTwo.getSparkMax().follow(intakeMotorControllerOne.getSparkMax(), true);
+    intakeMotorControllerTwo.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
   }
 
-  public void IntakeSwitch(boolean on){    
-    if (on){
-      //double intakeSmartSpeed = SmartDashboard.getNumber("Belt Speed", Constants.CDSBeltSpeed);
-      
-      intakeMotorControllerOne.getSparkMax().set(Constants.intakeMotorSpeed);
-      SmartDashboard.putNumber("Intake Motor Speed", Constants.intakeMotorSpeed);
+  public void stopIntake() {
+    intakeMotorControllerOne.getSparkMax().set(0.0);
+    SmartDashboard.putNumber("Intake Motor Speed", 0.0);
+  }
+  
+  public void toggleIntake(boolean reverse) {
+    if (reverse) {
+      intakeMotorControllerOne.getSparkMax().set(-Constants.intakeMotorSpeed);
+      SmartDashboard.putString("Intake Motor Direction", "Reverse");
+      SmartDashboard.putNumber("Intake Motor Speed", -Constants.intakeMotorSpeed);
     } else {
-      intakeMotorControllerOne.getSparkMax().set(0);
-      SmartDashboard.putNumber("Intake Motor Speed", 0);
+      intakeMotorControllerOne.getSparkMax().set(Constants.intakeMotorSpeed);
+      SmartDashboard.putString("Intake Motor Direction", "Forward");
+      SmartDashboard.putNumber("Intake Motor Speed", Constants.intakeMotorSpeed);
     }
   }
-  
-  public void ForwardIntake(){
-    intakeMotorControllerOne.getSparkMax().set(Constants.intakeMotorSpeed);
-    SmartDashboard.putString("Intake Motor Direction", "Forward");
-  }
-
-  public void ReverseIntake(){
-    intakeMotorControllerOne.getSparkMax().set(-Constants.intakeMotorSpeed);
-    SmartDashboard.putString("Intake Motor Direction", "Reverse");
-  }
-
-  
 }
