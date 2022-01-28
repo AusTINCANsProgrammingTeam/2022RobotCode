@@ -14,47 +14,42 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    //Distance calculation constants
+    public static final double kLLHeight = 1.5;   //Height of the limelight in ft from the carpet
+    public static final double kLLAngle = 30.0;   //Angle that the limelight is mounted at
+    public static final double kGoalHeight = 8.8; //Height of the goal in ft from the carpet
   
     // TODO: Swap placeholder motor IDs & Button Ports and Numbers for real ones 
     // Constants for wheel motors
   
     // Actual IDs on robot, used to activate the right motors
     // TODO: Values to be changed, these are placeholder values for now
-    // Might be reversed
     public static final int kDriveRightFront = 1;
     public static final int kDriveRightRear = 2;
     public static final int kDriveLeftFront = 3;
     public static final int kDriveLeftRear = 4;
     
     // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
-    public static final  int kDriveLeftFrontIndex = 0;
+    public static final int kDriveLeftFrontIndex = 0;
     public static final int kDriveLeftRearIndex = 1;
     public static final int kDriveRightFrontIndex = 2;
     public static final int kDriveRightRearIndex = 3;
 
     public static final int kDriveBaseCurrentLimit = 40;
 
-    // Encoder constants
-    // TODO: Replace these with the correct ports
-    public static final int kLeftEncoderDIOone = 0;
-    public static final int kLeftEncoderDIOtwo = 1;
-    public static final int kRightEncoderDIOone = 2;
-    public static final int kRightEncoderDIOtwo = 3;
-    
-    // Pathweaver constants
+
+    //Pathweaver constants
     public static final double kRamseteB = 2; //Convergence, larger values are more aggressive
     public static final double kRamseteZeta = 0.7; //Damping, larger values offer more damping
 
-
-    // TODO: Calibrate robot with correct values - These are just placeholers
-    // Note: below comments might not be entirely accurate
-    public static final double ksVolts = 0.22;                
-    
-    // Volts
+    //TODO: Calibrate robot with correct values - These are just placeholers
+    //Note: below comments might not be entirely accurate
+    public static final double ksVolts = 0.22;                     //Volts
     public static final double kvVoltSecondsPerMeter = 1.98;       //Velocity
     public static final double kaVoltSecondsSquaredPerMeter = 0.2; //Accelleration
     public static final double kPDriveVel = 8.5;                   //Velocity
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(0.5);    // Replace 0.5 with track width in meters
+
     
     //Controller constants
     public static final int kDBJoystickPort = 0;
@@ -71,6 +66,11 @@ public final class Constants {
     public static final int kIntakeMotorTwoID = 12;
     public static final double kIntakeMotorSpeed = 0.25;
 
+    //Climb Constants
+    public static final int kClimbMotorOneIndex = 5;
+    public static final int kClimbMotorTwoIndex = 6;
+    //Todo: Fill in placeholder values
+
     //CDS Constants
     public static final int kCDSMotorThreeIndex = 0;
     public static final int kCDSMotorThreeID = 13;
@@ -86,34 +86,10 @@ public final class Constants {
     public static final int kJoystickButtonNumberTwo = 2;
     public static final int kBButton = 2; // Button for hopper
     public static final int kXButton = 3; // Button for reverse hopper
+    public static final int kAButton = 4; // TODO: check if right vale for A button // used for climb
     public static final int kRightBumperButton = 5; // Button for intake 
     public static final int kLeftBumperButton = 6;  // Button to reverse intake
-    public static final int kXbutton = 3; // Button for Shooter
-    public static final int kDownbutton = 4; // Button for shooter mode
-    public static final int kUpbutton = 5; // Button for shooter mode
 
-    // Preset aim constants
-    public static final double kLOWRPM = 0.0; // RPM that the LOW aimMode winds to
-    public static final double kLOWAngle = 0.0; // Angle that the LOW aimMode adjusts to
-    public static final double kLAUNCHRPM = 0.0; // RPM that the LAUNCH aimMode winds to
-    public static final double kLAUNCHAngle = 0.0; // Angle that the LAUNCH aimMode adjusts to
-    public static final double kTARMACRPM = 0.0; // RPM that the TARMAC aimMode winds to
-    public static final double kTARMACAngle = 0.0; // Angle that the TARMAC aimMode adjusts to
-
-    // Shooter Constants
-    public static final int kShooterID = 7; // ID of the shooter
-    public static final int kHoodID = 8; // ID of the hood;
-    public static final double kShooterHeight = 3;
-    public static final double kHighHeight = 8.0 + 8.0/12.0; // Height of the high goal in ft from the carpet
-    public static final double kLowHeight = 5.0 + 7.75/12.0; // Height of the low goal in ft from the carpet
-    public static final double kAirboneTime = 1.2;
-    public static final double kGravity = 32;
-    public static final double kLLHeight = 1.5; // Height of the limelight in ft from the carpet
-    public static final double kLLAngle = 30.0; // Angle that the limelight is mounted at
-    public static final double kGearRatioIn = 34;
-    public static final double kGearRatioOut = 14;
-    public static final double kGearDiameter = 4; // Gear diametter in inches
-    public static final double kBallFlywheelratio = 2;
-    public static final int kShooterCargoID = 9;
-    public static final double kCargoRotation = 3;
+    // Climb Constants
+    public static final int kLimitSwitchChannel = 0;    // TODO: get actual channel id and maybe add more limit switches and channels
 }
