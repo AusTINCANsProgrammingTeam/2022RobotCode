@@ -47,18 +47,19 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
 
-/*
+
   private final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
   private JoystickButton[] mButtons = new JoystickButton[11];
 
   // subsystems
   private final DriveBaseSubsystem mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
   private final CDSSubsystem mCDSSubsystem = new CDSSubsystem();
-  private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem(); */
+  private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem(); 
   private final ShooterSubsystem mShooterSubsystem = new ShooterSubsystem();
-/*
+
   // commands
   private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
+  
   private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
   private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
   private ShooterPrime mShooterPrime = new ShooterPrime(mShooterSubsystem);
@@ -161,5 +162,4 @@ public class RobotContainer {
     return mDriveBaseSubsystem;
     
   }
-  */
 }

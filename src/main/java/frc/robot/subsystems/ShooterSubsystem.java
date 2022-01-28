@@ -40,15 +40,14 @@ public class ShooterSubsystem extends SubsystemBase {
   private MotorController cargo_motorController;
   private SparkMaxPIDController kCargoController;
   private RelativeEncoder kCargoEncoder;
-  private int shooterRPM;
   private NetworkTableEntry sbShooterRPM;
   private double currentRPM;
 
   public ShooterSubsystem() {
-//    sbShooterRPM = RobotContainer.debugTab.add("shooterRPM", 0).getEntry();
+    sbShooterRPM = RobotContainer.debugTab.add("shooterRPM", 0).getEntry();
 
     aimMode = 4;
-   /* cargo_motorController = new MotorController("Shooter Cargo", Constants.kShooterCargoID);
+    cargo_motorController = new MotorController("Shooter Cargo", Constants.kShooterCargoID);
     kCargoController = cargo_motorController.getPID();
     kCargoEncoder = cargo_motorController.getEncoder();
 
@@ -62,7 +61,7 @@ public class ShooterSubsystem extends SubsystemBase {
     hood_motorController = new MotorController("Hood", Constants.kHoodID);
     KHoodController = hood_motorController.getPID();
     KHoodEncoder = shooter_motorController.getEncoder();
-*/
+
   }
 
   public void adjustHood(double a) {
@@ -175,7 +174,6 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    //shooterRPM = sbShooterRPM.getDouble(0.0);
     SmartDashboard.putNumber("dist", getDistance());
   }
 
