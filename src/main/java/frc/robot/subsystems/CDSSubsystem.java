@@ -20,6 +20,8 @@ public class CDSSubsystem extends SubsystemBase {
   private DigitalInput initialBallSensor;
   private DigitalInput middleBallSensor;
   private DigitalInput finalBallSensor;
+
+  
   private int ballCount = 0;
  
   //TODO: Figure out what CDS motor is for
@@ -31,7 +33,9 @@ public class CDSSubsystem extends SubsystemBase {
    
     initialBallSensor = new DigitalInput(Constants.initialBallSensorChannel);
     middleBallSensor = new DigitalInput(Constants.middleBallSensorChannel);
-    finalBallSensor = new DigitalInput(Constants.finalBallSensorChannel);
+    finalBallSensor = new DigitalInput(Constants.finalBallSensorChannel); 
+
+    DigitalInput[] sensorArray = {initialBallSensor, middleBallSensor, finalBallSensor};
   }
   
   public void stopCDS() {
@@ -68,7 +72,7 @@ public class CDSSubsystem extends SubsystemBase {
     return beamBreakArray;
   }
 
-  public void incrimentBalls() {
+  public int getBallCount() {
     boolean[] beamBreakStatuses = this.getBeamBreakStatus();
     if (!beamBreakStatuses[0]) {
       if (this.getDirection()){
@@ -77,16 +81,16 @@ public class CDSSubsystem extends SubsystemBase {
         ballCount++;
       }
     }
+    return ballCount;
   }
 
   public void expelBalls() {
     if (ballCount > 2) {
       this.toggleCDS(true);
-      while (ballCount > 2) {
-        this.incrimentBalls();
+      while (this.getBallCount() > 2) {
       }
       this.toggleCDS(false);
     }
   }
 
-} //dont delete, for main method
+} //dont delete, for main method 
