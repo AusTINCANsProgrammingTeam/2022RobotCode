@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -39,7 +40,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private MotorController cargo_motorController;
   private SparkMaxPIDController kCargoController;
   private RelativeEncoder kCargoEncoder;
-  private int shooterRPM;
   private NetworkTableEntry sbShooterRPM;
   private double currentRPM;
 
@@ -111,11 +111,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double getTY() {
     // Gets TY, the vertical angle of the target from the limelight
-    return Math.toDegrees(NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0));
+    return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
   }
 
   public double getDistance() {
     // Uses Limelight to find distance to High Goal
+    SmartDashboard.putNumber("ty", getTY());
     return (Constants.kHighHeight - Constants.kLLHeight) / Math.tan(Math.toRadians((getTY() + Constants.kLLAngle))); // Return distance in
                                                                                                    // feet
   }
@@ -173,7 +174,7 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    //shooterRPM = sbShooterRPM.getDouble(0.0);
+    SmartDashboard.putNumber("dist", getDistance());
   }
 
 }

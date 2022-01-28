@@ -22,7 +22,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public IntakeSubsystem() {
     intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.kIntakeMotorOneID);
-    intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.kIntakeMotorTwoID);
+    intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.kIntakeMotorTwoID); 
 
     intakeMotorControllerTwo.getSparkMax().follow(intakeMotorControllerTwo.getSparkMax());
   }

@@ -54,11 +54,12 @@ public class RobotContainer {
   // subsystems
   private final DriveBaseSubsystem mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
   private final CDSSubsystem mCDSSubsystem = new CDSSubsystem();
-  private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
+  private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem(); 
   private final ShooterSubsystem mShooterSubsystem = new ShooterSubsystem();
 
   // commands
   private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
+  
   private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
   private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
   private ShooterPrime mShooterPrime = new ShooterPrime(mShooterSubsystem);
@@ -159,6 +160,6 @@ public class RobotContainer {
   // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way
   public DriveBaseSubsystem getDriveBase() {
     return mDriveBaseSubsystem;
+    
   }
-
 }
