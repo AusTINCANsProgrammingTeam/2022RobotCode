@@ -45,18 +45,18 @@ public class DriveBaseSim extends SubsystemBase {
 
         // Normal Arcade Drive
   public void arcadeDrive() {
-    m_DifferentialDrivetrainSim.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
+    //m_DifferentialDrivetrainSim.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
 
   }
 
   // tank drive, not used but good to have
   public void tankDrive() {
-    m_DifferentialDrivetrainSim.tankDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
+    //m_DifferentialDrivetrainSim.tankDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
   }
 
   // Arcade Drive where you can only move forwards and backwards for testing
   //public void arcadeDrive(double rotation) {
-  //  m_DifferentialDrivetrainSim.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), rotation);
+  m_DifferentialDrivetrainSim.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), rotation);
   //}
 
   @Override

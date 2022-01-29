@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.common.hardware.MotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Joystick;
@@ -42,6 +43,10 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.kDriveRightMiddleIndex].getSparkMax().follow(m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
 
     m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax(), m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
+
+    if (Robot.isSimulation()) {
+      
+    }
   }
 
   @Override
@@ -72,6 +77,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     // Currently serves no purpose
+
   }
 
   public void driveFunction() {
@@ -91,7 +97,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public double getRightSpeed() {
     return 0.0;
   }
-
 
   // TODO: we can add more tankDrive co functions as extras later
 }
