@@ -9,12 +9,19 @@ import frc.robot.Robot;
 import frc.robot.common.hardware.MotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class DriveBaseSubsystem extends SubsystemBase {
@@ -22,15 +29,22 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private final Joystick m_driverJoystick;
   private final MotorController[] m_motorControllers = new MotorController[6];
   private final DifferentialDrive m_differentialDrive;
-  private final DifferentialDrivetrainSim m_DifferentialDrivetrainSim;
+  private DifferentialDrivetrainSim m_DifferentialDrivetrainSim;
+  public final Field2d m_field = new Field2d();
   private final double KvLinear = 1.98;
   private final double KaLinear = 0.2;
   private final double KvAngular = 1.5;
   private final double KaAngular = 0.3;
+  private AnalogGyro m_gyro = new AnalogGyro(1);
+  private AnalogGyroSim m_gyroSim = new AnalogGyroSim(m_gyro);
+  private DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), new Pose2d(5.0, 13.5, new Rotation2d()));
+
   
   public DriveBaseSubsystem(Joystick joystick) {  
     m_driverJoystick = joystick;
+    SmartDashboard.putData("Field", m_field);
 
+    
 
     // motor controllers
     m_motorControllers[Constants.kDriveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.kDriveLeftFront);
@@ -58,11 +72,11 @@ public class DriveBaseSubsystem extends SubsystemBase {
         DCMotor.getNEO(2),       // 2 NEO motors on each side of the drivetrain.
         7.29,                    // 7.29:1 gearing reduction.
         7.5,                     // MOI of 7.5 kg m^2 (from CAD model).
-        60.0,                    // The mass of the robot is 60 kg.
-        Units.inchesToMeters(3), // The robot uses 3" radius wheels.
-        0.7112,                  // The track width is 0.7112 meters.
+        60.0,                    // mass of the robot
+        Units.inchesToMeters(3), // The robot wheel radius
+        0.7112,                  // The track width
         VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005));
-        // The standard deviations for measurement noise: x and y: 0.001m heading: 0.001 rad  l and r velocity: 0.1m/s  l and r position: 0.005m
+        // standard deviations for measurement noise: x and y: 0.001m heading: 0.001 rad  l and r velocity: 0.1m/s  l and r position: 0.005m
     }
   }
 
@@ -71,6 +85,11 @@ public class DriveBaseSubsystem extends SubsystemBase {
     // Update the smart dashboard in here, runs a for loop so it does it for every motor
     for(int i = 0; i < m_motorControllers.length; i++) {
       m_motorControllers[i].updateSmartDashboard();
+      m_odometry.update(m_gyro.getRotation2d(),
+                    m_motorControllers[Constants.kDriveLeftFrontIndex].getEncoder().getPosition(),
+                    m_motorControllers[Constants.kDriveRightFrontIndex].getEncoder().getPosition());
+      m_field.setRobotPose(m_odometry.getPoseMeters());
+
     }
  
   }
@@ -93,10 +112,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    // Currently serves no purpose
-    m_DifferentialDrivetrainSim.setInputs(m_motorControllers[Constants.kDriveLeftFrontIndex].get() * RobotController.getInputVoltage(),
-    m_motorControllers[Constants.kDriveRightFrontIndex].get() * RobotController.getInputVoltage());
-
+    m_DifferentialDrivetrainSim.setInputs(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax().get() * RobotController.getInputVoltage(),
+    m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax().get() * RobotController.getInputVoltage());
+    m_gyroSim.setAngle(-m_DifferentialDrivetrainSim.getHeading().getDegrees());
     m_DifferentialDrivetrainSim.update(0.02);
   }
 
