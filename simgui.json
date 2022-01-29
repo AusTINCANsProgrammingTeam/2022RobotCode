@@ -1,13 +1,4 @@
 {
-  "HALProvider": {
-    "Other Devices": {
-      "SPARK MAX [1]": {
-        "header": {
-          "open": true
-        }
-      }
-    }
-  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
@@ -15,6 +6,7 @@
       "/LiveWindow/DriveBaseSubsystem": "Subsystem",
       "/LiveWindow/ExampleSubsystem": "Subsystem",
       "/LiveWindow/IntakeSubsystem": "Subsystem",
+      "/LiveWindow/ShooterSubsystem": "Subsystem",
       "/LiveWindow/Ungrouped/AnalogGyro[1]": "Gyro",
       "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
       "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
@@ -26,6 +18,24 @@
     },
     "windows": {
       "/SmartDashboard/Field": {
+        "Robot": {
+          "arrowColor": [
+            0.47058820724487305,
+            0.0,
+            1.0,
+            255.0
+          ],
+          "color": [
+            0.9999995231628418,
+            0.0,
+            1.0,
+            255.0
+          ],
+          "image": "C:\\Users\\s10034243\\Desktop\\Nyan-Cat-PNG-Transparent.png",
+          "length": 1.0,
+          "style": "Box/Image",
+          "weight": 0.0
+        },
         "bottom": 900,
         "height": 8.229599952697754,
         "image": "C:\\Users\\s10034243\\Desktop\\2022-field.png",
@@ -45,14 +55,22 @@
         "Scheduler": {
           "open": true
         }
-      },
-      "open": true
+      }
     },
-    "Shuffleboard": {
-      "debug": {
-        "open": true
-      },
+    "SmartDashboard": {
       "open": true
+    }
+  },
+  "Plot": {
+    "Plot <0>": {
+      "plots": [
+        {
+          "height": 338
+        }
+      ],
+      "window": {
+        "visible": false
+      }
     }
   }
 }

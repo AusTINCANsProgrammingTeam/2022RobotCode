@@ -80,7 +80,7 @@ public final class Constants {
     public static final int finalBallSensorChannel = 2;
 
     //CDS Constants
-    public static final int CDSBeltID = 13;
+    //public static final int CDSBeltID = 13;
     public static final int CDSWheelControllerID = 14;
     public static final double CDSBeltSpeed = 0.15;
     public static final double CDSWheelControllerSpeed = 0.25;

@@ -56,7 +56,7 @@ public class RobotContainer {
 
   // subsystems
   private final DriveBaseSubsystem driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick);
-  private final CDSSubsystem CDSSubsystem = new CDSSubsystem();
+  //private final CDSSubsystem CDSSubsystem = new CDSSubsystem();
   private final IntakeSubsystem IntakeSubsystem = new IntakeSubsystem(); 
   private final ShooterSubsystem ShooterSubsystem = new ShooterSubsystem();
 
@@ -66,8 +66,8 @@ public class RobotContainer {
   private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(IntakeSubsystem);
   private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(IntakeSubsystem);
   private ShooterPrime shooterPrime = new ShooterPrime(ShooterSubsystem);
-  private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
+  //private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+  //private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
 
   // auton
   // private Trajectory[] mTrajectories;  // multiple trajectories
@@ -111,8 +111,8 @@ public class RobotContainer {
     mButtons[Constants.Xbutton].whenPressed(shooterPrime);
     mButtons[Constants.upbutton].whenPressed(new InstantCommand(ShooterSubsystem::cycleAimModeUp, ShooterSubsystem));
     mButtons[Constants.downbutton].whenPressed(new InstantCommand(ShooterSubsystem::cycleAimModeDown, ShooterSubsystem));
-    mButtons[Constants.Xbutton].whileHeld(CDSForwardCommand);
-    mButtons[Constants.BButton].whileHeld(CDSReverseCommand);
+    //mButtons[Constants.Xbutton].whileHeld(CDSForwardCommand);
+    //mButtons[Constants.BButton].whileHeld(CDSReverseCommand);
   }
 
   private void initializeTrajectories() throws IOException {

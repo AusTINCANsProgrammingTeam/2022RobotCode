@@ -96,10 +96,10 @@ public class DriveBaseSubsystem extends SubsystemBase {
       m_DifferentialDrivetrainSim = new DifferentialDrivetrainSim(
         DCMotor.getNEO(2),       // 2 NEO motors on each side of the drivetrain.
         7.29,                    // 7.29:1 gearing reduction.
-        7.5,                     // MOI of 7.5 kg m^2 (from CAD model).
+        10,                      // MOI of 7.5 kg m^2 (from CAD model).
         60.0,                    // mass of the robot
         Units.inchesToMeters(3), // The robot wheel radius
-        0.7112,                  // The track width
+        1,                       // The track width
         VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005)
       );
 
