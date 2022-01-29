@@ -4,19 +4,11 @@
 
 package frc.robot;
 
-import java.io.IOException;
-import java.nio.file.Path;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardComponent;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.subsystems.Tabs.TabContainer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -30,58 +22,13 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   private TabContainer m_tabContainer;
-  private ShuffleboardTab subSystemEnableTab;
-  private String[] subsystemList = {"Shooter", "DriveBase", "Intake"};
-  private NetworkTableEntry[] sbSubsystemEnables = new NetworkTableEntry[subsystemList.length];
-  private boolean[] subsystemEnables = new boolean[subsystemList.length];
   // This function is run when the robot is first started up and should be used for any
   // initialization code.
 
-  // TODO is there a better way to check if a Shuffleboard component already exists?
-  private boolean inShuffleboardTab(ShuffleboardTab sbT, String sbTitle) {
-
-    for (ShuffleboardComponent<?> sb : subSystemEnableTab.getComponents()) {
-       if (sb.getTitle() == sbTitle)
-       {
-         return true;
-       }
-    }
-    return false;
-
-  }
-   
   @Override
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    subSystemEnableTab = Shuffleboard.getTab("Subsystem Enables");
-    for (int i = 0; i < subSystemEnableTab.getComponents().size(); i++) {
-      subSystemEnableTab.getComponents().remove(i);
-    }
-     NetworkTableEntry sbCommitSubs = subSystemEnableTab.add("Commit Subsystems", false).withSize(2, 1).withPosition(0, 0).withWidget(BuiltInWidgets.kToggleButton).getEntry();
-
-    for (int i = 0; i < sbSubsystemEnables.length; i++) {
-      sbSubsystemEnables[i] = subSystemEnableTab.add("Enable" + subsystemList[i], false).withSize(1, 1).withPosition(i+2, 0).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
-    }
-    if (sbCommitSubs.setBoolean(false)) {
-      System.out.println("Reset Subsystem commit value");
-
-    }
-    Shuffleboard.update();
-    Shuffleboard.selectTab("Subsystem Enables");
-    while(!sbCommitSubs.getBoolean(false)) {
-      Shuffleboard.update();
-      System.out.println("Waiting for Subsystem enable values");
-      try {
-        Thread.sleep((long)1000.0);
-      } catch (InterruptedException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-    }
-    for (int i = 0; i < sbSubsystemEnables.length; i++) {
-      subsystemEnables[i] = sbSubsystemEnables[i].getBoolean(false);
-    }
     m_robotContainer = new RobotContainer();
     m_tabContainer = new TabContainer(m_robotContainer.getDriveBase());
 
