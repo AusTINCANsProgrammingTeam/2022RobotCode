@@ -10,6 +10,10 @@ import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+
 
 
 /** Add your docs here. */
@@ -19,8 +23,8 @@ public class ClimbSubsystem extends SubsystemBase {
   
   private MotorController m_climbMotorControllerOne;
   private MotorController m_climbMotorControllerTwo;
-
   private DigitalInput m_limitSwitch;
+
 
   // TODO: maybe add servos
 
@@ -29,14 +33,22 @@ public class ClimbSubsystem extends SubsystemBase {
     m_climbMotorControllerOne = new MotorController("Climb Motor One", Constants.kClimbMotorOneIndex);
     m_climbMotorControllerTwo = new MotorController("Climb Motor Two", Constants.kClimbMotorTwoIndex);
     m_climbMotorControllerTwo.setInverted(true);
-
     m_limitSwitch = new DigitalInput(Constants.kLimitSwitchChannel);
+
+    //Example camera system, unsure if it goes here or not
+    CameraServer.startAutomaticCapture();
+    CvSink cvSink = CameraServer.getVideo();
+    CvSource outputStream = CameraServer.putVideo("Blur", 640, 480);
   }
 
   public void toggleClimb(boolean on){    
     if (on){
-      m_climbMotorControllerOne.getSparkMax().set(1);
-      
+      if (m_limitSwitch.get()) {
+        m_climbMotorControllerOne.getSparkMax().set(0);
+      } else {
+        m_climbMotorControllerOne.getSparkMax().set(1);
+      }
+
     } else {
       m_climbMotorControllerOne.getSparkMax().set(0);
       

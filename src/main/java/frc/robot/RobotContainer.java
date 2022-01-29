@@ -104,7 +104,7 @@ public class RobotContainer {
     mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
     mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
     // Shooter
-    mButtons[Constants.kXbutton].whenPressed(mShooterPrime);
+    mButtons[Constants.kXButton].whenPressed(mShooterPrime);
     mButtons[Constants.kUpbutton].whenPressed(new InstantCommand(mShooterSubsystem::cycleAimModeUp, mShooterSubsystem));
     mButtons[Constants.kDownbutton].whenPressed(new InstantCommand(mShooterSubsystem::cycleAimModeDown, mShooterSubsystem));
     mButtons[Constants.kXButton].whileHeld(mCDSForwardCommand);
