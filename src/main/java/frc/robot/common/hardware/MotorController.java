@@ -87,6 +87,10 @@ public class MotorController {
 
     // get speeds of wheel side
     public double getSpeed() {
+        // Check first that mEncoder has been instantiated
+        if(mEncoder == null) {
+            throw new NullPointerException("Encoder has not been instantiated.");
+        }
         return mEncoder.getVelocity();
     }
 
