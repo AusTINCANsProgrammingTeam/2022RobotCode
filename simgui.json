@@ -2,22 +2,17 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/LiveWindow/DriveBaseSubsystem": "Subsystem",
-      "/LiveWindow/HopperSubsystem": "Subsystem",
-      "/LiveWindow/IntakeSubsystem": "Subsystem",
-      "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
+      "/LiveWindow/ExampleSubsystem": "Subsystem",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler"
     }
   },
   "NetworkTables": {
     "LiveWindow": {
-      "DriveBaseSubsystem": {
-        "open": true
-      },
-      "open": true
+      "Ungrouped": {
+        "Scheduler": {
+          "open": true
+        }
+      }
     }
-  },
-  "NetworkTables View": {
-    "visible": false
   }
 }
