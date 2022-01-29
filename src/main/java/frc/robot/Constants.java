@@ -29,7 +29,7 @@ public final class Constants {
     public static final int driveLeftRear = 4;
     
     // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
-    public static final  int driveLeftFrontIndex = 0;
+    public static final int driveLeftFrontIndex = 0;
     public static final int driveLeftRearIndex = 1;
     public static final int driveRightFrontIndex = 2;
     public static final int driveRightRearIndex = 3;
