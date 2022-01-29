@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.REVLibError;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -54,7 +55,7 @@ public class MotorController {
         return mEncoder;
     }
 
-    public SparkMaxPIDController getPID() {
+    public SparkMaxPIDController getPID() { 
         return mPIDController;
     }
 
@@ -109,6 +110,11 @@ public class MotorController {
                 mPIDController.setD(mD);
             }
         }
+    }
+
+    // Mode can be coast or brake
+    public void setIdleMode(CANSparkMax.IdleMode mode) {
+        mSparkMax.setIdleMode(mode);    
     }
 
 }
