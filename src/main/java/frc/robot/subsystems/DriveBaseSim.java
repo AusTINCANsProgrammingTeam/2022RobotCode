@@ -7,9 +7,7 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import com.revrobotics.CANSparkMax;
-
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -56,7 +54,7 @@ public class DriveBaseSim extends SubsystemBase {
 
   // Arcade Drive where you can only move forwards and backwards for testing
   //public void arcadeDrive(double rotation) {
-  m_DifferentialDrivetrainSim.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), rotation);
+  //m_DifferentialDrivetrainSim.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), rotation);
   //}
 
   @Override
@@ -70,7 +68,7 @@ public class DriveBaseSim extends SubsystemBase {
 
   public void stopMotorsFunction() {
     // Calls Arcade Drive with a zero to both speed and rotation in order to stop the motors
-    m_DifferentialDrivetrainSim.arcadeDrive(0.0, 0.0);
+    //m_DifferentialDrivetrainSim.arcadeDrive(0.0, 0.0);
   }
   @Override
   public void periodic() {
