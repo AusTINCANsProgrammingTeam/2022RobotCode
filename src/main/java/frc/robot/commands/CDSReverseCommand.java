@@ -20,7 +20,7 @@ public class CDSReverseCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mCDSSubsystem.toggleCDS(true);
+    mCDSSubsystem.CDSBeltWheelControllerToggle(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

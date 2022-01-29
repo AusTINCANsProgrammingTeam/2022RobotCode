@@ -5,22 +5,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.CDSSubsystem; 
+import frc.robot.subsystems.CDSSubsystem;
 
-public class CDSForwardCommand extends CommandBase {
-  /** Creates a new IntakeForwardCommand. */
-  private final CDSSubsystem mCDSSubsystem;
-  
-  public CDSForwardCommand(CDSSubsystem CDSSubsystem) {
-    //Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(CDSSubsystem); 
-    mCDSSubsystem = CDSSubsystem;
+public class CDSAlignmentWheelCommand extends CommandBase {
+  /** Creates a new CDSAlignmentWheelCommand. */
+  private final CDSSubsystem mCDSAlignmentWheel;
+
+  public CDSAlignmentWheelCommand(CDSSubsystem CDSSubsystem) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(CDSSubsystem);
+    mCDSAlignmentWheel = CDSSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mCDSSubsystem.CDSBeltWheelControllerToggle(false);
+    mCDSAlignmentWheel.CDSAlignmentToggle(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -30,7 +30,7 @@ public class CDSForwardCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    mCDSSubsystem.stopCDS();
+    mCDSAlignmentWheel.stopCDS();
   }
 
   // Returns true when the command should end.

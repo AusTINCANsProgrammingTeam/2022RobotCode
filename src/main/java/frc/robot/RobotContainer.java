@@ -16,6 +16,7 @@ import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
+import frc.robot.commands.CDSAlignmentWheelCommand;
 
 
  // This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -43,6 +44,7 @@ public class RobotContainer {
   private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
   private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
   private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
+  private CDSAlignmentWheelCommand CDSAlignmentWheelCommand = new CDSAlignmentWheelCommand(CDSSubsystem);
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
@@ -62,6 +64,7 @@ public class RobotContainer {
     buttons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
     buttons[Constants.BButton].whileHeld(CDSForwardCommand);
     buttons[Constants.XButton].whileHeld(CDSReverseCommand);
+    buttons[Constants.AButton].whileHeld(CDSAlignmentWheelCommand);
   }
 
   // Use this to pass the autonomous command to the main {@link Robot} class.

@@ -66,8 +66,9 @@ public final class Constants {
 
     //Joystick Constants
     public static final int portNumber = 0; //driver joystick
-    public static final int BButton = 2; // Button for hopper
-    public static final int XButton = 3; // Button for reverse hopper
+    public static final int BButton = 2; // Button for forward CDS
+    public static final int XButton = 3; // Button for reverse CDS
+    public static final int AButton = 1; // Button for Alignment CDS
     public static final int rightBumperButton = 5; // Button for intake 
     public static final int leftBumperButton = 6;  // Button to reverse intake
 }

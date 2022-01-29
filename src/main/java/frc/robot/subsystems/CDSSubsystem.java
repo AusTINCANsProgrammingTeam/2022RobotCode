@@ -51,27 +51,34 @@ public class CDSSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("CDS Belt Speed", 0.0);
   }
 
-  public void toggleCDS (boolean reverse) {
+  public void CDSBeltWheelControllerToggle(boolean reverse) {
     if (reverse) {
       CDSWheelControllerOne.getSparkMax().set(-Constants.CDSWheelControllerSpeed);
-      CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
-      CDSAlignmentWheelOne.getSparkMax().set(-Constants.CDSAlignmentSpeed);
-      
       SmartDashboard.putString("CDS Wheel Controller Direction", "Reverse");
       SmartDashboard.putNumber("CDS Wheel Controller Speed", -Constants.CDSWheelControllerSpeed);
+      
+      CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
       SmartDashboard.putString("CDS Belt Direction", "Reverse");
       SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
-      SmartDashboard.putString("CDS Alignment Wheel Direction", "Reverse");
-      SmartDashboard.putNumber("CDS Alignment Wheel Speed", -Constants.CDSAlignmentSpeed);
     } else {
       CDSWheelControllerOne.getSparkMax().set(Constants.CDSWheelControllerSpeed);
-      CDSBeltController.getSparkMax().set(Constants.CDSBeltSpeed);
-      CDSAlignmentWheelOne.getSparkMax().set(Constants.CDSAlignmentSpeed);
-      
       SmartDashboard.putString("CDS Wheel Controller Direction", "Forward");
       SmartDashboard.putNumber("CDS Wheel Controller Speed", Constants.CDSWheelControllerSpeed);
+      
+      CDSBeltController.getSparkMax().set(Constants.CDSBeltSpeed);
       SmartDashboard.putString("CDS Belt Direction", "Forward");
       SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
+    }
+  }
+
+  public void CDSAlignmentToggle(boolean reverse){
+    if(reverse){
+      CDSAlignmentWheelOne.getSparkMax().set(-Constants.CDSAlignmentSpeed);
+      SmartDashboard.putString("CDS Alignment Wheel Direction", "Reverse");
+      SmartDashboard.putNumber("CDS Alignment Wheel Speed", -Constants.CDSAlignmentSpeed);
+
+    } else{
+      CDSAlignmentWheelOne.getSparkMax().set(Constants.CDSAlignmentSpeed);
       SmartDashboard.putString("CDS Alignment Wheel Direction", "Forward");
       SmartDashboard.putNumber("CDS Alignment Wheel Speed", Constants.CDSAlignmentSpeed);
     }
