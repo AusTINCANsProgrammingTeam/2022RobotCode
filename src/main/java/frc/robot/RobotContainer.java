@@ -36,7 +36,6 @@ import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.ShooterPrime;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
-import frc.robot.commands.CDSAlignmentWheelCommand;
 
  // This class is where the bulk of the robot should be declared. Since Command-based is a
  // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
