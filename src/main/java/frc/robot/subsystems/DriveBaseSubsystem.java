@@ -74,7 +74,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     m_motorControllers = new MotorController[4];
     //m_gyro = new ADXRS450_Gyro();
-    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
+    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), new Pose2d(6.732000, 4.743371, new Rotation2d(2.70526)));
     
     
 
