@@ -20,13 +20,6 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSWheelControllerOne;
   private MotorController CDSWheelControllerTwo;
 
-  /*private DigitalInput initialBallSensor;
-  private DigitalInput middleBallSensor;
-  private DigitalInput finalBallSensor;
-
-  private int ballCount = 0;*/
- 
-
   public CDSSubsystem() {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
     CDSAlignmentWheelOne = new MotorController("CDS to Shooter Wheel One", Constants.CDSAlignmentID, 40);
@@ -36,19 +29,6 @@ public class CDSSubsystem extends SubsystemBase {
 
     CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
     CDSAlignmentWheelTwo.getSparkMax().follow(CDSAlignmentWheelOne.getSparkMax(), true);
-    
-    /*initialBallSensor = new DigitalInput(Constants.initialBallSensorChannel);
-    middleBallSensor = new DigitalInput(Constants.middleBallSensorChannel);
-    finalBallSensor = new DigitalInput(Constants.finalBallSensorChannel); 
-
-    DigitalInput[] sensorArray = {initialBallSensor, middleBallSensor, finalBallSensor};*/
-  }
-  
-  public void stopCDS() {
-    CDSWheelControllerOne.getSparkMax().set(0.0);
-    CDSAlignmentWheelOne.getSparkMax().set(0.0);
-    CDSBeltController.getSparkMax().set(0.0);
-    SmartDashboard.putNumber("CDS Belt Speed", 0.0);
   }
 
   public void CDSBeltWheelControllerToggle(boolean reverse) {
@@ -84,42 +64,11 @@ public class CDSSubsystem extends SubsystemBase {
     }
   }
 
-  /*public boolean getDirection() {
-    // true = inverted, false = forward
-    if (CDSBeltController.getSparkMax().get() > 0) {
-      return false;
-    } else {
-    return true;
-    }
-  }
+  public void stopCDS() {
+    CDSWheelControllerOne.getSparkMax().set(0.0);
+    CDSAlignmentWheelOne.getSparkMax().set(0.0);
+    CDSBeltController.getSparkMax().set(0.0);
+    SmartDashboard.putNumber("CDS Belt Speed", 0.0);
 
-  public boolean[] getBeamBreakStatus() {
-    boolean initialStatus = initialBallSensor.get();
-    boolean middleStatus = middleBallSensor.get();
-    boolean finalStatus = finalBallSensor.get();
-    boolean[] beamBreakArray = {initialStatus, middleStatus, finalStatus};
-    return beamBreakArray;
-  }
-
-  public int getBallCount() {
-    boolean[] beamBreakStatuses = this.getBeamBreakStatus();
-    if (!beamBreakStatuses[0]) {
-      if (this.getDirection()){
-        ballCount--;
-      } else {
-        ballCount++;
-      }
-    }
-    return ballCount;
-  }
-
-  public void expelBalls() {
-    if (ballCount > 2) {
-      this.toggleCDS(true);
-      while (this.getBallCount() > 2) {
-      }
-      this.toggleCDS(false);
-    }
-  }*/
-
+}
 } //dont delete, for main method 

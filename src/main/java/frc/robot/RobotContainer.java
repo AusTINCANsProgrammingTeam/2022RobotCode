@@ -60,13 +60,14 @@ public class RobotContainer {
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
 
   // commands
-  private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
+  private final DriveBaseTeleopCommand driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
   
-  private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
-  private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
-  private ShooterPrime mShooterPrime = new ShooterPrime(shooterSubsystem);
-  private CDSForwardCommand mCDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-  private CDSReverseCommand mCDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
+  private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
+  private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
+  private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem);
+  private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
+  private CDSAlignmentWheelCommand CDSAlignmentWheelCommand = new CDSAlignmentWheelCommand(CDSSubsystem);
 
   // auton
   // private Trajectory[] mTrajectories;  // multiple trajectories
@@ -91,7 +92,7 @@ public class RobotContainer {
       e.printStackTrace();
     }
 
-    driveBaseSubsystem.setDefaultCommand(mDriveBaseTeleopCommand);
+    driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
 
   }
 
@@ -104,15 +105,20 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Intake
-    buttons[Constants.leftBumperButton].whileHeld(mIntakeForwardCommand);
-    buttons[Constants.rightBumperButton].whileHeld(mIntakeReverseCommand);
+    buttons[Constants.leftBumperButton].whileHeld(intakeForwardCommand);
+    buttons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
+    
+    // CDS
+    buttons[Constants.YButton].whileHeld(CDSForwardCommand);
+    buttons[Constants.BButton].whileHeld(CDSReverseCommand);
+    buttons[Constants.AButton].whileHeld(CDSAlignmentWheelCommand);
+  
+    
     // Shooter
-    buttons[Constants.Xbutton].whenPressed(mShooterPrime);
+    buttons[Constants.Xbutton].whenPressed(shooterPrime);
     buttons[Constants.upbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
     buttons[Constants.downbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
-    buttons[Constants.YButton].whileHeld(mCDSForwardCommand);
-    buttons[Constants.BButton].whileHeld(mCDSReverseCommand);
-  }
+    }
 
   private void initializeTrajectories() throws IOException {
     // String[] trajectoryJSON = {"One.wpilib.json", "Two.wpilib.json", "Three.wpilib.json", "Four.wpilib.json"};  // add new trajectories manually

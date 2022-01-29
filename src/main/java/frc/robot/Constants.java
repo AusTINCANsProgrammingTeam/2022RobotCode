@@ -88,8 +88,9 @@ public final class Constants {
     public static final int portNumber = 0;
     public static final int joystickButtonNumberOne = 1;
     public static final int joystickButtonNumberTwo = 2;
-    public static final int BButton = 2; // Button for hopper
-    public static final int YButton = 4; // Button for reverse hopper
+    public static final int BButton = 2; // Button for forward cds
+    public static final int YButton = 4; // Button for reverse cds
+    public static final int AButton = 1; // Button for aligning cds
     public static final int rightBumperButton = 5; // Button for intake 
     public static final int leftBumperButton = 6;  // Button to reverse intake
     public static final int Xbutton = 3; // Button for Shooter
