@@ -14,6 +14,8 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+
 import edu.wpi.first.wpilibj.Encoder;
 
 
@@ -25,30 +27,27 @@ public class DriveBaseSubsystem extends SubsystemBase {
   //public static ADIS16448_IMU m_gyro; //Non-native gyro, might use later
   public static ADXRS450_Gyro m_gyro;
   private final DifferentialDriveOdometry m_odometry;
-  public static Encoder m_leftEncoder;
-  public static Encoder m_rightEncoder;
+  public static RelativeEncoder m_leftEncoder;
+  public static RelativeEncoder m_rightEncoder;
 
   // Here are the encoders
   
   
 
   public DriveBaseSubsystem(Joystick joystick) {  
-    m_leftEncoder = new Encoder(Constants.kLeftEncoderDIOone, Constants.kLeftEncoderDIOtwo, 
-    false, Encoder.EncodingType.k2X);
-    m_rightEncoder = new Encoder(Constants.kRightEncoderDIOone, Constants.kRightEncoderDIOtwo, 
-    false, Encoder.EncodingType.k2X);
     m_driverJoystick = joystick;
     m_motorControllers = new MotorController[4];
+    
     m_gyro = new ADXRS450_Gyro();
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
     
     
 
     // motor controllers
-    m_motorControllers[Constants.kDriveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.kDriveLeftFront);
-    m_motorControllers[Constants.kDriveLeftRearIndex] = new MotorController("Differential Left Rear", Constants.kDriveLeftRear);
-    m_motorControllers[Constants.kDriveRightFrontIndex] = new MotorController("Differential Right Front", Constants.kDriveRightFront);
-    m_motorControllers[Constants.kDriveRightRearIndex] = new MotorController("Differential Right Rear", Constants.kDriveRightRear);
+    m_motorControllers[Constants.kDriveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.kDriveLeftFront, 40, true);
+    m_motorControllers[Constants.kDriveLeftRearIndex] = new MotorController("Differential Left Rear", Constants.kDriveLeftRear, 40, true);
+    m_motorControllers[Constants.kDriveRightFrontIndex] = new MotorController("Differential Right Front", Constants.kDriveRightFront, 40, true);
+    m_motorControllers[Constants.kDriveRightRearIndex] = new MotorController("Differential Right Rear", Constants.kDriveRightRear, 40, true);
 
     // inverses right side motors (2022 wpilib doesn't default it to be inverted for differential drive)
     m_motorControllers[Constants.kDriveRightFrontIndex].setInverted(true);
@@ -57,7 +56,10 @@ public class DriveBaseSubsystem extends SubsystemBase {
     //Forces middle and rear motors of each side to follow the first
     m_motorControllers[Constants.kDriveLeftRearIndex].setFollow(m_motorControllers[Constants.kDriveLeftFrontIndex]);
     m_motorControllers[Constants.kDriveRightRearIndex].setFollow(m_motorControllers[Constants.kDriveRightFrontIndex]);
-
+    
+    // Encoders
+    m_leftEncoder = m_motorControllers[Constants.kDriveLeftFrontIndex].getEncoder();
+    m_rightEncoder = m_motorControllers[Constants.kDriveRightFrontIndex].getEncoder();  
     // differential drive
     m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax(), 
                                           m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
@@ -135,8 +137,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
   }
 
   public void resetEncoders() {
-    m_leftEncoder.reset();
-    m_rightEncoder.reset();
+    m_leftEncoder.setPosition(0);
+    m_rightEncoder.setPosition(0);
   }
 
   public void resetOdometry(Pose2d pose) {

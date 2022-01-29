@@ -36,7 +36,7 @@ public class MotorController {
         // If enablePid has any number of booleans greater than 0 we are enabling pid
         if (enablePid.length > 0)
         {
-            mP = SmartDashboard.getNumber(mName + " P Value", 1.0);
+            mP = SmartDashboard.getNumber(mName + " P Value", 0.000025);
             mI = SmartDashboard.getNumber(mName + " I Value", 0.0);
             mD = SmartDashboard.getNumber(mName + " D Value", 0.0);
             mPIDController = mSparkMax.getPIDController();
