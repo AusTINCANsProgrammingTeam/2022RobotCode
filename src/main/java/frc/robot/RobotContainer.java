@@ -31,8 +31,10 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
+import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.ShooterPrime;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
@@ -56,6 +58,7 @@ public class RobotContainer {
   private final CDSSubsystem mCDSSubsystem = new CDSSubsystem();
   private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem(); 
   private final ShooterSubsystem mShooterSubsystem = new ShooterSubsystem();
+  private final LimelightSubsystem mLimelightSubsystem = new LimelightSubsystem();
 
   // commands
   private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
@@ -65,6 +68,7 @@ public class RobotContainer {
   private ShooterPrime mShooterPrime = new ShooterPrime(mShooterSubsystem);
   private CDSForwardCommand mCDSForwardCommand = new CDSForwardCommand(mCDSSubsystem);
   private CDSReverseCommand mCDSReverseCommand = new CDSReverseCommand(mCDSSubsystem);
+  private LimelightAlign mLimelightAlign = new LimelightAlign(mLimelightSubsystem);
 
   // auton
   // private Trajectory[] mTrajectories;  // multiple trajectories
@@ -110,6 +114,8 @@ public class RobotContainer {
     mButtons[Constants.kDownbutton].whenPressed(new InstantCommand(mShooterSubsystem::cycleAimModeDown, mShooterSubsystem));
     mButtons[Constants.kXButton].whileHeld(mCDSForwardCommand);
     mButtons[Constants.kBButton].whileHeld(mCDSReverseCommand);
+    // Limelight
+    mButtons[Constants.kAButton].whenPressed(mLimelightAlign);
   }
 
   private void initializeTrajectories() throws IOException {

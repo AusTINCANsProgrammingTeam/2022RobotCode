@@ -27,12 +27,14 @@ public class LimelightSubsystem extends SubsystemBase {
   private DriveBaseSubsystem m_DriveBaseSubsystem;
   private CANSparkMax m_leftMotor;
   private CANSparkMax m_rightMotor;
+  private boolean isFinished;
 
   public LimelightSubsystem() {
     m_PidController = new PIDController(6e-5, 0, 0);
     m_PidController.setTolerance(1.0);
     m_leftMotor = m_DriveBaseSubsystem.getLeftMotor();
     m_rightMotor = m_DriveBaseSubsystem.getRightMotor();
+    isFinished = false;
   }
 
   public double getTX() {
@@ -52,11 +54,17 @@ public class LimelightSubsystem extends SubsystemBase {
 
   public void setMotors(){
     //Sets drive motors to align based on our calculations
-    m_leftMotor.set(calculatePID());
-    m_rightMotor.set(calculatePID());
+    double adjustment = calculatePID();
+    m_leftMotor.set(adjustment);
+    m_rightMotor.set(-1 * adjustment);
+  }
+
+  public boolean getFinished(){
+    isFinished = true;
+    return isFinished;
   }
 
   public void updateSmartDashboard(){
 
-}
+  }
 }

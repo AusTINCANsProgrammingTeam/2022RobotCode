@@ -91,6 +91,7 @@ public final class Constants {
     public static final int kXbutton = 3; // Button for Shooter
     public static final int kDownbutton = 4; // Button for shooter mode
     public static final int kUpbutton = 5; // Button for shooter mode
+    public static final int kAButton = 2; //Button to align Limelight
 
     // Preset aim constants
     public static final double kLOWRPM = 0.0; // RPM that the LOW aimMode winds to
