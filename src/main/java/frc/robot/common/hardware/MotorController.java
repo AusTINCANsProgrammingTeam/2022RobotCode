@@ -1,5 +1,7 @@
 package frc.robot.common.hardware;
 
+import javax.management.JMRuntimeException;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -7,6 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.REVLibError;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import netscape.javascript.JSException;
 
 public class MotorController {
     
@@ -48,14 +51,26 @@ public class MotorController {
     }
 
     public CANSparkMax getSparkMax() {
+        // Check first that mSparkMax has been instantiated
+        if(mSparkMax == null) {
+            throw new NullPointerException("Spark MAX motor has not been instantiated.");
+        }
         return mSparkMax;
     }
 
     public RelativeEncoder getEncoder() {
+        // Check first that mEncoder has been instantiated
+        if(mEncoder == null) {
+            throw new NullPointerException("Encoder has not been instantiated.");
+        }
         return mEncoder;
     }
 
     public SparkMaxPIDController getPID() { 
+        // Check first that mPIDController has been instantiated
+        if(mPIDController == null) {
+            throw new NullPointerException("PID Controller has not been instantiated.");
+        }
         return mPIDController;
     }
 
@@ -85,6 +100,11 @@ public class MotorController {
     }
 
     public void setPID() {
+        // Check first that mPIDController has been instantiated
+        if(mPIDController == null) {
+            throw new NullPointerException("PID Controller has not been instantiated.");
+        }
+
         mPIDController.setP(mP);
         mPIDController.setI(mI);
         mPIDController.setD(mD);
