@@ -60,10 +60,10 @@ public class DriveBaseSubsystem extends SubsystemBase {
   
 
   public DriveBaseSubsystem(Joystick joystick) { 
-    m_leftEncoder = new Encoder(Constants.kLeftEncoderDIOone, Constants.kLeftEncoderDIOtwo, 
+    m_leftEncoder = new Encoder(Constants.leftEncoderDIOone, Constants.leftEncoderDIOtwo, 
                                 false, Encoder.EncodingType.k2X);
 
-    m_rightEncoder = new Encoder(Constants.kRightEncoderDIOone, Constants.kRightEncoderDIOtwo, 
+    m_rightEncoder = new Encoder(Constants.rightEncoderDIOone, Constants.rightEncoderDIOtwo, 
                                 false, Encoder.EncodingType.k2X);
 
     m_leftEncoderSim = new EncoderSim(m_leftEncoder);
