@@ -36,11 +36,13 @@ import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.ShooterPrime;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
+import frc.robot.commands.CDSAlignmentWheelCommand;
 
  // This class is where the bulk of the robot should be declared. Since Command-based is a
  // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  // perieodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- // subsystems, commands, and button mappings) should be declared here.
+ // subsystems, commands, and button mappings) should be declared here. 
+ 
 
 public class RobotContainer {
   public static ShuffleboardTab debugTab;
@@ -48,23 +50,23 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
 
-  private final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
-  private JoystickButton[] mButtons = new JoystickButton[11];
+  private final Joystick driverJoystick = new Joystick(Constants.portNumber);
+  private JoystickButton[] buttons = new JoystickButton[11];
 
   // subsystems
-  private final DriveBaseSubsystem mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
-  private final CDSSubsystem mCDSSubsystem = new CDSSubsystem();
-  private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem(); 
-  private final ShooterSubsystem mShooterSubsystem = new ShooterSubsystem();
+  private final DriveBaseSubsystem driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick);
+  private final CDSSubsystem CDSSubsystem = new CDSSubsystem();
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(); 
+  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
 
   // commands
-  private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
+  private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
   
-  private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
-  private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
-  private ShooterPrime mShooterPrime = new ShooterPrime(mShooterSubsystem);
-  private CDSForwardCommand mCDSForwardCommand = new CDSForwardCommand(mCDSSubsystem);
-  private CDSReverseCommand mCDSReverseCommand = new CDSReverseCommand(mCDSSubsystem);
+  private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
+  private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
+  private ShooterPrime mShooterPrime = new ShooterPrime(shooterSubsystem);
+  private CDSForwardCommand mCDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+  private CDSReverseCommand mCDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
 
   // auton
   // private Trajectory[] mTrajectories;  // multiple trajectories
@@ -75,8 +77,8 @@ public class RobotContainer {
   public RobotContainer() {
     debugTab = Shuffleboard.getTab("debug");
     // Configure the button bindings
-    for (int i = 1; i < mButtons.length; i++) {
-      mButtons[i] = new JoystickButton(mDriverJoystick, i);
+    for (int i = 1; i < buttons.length; i++) {
+      buttons[i] = new JoystickButton(driverJoystick, i);
     }
 
 
@@ -89,7 +91,7 @@ public class RobotContainer {
       e.printStackTrace();
     }
 
-    mDriveBaseSubsystem.setDefaultCommand(mDriveBaseTeleopCommand);
+    driveBaseSubsystem.setDefaultCommand(mDriveBaseTeleopCommand);
 
   }
 
@@ -102,14 +104,14 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Intake
-    mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
-    mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
+    buttons[Constants.leftBumperButton].whileHeld(mIntakeForwardCommand);
+    buttons[Constants.rightBumperButton].whileHeld(mIntakeReverseCommand);
     // Shooter
-    mButtons[Constants.kXbutton].whenPressed(mShooterPrime);
-    mButtons[Constants.kUpbutton].whenPressed(new InstantCommand(mShooterSubsystem::cycleAimModeUp, mShooterSubsystem));
-    mButtons[Constants.kDownbutton].whenPressed(new InstantCommand(mShooterSubsystem::cycleAimModeDown, mShooterSubsystem));
-    mButtons[Constants.kXButton].whileHeld(mCDSForwardCommand);
-    mButtons[Constants.kBButton].whileHeld(mCDSReverseCommand);
+    buttons[Constants.Xbutton].whenPressed(mShooterPrime);
+    buttons[Constants.upbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
+    buttons[Constants.downbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
+    buttons[Constants.YButton].whileHeld(mCDSForwardCommand);
+    buttons[Constants.BButton].whileHeld(mCDSReverseCommand);
   }
 
   private void initializeTrajectories() throws IOException {
@@ -134,32 +136,30 @@ public class RobotContainer {
     RamseteCommand ramseteCommand =
     new RamseteCommand(
         trajectory,
-        mDriveBaseSubsystem::getPose,
-        new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta), //Fix these constants by
+        driveBaseSubsystem::getPose,
+        new RamseteController(Constants.ramseteB, Constants.ramseteZeta), //Fix these constants by
                                                                             //characterizing the robot
         new SimpleMotorFeedforward(
-            Constants.ksVolts,
-            Constants.kvVoltSecondsPerMeter,
-            Constants.kaVoltSecondsSquaredPerMeter),
+            Constants.sVolts,
+            Constants.vVoltSecondsPerMeter,
+            Constants.aVoltSecondsSquaredPerMeter),
 
-        Constants.kDriveKinematics,
+        Constants.driveKinematics,
         
-        mDriveBaseSubsystem::getWheelSpeeds,
+        driveBaseSubsystem::getWheelSpeeds,
         new PIDController(1, 0, 0),
         new PIDController(1, 0, 0),
         //RamseteCommand passes volts to the callback
-        mDriveBaseSubsystem::setAutonVolts,
-        mDriveBaseSubsystem);
+        driveBaseSubsystem::setAutonVolts,
+        driveBaseSubsystem);
         
-    mDriveBaseSubsystem.resetOdometry(trajectory.getInitialPose());
+    driveBaseSubsystem.resetOdometry(trajectory.getInitialPose());
 
-    return ramseteCommand.andThen(() -> mDriveBaseSubsystem.setAutonVolts(0,0));
+    return ramseteCommand.andThen(() -> driveBaseSubsystem.setAutonVolts(0,0));
   }
-
 
   // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way
   public DriveBaseSubsystem getDriveBase() {
-    return mDriveBaseSubsystem;
-    
+    return driveBaseSubsystem;
   }
 }
