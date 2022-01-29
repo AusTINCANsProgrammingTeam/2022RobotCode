@@ -41,8 +41,8 @@ public class RobotContainer {
   private final DriveBaseTeleopCommand driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
   private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
   private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
-  //private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-  //private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
+  private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
@@ -60,6 +60,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     buttons[Constants.leftBumperButton].whileHeld(intakeForwardCommand);
     buttons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
+    buttons[Constants.BButton].whileHeld(CDSForwardCommand);
+    buttons[Constants.XButton].whileHeld(CDSReverseCommand);
   }
 
   // Use this to pass the autonomous command to the main {@link Robot} class.

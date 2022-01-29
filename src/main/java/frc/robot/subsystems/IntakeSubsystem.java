@@ -8,6 +8,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -18,18 +19,29 @@ public class IntakeSubsystem extends SubsystemBase {
   
   private MotorController intakeMotorControllerOne;
   private MotorController intakeMotorControllerTwo;
-  private MotorController CDSWheelControllerOne;
-  private MotorController CDSWheelControllerTwo;
+  //private MotorController CDSWheelControllerOne;
+  //private MotorController CDSWheelControllerTwo;
+  private DigitalInput initialBallSensor;
+  private DigitalInput middleBallSensor;
+  private DigitalInput finalBallSensor;
+
+  private int ballCount = 0;
 
   public IntakeSubsystem() {
-    intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID);
-    intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.intakeMotorTwoID);
-    CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.intakeWheelOneID, 40);
-    CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.intakeWheelTwoID, 40);
+    intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID, 40);
+    intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.intakeMotorTwoID, 40);
+    //CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.intakeWheelOneID, 40);
+    //CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.intakeWheelTwoID, 40);
+
+    initialBallSensor = new DigitalInput(Constants.initialBallSensorChannel);
+    middleBallSensor = new DigitalInput(Constants.middleBallSensorChannel);
+    finalBallSensor = new DigitalInput(Constants.finalBallSensorChannel); 
+
+    DigitalInput[] sensorArray = {initialBallSensor, middleBallSensor, finalBallSensor};
 
     // Remove invert=true parameter if wheels aren't running correctly
-    CDSWheelControllerOne.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
-    CDSWheelControllerTwo.getSparkMax().follow(intakeMotorControllerOne.getSparkMax(), true);
+    //CDSWheelControllerOne.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
+    //CDSWheelControllerTwo.getSparkMax().follow(intakeMotorControllerOne.getSparkMax(), true);
     intakeMotorControllerTwo.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
   }
 
@@ -47,6 +59,44 @@ public class IntakeSubsystem extends SubsystemBase {
       intakeMotorControllerOne.getSparkMax().set(Constants.intakeMotorSpeed);
       SmartDashboard.putString("Intake Motor Direction", "Forward");
       SmartDashboard.putNumber("Intake Motor Speed", Constants.intakeMotorSpeed);
+    }
+  }
+
+  public boolean getDirection() {
+    // true = inverted, false = forward
+    if (intakeMotorControllerOne.getSparkMax().get() > 0) {
+      return false;
+    } else {
+    return true;
+    }
+  }
+
+  public boolean[] getBeamBreakStatus() {
+    boolean initialStatus = initialBallSensor.get();
+    boolean middleStatus = middleBallSensor.get();
+    boolean finalStatus = finalBallSensor.get();
+    boolean[] beamBreakArray = {initialStatus, middleStatus, finalStatus};
+    return beamBreakArray;
+  }
+
+  public int getBallCount() {
+    boolean[] beamBreakStatuses = this.getBeamBreakStatus();
+    if (!beamBreakStatuses[0]) {
+      if (this.getDirection()){
+        ballCount--;
+      } else {
+        ballCount++;
+      }
+    }
+    return ballCount;
+  }
+
+  public void expelBalls() {
+    if (ballCount > 2) {
+      this.toggleIntake(true);
+      while (this.getBallCount() > 2) {
+      }
+      this.toggleIntake(false);
     }
   }
 }

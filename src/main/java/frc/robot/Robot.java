@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Tabs.TabContainer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.CDSSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
 
  // The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -20,7 +20,7 @@ public class Robot extends TimedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
   private TabContainer tabContainer;
-  private CDSSubsystem ballController;
+  private IntakeSubsystem ballController;
   
    // This function is run when the robot is first started up and should be used for any
    // initialization code.
@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
     tabContainer = new TabContainer(robotContainer.getDriveBase());
-    ballController = new CDSSubsystem();
+    ballController = new IntakeSubsystem();
   }
 
    // This function is called every robot packet, no matter the mode. Use this for items like
