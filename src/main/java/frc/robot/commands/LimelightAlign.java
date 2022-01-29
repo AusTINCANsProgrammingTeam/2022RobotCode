@@ -22,18 +22,20 @@ public class LimelightAlign extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    SmartDashboard.putNumber("ran", 1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putNumber("ran", 3);
     m_LimelightSubsystem.setMotors();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    SmartDashboard.putNumber("ran", 5);
     m_LimelightSubsystem.setMotors();
   }
 

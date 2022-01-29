@@ -44,7 +44,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private double currentRPM;
 
   public ShooterSubsystem() {
-    sbShooterRPM = RobotContainer.debugTab.add("shooterRPM", 0).getEntry();
+//    sbShooterRPM = RobotContainer.debugTab.add("shooterRPM", 0).getEntry();
 
     aimMode = 4;
     cargo_motorController = new MotorController("Shooter Cargo", Constants.kShooterCargoID);

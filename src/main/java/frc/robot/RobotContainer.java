@@ -50,24 +50,24 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
 
-  private final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
+  private static final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
   private JoystickButton[] mButtons = new JoystickButton[11];
 
   // subsystems
-  private final DriveBaseSubsystem mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
-  private final CDSSubsystem mCDSSubsystem = new CDSSubsystem();
-  private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem(); 
-  private final ShooterSubsystem mShooterSubsystem = new ShooterSubsystem();
+  private final static DriveBaseSubsystem mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
+  //private final CDSSubsystem mCDSSubsystem = new CDSSubsystem();
+  //private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem(); 
+  //private final ShooterSubsystem mShooterSubsystem = new ShooterSubsystem();
   private final LimelightSubsystem mLimelightSubsystem = new LimelightSubsystem();
 
   // commands
   private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
   
-  private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
+  /*private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
   private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
   private ShooterPrime mShooterPrime = new ShooterPrime(mShooterSubsystem);
   private CDSForwardCommand mCDSForwardCommand = new CDSForwardCommand(mCDSSubsystem);
-  private CDSReverseCommand mCDSReverseCommand = new CDSReverseCommand(mCDSSubsystem);
+  private CDSReverseCommand mCDSReverseCommand = new CDSReverseCommand(mCDSSubsystem);*/
   private LimelightAlign mLimelightAlign = new LimelightAlign(mLimelightSubsystem);
 
   // auton
@@ -106,14 +106,14 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Intake
-    mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
+    /*mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
     mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
     // Shooter
     mButtons[Constants.kXbutton].whenPressed(mShooterPrime);
     mButtons[Constants.kUpbutton].whenPressed(new InstantCommand(mShooterSubsystem::cycleAimModeUp, mShooterSubsystem));
     mButtons[Constants.kDownbutton].whenPressed(new InstantCommand(mShooterSubsystem::cycleAimModeDown, mShooterSubsystem));
     mButtons[Constants.kXButton].whileHeld(mCDSForwardCommand);
-    mButtons[Constants.kBButton].whileHeld(mCDSReverseCommand);
+    mButtons[Constants.kBButton].whileHeld(mCDSReverseCommand);*/
     // Limelight
     mButtons[Constants.kAButton].whenPressed(mLimelightAlign);
   }
@@ -135,7 +135,7 @@ public class RobotContainer {
             
   // Use this to pass the autonomous command to the main {@link Robot} class.
   // @return the command to run in autonomous
-  public Command getAutonomousCommand() {
+ /* public Command getAutonomousCommand() {
     //Ramsete Command for Pathweaver
     RamseteCommand ramseteCommand =
     new RamseteCommand(
@@ -160,11 +160,11 @@ public class RobotContainer {
     mDriveBaseSubsystem.resetOdometry(trajectory.getInitialPose());
 
     return ramseteCommand.andThen(() -> mDriveBaseSubsystem.setAutonVolts(0,0));
-  }
+  }*/
 
 
   // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way
-  public DriveBaseSubsystem getDriveBase() {
+  public static DriveBaseSubsystem getDriveBase() {
     return mDriveBaseSubsystem;
     
   }

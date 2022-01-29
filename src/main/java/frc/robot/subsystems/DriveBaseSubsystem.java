@@ -23,8 +23,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private final MotorController[] m_motorControllers;
   private final DifferentialDrive m_differentialDrive;
   //public static ADIS16448_IMU m_gyro; Non-native gyro, might use later
-  public static ADXRS450_Gyro m_gyro;
-  private final DifferentialDriveOdometry m_odometry;
+  //public static ADXRS450_Gyro m_gyro;
+  //private final DifferentialDriveOdometry m_odometry;
   public static Encoder m_leftEncoder;
   public static Encoder m_rightEncoder;
 
@@ -39,8 +39,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
     false, Encoder.EncodingType.k2X);
     m_driverJoystick = joystick;
     m_motorControllers = new MotorController[4];
-    m_gyro = new ADXRS450_Gyro();
-    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
+    //m_gyro = new ADXRS450_Gyro();
+    //m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
     
     
 
@@ -76,8 +76,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // Normal Arcade Drive
   public void arcadeDrive() {
-    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), 
-                                      m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
+   // m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), 
+   //                                   m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
   }
 
   // Arcade Drive where you can only move forwards and backwards for testing
@@ -130,9 +130,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
     return m_motorControllers[Constants.kDriveRightFrontIndex].getSpeed();
   }
 
-  public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
-  }
+  //public Pose2d getPose() {
+    //return m_odometry.getPoseMeters();
+  //}
 
   public void resetEncoders() {
     m_leftEncoder.reset();
@@ -141,7 +141,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   public void resetOdometry(Pose2d pose) {
     resetEncoders();  // reset encoders
-    m_odometry.resetPosition(pose, m_gyro.getRotation2d());
+    //m_odometry.resetPosition(pose, m_gyro.getRotation2d());
   }
 
   
