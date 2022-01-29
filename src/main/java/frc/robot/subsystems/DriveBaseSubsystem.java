@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Joystick;
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -37,33 +39,43 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private final DifferentialDrive m_differentialDrive;
   private DifferentialDrivetrainSim m_DifferentialDrivetrainSim;
   public final Field2d m_field = new Field2d();
+/** 
   private final double KvLinear = 1.98;
   private final double KaLinear = 0.2;
   private final double KvAngular = 1.5;
   private final double KaAngular = 0.3;
+  */
   private AnalogGyro m_gyro = new AnalogGyro(1);
   private AnalogGyroSim m_gyroSim = new AnalogGyroSim(m_gyro);
-  private DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), new Pose2d(5.0, 13.5, new Rotation2d()));
+  //private DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), new Pose2d(5.0, 13.5, new Rotation2d()));
   //public static ADIS16448_IMU m_gyro; Non-native gyro, might use later
-  public static ADXRS450_Gyro m_gyro;
+  //public static ADXRS450_Gyro m_gyro;
   private final DifferentialDriveOdometry m_odometry;
   public static Encoder m_leftEncoder;
   public static Encoder m_rightEncoder;
+  private EncoderSim m_leftEncoderSim;
+  private EncoderSim m_rightEncoderSim;
+  
 
   // Here are the encoders
   
   
 
-  public DriveBaseSubsystem(Joystick joystick) {  
+  public DriveBaseSubsystem(Joystick joystick) { 
     m_leftEncoder = new Encoder(Constants.kLeftEncoderDIOone, Constants.kLeftEncoderDIOtwo, 
-    false, Encoder.EncodingType.k2X);
+                                false, Encoder.EncodingType.k2X);
+
     m_rightEncoder = new Encoder(Constants.kRightEncoderDIOone, Constants.kRightEncoderDIOtwo, 
     false, Encoder.EncodingType.k2X);
+
+    m_leftEncoderSim = new EncoderSim(m_leftEncoder);
+    m_rightEncoderSim = new EncoderSim(m_rightEncoder);
+
     m_driverJoystick = joystick;
     SmartDashboard.putData("Field", m_field);
 
     m_motorControllers = new MotorController[4];
-    m_gyro = new ADXRS450_Gyro();
+    //m_gyro = new ADXRS450_Gyro();
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
     
     
@@ -96,20 +108,21 @@ public class DriveBaseSubsystem extends SubsystemBase {
         // standard deviations for measurement noise: x and y: 0.001m heading: 0.001 rad  l and r velocity: 0.1m/s  l and r position: 0.005m
     }
     // differential drive
-    m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax(), 
-                                          m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
+    //m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax(), 
+     //                                     m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
   }
 
   @Override
   public void periodic() {
-    arcadeDrive();  // periodically runs the arcadeDrive function, avoid scheduling the command
 
     // Update the smart dashboard in here, runs a for loop so it does it for every motor
     for(int i = 0; i < m_motorControllers.length; i++) {
       m_motorControllers[i].updateSmartDashboard();
       m_odometry.update(m_gyro.getRotation2d(),
-                    m_motorControllers[Constants.kDriveLeftFrontIndex].getEncoder().getPosition(),
-                    m_motorControllers[Constants.kDriveRightFrontIndex].getEncoder().getPosition());
+                    //m_motorControllers[Constants.kDriveLeftFrontIndex].getEncoder().getPosition(),
+                    //m_motorControllers[Constants.kDriveRightFrontIndex].getEncoder().getPosition();
+                    m_leftEncoder.getDistance(),
+                    m_rightEncoder.getDistance());
       m_field.setRobotPose(m_odometry.getPoseMeters());
 
     }
@@ -119,7 +132,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   // Normal Arcade Drive
   public void arcadeDrive() {
     m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), 
-                                      m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
+                                    -m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisX));
   }
 
   // Arcade Drive where you can only move forwards and backwards for testing
@@ -142,10 +155,21 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    m_DifferentialDrivetrainSim.setInputs(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax().get() * RobotController.getInputVoltage(),
-    m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax().get() * RobotController.getInputVoltage());
-    m_gyroSim.setAngle(-m_DifferentialDrivetrainSim.getHeading().getDegrees());
+    m_DifferentialDrivetrainSim.setInputs(-m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax().get() * RobotController.getInputVoltage(),
+                                          -m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax().get() * RobotController.getInputVoltage());
+
+    //m_gyroSim.setAngle(-m_DifferentialDrivetrainSim.getHeading().getDegrees());
+
     m_DifferentialDrivetrainSim.update(0.02);
+
+    SmartDashboard.putNumber("LMotor",m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax().get() );
+    SmartDashboard.putNumber("RMotor",m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax().get() );
+
+    m_leftEncoderSim.setDistance(m_DifferentialDrivetrainSim.getLeftPositionMeters());
+    m_leftEncoderSim.setRate(m_DifferentialDrivetrainSim.getLeftVelocityMetersPerSecond());
+    m_rightEncoderSim.setDistance(m_DifferentialDrivetrainSim.getRightPositionMeters());
+    m_rightEncoderSim.setRate(m_DifferentialDrivetrainSim.getRightVelocityMetersPerSecond());
+    m_gyroSim.setAngle(-m_DifferentialDrivetrainSim.getHeading().getDegrees());
   }
 
   public void driveFunction() {

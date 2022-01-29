@@ -58,14 +58,14 @@ public class RobotContainer {
   private final DriveBaseSubsystem mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
   private final CDSSubsystem mCDSSubsystem = new CDSSubsystem();
   private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem(); 
-  private final ShooterSubsystem mShooterSubsystem = new ShooterSubsystem();
+  //private final ShooterSubsystem mShooterSubsystem = new ShooterSubsystem();
 
   // commands
   private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
   
   private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
   private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
-  private ShooterPrime mShooterPrime = new ShooterPrime(mShooterSubsystem);
+  //private ShooterPrime mShooterPrime = new ShooterPrime(mShooterSubsystem);
   private CDSForwardCommand mCDSForwardCommand = new CDSForwardCommand(mCDSSubsystem);
   private CDSReverseCommand mCDSReverseCommand = new CDSReverseCommand(mCDSSubsystem);
 
@@ -108,9 +108,9 @@ public class RobotContainer {
     mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
     mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
     // Shooter
-    mButtons[Constants.kXbutton].whenPressed(mShooterPrime);
-    mButtons[Constants.kUpbutton].whenPressed(new InstantCommand(mShooterSubsystem::cycleAimModeUp, mShooterSubsystem));
-    mButtons[Constants.kDownbutton].whenPressed(new InstantCommand(mShooterSubsystem::cycleAimModeDown, mShooterSubsystem));
+    //mButtons[Constants.kXbutton].whenPressed(mShooterPrime);
+    //mButtons[Constants.kUpbutton].whenPressed(new InstantCommand(mShooterSubsystem::cycleAimModeUp, mShooterSubsystem));
+    //mButtons[Constants.kDownbutton].whenPressed(new InstantCommand(mShooterSubsystem::cycleAimModeDown, mShooterSubsystem));
     mButtons[Constants.kXButton].whileHeld(mCDSForwardCommand);
     mButtons[Constants.kBButton].whileHeld(mCDSReverseCommand);
   }
