@@ -40,8 +40,7 @@ import frc.robot.commands.CDSReverseCommand;
  // This class is where the bulk of the robot should be declared. Since Command-based is a
  // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  // perieodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- // subsystems, commands, and button mappings) should be declared here. 
- 
+ // subsystems, commands, and button mappings) should be declared here.
 
 public class RobotContainer {
   public static ShuffleboardTab debugTab;
@@ -50,22 +49,22 @@ public class RobotContainer {
 
 
   private final Joystick driverJoystick = new Joystick(Constants.portNumber);
-  private JoystickButton[] buttons = new JoystickButton[11];
+  private JoystickButton[] mButtons = new JoystickButton[11];
 
   // subsystems
   private final DriveBaseSubsystem driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick);
   private final CDSSubsystem CDSSubsystem = new CDSSubsystem();
-  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(); 
-  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  private final IntakeSubsystem IntakeSubsystem = new IntakeSubsystem(); 
+  private final ShooterSubsystem ShooterSubsystem = new ShooterSubsystem();
 
   // commands
   private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
   
-  private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
-  private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
-  private ShooterPrime mShooterPrime = new ShooterPrime(shooterSubsystem);
-  private CDSForwardCommand mCDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-  private CDSReverseCommand mCDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
+  private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(IntakeSubsystem);
+  private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(IntakeSubsystem);
+  private ShooterPrime shooterPrime = new ShooterPrime(ShooterSubsystem);
+  private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
 
   // auton
   // private Trajectory[] mTrajectories;  // multiple trajectories
@@ -76,8 +75,8 @@ public class RobotContainer {
   public RobotContainer() {
     debugTab = Shuffleboard.getTab("debug");
     // Configure the button bindings
-    for (int i = 1; i < buttons.length; i++) {
-      buttons[i] = new JoystickButton(driverJoystick, i);
+    for (int i = 1; i < mButtons.length; i++) {
+      mButtons[i] = new JoystickButton(driverJoystick, i);
     }
 
 
@@ -103,14 +102,14 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Intake
-    buttons[Constants.leftBumperButton].whileHeld(mIntakeForwardCommand);
-    buttons[Constants.rightBumperButton].whileHeld(mIntakeReverseCommand);
+    mButtons[Constants.leftBumperButton].whileHeld(intakeForwardCommand);
+    mButtons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
     // Shooter
-    buttons[Constants.Xbutton].whenPressed(mShooterPrime);
-    buttons[Constants.upbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
-    buttons[Constants.downbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
-    buttons[Constants.YButton].whileHeld(mCDSForwardCommand);
-    buttons[Constants.BButton].whileHeld(mCDSReverseCommand);
+    mButtons[Constants.Xbutton].whenPressed(shooterPrime);
+    mButtons[Constants.upbutton].whenPressed(new InstantCommand(ShooterSubsystem::cycleAimModeUp, ShooterSubsystem));
+    mButtons[Constants.downbutton].whenPressed(new InstantCommand(ShooterSubsystem::cycleAimModeDown, ShooterSubsystem));
+    mButtons[Constants.Xbutton].whileHeld(CDSForwardCommand);
+    mButtons[Constants.BButton].whileHeld(CDSReverseCommand);
   }
 
   private void initializeTrajectories() throws IOException {
@@ -157,8 +156,10 @@ public class RobotContainer {
     return ramseteCommand.andThen(() -> driveBaseSubsystem.setAutonVolts(0,0));
   }
 
+
   // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way
   public DriveBaseSubsystem getDriveBase() {
     return driveBaseSubsystem;
+    
   }
 }
