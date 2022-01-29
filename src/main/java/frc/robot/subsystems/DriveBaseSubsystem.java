@@ -79,20 +79,18 @@ public class DriveBaseSubsystem extends SubsystemBase {
     
 
     // motor controllers
-    m_motorControllers[Constants.kDriveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.kDriveLeftFront);
-    m_motorControllers[Constants.kDriveLeftRearIndex] = new MotorController("Differential Left Rear", Constants.kDriveLeftRear);
-    m_motorControllers[Constants.kDriveRightFrontIndex] = new MotorController("Differential Right Front", Constants.kDriveRightFront);
-    m_motorControllers[Constants.kDriveRightRearIndex] = new MotorController("Differential Right Rear", Constants.kDriveRightRear);
+    m_motorControllers[Constants.driveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.driveLeftFront);
+    m_motorControllers[Constants.driveLeftRearIndex] = new MotorController("Differential Left Rear", Constants.driveLeftRear);
+    m_motorControllers[Constants.driveRightFrontIndex] = new MotorController("Differential Right Front", Constants.driveRightFront);
+    m_motorControllers[Constants.driveRightRearIndex] = new MotorController("Differential Right Rear", Constants.driveRightRear);
 
     // inverses right side motors (2022 wpilib doesn't default it to be inverted for differential drive)
-    m_motorControllers[Constants.kDriveRightFrontIndex].setInverted(true);
-    m_motorControllers[Constants.kDriveRightRearIndex].setInverted(true);
+    m_motorControllers[Constants.driveRightFrontIndex].setInverted(true);
+    m_motorControllers[Constants.driveRightRearIndex].setInverted(true);
 
     //Forces middle and rear motors of each side to follow the first
-    m_motorControllers[Constants.kDriveLeftRearIndex].setFollow(m_motorControllers[Constants.kDriveLeftFrontIndex]);
-    m_motorControllers[Constants.kDriveRightRearIndex].setFollow(m_motorControllers[Constants.kDriveRightFrontIndex]);
-
-    m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax(), m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
+    m_motorControllers[Constants.driveLeftRearIndex].setFollow(m_motorControllers[Constants.driveLeftFrontIndex]);
+    m_motorControllers[Constants.driveRightRearIndex].setFollow(m_motorControllers[Constants.driveRightFrontIndex]);
 
     if (Robot.isSimulation()) {
       m_DifferentialDrivetrainSim = new DifferentialDrivetrainSim(
@@ -108,8 +106,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
         // standard deviations for measurement noise: x and y: 0.001m heading: 0.001 rad  l and r velocity: 0.1m/s  l and r position: 0.005m
     }
     // differential drive
-    //m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax(), 
-    //                                     m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
+    m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax(), 
+                                          m_motorControllers[Constants.driveRightFrontIndex].getSparkMax());
   }
 
   @Override
@@ -129,8 +127,13 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // Normal Arcade Drive
   public void arcadeDrive() {
-    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), 
-                                    -m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisX));
+    if (Robot.isSimulation()) {
+      m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.DBLeftJoystickAxisY), 
+                                      -m_driverJoystick.getRawAxis(Constants.DBRightJoystickAxisX));
+    } else {
+      m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.DBLeftJoystickAxisY), 
+                                      m_driverJoystick.getRawAxis(Constants.DBRightJoystickAxisY));
+    }                                  
   }
 
   // Arcade Drive where you can only move forwards and backwards for testing
@@ -141,27 +144,27 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // tank drive, not used but good to have
   public void tankDrive() {
-    m_differentialDrive.tankDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), 
-                                  m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
+    m_differentialDrive.tankDrive(m_driverJoystick.getRawAxis(Constants.DBLeftJoystickAxisY), 
+                                  m_driverJoystick.getRawAxis(Constants.DBRightJoystickAxisY));
   }
 
   public void setAutonVolts(double leftVolts, double rightVolts) {
-    m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax().setVoltage(leftVolts);
-    m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax().setVoltage(rightVolts);
+    m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax().setVoltage(leftVolts);
+    m_motorControllers[Constants.driveRightFrontIndex].getSparkMax().setVoltage(rightVolts);
     m_differentialDrive.feed();
   }
 
   @Override
   public void simulationPeriodic() {
-    m_DifferentialDrivetrainSim.setInputs(-m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax().get() * RobotController.getInputVoltage(),
-                                          -m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax().get() * RobotController.getInputVoltage());
+    m_DifferentialDrivetrainSim.setInputs(-m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax().get() * RobotController.getInputVoltage(),
+                                          -m_motorControllers[Constants.driveRightFrontIndex].getSparkMax().get() * RobotController.getInputVoltage());
 
     //m_gyroSim.setAngle(-m_DifferentialDrivetrainSim.getHeading().getDegrees());
 
     m_DifferentialDrivetrainSim.update(0.02);
 
-    SmartDashboard.putNumber("LMotor",m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax().get() );
-    SmartDashboard.putNumber("RMotor",m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax().get() );
+    SmartDashboard.putNumber("LMotor",m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax().get() );
+    SmartDashboard.putNumber("RMotor",m_motorControllers[Constants.driveRightFrontIndex].getSparkMax().get() );
 
     m_leftEncoderSim.setDistance(m_DifferentialDrivetrainSim.getLeftPositionMeters());
     m_leftEncoderSim.setRate(m_DifferentialDrivetrainSim.getLeftVelocityMetersPerSecond());
@@ -180,21 +183,21 @@ public class DriveBaseSubsystem extends SubsystemBase {
   }
 
   public CANSparkMax getRightMotor() {
-    return m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax();
+    return m_motorControllers[Constants.driveRightFrontIndex].getSparkMax();
   }
 
   public CANSparkMax getLeftMotor() {
-    return m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax();
+    return m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax();
   }
 
   // return speed of left side motors
   public double getLeftSpeed() {
-    return m_motorControllers[Constants.kDriveLeftFrontIndex].getSpeed();
+    return m_motorControllers[Constants.driveLeftFrontIndex].getSpeed();
   }
 
   // return speed of right side motors
   public double getRightSpeed() {
-    return m_motorControllers[Constants.kDriveRightFrontIndex].getSpeed();
+    return m_motorControllers[Constants.driveRightFrontIndex].getSpeed();
   }
 
   public Pose2d getPose() {
