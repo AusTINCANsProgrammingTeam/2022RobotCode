@@ -23,6 +23,7 @@ public class MotorController {
     public MotorController(String name, int deviceID) {
         mName = name;
         mSparkMax = new CANSparkMax(deviceID, MotorType.kBrushless);
+        mSparkMax.setSmartCurrentLimit(40); // default current limit is 40A
 
         mEncoder = mSparkMax.getEncoder();
         mSparkMax.restoreFactoryDefaults();
