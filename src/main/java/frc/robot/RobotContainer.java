@@ -52,19 +52,19 @@ public class RobotContainer {
   private JoystickButton[] mButtons = new JoystickButton[11];
 
   // subsystems
-  private final DriveBaseSubsystem mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
-  private final CDSSubsystem mCDSSubsystem = new CDSSubsystem();
-  private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem(); 
-  private final ShooterSubsystem mShooterSubsystem = new ShooterSubsystem();
+  private final DriveBaseSubsystem mDriveBaseSubsystem;
+  private final CDSSubsystem mCDSSubsystem;
+  private final IntakeSubsystem mIntakeSubsystem; 
+  private final ShooterSubsystem mShooterSubsystem;
 
   // commands
-  private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
+  private final DriveBaseTeleopCommand mDriveBaseTeleopCommand;
   
-  private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
-  private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
-  private ShooterPrime mShooterPrime = new ShooterPrime(mShooterSubsystem);
-  private CDSForwardCommand mCDSForwardCommand = new CDSForwardCommand(mCDSSubsystem);
-  private CDSReverseCommand mCDSReverseCommand = new CDSReverseCommand(mCDSSubsystem);
+  private IntakeForwardCommand mIntakeForwardCommand;
+  private IntakeReverseCommand mIntakeReverseCommand;
+  private ShooterPrime mShooterPrime;
+  private CDSForwardCommand mCDSForwardCommand;
+  private CDSReverseCommand mCDSReverseCommand;
 
   // auton
   // private Trajectory[] mTrajectories;  // multiple trajectories
@@ -78,7 +78,20 @@ public class RobotContainer {
     for (int i = 1; i < mButtons.length; i++) {
       mButtons[i] = new JoystickButton(mDriverJoystick, i);
     }
+  // subsystems
+  mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
+  mCDSSubsystem = new CDSSubsystem();
+  mIntakeSubsystem = new IntakeSubsystem(); 
+  mShooterSubsystem = new ShooterSubsystem();
 
+  // commands
+  mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
+  
+  mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
+  mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
+  mShooterPrime = new ShooterPrime(mShooterSubsystem);
+  mCDSForwardCommand = new CDSForwardCommand(mCDSSubsystem);
+  mCDSReverseCommand = new CDSReverseCommand(mCDSSubsystem);
 
     configureButtonBindings();
     
