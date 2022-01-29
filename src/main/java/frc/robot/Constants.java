@@ -77,8 +77,10 @@ public final class Constants {
 
     //CDS Constants
     public static final int CDSBeltID = 13;
-    public static final int CDSWheelControllerID = 14;
-    public static final int CDSAlignmentID = 15;
+    public static final int CDSWheelControllerOneID = 14;
+    public static final int CDSWheelControllerTwoID = 15;
+    public static final int CDSAlignmentOneID = 16;
+    public static final int CDSAlignmentTwoID = 17;
     public static final double CDSBeltSpeed = 0.15;
     public static final double CDSWheelControllerSpeed = 0.25;
     public static final double CDSAlignmentSpeed = 0.25;

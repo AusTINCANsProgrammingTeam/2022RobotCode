@@ -22,10 +22,10 @@ public class CDSSubsystem extends SubsystemBase {
 
   public CDSSubsystem() {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
-    CDSAlignmentWheelOne = new MotorController("CDS to Shooter Wheel One", Constants.CDSAlignmentID, 40);
-    CDSAlignmentWheelTwo = new MotorController("CDS to Shooter Wheel Two", Constants.CDSAlignmentID, 40);
-    CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerID, 40);
-    CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerID, 40);
+    CDSAlignmentWheelOne = new MotorController("CDS to Shooter Wheel One", Constants.CDSAlignmentOneID, 40);
+    CDSAlignmentWheelTwo = new MotorController("CDS to Shooter Wheel Two", Constants.CDSAlignmentTwoID, 40);
+    CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerOneID, 40);
+    CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerTwoID, 40);
 
     CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
     CDSAlignmentWheelTwo.getSparkMax().follow(CDSAlignmentWheelOne.getSparkMax(), true);
