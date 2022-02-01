@@ -17,6 +17,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.I2C;
+import com.kauailabs.navx.frc.AHRS;
 
 
 public class DriveBaseSubsystem extends SubsystemBase {
@@ -25,22 +27,20 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private final MotorController[] m_motorControllers;
   private final DifferentialDrive m_differentialDrive;
   //public static ADIS16448_IMU m_gyro; //Non-native gyro, might use later
-  public static ADXRS450_Gyro m_gyro;
+  //public static ADXRS450_Gyro m_gyro;
+  private AHRS m_gyro;
   private final DifferentialDriveOdometry m_odometry;
   public static RelativeEncoder m_leftEncoder;
   public static RelativeEncoder m_rightEncoder;
 
-  // Here are the encoders
-  
   
 
   public DriveBaseSubsystem(Joystick joystick) {  
     m_driverJoystick = joystick;
     m_motorControllers = new MotorController[4];
-    
-    m_gyro = new ADXRS450_Gyro();
-    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
-    
+    //m_gyro = new ADIS16448_IMU();
+    m_gyro = new AHRS(I2C.Port.kMXP);
+    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d()); 
     
 
     // motor controllers
@@ -131,6 +131,10 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public double getRightSpeed() {
     return m_motorControllers[Constants.kDriveRightFrontIndex].getSpeed();
   }
+  // return gyro info
+  public double getGyroAngle() {
+    return m_gyro.getAngle();
+  }
 
   public Pose2d getPose() {
     return m_odometry.getPoseMeters();
@@ -145,8 +149,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
     resetEncoders();  // reset encoders
     m_odometry.resetPosition(pose, m_gyro.getRotation2d());
   }
-
-  
   
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
