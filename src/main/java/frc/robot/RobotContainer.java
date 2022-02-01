@@ -127,8 +127,8 @@ public class RobotContainer {
         Constants.kDriveKinematics,
         
         mDriveBaseSubsystem::getWheelSpeeds,
-        new PIDController(1, 0, 0),
-        new PIDController(1, 0, 0),
+        new PIDController(0.00005, 0, 0),
+        new PIDController(0.00005, 0, 0),
         //RamseteCommand passes volts to the callback
         mDriveBaseSubsystem::setAutonVolts,
         mDriveBaseSubsystem);

@@ -67,7 +67,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    arcadeDrive();  // periodically runs the arcadeDrive function, avoid scheduling the command
+    //arcadeDrive();  // periodically runs the arcadeDrive function, avoid scheduling the command
 
     // Update the smart dashboard in here, runs a for loop so it does it for every motor
     for(int i = 0; i < m_motorControllers.length; i++) {
