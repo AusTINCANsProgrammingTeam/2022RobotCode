@@ -91,11 +91,14 @@
   ],
   "robotJoysticks": [
     {
-      "guid": "030000006d04000016c2000000000000"
+      "guid": "03000000790000000600000000000000"
+    },
+    {
+      "guid": "Keyboard2"
     },
     {},
     {
-      "guid": "Keyboard1"
+      "guid": "Keyboard0"
     }
   ]
 }

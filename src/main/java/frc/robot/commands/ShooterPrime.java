@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.ShooterSubsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ShooterPrime extends CommandBase {
@@ -37,7 +36,7 @@ public class ShooterPrime extends CommandBase {
   public void end(boolean interrupted) {
     if (!interrupted){
       //TODO: uncomment when cargoMotor exists 
-      //m_ShooterSubsystem.shoot()
+      m_ShooterSubsystem.shoot();
     }
     m_ShooterSubsystem.windFlywheel(0); //TODO: Look at this again, we don't want our flywheel to instantly switch off in the end
   }

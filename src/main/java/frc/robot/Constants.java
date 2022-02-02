@@ -5,10 +5,6 @@
 package frc.robot;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N2;
-import edu.wpi.first.math.system.LinearSystem;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -80,7 +76,7 @@ public final class Constants {
     public static final int finalBallSensorChannel = 2;
 
     //CDS Constants
-    //public static final int CDSBeltID = 13;
+    public static final int CDSBeltID = 13;
     public static final int CDSWheelControllerID = 14;
     public static final double CDSBeltSpeed = 0.15;
     public static final double CDSWheelControllerSpeed = 0.25;
@@ -121,4 +117,6 @@ public final class Constants {
     public static final double ballFlywheelratio = 2;
     public static final int shooterCargoID = 9;
     public static final double cargoRotation = 3;
+
+    public static final double GearRatioOut = 0; //Idk if need But It fix errors in Shooter Sub
 }

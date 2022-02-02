@@ -19,7 +19,7 @@ public class CDSSubsystem extends SubsystemBase {
  
 
   public CDSSubsystem() {
-    //CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
+    CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
     CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerID, 40);
     CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerID, 40);
 
