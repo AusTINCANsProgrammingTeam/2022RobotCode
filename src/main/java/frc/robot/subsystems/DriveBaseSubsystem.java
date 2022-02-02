@@ -34,7 +34,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public static RelativeEncoder m_rightEncoder;
 
   
-
   public DriveBaseSubsystem(Joystick joystick) {  
     m_driverJoystick = joystick;
     m_motorControllers = new MotorController[4];
@@ -114,13 +113,13 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_differentialDrive.arcadeDrive(0.0, 0.0);
   }
 
-  public CANSparkMax getRightMotor() {
-    return m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax();
-  }
+  // public CANSparkMax getRightMotor() {
+  //   return m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax();
+  // }
 
-  public CANSparkMax getLeftMotor() {
-    return m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax();
-  }
+  // public CANSparkMax getLeftMotor() {
+  //   return m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax();
+  // }
 
   // return speed of left side motors
   public double getLeftSpeed() {
@@ -154,6 +153,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
     return new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
   }
   
+  public double getVelocityConversionFactor() {
+    return m_rightEncoder.getVelocityConversionFactor();
+  }
 
   // TODO: we can add more tankdrive co functions as extras later
 }

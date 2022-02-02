@@ -10,6 +10,7 @@ public class TabDriveBase {
     private NetworkTableEntry sbLeftWheelSpeed;
     private NetworkTableEntry sbRightWheelSpeed;
     private NetworkTableEntry sbGyroAngle;
+    private NetworkTableEntry sbVelocityConversionFactor;
 
     // TODO: other indicators for motor controllers: if inverted, what motors they're following, + other factors important to driver and debugging
 
@@ -25,7 +26,7 @@ public class TabDriveBase {
         sbLeftWheelSpeed = dtTab.add("Left Wheel Speed", 0).withSize(2, 2).withPosition(0, 0).getEntry();
         sbRightWheelSpeed = dtTab.add("Right Wheel Speed", 0).withSize(2, 2).withPosition(3, 0).getEntry();
         sbGyroAngle = dtTab.add("Gyro Angle", 0).withSize(1, 1).withPosition(2, 0).getEntry();
-    
+        sbVelocityConversionFactor = dtTab.add("Velocity Conversion Factor from Encoder", 0).withSize(2,2).withPosition(0,1).getEntry();
         
     }
 
@@ -35,10 +36,12 @@ public class TabDriveBase {
         double leftSpeed = mDriveBaseSubsystem.getLeftSpeed();
         double rightSpeed = mDriveBaseSubsystem.getRightSpeed();
         double gyroAngle = mDriveBaseSubsystem.getGyroAngle();
+        double velocityConversionFactor = mDriveBaseSubsystem.getVelocityConversionFactor();
 
         sbLeftWheelSpeed.setDouble(leftSpeed);
         sbRightWheelSpeed.setDouble(rightSpeed);
         sbGyroAngle.setDouble(gyroAngle);
+        sbVelocityConversionFactor.setDouble(velocityConversionFactor);
         
     }
 }
