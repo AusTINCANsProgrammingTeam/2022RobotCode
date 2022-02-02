@@ -1,0 +1,8 @@
+[
+    {
+        "CDSSubsystem"       : "true",
+        "DriveBaseSubsystem" : "true",
+        "IntakeSubsystem"    : "true",
+        "ShooterSubsystem"   : "true"
+    }
+]

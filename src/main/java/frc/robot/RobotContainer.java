@@ -11,11 +11,19 @@ import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.subsystems.DriveBaseSubsystem;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.Flow.Subscriber;
+
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
@@ -58,14 +66,13 @@ public class RobotContainer {
   private JoystickButton[] mButtons = new JoystickButton[11];
 
   // subsystems
-  private final DriveBaseSubsystem mDriveBaseSubsystem;
-  private final CDSSubsystem mCDSSubsystem;
-  private final IntakeSubsystem mIntakeSubsystem; 
-  private final ShooterSubsystem mShooterSubsystem;
+  private DriveBaseSubsystem mDriveBaseSubsystem;
+  private CDSSubsystem mCDSSubsystem;
+  private IntakeSubsystem mIntakeSubsystem; 
+  private ShooterSubsystem mShooterSubsystem;
 
   // commands
-  private final DriveBaseTeleopCommand mDriveBaseTeleopCommand;
-  
+  private DriveBaseTeleopCommand mDriveBaseTeleopCommand;
   private IntakeForwardCommand mIntakeForwardCommand;
   private IntakeReverseCommand mIntakeReverseCommand;
   private ShooterPrime mShooterPrime;
@@ -77,23 +84,28 @@ public class RobotContainer {
   // private int trajectoryIndex = 0;
   private Trajectory trajectory;
 
-  private String[] subsystemList = {"CDS", "Shooter", "DriveBase", "Intake"};
-  private Map<String, NetworkTableEntry> sbSubsystemEnables = new Hashtable<String, NetworkTableEntry>();
   private Map<String, Boolean> subsystemEnables = new Hashtable<String, Boolean>();
+  private JSONObject subSysEnables;
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
+    try {
+      String jsonString = Files.readString(Filesystem.getDeployDirectory().toPath().resolve("SubsystemEnables.json"));
+      JSONArray jsonArray = (JSONArray) JSONValue.parse(jsonString);
+      subSysEnables = (JSONObject) jsonArray.get(0);
+       
+      //for (Object k : subSysEnables.keySet()) {
+      //   System.out.println((String) k + " " + subSysEnables.get((String) k));
+      //}
+
+
+    } catch (IOException e) {
+         
+    }
+    
+
 
     debugTab = Shuffleboard.getTab("debug");
-    for (String s : subsystemList) {
-      sbSubsystemEnables.put(s,debugTab.add("Enable" + s, false).withSize(1, 1).withPosition(i, 0).withWidget(BuiltInWidgets.kToggleSwitch).getEntry());
-      subsystemEnables.put(s, Boolean.valueOf(false));
-    }
-    Shuffleboard.selectTab("debug");
-    Shuffleboard.update();
-    for (String s : subsystemList) {
-      subsystemEnables.put(s, Boolean.valueOf(sbSubsystemEnables.get(s).getBoolean(false)));
-    }
 
     // Configure the button bindings
     for (int i = 1; i < mButtons.length; i++) {
@@ -101,24 +113,45 @@ public class RobotContainer {
     }
 
     // subsystems
-    if (subsystemEnables.get("Drivebase")) {
-      mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
-      mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
-      mDriveBaseSubsystem.setDefaultCommand(mDriveBaseTeleopCommand);
-    }
-    if (subsystemEnables.get("CDS")) {
-      mCDSSubsystem = new CDSSubsystem();
-      mCDSForwardCommand = new CDSForwardCommand(mCDSSubsystem);
-      mCDSReverseCommand = new CDSReverseCommand(mCDSSubsystem);
-    }
-    if (subsystemEnables.get("Intake")) {
-      mIntakeSubsystem = new IntakeSubsystem(); 
-      mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
-      mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
-    }
-    if (subsystemEnables.get("Shooter")) {
-      mShooterSubsystem = new ShooterSubsystem();
-      mShooterPrime = new ShooterPrime(mShooterSubsystem);
+    for (Object k : subSysEnables.keySet()) {
+      if (((String)subSysEnables.get((String) k)).equals("true")) {
+
+        //System.out.println((String) k + " " + subSysEnables.get((String) k));
+        switch ((String) k) {
+          case "DriveBaseSubsystem": 
+          {
+            System.out.println("Drivebase enabled");
+            mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
+            mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
+            mDriveBaseSubsystem.setDefaultCommand(mDriveBaseTeleopCommand);
+            break;
+          }
+          case "CDSSubsystem": 
+          {
+            System.out.println("CDS enabled");
+            mCDSSubsystem = new CDSSubsystem();
+            mCDSForwardCommand = new CDSForwardCommand(mCDSSubsystem);
+            mCDSReverseCommand = new CDSReverseCommand(mCDSSubsystem);
+            break;
+          }
+          case "IntakeSubsystem":
+          {
+            System.out.println("Intake enabled");
+            mIntakeSubsystem = new IntakeSubsystem(); 
+            mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
+            mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
+            break;
+          }
+          case "ShooterSubsystem":
+          {
+            System.out.println("Shooter enabled");
+            mShooterSubsystem = new ShooterSubsystem();
+            mShooterPrime = new ShooterPrime(mShooterSubsystem);
+            break;
+          }
+
+        }
+      }
     }
 
     // commands
@@ -145,8 +178,10 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Intake
-    mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
-    mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
+    if(mIntakeSubsystem != null) {
+      mButtons[Constants.kLeftBumperButton].whileHeld(mIntakeForwardCommand);
+      mButtons[Constants.kRightBumperButton].whileHeld(mIntakeReverseCommand);
+    }
 
     // Shooter
     if (mShooterSubsystem != null) {
@@ -211,6 +246,9 @@ public class RobotContainer {
 
   // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way
   public DriveBaseSubsystem getDriveBase() {
+    if (mDriveBaseSubsystem == null) {
+      return null;
+    }
     return mDriveBaseSubsystem;
     
   }

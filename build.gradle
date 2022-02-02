@@ -67,6 +67,8 @@ dependencies {
     nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
     simulationRelease wpi.sim.enableRelease()
 
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
     testImplementation 'junit:junit:4.12'
 }
 
