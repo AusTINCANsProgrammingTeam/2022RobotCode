@@ -37,16 +37,7 @@ public class ElevatorSim extends SubsystemBase {
   private int kElevatorDrumRadius = 10;
   private int kMinElevatorHeight = 1;
   private int kMaxElevatorHeight = 10;
-  private final ElevatorSim m_elevatorSim =
-  new ElevatorSim(
-      m_elevatorGearbox,
-      kElevatorGearing,
-      kCarriageMass,
-      kElevatorDrumRadius,
-      kMinElevatorHeight,
-      kMaxElevatorHeight,
-      VecBuilder.fill(0.01));
-      private final EncoderSim m_encoderSim = new EncoderSim(m_encoderSim);
+  private final ElevatorSim m_elevatorSim;
   /** Creates a new ElevatorSim. */
   public ElevatorSim() {
 
