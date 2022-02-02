@@ -8,37 +8,24 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.subsystems.DriveBaseSubsystem;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.simulation.EncoderSim;
-
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.math.controller.PIDController;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.ShooterPrime;
-import frc.robot.commands.CDSForwardCommand;
-import frc.robot.commands.CDSReverseCommand;
 
  // This class is where the bulk of the robot should be declared. Since Command-based is a
  // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -56,7 +43,7 @@ public class RobotContainer {
 
   // subsystems
   private final DriveBaseSubsystem driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick);
-  private final CDSSubsystem CDSSubsystem = new CDSSubsystem();
+  //private final CDSSubsystem CDSSubsystem = new CDSSubsystem();
   private final IntakeSubsystem IntakeSubsystem = new IntakeSubsystem(); 
   private final ShooterSubsystem ShooterSubsystem = new ShooterSubsystem();
 
@@ -66,12 +53,12 @@ public class RobotContainer {
   private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(IntakeSubsystem);
   private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(IntakeSubsystem);
   private ShooterPrime shooterPrime = new ShooterPrime(ShooterSubsystem);
-  private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
+  //private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+  //private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
 
   // auton
-  // private Trajectory[] mTrajectories;  // multiple trajectories
-  // private int trajectoryIndex = 0;
+  private Trajectory[] mTrajectories;  // multiple trajectories
+  private int trajectoryIndex = 0;
   private Trajectory trajectory;
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
@@ -111,18 +98,11 @@ public class RobotContainer {
     mButtons[Constants.Xbutton].whenPressed(shooterPrime);
     mButtons[Constants.upbutton].whenPressed(new InstantCommand(ShooterSubsystem::cycleAimModeUp, ShooterSubsystem));
     mButtons[Constants.downbutton].whenPressed(new InstantCommand(ShooterSubsystem::cycleAimModeDown, ShooterSubsystem));
-    mButtons[Constants.Xbutton].whileHeld(CDSForwardCommand);
-    mButtons[Constants.BButton].whileHeld(CDSReverseCommand);
+    //mButtons[Constants.Xbutton].whileHeld(CDSForwardCommand);
+    //mButtons[Constants.BButton].whileHeld(CDSReverseCommand);
   }
 
   private void initializeTrajectories() throws IOException {
-    // String[] trajectoryJSON = {"One.wpilib.json", "Two.wpilib.json", "Three.wpilib.json", "Four.wpilib.json"};  // add new trajectories manually
-    // mTrajectories = new Trajectory[trajectoryJSON.length];
-    // for(int i = 0; i < trajectoryJSON.length; i++) {
-    //   Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON[i]);
-    //   Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-    //   mTrajectories[i] = trajectory;
-    // }
 
     // to test auton with just a one straight path
     String trajectoryJSON = "Straight.wpilib.json";
@@ -139,7 +119,7 @@ public class RobotContainer {
         trajectory,
         driveBaseSubsystem::getPose,
         new RamseteController(Constants.ramseteB, Constants.ramseteZeta), //Fix these constants by
-                                                                            //characterizing the robot
+                                                                          //characterizing the robot
         new SimpleMotorFeedforward(
             Constants.sVolts,
             Constants.vVoltSecondsPerMeter,
