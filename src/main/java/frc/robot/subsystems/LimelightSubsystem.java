@@ -7,15 +7,12 @@ package frc.robot.subsystems;
 //import edu.wpi.first.wpilibj2.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.DriveBaseSubsystem;
-import frc.robot.common.hardware.MotorController;
-
+import frc.robot.RobotContainer;
 import com.revrobotics.CANSparkMax;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.common.hardware.MotorController;
+import edu.wpi.first.math.MathUtil;
 
 
 
@@ -30,8 +27,9 @@ public class LimelightSubsystem extends SubsystemBase {
   private boolean isFinished;
 
   public LimelightSubsystem() {
-    m_PidController = new PIDController(6e-5, 0, 0);
-    m_PidController.setTolerance(1.0);
+    m_PidController = new PIDController(6e-3, 0, 0);
+    m_PidController.setTolerance(2.0);
+    m_DriveBaseSubsystem = RobotContainer.getDriveBase();
     m_leftMotor = m_DriveBaseSubsystem.getLeftMotor();
     m_rightMotor = m_DriveBaseSubsystem.getRightMotor();
     isFinished = false;
@@ -43,25 +41,32 @@ public class LimelightSubsystem extends SubsystemBase {
   }
 
   public double calculatePID(){
+    double calculation = MathUtil.clamp(m_PidController.calculate(getTX(), 0.0), -1.0, 1.0);
       // Uses TX and our setpoint (which will always be 0.0) to return the next calculation
     if (m_PidController.atSetpoint()){ // If our robot is aligned within the tolerance, return 0.0 to end command
-        return 0.0;
+      SmartDashboard.putNumber("Finished?", 1);
+      System.out.println("done");
+      isFinished = true;
+      return 0.0;
     }
     else{
-        return m_PidController.calculate(getTX(), 0.0); 
+      return Math.signum(calculation) * Math.max(Math.abs(calculation),0.05);
     }
   }
 
   public void setMotors(){
     //Sets drive motors to align based on our calculations
     double adjustment = calculatePID();
-    m_leftMotor.set(adjustment);
-    m_rightMotor.set(-1 * adjustment);
+    m_leftMotor.set(-1 * adjustment);
+    m_rightMotor.set(adjustment);
   }
 
   public boolean getFinished(){
-    isFinished = true;
     return isFinished;
+  }
+
+  public void reset(){
+    isFinished = false;
   }
 
   public void updateSmartDashboard(){

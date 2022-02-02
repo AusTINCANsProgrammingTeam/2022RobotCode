@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.LimelightSubsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class LimelightAlign extends CommandBase {
@@ -35,6 +34,7 @@ public class LimelightAlign extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_LimelightSubsystem.setMotors();
+    m_LimelightSubsystem.reset();
   }
 
   // Returns true when the command should end.

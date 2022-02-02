@@ -50,11 +50,11 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
 
-  private final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
+  private static final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
   private JoystickButton[] mButtons = new JoystickButton[11];
 
   // subsystems
-  private final DriveBaseSubsystem mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
+  private static final DriveBaseSubsystem mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
   private final CDSSubsystem mCDSSubsystem = new CDSSubsystem();
   private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem(); 
   private final ShooterSubsystem mShooterSubsystem = new ShooterSubsystem();
@@ -164,7 +164,7 @@ public class RobotContainer {
 
 
   // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way
-  public DriveBaseSubsystem getDriveBase() {
+  public static DriveBaseSubsystem getDriveBase() {
     return mDriveBaseSubsystem;
     
   }
