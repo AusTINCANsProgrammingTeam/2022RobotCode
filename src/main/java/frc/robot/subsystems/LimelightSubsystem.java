@@ -15,6 +15,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.common.hardware.MotorController;
+import edu.wpi.first.math.MathUtil;
 
 
 
@@ -29,7 +30,7 @@ public class LimelightSubsystem extends SubsystemBase {
   private boolean isFinished;
 
   public LimelightSubsystem() {
-    m_PidController = new PIDController(1.0, 0, 0);
+    m_PidController = new PIDController(6e-3, 0, 0);
     m_PidController.setTolerance(2.0);
     m_DriveBaseSubsystem = RobotContainer.getDriveBase();
     m_leftMotor = m_DriveBaseSubsystem.getLeftMotor();
@@ -43,7 +44,7 @@ public class LimelightSubsystem extends SubsystemBase {
   }
 
   public double calculatePID(){
-    double calculation = m_PidController.calculate(getTX(), 0.0); 
+    double calculation = MathUtil.clamp(m_PidController.calculate(getTX(), 0.0), -1.0, 1.0);
       // Uses TX and our setpoint (which will always be 0.0) to return the next calculation
     if (m_PidController.atSetpoint()){ // If our robot is aligned within the tolerance, return 0.0 to end command
       SmartDashboard.putNumber("Finished?", 1);
@@ -53,10 +54,10 @@ public class LimelightSubsystem extends SubsystemBase {
     }
     else{
       SmartDashboard.putNumber("tx", getTX());
-      System.out.println("TX " + getTX() + "calc " + calculation + "adjust " + Math.signum(calculation) * Math.max(Math.abs(calculation/85),0.04));
+      System.out.println("TX " + getTX() + "calc " + calculation + "adjust " + Math.signum(calculation) * Math.max(Math.abs(calculation),0.05));
       SmartDashboard.putNumber("calculation", calculation);
       SmartDashboard.putNumber("Finished?", 0);
-      return Math.signum(calculation) * Math.max(Math.abs(calculation/85),0.04);
+      return Math.signum(calculation) * Math.max(Math.abs(calculation),0.05);
     }
   }
 
@@ -70,6 +71,10 @@ public class LimelightSubsystem extends SubsystemBase {
 
   public boolean getFinished(){
     return isFinished;
+  }
+
+  public void reset(){
+    isFinished = false;
   }
 
   public void updateSmartDashboard(){

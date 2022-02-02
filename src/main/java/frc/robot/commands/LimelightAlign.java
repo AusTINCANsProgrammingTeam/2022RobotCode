@@ -37,6 +37,7 @@ public class LimelightAlign extends CommandBase {
   public void end(boolean interrupted) {
     SmartDashboard.putNumber("ran", 5);
     m_LimelightSubsystem.setMotors();
+    m_LimelightSubsystem.reset();
   }
 
   // Returns true when the command should end.
