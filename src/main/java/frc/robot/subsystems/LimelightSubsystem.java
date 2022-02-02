@@ -44,8 +44,6 @@ public class LimelightSubsystem extends SubsystemBase {
     double calculation = MathUtil.clamp(m_PidController.calculate(getTX(), 0.0), -1.0, 1.0);
       // Uses TX and our setpoint (which will always be 0.0) to return the next calculation
     if (m_PidController.atSetpoint()){ // If our robot is aligned within the tolerance, return 0.0 to end command
-      SmartDashboard.putNumber("Finished?", 1);
-      System.out.println("done");
       isFinished = true;
       return 0.0;
     }
