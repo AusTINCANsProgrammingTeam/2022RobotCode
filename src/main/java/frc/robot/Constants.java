@@ -119,4 +119,7 @@ public final class Constants {
     public static final double cargoRotation = 3;
 
     public static final double GearRatioOut = 0; //Idk if need But It fix errors in Shooter Sub
+
+    //Elevator Sim Constance (if needed)(Elevator Sim is for Testing Simulations)
+    public static final double m_encoderSim = 5;
 }
