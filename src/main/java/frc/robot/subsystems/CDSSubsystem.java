@@ -15,20 +15,15 @@ public class CDSSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private MotorController CDSBeltController;
-  private MotorController CDSAlignmentWheelOne;
-  private MotorController CDSAlignmentWheelTwo;
   private MotorController CDSWheelControllerOne;
   private MotorController CDSWheelControllerTwo;
 
   public CDSSubsystem() {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
-    CDSAlignmentWheelOne = new MotorController("CDS to Shooter Wheel One", Constants.CDSAlignmentOneID, 40);
-    CDSAlignmentWheelTwo = new MotorController("CDS to Shooter Wheel Two", Constants.CDSAlignmentTwoID, 40);
     CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerOneID, 40);
     CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerTwoID, 40);
 
     CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
-    CDSAlignmentWheelTwo.getSparkMax().follow(CDSAlignmentWheelOne.getSparkMax(), true);
   }
 
   public void CDSBeltWheelControllerToggle(boolean reverse) {
@@ -51,24 +46,10 @@ public class CDSSubsystem extends SubsystemBase {
     }
   }
 
-  public void CDSAlignmentToggle(boolean reverse){
-    if(reverse){
-      CDSAlignmentWheelOne.getSparkMax().set(-Constants.CDSAlignmentSpeed);
-      SmartDashboard.putString("CDS Alignment Wheel Direction", "Reverse");
-      SmartDashboard.putNumber("CDS Alignment Wheel Speed", -Constants.CDSAlignmentSpeed);
-
-    } else{
-      CDSAlignmentWheelOne.getSparkMax().set(Constants.CDSAlignmentSpeed);
-      SmartDashboard.putString("CDS Alignment Wheel Direction", "Forward");
-      SmartDashboard.putNumber("CDS Alignment Wheel Speed", Constants.CDSAlignmentSpeed);
-    }
-  }
-
   public void stopCDS() {
     CDSWheelControllerOne.getSparkMax().set(0.0);
-    CDSAlignmentWheelOne.getSparkMax().set(0.0);
     CDSBeltController.getSparkMax().set(0.0);
     SmartDashboard.putNumber("CDS Belt Speed", 0.0);
 
 }
-} //dont delete, for main method 
+} //Don't delete, for main method.

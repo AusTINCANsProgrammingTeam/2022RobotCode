@@ -79,11 +79,8 @@ public final class Constants {
     public static final int CDSBeltID = 13;
     public static final int CDSWheelControllerOneID = 14;
     public static final int CDSWheelControllerTwoID = 15;
-    public static final int CDSAlignmentOneID = 16;
-    public static final int CDSAlignmentTwoID = 17;
     public static final double CDSBeltSpeed = 0.15;
     public static final double CDSWheelControllerSpeed = 0.25;
-    public static final double CDSAlignmentSpeed = 0.25;
 
     //Joystick Constants
     public static final int portNumber = 0;
@@ -91,7 +88,6 @@ public final class Constants {
     public static final int joystickButtonNumberTwo = 2;
     public static final int BButton = 2; // Button for forward cds
     public static final int YButton = 4; // Button for reverse cds
-    public static final int AButton = 1; // Button for aligning cds
     public static final int rightBumperButton = 5; // Button for intake 
     public static final int leftBumperButton = 6;  // Button to reverse intake
     public static final int Xbutton = 3; // Button for Shooter

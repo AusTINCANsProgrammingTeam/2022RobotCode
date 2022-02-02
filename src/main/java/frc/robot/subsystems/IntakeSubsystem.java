@@ -22,7 +22,7 @@ public class IntakeSubsystem extends SubsystemBase {
   private MotorController intakeMotorControllerTwo;
   //private MotorController CDSWheelControllerOne;
   //private MotorController CDSWheelControllerTwo;
-  private DigitalInput initialBallSensor;
+  private DigitalInput frontBallSensor;
   private DigitalInput middleBallSensor;
   private DigitalInput finalBallSensor;
 
@@ -34,11 +34,11 @@ public class IntakeSubsystem extends SubsystemBase {
     //CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.intakeWheelOneID, 40);
     //CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.intakeWheelTwoID, 40);
 
-    initialBallSensor = new DigitalInput(Constants.initialBallSensorChannel);
+    frontBallSensor = new DigitalInput(Constants.initialBallSensorChannel);
     middleBallSensor = new DigitalInput(Constants.middleBallSensorChannel);
     finalBallSensor = new DigitalInput(Constants.finalBallSensorChannel); 
 
-    DigitalInput[] sensorArray = {initialBallSensor, middleBallSensor, finalBallSensor};
+    DigitalInput[] sensorArray = {frontBallSensor, middleBallSensor, finalBallSensor};
 
     // Remove invert=true parameter if wheels aren't running correctly
     //CDSWheelControllerOne.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
@@ -73,15 +73,16 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public boolean[] getBeamBreakStatus() {
-    boolean initialStatus = initialBallSensor.get();
+    boolean frontStatus = frontBallSensor.get();
     boolean middleStatus = middleBallSensor.get();
     boolean finalStatus = finalBallSensor.get();
-    boolean[] beamBreakArray = {initialStatus, middleStatus, finalStatus};
+    boolean[] beamBreakArray = {frontStatus, middleStatus, finalStatus};
     return beamBreakArray;
   }
 
   public int getBallCount() {
     boolean[] beamBreakStatuses = this.getBeamBreakStatus();
+    // TODO: Possibly add more beambreaks once done with testing.
     if (!beamBreakStatuses[0]) {
       if (this.getDirection()){
         ballCount--;
@@ -95,9 +96,105 @@ public class IntakeSubsystem extends SubsystemBase {
   public void expelBalls() {
     if (ballCount > 2) {
       this.toggleIntake(true);
-      while (this.getBallCount() > 2) {
-      }
-      this.toggleIntake(false);
-    }
+    } while (this.getBallCount() > 2){}
+    this.stopIntake();
   }
-}
+}  //Don't delete, this is for main method.
+
+// Steps to activate the code:
+// Incriment ball count (If statement)
+// Reverse motors if ball count > 2 (if else statement)
+// Set back to forward motors if the ball count is below 2 
+// There are no while loops
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// I'm totally not hiding ;]

@@ -36,7 +36,6 @@ import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.ShooterPrime;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
-import frc.robot.commands.CDSAlignmentWheelCommand;
 
  // This class is where the bulk of the robot should be declared. Since Command-based is a
  // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -67,7 +66,6 @@ public class RobotContainer {
   private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem);
   private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
   private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
-  private CDSAlignmentWheelCommand CDSAlignmentWheelCommand = new CDSAlignmentWheelCommand(CDSSubsystem);
 
   // auton
   // private Trajectory[] mTrajectories;  // multiple trajectories
@@ -111,7 +109,6 @@ public class RobotContainer {
     // CDS
     buttons[Constants.YButton].whileHeld(CDSForwardCommand);
     buttons[Constants.BButton].whileHeld(CDSReverseCommand);
-    buttons[Constants.AButton].whileHeld(CDSAlignmentWheelCommand);
   
     
     // Shooter
