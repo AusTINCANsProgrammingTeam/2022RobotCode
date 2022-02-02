@@ -23,16 +23,20 @@ public class MotorController {
     public MotorController(String name, int deviceID) {
         mName = name;
         mSparkMax = new CANSparkMax(deviceID, MotorType.kBrushless);
+        mSparkMax.restoreFactoryDefaults();
+
+        // Create default values for Spark Max motor controller
         mSparkMax.setSmartCurrentLimit(40); // default current limit is 40A
+        mSparkMax.setIdleMode(CANSparkMax.IdleMode.kCoast); // default mode is Coast
 
         mEncoder = mSparkMax.getEncoder();
-        mSparkMax.restoreFactoryDefaults();
     }
 
 
     public MotorController(String name, int deviceID, int smartCurrentLimit, boolean... enablePid) {
         this(name, deviceID);                               // intializes CANSparkMax and Encoder
         mSparkMax.setSmartCurrentLimit(smartCurrentLimit);  // set smartCurrentLimit
+        mSparkMax.setIdleMode(CANSparkMax.IdleMode.kCoast); // default mode is Coast
 
         // If enablePid has any number of booleans greater than 0 we are enabling pid
         if (enablePid.length > 0)
@@ -49,7 +53,7 @@ public class MotorController {
     public CANSparkMax getSparkMax() {
         // Check first that mSparkMax has been instantiated
         if(mSparkMax == null) {
-            throw new NullPointerException("Spark MAX motor has not been instantiated.");
+            throw new NullPointerException("Spark MAX motor for "+this.mName +" has not been instantiated.");
         }
         return mSparkMax;
     }
@@ -57,7 +61,7 @@ public class MotorController {
     public RelativeEncoder getEncoder() {
         // Check first that mEncoder has been instantiated
         if(mEncoder == null) {
-            throw new NullPointerException("Encoder has not been instantiated.");
+            throw new NullPointerException("Encoder for "+this.mName +" has not been instantiated.");
         }
         return mEncoder;
     }
@@ -65,7 +69,7 @@ public class MotorController {
     public SparkMaxPIDController getPID() { 
         // Check first that mPIDController has been instantiated
         if(mPIDController == null) {
-            throw new NullPointerException("PID Controller has not been instantiated.");
+            throw new NullPointerException("PID Controller for "+this.mName +" has not been instantiated.");
         }
         return mPIDController;
     }
@@ -89,7 +93,7 @@ public class MotorController {
     public double getSpeed() {
         // Check first that mEncoder has been instantiated
         if(mEncoder == null) {
-            throw new NullPointerException("Encoder has not been instantiated.");
+            throw new NullPointerException("Encoder for "+this.mName +" has not been instantiated.");
         }
         return mEncoder.getVelocity();
     }
@@ -102,7 +106,7 @@ public class MotorController {
     public void setPID() {
         // Check first that mPIDController has been instantiated
         if(mPIDController == null) {
-            throw new NullPointerException("PID Controller has not been instantiated.");
+            throw new NullPointerException("PID Controller for "+this.mName +" has not been instantiated.");
         }
 
         mPIDController.setP(mP);
