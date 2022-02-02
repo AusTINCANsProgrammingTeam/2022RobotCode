@@ -3,25 +3,24 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.CDSSubsystem; 
+import frc.robot.subsystems.CDSSubsystem;
+
 
 public class CDSForwardCommand extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
   private final CDSSubsystem mCDSSubsystem;
-  
+
   public CDSForwardCommand(CDSSubsystem CDSSubsystem) {
     //Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(CDSSubsystem); 
+    addRequirements(CDSSubsystem);
     mCDSSubsystem = CDSSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mCDSSubsystem.ForwardCDS();
-    mCDSSubsystem.HopperSwitch(true);
+    mCDSSubsystem.CDSBeltWheelControllerToggle(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -31,12 +30,21 @@ public class CDSForwardCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    mCDSSubsystem.HopperSwitch(false);
+    mCDSSubsystem.stopCDS();
   }
-
+  
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;
   }
 }
+
+
+
+
+
+
+
+
+

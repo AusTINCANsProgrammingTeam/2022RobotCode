@@ -16,43 +16,40 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSBeltController;
   private MotorController CDSWheelControllerOne;
   private MotorController CDSWheelControllerTwo;
-  
+ 
+
   public CDSSubsystem() {
-    CDSBeltController = new MotorController("CDS Motor", Constants.kCDSMotorThreeID);
-    CDSWheelControllerOne =  new MotorController("Main CDS Wheel Controller", Constants.kCDSMotorFourID);
-    CDSWheelControllerTwo = new MotorController("Follows CDS Wheel Controller", Constants.kCDSMotorFiveID);
-    
-    CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax());
+    CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
+    CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerID, 40);
+    CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerID, 40);
+
+    CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);    
+  }
+  
+  public void stopCDS() {
+    CDSWheelControllerOne.getSparkMax().set(0.0);
+    CDSBeltController.getSparkMax().set(0.0);
+    SmartDashboard.putNumber("CDS Belt Speed", 0.0);
   }
 
-  public void HopperSwitch(boolean on) {
-    if (on) {
-      double beltSmartSpeed = SmartDashboard.getNumber("Belt Speed", Constants.kCDSBeltSpeed);
-      double wheelSmartSpeed = SmartDashboard.getNumber("Wheel Speed", Constants.kCDSWheelSpeed);
-
-      CDSBeltController.getSparkMax().set(beltSmartSpeed);
-      CDSWheelControllerOne.getSparkMax().set(wheelSmartSpeed);
-      SmartDashboard.putNumber("CDS Belt Speed", Constants.kCDSBeltSpeed);
-      SmartDashboard.putNumber("CDS Wheel Speed", Constants.kCDSWheelSpeed);
+  public void CDSBeltWheelControllerToggle(boolean reverse) {
+    if (reverse) {
+      CDSWheelControllerOne.getSparkMax().set(-Constants.CDSWheelControllerSpeed);
+      SmartDashboard.putString("CDS Wheel Controller Direction", "Reverse");
+      SmartDashboard.putNumber("CDS Wheel Controller Speed", -Constants.CDSWheelControllerSpeed);
+      
+      CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
+      SmartDashboard.putString("CDS Belt Direction", "Reverse");
+      SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
     } else {
-      CDSBeltController.getSparkMax().set(0.0);
-      CDSWheelControllerOne.getSparkMax().set(0.0);
-      SmartDashboard.putNumber("CDS Motor Speed", 0);
+      CDSWheelControllerOne.getSparkMax().set(Constants.CDSWheelControllerSpeed);
+      SmartDashboard.putString("CDS Wheel Controller Direction", "Forward");
+      SmartDashboard.putNumber("CDS Wheel Controller Speed", Constants.CDSWheelControllerSpeed);
+      
+      CDSBeltController.getSparkMax().set(Constants.CDSBeltSpeed);
+      SmartDashboard.putString("CDS Belt Direction", "Forward");
+      SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
     }
   }
 
-  public void ForwardCDS() {
-    CDSBeltController.getSparkMax().setInverted(false);
-    CDSWheelControllerOne.getSparkMax().setInverted(false);
-    SmartDashboard.putString("CDS Belt Direction", "Forward");
-    SmartDashboard.putString("CDS Wheel Direction", "Forward");
-  }
-
-  public void ReverseCDS() {
-    CDSBeltController.getSparkMax().setInverted(true);
-    CDSWheelControllerOne.getSparkMax().setInverted(true);
-    SmartDashboard.putString("CDS Belt Direction", "Reverse");
-    SmartDashboard.putString("CDS Wheel Direction", "Reverse");
-  }
-
-}
+} //dont delete, for main method 
