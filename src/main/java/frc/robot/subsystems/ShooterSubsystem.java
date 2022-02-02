@@ -23,20 +23,20 @@ public class ShooterSubsystem extends SubsystemBase {
   private SparkMaxPIDController KShooterController;
   private SparkMaxPIDController KHoodController;
   private RelativeEncoder KShooterEncoder;
-  private RelativeEncoder KHoodEncoder;
+  //private RelativeEncoder KHoodEncoder;
   private MotorController cargo_motorController;
-  private SparkMaxPIDController kCargoController;
-  private RelativeEncoder kCargoEncoder;
-  private NetworkTableEntry sbShooterRPM;
+  //private SparkMaxPIDController kCargoController;
+  //private RelativeEncoder kCargoEncoder;
+  //private NetworkTableEntry sbShooterRPM;
   private double currentRPM;
 
   public ShooterSubsystem() {
-    sbShooterRPM = RobotContainer.debugTab.add("shooterRPM", 0).getEntry();
+    // sbShooterRPM = RobotContainer.debugTab.add("shooterRPM", 0).getEntry();
 
     aimMode = 4;
     cargo_motorController = new MotorController("Shooter Cargo", Constants.shooterCargoID);
-    kCargoController = cargo_motorController.getPID();
-    kCargoEncoder = cargo_motorController.getEncoder();
+    //kCargoController = cargo_motorController.getPID();
+    //kCargoEncoder = cargo_motorController.getEncoder();
 
     shooter_motorController = new MotorController("Shooter", Constants.shooterID, 40, true);
     KShooterController = shooter_motorController.getPID();
@@ -47,7 +47,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     hood_motorController = new MotorController("Hood", Constants.hoodID);
     KHoodController = hood_motorController.getPID();
-    KHoodEncoder = shooter_motorController.getEncoder();
+    //KHoodEncoder = shooter_motorController.getEncoder();
 
   }
 
@@ -59,9 +59,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void windFlywheel(double rpm) {
     // Winds Flywheel using PID control to passed rpm
-    double adjustedRPM = rpm * (Constants.gearRatioIn / Constants.GearRatioOut); //TODO: reconsider using this
-    currentRPM = rpm;
-    KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
+    //double adjustedRPM = rpm * (Constants.gearRatioIn / Constants.GearRatioOut); //TODO: reconsider using this
+    //currentRPM = rpm;
+    //KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
   }
 
   public void shoot() { //TODO: uncomment when merged; missing MotorController method
@@ -161,7 +161,7 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("dist", getDistance());
+    //SmartDashboard.putNumber("dist", getDistance());
   }
 
 }

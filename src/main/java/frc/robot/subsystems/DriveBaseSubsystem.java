@@ -41,7 +41,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private AnalogGyroSim m_gyroSim;
   public static ADIS16448_IMU m_gyro2; //Non-native gyro, might use later
   public static ADXRS450_Gyro m_gyro1;
-  private final DifferentialDriveOdometry m_odometry;
+  private DifferentialDriveOdometry m_odometry;
   public static Encoder m_leftEncoder;
   public static Encoder m_rightEncoder;
   private EncoderSim m_leftEncoderSim;
@@ -63,7 +63,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     m_motorControllers = new MotorController[4];
     m_gyro1 = new ADXRS450_Gyro();
-    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), new Pose2d(6.732000, 4.743371, new Rotation2d(2.70526)));
     
     
 
@@ -89,16 +88,17 @@ public class DriveBaseSubsystem extends SubsystemBase {
       m_rightEncoderSim = new EncoderSim(m_rightEncoder);
 
       SmartDashboard.putData("Field", m_field);
+
+      m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), new Pose2d(6.732000, 4.743371, new Rotation2d(2.70526)));
       
       m_DifferentialDrivetrainSim = new DifferentialDrivetrainSim(
         DCMotor.getNEO(2),       // 2 NEO motors on each side of the drivetrain.
         7.29,                    // 7.29:1 gearing reduction.
-        10,                      // MOI of 7.5 kg m^2 (from CAD model).
+        10.0,                    // MOI of 7.5 kg m^2 (from CAD model).
         60.0,                    // mass of the robot
         Units.inchesToMeters(3), // The robot wheel radius
-        1,                       // The track width
-        VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005)
-      );
+        0.5,                     // The track width
+        VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005));
         // standard deviations for measurement noise: x and y: 0.001m heading: 0.001 rad  l and r velocity: 0.1m/s  l and r position: 0.005m
 
     }
@@ -168,6 +168,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
                     m_leftEncoder.getDistance(),
                     m_rightEncoder.getDistance());
     m_field.setRobotPose(m_odometry.getPoseMeters());
+
   }
 
   public void driveFunction() {
