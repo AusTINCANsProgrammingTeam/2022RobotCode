@@ -29,6 +29,8 @@ import org.opencv.core.Mat;
 import com.revrobotics.RelativeEncoder;
 import frc.robot.common.hardware.MotorController;
 
+import java.io.*;
+
 public class ShooterSubsystem extends SubsystemBase {
   private int aimMode; // 0 is LOW, 1 is AUTO, 2 is LAUNCH, 3 is TARMAC, 4 is TEST
   private MotorController shooter_motorController;
@@ -121,7 +123,7 @@ public class ShooterSubsystem extends SubsystemBase {
                                                                                                    // feet
   }
 
-  public double[] ProjectilePrediction(double y0, double x0, double y, double x, double g, double t) {
+  public static double[] ProjectilePrediction(double y0, double x0, double y, double x, double g, double t) {
     x = x + 1; // Applies an offset to target goal center
     double hoodAngle = Math.toDegrees(Math.atan((y - y0 + 1 / 2 * g * (Math.pow(t, 2))) / x)); //Finds angle to shoot at
     double velocity = Math.abs(x / (Math.cos(Math.toRadians(hoodAngle)) * t)); //Finds velocity in feet per second to shoot at
@@ -132,7 +134,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   }
 
-  public double UnitConversion(double KBallSpeed, double GearDiameter) {
+  public static double UnitConversion(double KBallSpeed, double GearDiameter) {
     // Convert from FPS of the ball into RPM
     return (((KBallSpeed * 12) / Constants.gearDiameter) * Constants.ballFlywheelratio) * 2;
   }
@@ -176,5 +178,25 @@ public class ShooterSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("dist", getDistance());
   }
+
+  public static void main(String... args) {
+    // This is a debugging method to allow running the ProjectilePrediction code outside of the Java Robot.
+    // It may be better to use ShuffleBoard instead of this 
+	  BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	  double[] results = new double[2];
+	  double distance;
+	  double velocityY;
+	  try{
+	    while ( true ){
+	      System.out.println("Enter Distance:");
+	      distance = Double.parseDouble(br.readLine());
+	      results = ProjectilePrediction(Constants.shooterHeight,0,Constants.highHeight,distance,Constants.gravity,Constants.airboneTime);
+	      System.out.printf("Distance: %f Velocity in Feet per second: %f Angle in Degrees: %f \n",
+	      distance,results[0],results[1]);// Output using string formatting.
+	    }
+	  }catch(IOException ioe) {
+	    System.out.println(ioe);
+	  }
+	}
 
 }
