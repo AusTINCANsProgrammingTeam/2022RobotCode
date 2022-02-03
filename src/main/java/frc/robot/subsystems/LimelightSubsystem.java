@@ -47,7 +47,7 @@ public class LimelightSubsystem extends SubsystemBase {
       isFinished = true;
       return 0.0;
     }
-    else{
+    else{ //Returns calculation, with a minimum power level of 0.05 going to motors
       return Math.signum(calculation) * Math.max(Math.abs(calculation),0.05);
     }
   }
