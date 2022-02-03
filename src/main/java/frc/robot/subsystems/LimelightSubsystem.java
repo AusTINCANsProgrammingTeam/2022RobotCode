@@ -22,16 +22,12 @@ public class LimelightSubsystem extends SubsystemBase {
   // here. Call these from Commands.
   private PIDController m_PidController;
   private DriveBaseSubsystem m_DriveBaseSubsystem;
-  private CANSparkMax m_leftMotor;
-  private CANSparkMax m_rightMotor;
   private boolean isFinished;
 
   public LimelightSubsystem() {
     m_PidController = new PIDController(6e-3, 0, 0);
     m_PidController.setTolerance(2.0);
     m_DriveBaseSubsystem = RobotContainer.getDriveBase();
-    m_leftMotor = m_DriveBaseSubsystem.getLeftMotor();
-    m_rightMotor = m_DriveBaseSubsystem.getRightMotor();
     isFinished = false;
   }
 
@@ -40,7 +36,7 @@ public class LimelightSubsystem extends SubsystemBase {
     return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
   }
 
-  public double calculatePID(){
+  private double calculatePID(){
     double calculation = MathUtil.clamp(m_PidController.calculate(getTX(), 0.0), -1.0, 1.0);
       // Uses TX and our setpoint (which will always be 0.0) to return the next calculation
     if (m_PidController.atSetpoint()){ // If our robot is aligned within the tolerance, return 0.0 to end command
@@ -55,8 +51,11 @@ public class LimelightSubsystem extends SubsystemBase {
   public void setMotors(){
     //Sets drive motors to align based on our calculations
     double adjustment = calculatePID();
-    m_leftMotor.set(-1 * adjustment);
-    m_rightMotor.set(adjustment);
+    m_DriveBaseSubsystem.setSpeeds(-1 * adjustment, adjustment);
+  }
+
+  public void stopMotors(){
+    m_DriveBaseSubsystem.setSpeeds(0.0, 0.0);
   }
 
   public boolean getFinished(){

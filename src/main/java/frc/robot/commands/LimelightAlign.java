@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -11,8 +12,9 @@ public class LimelightAlign extends CommandBase {
   private LimelightSubsystem m_LimelightSubsystem;
 
   /** Creates a new ShooterPrimary. */
-  public LimelightAlign(LimelightSubsystem LimelightSubsystem) {
+  public LimelightAlign(LimelightSubsystem LimelightSubsystem, DriveBaseSubsystem DriveBaseSubsystem) {
     addRequirements(LimelightSubsystem);
+    addRequirements(DriveBaseSubsystem);
     m_LimelightSubsystem = LimelightSubsystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -27,7 +29,7 @@ public class LimelightAlign extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_LimelightSubsystem.setMotors();
+    m_LimelightSubsystem.stopMotors();
   }
 
   // Called once the command ends or is interrupted.

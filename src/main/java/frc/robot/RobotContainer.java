@@ -68,7 +68,7 @@ public class RobotContainer {
   private ShooterPrime mShooterPrime = new ShooterPrime(mShooterSubsystem);
   private CDSForwardCommand mCDSForwardCommand = new CDSForwardCommand(mCDSSubsystem);
   private CDSReverseCommand mCDSReverseCommand = new CDSReverseCommand(mCDSSubsystem);
-  private LimelightAlign mLimelightAlign = new LimelightAlign(mLimelightSubsystem);
+  private LimelightAlign mLimelightAlign = new LimelightAlign(mLimelightSubsystem,mDriveBaseSubsystem);
 
   // auton
   // private Trajectory[] mTrajectories;  // multiple trajectories
