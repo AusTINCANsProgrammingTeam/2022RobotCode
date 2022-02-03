@@ -43,25 +43,32 @@ public class DriveBaseSubsystem extends SubsystemBase {
     
 
     // motor controllers
-    m_motorControllers[Constants.kDriveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.kDriveLeftFront, 40, true);
-    m_motorControllers[Constants.kDriveLeftRearIndex] = new MotorController("Differential Left Rear", Constants.kDriveLeftRear, 40, true);
-    m_motorControllers[Constants.kDriveRightFrontIndex] = new MotorController("Differential Right Front", Constants.kDriveRightFront, 40, true);
-    m_motorControllers[Constants.kDriveRightRearIndex] = new MotorController("Differential Right Rear", Constants.kDriveRightRear, 40, true);
+    m_motorControllers[Constants.driveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.driveLeftFront);
+    m_motorControllers[Constants.driveLeftRearIndex] = new MotorController("Differential Left Rear", Constants.driveLeftRear);
+    m_motorControllers[Constants.driveRightFrontIndex] = new MotorController("Differential Right Front", Constants.driveRightFront);
+    m_motorControllers[Constants.driveRightRearIndex] = new MotorController("Differential Right Rear", Constants.driveRightRear);
 
-    // inverses right side motors (2022 wpilib doesn't default it to be inverted for differential drive)
-    m_motorControllers[Constants.kDriveLeftFrontIndex].setInverted(true);
-    m_motorControllers[Constants.kDriveLeftRearIndex].setInverted(true);
+    // invert left side motors
+    m_motorControllers[Constants.driveLeftFrontIndex].setInverted(true);
+    m_motorControllers[Constants.driveLeftRearIndex].setInverted(true);
 
     //Forces middle and rear motors of each side to follow the first
-    m_motorControllers[Constants.kDriveLeftRearIndex].setFollow(m_motorControllers[Constants.kDriveLeftFrontIndex]);
-    m_motorControllers[Constants.kDriveRightRearIndex].setFollow(m_motorControllers[Constants.kDriveRightFrontIndex]);
+    m_motorControllers[Constants.driveLeftRearIndex].setFollow(m_motorControllers[Constants.driveLeftFrontIndex]);
+    m_motorControllers[Constants.driveRightRearIndex].setFollow(m_motorControllers[Constants.driveRightFrontIndex]);
+
+    // differential drive
+    m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax(), 
+                                          m_motorControllers[Constants.driveRightFrontIndex].getSparkMax());
+
+    // TODO: external encoders?
+    // m_leftEncoder = new Encoder(Constants.leftEncoderDIOone, Constants.leftEncoderDIOtwo, 
+    // false, Encoder.EncodingType.k2X);
+    // m_rightEncoder = new Encoder(Constants.rightEncoderDIOone, Constants.rightEncoderDIOtwo, 
+    // false, Encoder.EncodingType.k2X);
     
     // Encoders
     m_leftEncoder = m_motorControllers[Constants.kDriveLeftFrontIndex].getEncoder();
     m_rightEncoder = m_motorControllers[Constants.kDriveRightFrontIndex].getEncoder();  
-    // differential drive
-    m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax(), 
-                                          m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax());
   }
 
   @Override
@@ -77,25 +84,26 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // Normal Arcade Drive
   public void arcadeDrive() {
-    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), 
-                                      m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
+    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.DBLeftJoystickAxisY), 
+                                      m_driverJoystick.getRawAxis(Constants.DBRightJoystickAxisY));
   }
 
   // Arcade Drive where you can only move forwards and backwards for testing
-  //TODO: Make a command to switch modes (only if we actually want this)
   public void arcadeDrive(double rotation) {
     //m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), rotation);
   }
 
+  //TODO: Make a command to switch modes (extra)
+
   // tank drive, not used but good to have
   public void tankDrive() {
-    m_differentialDrive.tankDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), 
-                                  m_driverJoystick.getRawAxis(Constants.kDBRightJoystickAxisY));
+    m_differentialDrive.tankDrive(m_driverJoystick.getRawAxis(Constants.DBLeftJoystickAxisY), 
+                                  m_driverJoystick.getRawAxis(Constants.DBRightJoystickAxisY));
   }
 
   public void setAutonVolts(double leftVolts, double rightVolts) {
-    m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax().setVoltage(leftVolts);
-    m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax().setVoltage(rightVolts);
+    m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax().setVoltage(leftVolts);
+    m_motorControllers[Constants.driveRightFrontIndex].getSparkMax().setVoltage(rightVolts);
     m_differentialDrive.feed();
   }
 
@@ -113,22 +121,22 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_differentialDrive.arcadeDrive(0.0, 0.0);
   }
 
-  // public CANSparkMax getRightMotor() {
-  //   return m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax();
-  // }
+  public CANSparkMax getRightMotor() {
+    return m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax();
+  }
 
-  // public CANSparkMax getLeftMotor() {
-  //   return m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax();
-  // }
+  public CANSparkMax getLeftMotor() {
+    return m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax();
+  }
 
   // return speed of left side motors
   public double getLeftSpeed() {
-    return m_motorControllers[Constants.kDriveLeftFrontIndex].getSpeed();
+    return m_motorControllers[Constants.driveLeftFrontIndex].getSpeed();
   }
 
   // return speed of right side motors
   public double getRightSpeed() {
-    return m_motorControllers[Constants.kDriveRightFrontIndex].getSpeed();
+    return m_motorControllers[Constants.driveRightFrontIndex].getSpeed();
   }
   // return gyro info
   public double getGyroAngle() {
@@ -147,6 +155,11 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public void resetOdometry(Pose2d pose) {
     resetEncoders();  // reset encoders
     m_odometry.resetPosition(pose, m_gyro.getRotation2d());
+  }
+
+  public void setSpeeds(double left, double right){
+    getLeftMotor().set(left);
+    getRightMotor().set(right);
   }
   
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {

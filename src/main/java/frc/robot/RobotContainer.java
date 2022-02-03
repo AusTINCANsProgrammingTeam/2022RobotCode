@@ -31,8 +31,10 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
+import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.ShooterPrime;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
@@ -46,24 +48,24 @@ public class RobotContainer {
   public static ShuffleboardTab debugTab;
 
   // The robot's subsystems and commands are defined here...
-
-
-  private final Joystick mDriverJoystick = new Joystick(Constants.kPortNumber);
+  private static final Joystick driverJoystick = new Joystick(Constants.portNumber);
   private JoystickButton[] mButtons = new JoystickButton[11];
 
   // subsystems
-  private final DriveBaseSubsystem mDriveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
-  // private final CDSSubsystem mCDSSubsystem = new CDSSubsystem();
-  // private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
-  // private final ShooterSubsystem mShooterSubsystem = new ShooterSubsystem();
+  private static final DriveBaseSubsystem driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick);
+  // private final CDSSubsystem CDSSubsystem = new CDSSubsystem();
+  // private final IntakeSubsystem IntakeSubsystem = new IntakeSubsystem(); 
+  // private final ShooterSubsystem ShooterSubsystem = new ShooterSubsystem();
+  // private final LimelightSubsystem LimelightSubsystem = new LimelightSubsystem();
 
   // commands
-  private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(mDriveBaseSubsystem);
-  // private IntakeForwardCommand mIntakeForwardCommand = new IntakeForwardCommand(mIntakeSubsystem);
-  // private IntakeReverseCommand mIntakeReverseCommand = new IntakeReverseCommand(mIntakeSubsystem);
-  // private ShooterPrime mShooterPrime = new ShooterPrime(mShooterSubsystem);
-  // private CDSForwardCommand mCDSForwardCommand = new CDSForwardCommand(mCDSSubsystem);
-  // private CDSReverseCommand mCDSReverseCommand = new CDSReverseCommand(mCDSSubsystem);
+  private final DriveBaseTeleopCommand driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
+  // private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(IntakeSubsystem);
+  // private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(IntakeSubsystem);
+  // private ShooterPrime shooterPrime = new ShooterPrime(ShooterSubsystem);
+  // private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+  // private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
+  // private LimelightAlign limelightAlign = new LimelightAlign(LimelightSubsystem,driveBaseSubsystem);
 
   // auton
   // private Trajectory[] mTrajectories;  // multiple trajectories
@@ -75,9 +77,8 @@ public class RobotContainer {
     debugTab = Shuffleboard.getTab("debug");
     // Configure the button bindings
     for (int i = 1; i < mButtons.length; i++) {
-      mButtons[i] = new JoystickButton(mDriverJoystick, i);
+      mButtons[i] = new JoystickButton(driverJoystick, i);
     }
-
 
     configureButtonBindings();
     
@@ -88,8 +89,7 @@ public class RobotContainer {
       e.printStackTrace();
     }
 
-    mDriveBaseSubsystem.setDefaultCommand(mDriveBaseTeleopCommand);
-
+    driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
   }
 
   // Use this method to define your button->command mappings. Buttons can be
@@ -109,6 +109,10 @@ public class RobotContainer {
     // mButtons[Constants.kDownbutton].whenPressed(new InstantCommand(mShooterSubsystem::cycleAimModeDown, mShooterSubsystem));
     // mButtons[Constants.kXButton].whileHeld(mCDSForwardCommand);
     // mButtons[Constants.kBButton].whileHeld(mCDSReverseCommand);
+    // Intake
+
+    // Limelight
+    // mButtons[Constants.AButton].whenPressed(limelightAlign);
   }
 
   private void initializeTrajectories() throws IOException {
@@ -133,32 +137,32 @@ public class RobotContainer {
     RamseteCommand ramseteCommand =
     new RamseteCommand(
         trajectory,
-        mDriveBaseSubsystem::getPose,
-        new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta), // Fix these constants by
+        driveBaseSubsystem::getPose,
+        new RamseteController(Constants.ramseteB, Constants.ramseteZeta), // Fix these constants by
                                                                             // characterizing the robot
         new SimpleMotorFeedforward(
-            Constants.ksVolts,
-            Constants.kvVoltSecondsPerMeter,
-            Constants.kaVoltSecondsSquaredPerMeter),
+            Constants.sVolts,
+            Constants.vVoltSecondsPerMeter,
+            Constants.aVoltSecondsSquaredPerMeter),
 
-        Constants.kDriveKinematics,
+        Constants.driveKinematics,
         
-        mDriveBaseSubsystem::getWheelSpeeds,
+        driveBaseSubsystem::getWheelSpeeds,
         new PIDController(0.00005, 0, 0),
         new PIDController(0.00005, 0, 0),
         //RamseteCommand passes volts to the callback
-        mDriveBaseSubsystem::setAutonVolts,
-        mDriveBaseSubsystem);
+        driveBaseSubsystem::setAutonVolts,
+        driveBaseSubsystem);
         
-    mDriveBaseSubsystem.resetOdometry(trajectory.getInitialPose());
+    driveBaseSubsystem.resetOdometry(trajectory.getInitialPose());
 
-    return ramseteCommand.andThen(() -> mDriveBaseSubsystem.setAutonVolts(0,0));
+    return ramseteCommand.andThen(() -> driveBaseSubsystem.setAutonVolts(0,0));
   }
 
 
-  // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way
-  public DriveBaseSubsystem getDriveBase() {
-    return mDriveBaseSubsystem;
+  // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way23
+  public static DriveBaseSubsystem getDriveBase() {
+    return driveBaseSubsystem;
+    
   }
-
 }

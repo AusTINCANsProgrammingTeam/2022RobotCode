@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -39,7 +40,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private MotorController cargo_motorController;
   private SparkMaxPIDController kCargoController;
   private RelativeEncoder kCargoEncoder;
-  private int shooterRPM;
   private NetworkTableEntry sbShooterRPM;
   private double currentRPM;
 
@@ -47,18 +47,18 @@ public class ShooterSubsystem extends SubsystemBase {
     sbShooterRPM = RobotContainer.debugTab.add("shooterRPM", 0).getEntry();
 
     aimMode = 4;
-    cargo_motorController = new MotorController("Shooter Cargo", Constants.kShooterCargoID);
+    cargo_motorController = new MotorController("Shooter Cargo", Constants.shooterCargoID);
     kCargoController = cargo_motorController.getPID();
     kCargoEncoder = cargo_motorController.getEncoder();
 
-    shooter_motorController = new MotorController("Shooter", Constants.kShooterID, 40, true);
+    shooter_motorController = new MotorController("Shooter", Constants.shooterID, 40, true);
     KShooterController = shooter_motorController.getPID();
     KShooterEncoder = shooter_motorController.getEncoder();
     KShooterController.setP(6e-4);
     KShooterController.setI(1e-6);
     KShooterController.setD(0.0);
 
-    hood_motorController = new MotorController("Hood", Constants.kHoodID);
+    hood_motorController = new MotorController("Hood", Constants.hoodID);
     KHoodController = hood_motorController.getPID();
     KHoodEncoder = shooter_motorController.getEncoder();
 
@@ -111,12 +111,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double getTY() {
     // Gets TY, the vertical angle of the target from the limelight
-    return Math.toDegrees(NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0));
+    return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
   }
 
   public double getDistance() {
     // Uses Limelight to find distance to High Goal
-    return (Constants.kHighHeight - Constants.kLLHeight) / Math.tan(Math.toRadians((getTY() + Constants.kLLAngle))); // Return distance in
+    SmartDashboard.putNumber("ty", getTY());
+    return (Constants.highHeight - Constants.LLHeight) / Math.tan(Math.toRadians((getTY() + Constants.LLAngle))); // Return distance in
                                                                                                    // feet
   }
 
@@ -125,7 +126,7 @@ public class ShooterSubsystem extends SubsystemBase {
     double hoodAngle = Math.toDegrees(Math.atan((y - y0 + 1 / 2 * g * (Math.pow(t, 2))) / x)); //Finds angle to shoot at
     double velocity = Math.abs(x / (Math.cos(Math.toRadians(hoodAngle)) * t)); //Finds velocity in feet per second to shoot at
     double[] returnArray = new double[2];
-    returnArray[0] = UnitConversion(velocity, Constants.kGearDiameter); //Converts FPS to RPM
+    returnArray[0] = UnitConversion(velocity, Constants.gearDiameter); //Converts FPS to RPM
     returnArray[1] = hoodAngle;
     return returnArray;
 
@@ -133,7 +134,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double UnitConversion(double KBallSpeed, double GearDiameter) {
     // Convert from FPS of the ball into RPM
-    return (((KBallSpeed * 12) / Constants.kGearDiameter) * Constants.kBallFlywheelratio) * 2;
+    return (((KBallSpeed * 12) / Constants.gearDiameter) * Constants.ballFlywheelratio) * 2;
   }
 
   public void prime() {
@@ -142,27 +143,27 @@ public class ShooterSubsystem extends SubsystemBase {
     switch (aimMode) {
       case 0: // Case for LOW mode, winds flywheel to preset RPM and adjusts hood to preset
               // angle
-        adjustHood(Constants.kLOWAngle);
-        windFlywheel(Constants.kLOWRPM);
+        adjustHood(Constants.LOWAngle);
+        windFlywheel(Constants.LOWRPM);
         break;
       case 1: // Case for AUTO mode, calculates trajectory and winds flywheel/adjusts hood to
               // a dynamic state
-        adjustHood(ProjectilePrediction(Constants.kShooterHeight, 0, Constants.kHighHeight, getDistance(),
-            Constants.kGravity, Constants.kAirboneTime)[1]);
+        adjustHood(ProjectilePrediction(Constants.shooterHeight, 0, Constants.highHeight, getDistance(),
+            Constants.gravity, Constants.airboneTime)[1]);
 
-        windFlywheel((int) (Math.ceil(ProjectilePrediction(Constants.kShooterHeight, 0, Constants.kHighHeight,
-            getDistance(), 32, Constants.kAirboneTime)[0])));
+        windFlywheel((int) (Math.ceil(ProjectilePrediction(Constants.shooterHeight, 0, Constants.highHeight,
+            getDistance(), 32, Constants.airboneTime)[0])));
 
         break;
       case 2: // Case for LAUNCH mode, winds flywheel to preset RPM and adjusts hood to preset
               // angle
-        adjustHood(Constants.kLAUNCHAngle);
-        windFlywheel(Constants.kLAUNCHRPM);
+        adjustHood(Constants.LAUNCHAngle);
+        windFlywheel(Constants.LAUNCHRPM);
         break;
       case 3: // Case for TARMAC mode, winds flywheel to preset RPM and adjusts hood to preset
               // angle
-        adjustHood(Constants.kTARMACAngle);
-        windFlywheel(Constants.kTARMACRPM);
+        adjustHood(Constants.TARMACAngle);
+        windFlywheel(Constants.TARMACRPM);
         break;
       case 4: //Case for TEST mode, just takes an RPM and winds
         windFlywheel(3000.0);
@@ -173,7 +174,7 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    //shooterRPM = sbShooterRPM.getDouble(0.0);
+    SmartDashboard.putNumber("dist", getDistance());
   }
 
 }
