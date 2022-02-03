@@ -33,6 +33,7 @@ import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
+import frc.robot.commands.BeamBreakCommand;
 import frc.robot.commands.ShooterPrime;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
@@ -63,6 +64,7 @@ public class RobotContainer {
   
   private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
   private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
+  private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
   private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem);
   private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
   private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
@@ -92,6 +94,8 @@ public class RobotContainer {
 
     driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
 
+    intakeSubsystem.setDefaultCommand(beamBreakCommand);
+
   }
 
   // Use this method to define your button->command mappings. Buttons can be
@@ -115,7 +119,7 @@ public class RobotContainer {
     buttons[Constants.Xbutton].whenPressed(shooterPrime);
     buttons[Constants.upbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
     buttons[Constants.downbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
-    }
+  }
 
   private void initializeTrajectories() throws IOException {
     // String[] trajectoryJSON = {"One.wpilib.json", "Two.wpilib.json", "Three.wpilib.json", "Four.wpilib.json"};  // add new trajectories manually

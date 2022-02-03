@@ -96,16 +96,10 @@ public class IntakeSubsystem extends SubsystemBase {
   public void expelBalls() {
     if (ballCount > 2) {
       this.toggleIntake(true);
-    } while (this.getBallCount() > 2){}
+    }
     this.stopIntake();
   }
 }  //Don't delete, this is for main method.
-
-// Steps to activate the code:
-// Incriment ball count (If statement)
-// Reverse motors if ball count > 2 (if else statement)
-// Set back to forward motors if the ball count is below 2 
-// There are no while loops
 
 
 
