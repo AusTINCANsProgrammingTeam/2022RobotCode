@@ -49,8 +49,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.kDriveRightRearIndex] = new MotorController("Differential Right Rear", Constants.kDriveRightRear, 40, true);
 
     // inverses right side motors (2022 wpilib doesn't default it to be inverted for differential drive)
-    m_motorControllers[Constants.kDriveRightFrontIndex].setInverted(true);
-    m_motorControllers[Constants.kDriveRightRearIndex].setInverted(true);
+    m_motorControllers[Constants.kDriveLeftFrontIndex].setInverted(true);
+    m_motorControllers[Constants.kDriveLeftRearIndex].setInverted(true);
 
     //Forces middle and rear motors of each side to follow the first
     m_motorControllers[Constants.kDriveLeftRearIndex].setFollow(m_motorControllers[Constants.kDriveLeftFrontIndex]);
