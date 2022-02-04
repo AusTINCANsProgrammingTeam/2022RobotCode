@@ -138,25 +138,14 @@ public class RobotContainer {
     new RamseteCommand(
         trajectory,
         driveBaseSubsystem::getPose,
-        new RamseteController(Constants.ramseteB, Constants.ramseteZeta), // Fix these constants by
-                                                                            // characterizing the robot
-        new SimpleMotorFeedforward(
-            Constants.sVolts,
-            Constants.vVoltSecondsPerMeter,
-            Constants.aVoltSecondsSquaredPerMeter),
-
+        new RamseteController(Constants.ramseteB, Constants.ramseteZeta), // ramsete follower to follow trajectory
         Constants.driveKinematics,
-        
-        driveBaseSubsystem::getWheelSpeeds,
-        new PIDController(0.00005, 0, 0),
-        new PIDController(0.00005, 0, 0),
-        //RamseteCommand passes volts to the callback
-        driveBaseSubsystem::setAutonVolts,
+        driveBaseSubsystem::acceptWheelSpeeds,
         driveBaseSubsystem);
         
     driveBaseSubsystem.resetOdometry(trajectory.getInitialPose());
 
-    return ramseteCommand.andThen(() -> driveBaseSubsystem.setAutonVolts(0,0));
+    return ramseteCommand.andThen(() -> driveBaseSubsystem.acceptWheelSpeeds(0,0));
   }
 
 

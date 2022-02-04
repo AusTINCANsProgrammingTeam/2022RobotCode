@@ -23,21 +23,24 @@ import com.kauailabs.navx.frc.AHRS;
 
 public class DriveBaseSubsystem extends SubsystemBase {
 
-  private final Joystick m_driverJoystick;
-  private final MotorController[] m_motorControllers;
-  private final DifferentialDrive m_differentialDrive;
-  //public static ADIS16448_IMU m_gyro; //Non-native gyro, might use later
-  //public static ADXRS450_Gyro m_gyro;
+  private Joystick m_driverJoystick;
+  private MotorController[] m_motorControllers;
+  private DifferentialDrive m_differentialDrive;
   private AHRS m_gyro;
-  private final DifferentialDriveOdometry m_odometry;
-  public static RelativeEncoder m_leftEncoder;
-  public static RelativeEncoder m_rightEncoder;
+  private DifferentialDriveOdometry m_odometry;
+
+  // external encoders
+  private Encoder m_extRightEncoder;
+  private Encoder m_extLeftEncoder;
+
+  // internal encoders
+  private RelativeEncoder m_internalLeftEncoder;
+  private RelativeEncoder m_internalRightEncoder;
 
   
   public DriveBaseSubsystem(Joystick joystick) {  
     m_driverJoystick = joystick;
     m_motorControllers = new MotorController[4];
-    //m_gyro = new ADIS16448_IMU();
     m_gyro = new AHRS(I2C.Port.kMXP);
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d()); 
     
@@ -60,20 +63,23 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax(), 
                                           m_motorControllers[Constants.driveRightFrontIndex].getSparkMax());
 
-    // TODO: external encoders?
-    // m_leftEncoder = new Encoder(Constants.leftEncoderDIOone, Constants.leftEncoderDIOtwo, 
-    // false, Encoder.EncodingType.k2X);
-    // m_rightEncoder = new Encoder(Constants.rightEncoderDIOone, Constants.rightEncoderDIOtwo, 
-    // false, Encoder.EncodingType.k2X);
+    // external encoders            
+    m_extLeftEncoder = new Encoder(Constants.leftEncoderDIOone, Constants.leftEncoderDIOtwo, 
+    false, Encoder.EncodingType.k2X);
+    m_extRightEncoder = new Encoder(Constants.rightEncoderDIOone, Constants.rightEncoderDIOtwo, 
+    false, Encoder.EncodingType.k2X);
     
-    // Encoders
-    m_leftEncoder = m_motorControllers[Constants.kDriveLeftFrontIndex].getEncoder();
-    m_rightEncoder = m_motorControllers[Constants.kDriveRightFrontIndex].getEncoder();  
+    // internal encoders
+    m_internalLeftEncoder = m_motorControllers[Constants.kDriveLeftFrontIndex].getEncoder();
+    m_internalRightEncoder = m_motorControllers[Constants.kDriveRightFrontIndex].getEncoder();  
   }
 
   @Override
   public void periodic() {
-    //arcadeDrive();  // periodically runs the arcadeDrive function, avoid scheduling the command
+
+    // update odometry
+    m_odometry.update(
+        m_gyro.getRotation2d(), m_extLeftEncoder.getDistance(), m_extRightEncoder.getDistance());
 
     // Update the smart dashboard in here, runs a for loop so it does it for every motor
     for(int i = 0; i < m_motorControllers.length; i++) {
@@ -101,11 +107,11 @@ public class DriveBaseSubsystem extends SubsystemBase {
                                   m_driverJoystick.getRawAxis(Constants.DBRightJoystickAxisY));
   }
 
-  public void setAutonVolts(double leftVolts, double rightVolts) {
-    m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax().setVoltage(leftVolts);
-    m_motorControllers[Constants.driveRightFrontIndex].getSparkMax().setVoltage(rightVolts);
-    m_differentialDrive.feed();
-  }
+  // public void setAutonVolts(double leftVolts, double rightVolts) {
+  //   m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax().setVoltage(leftVolts);
+  //   m_motorControllers[Constants.driveRightFrontIndex].getSparkMax().setVoltage(rightVolts);
+  //   m_differentialDrive.feed();
+  // }
 
   @Override
   public void simulationPeriodic() {
@@ -138,18 +144,10 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public double getRightSpeed() {
     return m_motorControllers[Constants.driveRightFrontIndex].getSpeed();
   }
-  // return gyro info
-  public double getGyroAngle() {
-    return m_gyro.getAngle();
-  }
-
-  public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
-  }
 
   public void resetEncoders() {
-    m_leftEncoder.setPosition(0);
-    m_rightEncoder.setPosition(0);
+    m_extLeftEncoder.reset();
+    m_extRightEncoder.reset();
   }
 
   public void resetOdometry(Pose2d pose) {
@@ -157,17 +155,37 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_odometry.resetPosition(pose, m_gyro.getRotation2d());
   }
 
+  public Pose2d getPose() {
+    return m_odometry.getPoseMeters();
+  }
+
   public void setSpeeds(double left, double right){
     getLeftMotor().set(left);
     getRightMotor().set(right);
   }
-  
-  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
+
+  // for trajectory (ramseteCommand)
+  public void acceptWheelSpeeds(double leftSpeed, double rightSpeed) {
+    m_motorControllers[Constants.driveLeftFrontIndex].setSpeed(leftSpeed);
+    m_motorControllers[Constants.driveRightFrontIndex].setSpeed(rightSpeed);
+    m_differentialDrive.feed();
   }
   
+  // public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+  //   return new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
+  // }
+
+
+  // for debug/shuffleboard
+
+  // return gyro info
+  public double getGyroAngle() {
+    return m_gyro.getAngle();
+  }
+  
+  // returns velocity conversion factor from the internal encoder in order to calculate distances and speeds, avoiding the use of external encoders
   public double getVelocityConversionFactor() {
-    return m_rightEncoder.getVelocityConversionFactor();
+    return m_internalRightEncoder.getVelocityConversionFactor();
   }
 
   // TODO: we can add more tankdrive co functions as extras later
