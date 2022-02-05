@@ -9,24 +9,12 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 import java.lang.Math;
-import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.SparkMaxRelativeEncoder;
-import com.revrobotics.CANSparkMax.ControlType;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
-
-import org.opencv.core.Mat;
-import com.revrobotics.RelativeEncoder;
 import frc.robot.common.hardware.MotorController;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -40,15 +28,12 @@ public class ShooterSubsystem extends SubsystemBase {
   private MotorController cargo_motorController;
   private SparkMaxPIDController kCargoController;
   private RelativeEncoder kCargoEncoder;
-  private NetworkTableEntry sbShooterRPM;
   private double currentRPM;
 
   public ShooterSubsystem() {
-    sbShooterRPM = RobotContainer.debugTab.add("shooterRPM", 0).getEntry();
 
     aimMode = 4;
     cargo_motorController = new MotorController("Shooter Cargo", Constants.shooterCargoID);
-    kCargoController = cargo_motorController.getPID();
     kCargoEncoder = cargo_motorController.getEncoder();
 
     shooter_motorController = new MotorController("Shooter", Constants.shooterID, 40, true);
@@ -57,10 +42,10 @@ public class ShooterSubsystem extends SubsystemBase {
     KShooterController.setP(6e-4);
     KShooterController.setI(1e-6);
     KShooterController.setD(0.0);
-
+/*
     hood_motorController = new MotorController("Hood", Constants.hoodID);
     KHoodController = hood_motorController.getPID();
-    KHoodEncoder = shooter_motorController.getEncoder();
+    KHoodEncoder = shooter_motorController.getEncoder();*/
 
   }
 
@@ -77,10 +62,12 @@ public class ShooterSubsystem extends SubsystemBase {
     KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
   }
 
-  public void shoot() { //TODO: uncomment when merged; missing MotorController method
-    /*cargo_motorController.setSpeed(1.0);
-    Thread.sleep(200);
-    cargo_motorController.setSpeed(0.0);*/
+  public void runCargo(boolean a) {
+    if(a){
+      cargo_motorController.setSpeed(1.0);
+    }else{
+      cargo_motorController.setSpeed(0.0);
+    }
   }
 
   public boolean wheelReady(){

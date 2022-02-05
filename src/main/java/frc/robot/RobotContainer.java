@@ -66,7 +66,7 @@ public class RobotContainer {
   private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
   private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
    // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
-  private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem);
+  private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem,limelightSubsystem);
   private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
   private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
   private LimelightAlign limelightAlign = new LimelightAlign(limelightSubsystem,driveBaseSubsystem);
@@ -113,16 +113,14 @@ public class RobotContainer {
     buttons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
     
     // CDS
-    buttons[Constants.YButton].whileHeld(CDSForwardCommand);
-    buttons[Constants.BButton].whileHeld(CDSReverseCommand);
+    buttons[Constants.leftBumperButton].whileHeld(CDSForwardCommand);
+    buttons[Constants.rightBumperButton].whileHeld(CDSReverseCommand);
   
     
     // Shooter
-    buttons[Constants.Xbutton].whenPressed(shooterPrime);
+    buttons[Constants.rightTriggerButton].whenPressed(shooterPrime);
     buttons[Constants.upbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
     buttons[Constants.downbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
-    buttons[Constants.Xbutton].whileHeld(CDSForwardCommand);
-    buttons[Constants.BButton].whileHeld(CDSReverseCommand);
     // Limelight
     buttons[Constants.AButton].whenPressed(limelightAlign);
   }

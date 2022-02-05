@@ -34,16 +34,16 @@ public class IntakeSubsystem extends SubsystemBase {
     //CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.intakeWheelOneID, 40);
     //CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.intakeWheelTwoID, 40);
 
-    frontBallSensor = new DigitalInput(Constants.initialBallSensorChannel);
+   /* frontBallSensor = new DigitalInput(Constants.initialBallSensorChannel);
     middleBallSensor = new DigitalInput(Constants.middleBallSensorChannel);
-    finalBallSensor = new DigitalInput(Constants.finalBallSensorChannel); 
+    finalBallSensor = new DigitalInput(Constants.finalBallSensorChannel); */
 
     DigitalInput[] sensorArray = {frontBallSensor, middleBallSensor, finalBallSensor};
 
     // Remove invert=true parameter if wheels aren't running correctly
     //CDSWheelControllerOne.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
     //CDSWheelControllerTwo.getSparkMax().follow(intakeMotorControllerOne.getSparkMax(), true);
-    intakeMotorControllerTwo.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
+    //intakeMotorControllerTwo.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
   }
 
   public void toggleIntake(boolean reverse) {
