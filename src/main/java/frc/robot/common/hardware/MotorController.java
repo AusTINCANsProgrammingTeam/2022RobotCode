@@ -89,6 +89,10 @@ public class MotorController {
         mSparkMax.setInverted(b);
     }
 
+    public String getName() {
+        return this.mName;
+    }
+
     // get speeds of wheel side
     public double getSpeed() {
         // Check first that mEncoder has been instantiated
