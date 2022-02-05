@@ -29,19 +29,20 @@ public class ShooterSubsystem extends SubsystemBase {
   private SparkMaxPIDController kCargoController;
   private RelativeEncoder kCargoEncoder;
   private double currentRPM;
+  private double dashRPM;
 
   public ShooterSubsystem() {
-
+    SmartDashboard.putNumber("RPMChange", 3000.0);
     aimMode = 4;
     cargo_motorController = new MotorController("Shooter Cargo", Constants.shooterCargoID);
     kCargoEncoder = cargo_motorController.getEncoder();
-
     shooter_motorController = new MotorController("Shooter", Constants.shooterID, 40, true);
     KShooterController = shooter_motorController.getPID();
     KShooterEncoder = shooter_motorController.getEncoder();
-    KShooterController.setP(6e-4);
+    KShooterController.setP(6e-5);
     KShooterController.setI(1e-6);
     KShooterController.setD(0.0);
+    KShooterController.setOutputRange(0, 1);
 /*
     hood_motorController = new MotorController("Hood", Constants.hoodID);
     KHoodController = hood_motorController.getPID();
@@ -64,8 +65,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void runCargo(boolean a,boolean r) {
     if(a){
-      //if(r){cargo_motorController.setSpeed(-1.0);}
-      cargo_motorController.setSpeed(1.0);
+      if(r){cargo_motorController.setSpeed(-0.2);}
+      else{cargo_motorController.setSpeed(0.2);}
     }else{
       cargo_motorController.setSpeed(0.0);
     }
@@ -155,7 +156,7 @@ public class ShooterSubsystem extends SubsystemBase {
         windFlywheel(Constants.TARMACRPM);
         break;
       case 4: //Case for TEST mode, just takes an RPM and winds
-        windFlywheel(3000.0);
+        windFlywheel(2700.0);
         break;
     }
   }
@@ -163,7 +164,9 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    //dashRPM = SmartDashboard.getNumber("RPMChange", 3000.0);
     SmartDashboard.putNumber("dist", getDistance());
+    SmartDashboard.putNumber("RPM", KShooterEncoder.getVelocity());
   }
 
 }

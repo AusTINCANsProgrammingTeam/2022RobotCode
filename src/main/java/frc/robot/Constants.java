@@ -119,6 +119,6 @@ public final class Constants {
     public static final double gearRatioOut = 14;
     public static final double gearDiameter = 4; // Gear diameter in inches
     public static final double ballFlywheelratio = 2;
-    public static final int shooterCargoID = 9;
+    public static final int shooterCargoID = 5;
     public static final double cargoRotation = 3;
 }
