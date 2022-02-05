@@ -71,7 +71,7 @@ public class IntakeSubsystem extends SubsystemBase {
     return true;
     }
   }
-
+/*
   public boolean[] getBeamBreakStatus() {
     boolean frontStatus = frontBallSensor.get();
     boolean middleStatus = middleBallSensor.get();
@@ -92,103 +92,14 @@ public class IntakeSubsystem extends SubsystemBase {
     }
     return ballCount;
   }
-
+*/
   public void expelBalls() {
+    /*
     if (ballCount > 2) {
       this.toggleIntake(true);
     }
     this.stopIntake();
+    */
   }
+
 }  //Don't delete, this is for main method.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// I'm totally not hiding ;]

@@ -64,7 +64,7 @@ public class RobotContainer {
   
   private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
   private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
-  private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
+ // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
   private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem);
   private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
   private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
@@ -94,7 +94,7 @@ public class RobotContainer {
 
     driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
 
-    intakeSubsystem.setDefaultCommand(beamBreakCommand);
+//    intakeSubsystem.setDefaultCommand(beamBreakCommand);
 
   }
 
