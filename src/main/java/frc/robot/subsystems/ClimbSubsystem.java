@@ -3,17 +3,13 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-
-//import edu.wpi.first.wpilibj2.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
-
 
 
 /** Add your docs here. */
@@ -24,7 +20,6 @@ public class ClimbSubsystem extends SubsystemBase {
   private MotorController m_climbMotorControllerOne;
   private MotorController m_climbMotorControllerTwo;
   private DigitalInput m_limitSwitch;
-
 
   // TODO: maybe add servos
 
@@ -48,7 +43,6 @@ public class ClimbSubsystem extends SubsystemBase {
       } else {
         m_climbMotorControllerOne.getSparkMax().set(1);
       }
-
     } else {
       m_climbMotorControllerOne.getSparkMax().set(0);
       
@@ -59,7 +53,5 @@ public class ClimbSubsystem extends SubsystemBase {
   public boolean getLimitSwitchVal() {
       return m_limitSwitch.get();
   }
-  // TODO: might add other getter methods depending on how many limit switches
-
-  
+  // TODO: might add other getter methods depending on how many limit switches 
 }
