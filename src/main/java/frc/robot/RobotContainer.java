@@ -62,7 +62,7 @@ public class RobotContainer {
   private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
   private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(IntakeSubsystem);
   private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(IntakeSubsystem);
-  private ShooterPrime shooterPrime = new ShooterPrime(ShooterSubsystem);
+  private ShooterPrime shooterPrime = new ShooterPrime(ShooterSubsystem,LimelightSubsystem);
   private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
   private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
   private LimelightAlign limelightAlign = new LimelightAlign(LimelightSubsystem,driveBaseSubsystem);
