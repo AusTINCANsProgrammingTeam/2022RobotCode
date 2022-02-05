@@ -35,7 +35,7 @@ public class TabDriveBase {
     }
 
     public void periodic() {
-        // constantly update the board
+        //Constantly update the board
         
         double leftSpeed = mDriveBaseSubsystem.getLeftSpeed();
         double rightSpeed = mDriveBaseSubsystem.getRightSpeed();

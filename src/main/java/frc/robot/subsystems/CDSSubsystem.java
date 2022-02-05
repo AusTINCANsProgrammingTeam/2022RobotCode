@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.common.hardware.MotorController;
+//import edu.wpi.first.wpilibj.DigitalInput;
 
 /** Add your docs here. */
 public class CDSSubsystem extends SubsystemBase {
@@ -16,20 +17,13 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSBeltController;
   private MotorController CDSWheelControllerOne;
   private MotorController CDSWheelControllerTwo;
- 
 
   public CDSSubsystem() {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
-    CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerID, 40);
-    CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerID, 40);
+    CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerOneID, 40);
+    CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerTwoID, 40);
 
-    CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);    
-  }
-  
-  public void stopCDS() {
-    CDSWheelControllerOne.getSparkMax().set(0.0);
-    CDSBeltController.getSparkMax().set(0.0);
-    SmartDashboard.putNumber("CDS Belt Speed", 0.0);
+    CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
   }
 
   public void CDSBeltWheelControllerToggle(boolean reverse) {
@@ -52,4 +46,10 @@ public class CDSSubsystem extends SubsystemBase {
     }
   }
 
-} //dont delete, for main method 
+  public void stopCDS() {
+    CDSWheelControllerOne.getSparkMax().set(0.0);
+    CDSBeltController.getSparkMax().set(0.0);
+    SmartDashboard.putNumber("CDS Belt Speed", 0.0);
+
+}
+} //Don't delete, for main method.
