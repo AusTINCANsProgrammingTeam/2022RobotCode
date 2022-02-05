@@ -137,7 +137,7 @@ public class RobotContainer {
           {
             System.out.println("Shooter enabled");
             ShooterSubsystem = new ShooterSubsystem();
-            shooterPrime = new ShooterPrime(ShooterSubsystem);
+            shooterPrime = new ShooterPrime(ShooterSubsystem, LimelightSubsystem);
             break;
           }
           case "LimelightSubsystem":
