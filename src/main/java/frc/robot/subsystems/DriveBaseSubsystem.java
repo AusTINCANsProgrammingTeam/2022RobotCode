@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+// import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveBaseSubsystem extends SubsystemBase {
 
@@ -37,8 +38,10 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private RelativeEncoder m_internalLeftEncoder;
   private RelativeEncoder m_internalRightEncoder;
 
+  private boolean usingExternal = false;
+
   
-  public DriveBaseSubsystem(Joystick joystick) {  
+  public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {  
     m_driverJoystick = joystick;
     m_motorControllers = new MotorController[4];
     m_gyro = new AHRS(I2C.Port.kMXP);
@@ -46,10 +49,10 @@ public class DriveBaseSubsystem extends SubsystemBase {
     
 
     // motor controllers
-    m_motorControllers[Constants.driveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.driveLeftFront);
-    m_motorControllers[Constants.driveLeftRearIndex] = new MotorController("Differential Left Rear", Constants.driveLeftRear);
-    m_motorControllers[Constants.driveRightFrontIndex] = new MotorController("Differential Right Front", Constants.driveRightFront);
-    m_motorControllers[Constants.driveRightRearIndex] = new MotorController("Differential Right Rear", Constants.driveRightRear);
+    m_motorControllers[Constants.driveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.driveLeftFront, Constants.driveBaseCurrentLimit, true);
+    m_motorControllers[Constants.driveLeftRearIndex] = new MotorController("Differential Left Rear", Constants.driveLeftRear, Constants.driveBaseCurrentLimit, true);
+    m_motorControllers[Constants.driveRightFrontIndex] = new MotorController("Differential Right Front", Constants.driveRightFront, Constants.driveBaseCurrentLimit, true);
+    m_motorControllers[Constants.driveRightRearIndex] = new MotorController("Differential Right Rear", Constants.driveRightRear, Constants.driveBaseCurrentLimit, true);
 
     // invert left side motors
     m_motorControllers[Constants.driveLeftFrontIndex].setInverted(true);
@@ -63,23 +66,42 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax(), 
                                           m_motorControllers[Constants.driveRightFrontIndex].getSparkMax());
 
+    this.usingExternal = usingExternal; // gets key if using external or internal encoders
+
     // external encoders            
     m_extLeftEncoder = new Encoder(Constants.leftEncoderDIOone, Constants.leftEncoderDIOtwo, 
-    false, Encoder.EncodingType.k2X);
+    false, Encoder.EncodingType.k2X); // TODO: confirm correct configuration for encoder
     m_extRightEncoder = new Encoder(Constants.rightEncoderDIOone, Constants.rightEncoderDIOtwo, 
     false, Encoder.EncodingType.k2X);
+
+    m_extLeftEncoder.setReverseDirection(true);
     
     // internal encoders
     m_internalLeftEncoder = m_motorControllers[Constants.kDriveLeftFrontIndex].getEncoder();
-    m_internalRightEncoder = m_motorControllers[Constants.kDriveRightFrontIndex].getEncoder();  
+    m_internalRightEncoder = m_motorControllers[Constants.kDriveRightFrontIndex].getEncoder();
+
+    m_internalLeftEncoder.setPositionConversionFactor(2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter); // calculate circumference then convert to meters
+    m_internalRightEncoder.setPositionConversionFactor(2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter);
+
   }
 
   @Override
   public void periodic() {
 
     // update odometry
-    m_odometry.update(
+
+    // checks which encoders are being used: external or internal
+    if(usingExternal) {
+      m_odometry.update(
         m_gyro.getRotation2d(), m_extLeftEncoder.getDistance(), m_extRightEncoder.getDistance());
+    }
+    else {  // internal
+      double leftPosition = m_internalLeftEncoder.getPosition() * m_internalLeftEncoder.getPositionConversionFactor();
+      double rightPosition = m_internalRightEncoder.getPosition() * m_internalRightEncoder.getPositionConversionFactor();
+
+      m_odometry.update(
+        m_gyro.getRotation2d(), leftPosition, rightPosition);
+    }
 
     // Update the smart dashboard in here, runs a for loop so it does it for every motor
     for(int i = 0; i < m_motorControllers.length; i++) {
@@ -166,8 +188,25 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // for trajectory (ramseteCommand)
   public void acceptWheelSpeeds(double leftSpeed, double rightSpeed) {
-    m_motorControllers[Constants.driveLeftFrontIndex].setSpeed(leftSpeed);
-    m_motorControllers[Constants.driveRightFrontIndex].setSpeed(rightSpeed);
+    // leftSpeed and rightSpeed in m/s, need to convert it to rpm
+
+    leftSpeed = leftSpeed * Constants.inchesInMeter;  // meters to inches because radius is in inches
+    rightSpeed = rightSpeed * Constants.inchesInMeter;
+
+    leftSpeed = leftSpeed / Constants.wheelRadius;  // convert it to angular velocities
+    rightSpeed = rightSpeed / Constants.wheelRadius;
+
+    leftSpeed = leftSpeed / (2*Math.PI);    // convert it to rpm
+    rightSpeed = rightSpeed / (2*Math.PI);
+
+    leftSpeed = leftSpeed * Constants.gearRatio;    // apply gear ratio of 10.75 : 1
+    rightSpeed = rightSpeed * Constants.gearRatio;
+
+    SmartDashboard.putNumber("left speed (rpm): ", leftSpeed);
+    SmartDashboard.putNumber("right speed (rpm): ", rightSpeed);
+
+    m_motorControllers[Constants.driveLeftFrontIndex].getPID().setReference(leftSpeed, CANSparkMax.ControlType.kVelocity);
+    m_motorControllers[Constants.driveRightFrontIndex].getPID().setReference(rightSpeed, CANSparkMax.ControlType.kVelocity);
     m_differentialDrive.feed();
   }
   
@@ -186,6 +225,13 @@ public class DriveBaseSubsystem extends SubsystemBase {
   // returns velocity conversion factor from the internal encoder in order to calculate distances and speeds, avoiding the use of external encoders
   public double getVelocityConversionFactor() {
     return m_internalRightEncoder.getVelocityConversionFactor();
+  }
+
+  public double[] getPositions() {
+    double[] positions = new double[2];
+    positions[0] = m_internalLeftEncoder.getPosition() * m_internalLeftEncoder.getPositionConversionFactor();
+    positions[1] = m_internalRightEncoder.getPosition() * m_internalRightEncoder.getPositionConversionFactor();
+    return positions;
   }
 
   // TODO: we can add more tankdrive co functions as extras later

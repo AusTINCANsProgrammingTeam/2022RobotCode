@@ -20,17 +20,21 @@ public final class Constants {
 
     // Constants for wheel motors
 
+    public static final double wheelRadius = 3.0125;    // radius of wheel, use for calculating angular values
+    public static final double gearRatio = 10.75;       // 10.75 : 1 gear ratio <--- kitbot
+    public static final double inchesInMeter = 39.3701;
+
     // Actual IDs on robot, used to activate the right motors
+    public static final int driveLeftFront = 1;
+    public static final int driveLeftRear = 2;
+    public static final int driveRightFront = 3;
+    public static final int driveRightRear = 4;
+
+    // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
     public static final  int kDriveLeftFrontIndex = 0;
     public static final int kDriveLeftRearIndex = 1;
     public static final int kDriveRightFrontIndex = 2;
     public static final int kDriveRightRearIndex = 3;
-
-    // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
-    public static final int driveRightFront = 1;
-    public static final int driveRightRear = 2;
-    public static final int driveLeftFront = 3;
-    public static final int driveLeftRear = 4;
 
     // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
     public static final int driveLeftFrontIndex = 0;
@@ -46,22 +50,26 @@ public final class Constants {
     public static final int rightEncoderDIOone = 2;
     public static final int rightEncoderDIOtwo = 3;
 
-    // Pathweaver constants
-    public static final double ramseteB = 2; //Convergence, larger values are more aggressive
-    public static final double ramseteZeta = 0.7; //Damping, larger values offer more damping
+    // Pathweaver constants, baselind values, units: meters per second
+    public static final double ramseteB = 2;      // Convergence, larger values are more aggressive
+    public static final double ramseteZeta = 0.7; // Damping, larger values offer more damping
 
 
-    // TODO: Calibrate robot with correct values - These are just placeholers
+    // TODO: Calibrate robot with correct values - double check values with a proper test
 
     // Note: below comments might not be entirely accurate
-    public static final double sVolts = 0.22;
 
-    // Volts
-    public static final double vVoltSecondsPerMeter = 1.98;       //Velocity
-    public static final double aVoltSecondsSquaredPerMeter = 0.2; //Accelleration
-    public static final double kPDriveVel = 8.5;                   //Velocity
-    public static final DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(0.5);    
-    // TODO: Replace 0.5 with track width in meters
+    public static final double unitsPerRotation = 0.4787787204;
+
+    // Volts, constants for ramseteCommand
+    public static final double ksVolts = 0.13323;                      // Ks, 
+    public static final double kvVoltSecondsPerMeter = 2.8295;         // Kv, Velocity
+    public static final double kaVoltSecondsSquaredPerMeter = 0.31462; // Ka, Accelleration
+
+    public static final double kpDriveVel = 2.1938;                    // Kp, Velocity
+    public static final double trackWidth = 0.69;
+    public static final DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(trackWidth);    
+    // TODO: Replace 0.69 with actual track width in meters
     
     //Controller constants
     public static final int DBJoystickPort = 0;

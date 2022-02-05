@@ -52,7 +52,10 @@ public class RobotContainer {
   private JoystickButton[] mButtons = new JoystickButton[11];
 
   // subsystems
-  private static final DriveBaseSubsystem driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick);
+
+  // TODO: change to true when have external encoders
+  private static final DriveBaseSubsystem driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, false);
+   
   // private final CDSSubsystem CDSSubsystem = new CDSSubsystem();
   // private final IntakeSubsystem IntakeSubsystem = new IntakeSubsystem(); 
   // private final ShooterSubsystem ShooterSubsystem = new ShooterSubsystem();
@@ -82,12 +85,7 @@ public class RobotContainer {
 
     configureButtonBindings();
     
-    try {
-      initializeTrajectories();
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    initializeTrajectories();
 
     driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
   }
@@ -115,7 +113,7 @@ public class RobotContainer {
     // mButtons[Constants.AButton].whenPressed(limelightAlign);
   }
 
-  private void initializeTrajectories() throws IOException {
+  private void initializeTrajectories() {
     // String[] trajectoryJSON = {"One.wpilib.json", "Two.wpilib.json", "Three.wpilib.json", "Four.wpilib.json"};  // add new trajectories manually
     // mTrajectories = new Trajectory[trajectoryJSON.length];
     // for(int i = 0; i < trajectoryJSON.length; i++) {
@@ -125,9 +123,15 @@ public class RobotContainer {
     // }
 
     // to test auton with just a one straight path
-    String trajectoryJSON = "Straight.wpilib.json";
-    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-    trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    String trajectoryJSON = "paths/Straight.wpilib.json";
+    try { 
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON); // goes to scr/main/deploy/paths
+      trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+    }
+    
   }
             
   // Use this to pass the autonomous command to the main {@link Robot} class.
@@ -149,7 +153,7 @@ public class RobotContainer {
   }
 
 
-  // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way23
+  // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way
   public static DriveBaseSubsystem getDriveBase() {
     return driveBaseSubsystem;
     
