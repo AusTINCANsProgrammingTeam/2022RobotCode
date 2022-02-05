@@ -65,7 +65,6 @@ public class RobotContainer {
   private final DriveBaseTeleopCommand driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
   private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
   private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
-   // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
   private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem,limelightSubsystem);
   private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
   private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
@@ -95,9 +94,6 @@ public class RobotContainer {
     }
 
     driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
-
-//    intakeSubsystem.setDefaultCommand(beamBreakCommand);
-
   }
 
   // Use this method to define your button->command mappings. Buttons can be
@@ -121,6 +117,7 @@ public class RobotContainer {
     buttons[Constants.rightTriggerButton].whenPressed(shooterPrime);
     buttons[Constants.upbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
     buttons[Constants.downbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
+    
     // Limelight
     buttons[Constants.AButton].whenPressed(limelightAlign);
   }
