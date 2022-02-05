@@ -15,6 +15,27 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 
 public final class Constants {
+
+    public enum Subsystems {
+        // Change booleans to disable a subsystem in RobotContainer
+        DriveBaseSubsystem(true),
+        CDSSubsystem      (true),
+        IntakeSubsystem   (true),
+        ShooterSubsystem  (true),
+        LimelightSubsystem(true);
+
+        private final Boolean enabled; 
+        
+        Subsystems(Boolean b) {
+            this.enabled = b;
+        }
+
+        public final Boolean isEnabled() {
+            return this.enabled;
+        };
+    }
+    
+
     //Distance calculation constants
     public static final double goalHeight = 8.8; //Height of the goal in ft from the carpet
 

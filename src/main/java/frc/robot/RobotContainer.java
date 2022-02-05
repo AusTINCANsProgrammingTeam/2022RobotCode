@@ -76,26 +76,8 @@ public class RobotContainer {
   // private int trajectoryIndex = 0;
   private Trajectory trajectory;
 
-  private JSONObject subSysEnables;
-
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
-    try {
-      String jsonString = Files.readString(Filesystem.getDeployDirectory().toPath().resolve("SubsystemEnables.json"));
-      JSONArray jsonArray = (JSONArray) JSONValue.parse(jsonString);
-      subSysEnables = (JSONObject) jsonArray.get(0);
-       
-      //for (Object k : subSysEnables.keySet()) {
-      //   System.out.println((String) k + " " + subSysEnables.get((String) k));
-      //}
-
-
-    } catch (IOException e) {
-      //TODO catch/fail gracefully
-    }
-    
-
-
     debugTab = Shuffleboard.getTab("debug");
 
     // Configure the button bindings
@@ -104,11 +86,11 @@ public class RobotContainer {
     }
 
     // subsystems
-    for (Object k : subSysEnables.keySet()) {
-      if (((String)subSysEnables.get((String) k)).equals("true")) {
+    for (Constants.Subsystems sub : Constants.Subsystems.values()) {
+      if (sub.isEnabled()) {
 
         //System.out.println((String) k + " " + subSysEnables.get((String) k));
-        switch ((String) k) {
+        switch (sub.toString()) {
           case "DriveBaseSubsystem": 
           {
             System.out.println("Drivebase enabled");
