@@ -34,6 +34,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
+import frc.robot.commands.BeamBreakCommand;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.ShooterPrime;
 import frc.robot.commands.CDSForwardCommand;
@@ -42,30 +43,33 @@ import frc.robot.commands.CDSReverseCommand;
  // This class is where the bulk of the robot should be declared. Since Command-based is a
  // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  // perieodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- // subsystems, commands, and button mappings) should be declared here.
+ // subsystems, commands, and button mappings) should be declared here. 
+ 
 
 public class RobotContainer {
   public static ShuffleboardTab debugTab;
 
   // The robot's subsystems and commands are defined here...
   private static final Joystick driverJoystick = new Joystick(Constants.portNumber);
-  private JoystickButton[] mButtons = new JoystickButton[11];
+  private JoystickButton[] buttons = new JoystickButton[11];
+
 
   // subsystems
   private static final DriveBaseSubsystem driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick);
   private final CDSSubsystem CDSSubsystem = new CDSSubsystem();
-  private final IntakeSubsystem IntakeSubsystem = new IntakeSubsystem(); 
-  private final ShooterSubsystem ShooterSubsystem = new ShooterSubsystem();
-  private final LimelightSubsystem LimelightSubsystem = new LimelightSubsystem();
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(); 
+  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  private final LimelightSubsystem limelightSubsystem = new LimelightSubsystem();
 
   // commands
-  private final DriveBaseTeleopCommand mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
-  private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(IntakeSubsystem);
-  private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(IntakeSubsystem);
-  private ShooterPrime shooterPrime = new ShooterPrime(ShooterSubsystem,LimelightSubsystem);
+  private final DriveBaseTeleopCommand driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
+  private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
+  private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
+   // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
+  private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem,limelightSubsystem);
   private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
   private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
-  private LimelightAlign limelightAlign = new LimelightAlign(LimelightSubsystem,driveBaseSubsystem);
+  private LimelightAlign limelightAlign = new LimelightAlign(limelightSubsystem,driveBaseSubsystem);
 
   // auton
   // private Trajectory[] mTrajectories;  // multiple trajectories
@@ -76,8 +80,8 @@ public class RobotContainer {
   public RobotContainer() {
     debugTab = Shuffleboard.getTab("debug");
     // Configure the button bindings
-    for (int i = 1; i < mButtons.length; i++) {
-      mButtons[i] = new JoystickButton(driverJoystick, i);
+    for (int i = 1; i < buttons.length; i++) {
+      buttons[i] = new JoystickButton(driverJoystick, i);
     }
 
 
@@ -90,7 +94,9 @@ public class RobotContainer {
       e.printStackTrace();
     }
 
-    driveBaseSubsystem.setDefaultCommand(mDriveBaseTeleopCommand);
+    driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
+
+//    intakeSubsystem.setDefaultCommand(beamBreakCommand);
 
   }
 
@@ -103,16 +109,22 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Intake
-    mButtons[Constants.leftBumperButton].whileHeld(intakeForwardCommand);
-    mButtons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
+    buttons[Constants.leftBumperButton].whileHeld(intakeForwardCommand);
+    buttons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
+    
+    // CDS
+    buttons[Constants.YButton].whileHeld(CDSForwardCommand);
+    buttons[Constants.BButton].whileHeld(CDSReverseCommand);
+  
+    
     // Shooter
-    mButtons[Constants.Xbutton].whenPressed(shooterPrime);
-    mButtons[Constants.upbutton].whenPressed(new InstantCommand(ShooterSubsystem::cycleAimModeUp, ShooterSubsystem));
-    mButtons[Constants.downbutton].whenPressed(new InstantCommand(ShooterSubsystem::cycleAimModeDown, ShooterSubsystem));
-    mButtons[Constants.Xbutton].whileHeld(CDSForwardCommand);
-    mButtons[Constants.BButton].whileHeld(CDSReverseCommand);
+    buttons[Constants.Xbutton].whenPressed(shooterPrime);
+    buttons[Constants.upbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
+    buttons[Constants.downbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
+    buttons[Constants.Xbutton].whileHeld(CDSForwardCommand);
+    buttons[Constants.BButton].whileHeld(CDSReverseCommand);
     // Limelight
-    mButtons[Constants.AButton].whenPressed(limelightAlign);
+    buttons[Constants.AButton].whenPressed(limelightAlign);
   }
 
   private void initializeTrajectories() throws IOException {
@@ -163,6 +175,5 @@ public class RobotContainer {
   // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way23
   public static DriveBaseSubsystem getDriveBase() {
     return driveBaseSubsystem;
-    
   }
 }

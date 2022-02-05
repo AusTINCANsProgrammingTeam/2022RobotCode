@@ -3,16 +3,17 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.CDSSubsystem;
+import frc.robot.subsystems.CDSSubsystem; 
 
 public class CDSReverseCommand extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
   private final CDSSubsystem mCDSSubsystem;
-
+  
   public CDSReverseCommand(CDSSubsystem CDSSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(CDSSubsystem);
+    addRequirements(CDSSubsystem); 
     mCDSSubsystem = CDSSubsystem;
   }
 
