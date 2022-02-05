@@ -62,12 +62,14 @@ public class ShooterSubsystem extends SubsystemBase {
     KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
   }
 
-  public void runCargo(boolean a) {
+  public void runCargo(boolean a,boolean r) {
     if(a){
+      //if(r){cargo_motorController.setSpeed(-1.0);}
       cargo_motorController.setSpeed(1.0);
     }else{
       cargo_motorController.setSpeed(0.0);
     }
+
   }
 
   public boolean wheelReady(){
