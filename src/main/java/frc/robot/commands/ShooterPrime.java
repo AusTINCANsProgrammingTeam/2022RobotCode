@@ -40,7 +40,7 @@ public class ShooterPrime extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_ShooterSubsystem.runCargo(false);
+    m_ShooterSubsystem.runCargo(false,false);
     m_ShooterSubsystem.windFlywheel(0);
     SmartDashboard.putBoolean("wheelReady", false);
   }
@@ -50,12 +50,12 @@ public class ShooterPrime extends CommandBase {
   public boolean isFinished() {
     if(m_ShooterSubsystem.wheelReady()){
       SmartDashboard.putBoolean("wheelReady", true);
-      if(i > 0 || m_LimelightSubsystem.calculatePID() == 0.0){
-        m_ShooterSubsystem.runCargo(true);
+      //if(i > 0 || m_LimelightSubsystem.calculatePID() == 0.0){
+        m_ShooterSubsystem.runCargo(true,false);
         i++;
         if(i==10){ //Expected to add a 200ms delay
           return true;
-        }
+       // }
       }
     }
     return false;
