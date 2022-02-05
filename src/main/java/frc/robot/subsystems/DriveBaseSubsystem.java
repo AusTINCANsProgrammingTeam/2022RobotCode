@@ -144,7 +144,10 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_odometry.resetPosition(pose, m_gyro.getRotation2d());
   }
 
-  
+  public void setSpeeds(double left, double right){
+    getLeftMotor().set(left);
+    getRightMotor().set(right);
+  }
   
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
