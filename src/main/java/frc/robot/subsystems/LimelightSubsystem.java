@@ -36,7 +36,7 @@ public class LimelightSubsystem extends SubsystemBase {
     return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
   }
 
-  private double calculatePID(){
+  public double calculatePID(){
     double calculation = MathUtil.clamp(m_PidController.calculate(getTX(), 0.0), -1.0, 1.0);
       // Uses TX and our setpoint (which will always be 0.0) to return the next calculation
     if (m_PidController.atSetpoint()){ // If our robot is aligned within the tolerance, return 0.0 to end command

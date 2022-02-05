@@ -66,7 +66,7 @@ public class RobotContainer {
   private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
   private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
    // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
-  private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem);
+  private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem,limelightSubsystem);
   private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
   private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
   private LimelightAlign limelightAlign = new LimelightAlign(limelightSubsystem,driveBaseSubsystem);
