@@ -81,29 +81,9 @@ public class IntakeSubsystem extends SubsystemBase {
     boolean[] beamBreakArray = {frontStatus, middleStatus, finalStatus};
     return beamBreakArray;
   }
-
-  public boolean getFrontBeamBreakStatus(){
-    if (frontBallSensor.isAnalogTrigger()) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public boolean getMiddleBeamBreakStatus(){
-    if (middleBallSensor.isAnalogTrigger()) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public boolean getFinalBeamBreakStatus(){
-    if (finalBallSensor.isAnalogTrigger()) {
-      return true;
-    } else {
-      return false;
-    }
+  
+  public void periodic() {
+    SmartDashboard.putBooleanArray("Beam Break", getBeamBreakStatus());
   }
 
   /*
