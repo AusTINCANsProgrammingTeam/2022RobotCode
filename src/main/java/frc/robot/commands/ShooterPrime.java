@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ShooterPrime extends CommandBase {
@@ -18,7 +19,7 @@ public class ShooterPrime extends CommandBase {
     addRequirements(shooterSubsystem);
     m_ShooterSubsystem = shooterSubsystem;
     m_LimelightSubsystem = limelightSubsystem;
-
+    SmartDashboard.putBoolean("wheelReady", false);
 
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -41,12 +42,14 @@ public class ShooterPrime extends CommandBase {
   public void end(boolean interrupted) {
     m_ShooterSubsystem.runCargo(false);
     m_ShooterSubsystem.windFlywheel(0);
+    SmartDashboard.putBoolean("wheelReady", false);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     if(m_ShooterSubsystem.wheelReady()){
+      SmartDashboard.putBoolean("wheelReady", true);
       if(m_LimelightSubsystem.calculatePID() == 0.0){
         m_ShooterSubsystem.runCargo(true);
         i++;
