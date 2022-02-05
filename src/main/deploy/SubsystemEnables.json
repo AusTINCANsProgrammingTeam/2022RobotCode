@@ -3,6 +3,7 @@
         "CDSSubsystem"       : "true",
         "DriveBaseSubsystem" : "true",
         "IntakeSubsystem"    : "true",
-        "ShooterSubsystem"   : "true"
+        "ShooterSubsystem"   : "true",
+        "LimeligthSubsystem" : "true"
     }
 ]

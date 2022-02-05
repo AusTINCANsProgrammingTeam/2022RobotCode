@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.commands.DriveBaseTeleopCommand;
@@ -13,13 +12,6 @@ import frc.robot.subsystems.DriveBaseSubsystem;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.concurrent.Flow.Subscriber;
-
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -27,8 +19,6 @@ import org.json.simple.JSONValue;
 
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.math.controller.PIDController;
@@ -38,7 +28,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
@@ -101,7 +90,7 @@ public class RobotContainer {
 
 
     } catch (IOException e) {
-         
+      //TODO catch/fail gracefully
     }
     
 
@@ -122,7 +111,7 @@ public class RobotContainer {
           case "DriveBaseSubsystem": 
           {
             System.out.println("Drivebase enabled");
-            driveBaseSubsystem = new DriveBaseSubsystem(mDriverJoystick);
+            driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick);
             mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
             driveBaseSubsystem.setDefaultCommand(mDriveBaseTeleopCommand);
             break;
@@ -148,6 +137,13 @@ public class RobotContainer {
             System.out.println("Shooter enabled");
             ShooterSubsystem = new ShooterSubsystem();
             shooterPrime = new ShooterPrime(ShooterSubsystem);
+            break;
+          }
+          case "LimelightSubsystem":
+          {
+            System.out.println("Limelight enabled");
+            LimelightSubsystem = new LimelightSubsystem();
+            limelightAlign = new LimelightAlign(LimelightSubsystem, driveBaseSubsystem);
             break;
           }
 
@@ -179,23 +175,24 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Intake
-    if(mIntakeSubsystem != null) {
+    if(IntakeSubsystem != null) {
       mButtons[Constants.leftBumperButton].whileHeld(intakeForwardCommand);
       mButtons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
     }
 
     // Shooter
-    if (mShooterSubsystem != null) {
+    if (ShooterSubsystem != null) {
       mButtons[Constants.Xbutton].whenPressed(shooterPrime);
       mButtons[Constants.upbutton].whenPressed(new InstantCommand(ShooterSubsystem::cycleAimModeUp, ShooterSubsystem));
       mButtons[Constants.downbutton].whenPressed(new InstantCommand(ShooterSubsystem::cycleAimModeDown, ShooterSubsystem));
     }
 
-    if (mCDSSubsystem != null) {
+    if (CDSSubsystem != null) {
       mButtons[Constants.Xbutton].whileHeld(CDSForwardCommand);
       mButtons[Constants.BButton].whileHeld(CDSReverseCommand);
     }
-	if (driveBaseSubsystem != null && limeLightSubsystem != null) {
+	// Limelight
+	if (driveBaseSubsystem != null && LimelightSubsystem != null) {
       mButtons[Constants.AButton].whenPressed(limelightAlign);
     }
   }
@@ -240,9 +237,9 @@ public class RobotContainer {
         driveBaseSubsystem::setAutonVolts,
         driveBaseSubsystem);
           
-    driveBaseSubsystem.resetOdometry(trajectory.getInitialPose());
+      driveBaseSubsystem.resetOdometry(trajectory.getInitialPose());
 
-    return ramseteCommand.andThen(() -> driveBaseSubsystem.setAutonVolts(0,0));
+      return ramseteCommand.andThen(() -> driveBaseSubsystem.setAutonVolts(0,0));
     }
     return null;
   }
