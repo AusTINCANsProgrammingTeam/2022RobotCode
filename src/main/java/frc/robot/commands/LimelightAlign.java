@@ -3,38 +3,45 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
+
+import frc.robot.subsystems.DriveBaseSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.CDSSubsystem;
 
-public class CDSReverseCommand extends CommandBase {
-  /** Creates a new IntakeForwardCommand. */
-  private final CDSSubsystem mCDSSubsystem;
+public class LimelightAlign extends CommandBase {
+  private LimelightSubsystem m_LimelightSubsystem;
 
-  public CDSReverseCommand(CDSSubsystem CDSSubsystem) {
+  /** Creates a new ShooterPrimary. */
+  public LimelightAlign(LimelightSubsystem limelightSubsystem, DriveBaseSubsystem driveBaseSubsystem) {
+    addRequirements(limelightSubsystem);
+    addRequirements(driveBaseSubsystem);
+    m_LimelightSubsystem = limelightSubsystem;
+
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(CDSSubsystem);
-    mCDSSubsystem = CDSSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mCDSSubsystem.CDSBeltWheelControllerToggle(true);
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    m_LimelightSubsystem.setMotors();
+  }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    mCDSSubsystem.stopCDS();
+    m_LimelightSubsystem.stopMotors();
+    m_LimelightSubsystem.reset();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return m_LimelightSubsystem.getFinished();
   }
 }

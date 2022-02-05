@@ -5,11 +5,11 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.ShooterSubsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ShooterPrime extends CommandBase {
   private ShooterSubsystem m_ShooterSubsystem;
+  private int i;
 
   /** Creates a new ShooterPrimary. */
   public ShooterPrime(ShooterSubsystem shooterSubsystem) {
@@ -23,30 +23,31 @@ public class ShooterPrime extends CommandBase {
   @Override
   public void initialize() {
     m_ShooterSubsystem.prime();
-
+    i = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (!interrupted){
-      //TODO: uncomment when cargoMotor exists 
-      //m_ShooterSubsystem.shoot()
-    }
-    m_ShooterSubsystem.windFlywheel(0); //TODO: Look at this again, we don't want our flywheel to instantly switch off in the end
+    m_ShooterSubsystem.runCargo(false);
+    m_ShooterSubsystem.windFlywheel(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     if(m_ShooterSubsystem.wheelReady()){
-      return true;
+      m_ShooterSubsystem.runCargo(true);
+      i++;
+      if(i==10){ //Expected to add a 200ms delay
+        return true;
+      }
     }
     return false;
   }
