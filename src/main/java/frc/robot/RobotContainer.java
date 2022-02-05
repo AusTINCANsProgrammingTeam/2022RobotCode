@@ -33,6 +33,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
+import frc.robot.commands.BeamBreakCommand;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.ShooterPrime;
 import frc.robot.commands.CDSForwardCommand;
@@ -41,24 +42,26 @@ import frc.robot.commands.CDSReverseCommand;
  // This class is where the bulk of the robot should be declared. Since Command-based is a
  // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  // perieodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- // subsystems, commands, and button mappings) should be declared here.
+ // subsystems, commands, and button mappings) should be declared here. 
+ 
 
 public class RobotContainer {
   public static ShuffleboardTab debugTab;
 
   // The robot's subsystems and commands are defined here...
   private static final Joystick driverJoystick = new Joystick(Constants.portNumber);
-  private JoystickButton[] mButtons = new JoystickButton[11];
+  private JoystickButton[] buttons = new JoystickButton[11];
+
 
   // subsystems
   private static DriveBaseSubsystem driveBaseSubsystem;
   private static CDSSubsystem CDSSubsystem;
-  private static IntakeSubsystem IntakeSubsystem; 
-  private static ShooterSubsystem ShooterSubsystem;
-  private static LimelightSubsystem LimelightSubsystem;
+  private static IntakeSubsystem intakeSubsystem; 
+  private static ShooterSubsystem shooterSubsystem;
+  private static LimelightSubsystem limelightSubsystem;
 
   // commands
-  private DriveBaseTeleopCommand mDriveBaseTeleopCommand;
+  private DriveBaseTeleopCommand driveBaseTeleopCommand;
   private IntakeForwardCommand intakeForwardCommand;
   private IntakeReverseCommand intakeReverseCommand;
   private ShooterPrime shooterPrime;
@@ -77,8 +80,8 @@ public class RobotContainer {
     debugTab = Shuffleboard.getTab("debug");
 
     // Configure the button bindings
-    for (int i = 1; i < mButtons.length; i++) {
-      mButtons[i] = new JoystickButton(driverJoystick, i);
+    for (int i = 1; i < buttons.length; i++) {
+      buttons[i] = new JoystickButton(driverJoystick, i);
     }
 
     // subsystems
@@ -91,8 +94,8 @@ public class RobotContainer {
           {
             System.out.println("Drivebase enabled");
             driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick);
-            mDriveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
-            driveBaseSubsystem.setDefaultCommand(mDriveBaseTeleopCommand);
+            driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
+            driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
             break;
           }
           case "CDSSubsystem": 
@@ -106,23 +109,23 @@ public class RobotContainer {
           case "IntakeSubsystem":
           {
             System.out.println("Intake enabled");
-            IntakeSubsystem = new IntakeSubsystem(); 
-            intakeForwardCommand = new IntakeForwardCommand(IntakeSubsystem);
-            intakeReverseCommand = new IntakeReverseCommand(IntakeSubsystem);
+            intakeSubsystem = new IntakeSubsystem(); 
+            intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
+            intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
             break;
           }
           case "ShooterSubsystem":
           {
             System.out.println("Shooter enabled");
-            ShooterSubsystem = new ShooterSubsystem();
-            shooterPrime = new ShooterPrime(ShooterSubsystem, LimelightSubsystem);
+            shooterSubsystem = new ShooterSubsystem();
+            shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem);
             break;
           }
           case "LimelightSubsystem":
           {
             System.out.println("Limelight enabled");
-            LimelightSubsystem = new LimelightSubsystem();
-            limelightAlign = new LimelightAlign(LimelightSubsystem, driveBaseSubsystem);
+            limelightSubsystem = new LimelightSubsystem();
+            limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
             break;
           }
 
@@ -142,6 +145,7 @@ public class RobotContainer {
       e.printStackTrace();
     }
 
+//    intakeSubsystem.setDefaultCommand(beamBreakCommand);
 
   }
 
@@ -154,25 +158,25 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Intake
-    if(IntakeSubsystem != null) {
-      mButtons[Constants.leftBumperButton].whileHeld(intakeForwardCommand);
-      mButtons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
+    if(intakeSubsystem != null) {
+      buttons[Constants.leftBumperButton].whileHeld(intakeForwardCommand);
+      buttons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
     }
 
     // Shooter
-    if (ShooterSubsystem != null) {
-      mButtons[Constants.Xbutton].whenPressed(shooterPrime);
-      mButtons[Constants.upbutton].whenPressed(new InstantCommand(ShooterSubsystem::cycleAimModeUp, ShooterSubsystem));
-      mButtons[Constants.downbutton].whenPressed(new InstantCommand(ShooterSubsystem::cycleAimModeDown, ShooterSubsystem));
+    if (shooterSubsystem != null) {
+      buttons[Constants.Xbutton].whenPressed(shooterPrime);
+      buttons[Constants.upbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
+      buttons[Constants.downbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
     }
 
     if (CDSSubsystem != null) {
-      mButtons[Constants.Xbutton].whileHeld(CDSForwardCommand);
-      mButtons[Constants.BButton].whileHeld(CDSReverseCommand);
+      buttons[Constants.Xbutton].whileHeld(CDSForwardCommand);
+      buttons[Constants.BButton].whileHeld(CDSReverseCommand);
     }
 	// Limelight
-	if (driveBaseSubsystem != null && LimelightSubsystem != null) {
-      mButtons[Constants.AButton].whenPressed(limelightAlign);
+	if (driveBaseSubsystem != null && limelightSubsystem != null) {
+      buttons[Constants.AButton].whenPressed(limelightAlign);
     }
   }
 
@@ -230,6 +234,5 @@ public class RobotContainer {
       return null;
     }
     return driveBaseSubsystem;
-    
   }
 }
