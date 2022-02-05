@@ -64,7 +64,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void runCargo(boolean a,boolean r) {
     if(a){
-      if(r){cargo_motorController.setSpeed(-1.0);}
+      //if(r){cargo_motorController.setSpeed(-1.0);}
       cargo_motorController.setSpeed(1.0);
     }else{
       cargo_motorController.setSpeed(0.0);
