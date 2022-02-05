@@ -4,17 +4,22 @@
 
 package frc.robot.commands;
 
+import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ShooterPrime extends CommandBase {
   private ShooterSubsystem m_ShooterSubsystem;
+  private LimelightSubsystem m_LimelightSubsystem;
   private int i;
 
   /** Creates a new ShooterPrimary. */
-  public ShooterPrime(ShooterSubsystem shooterSubsystem) {
+  public ShooterPrime(ShooterSubsystem shooterSubsystem, LimelightSubsystem limelightSubsystem) {
     addRequirements(shooterSubsystem);
     m_ShooterSubsystem = shooterSubsystem;
+    m_LimelightSubsystem = limelightSubsystem;
+    SmartDashboard.putBoolean("wheelReady", false);
 
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -37,16 +42,20 @@ public class ShooterPrime extends CommandBase {
   public void end(boolean interrupted) {
     m_ShooterSubsystem.runCargo(false);
     m_ShooterSubsystem.windFlywheel(0);
+    SmartDashboard.putBoolean("wheelReady", false);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     if(m_ShooterSubsystem.wheelReady()){
-      m_ShooterSubsystem.runCargo(true);
-      i++;
-      if(i==10){ //Expected to add a 200ms delay
-        return true;
+      SmartDashboard.putBoolean("wheelReady", true);
+      if(i > 0 || m_LimelightSubsystem.calculatePID() == 0.0){
+        m_ShooterSubsystem.runCargo(true);
+        i++;
+        if(i==10){ //Expected to add a 200ms delay
+          return true;
+        }
       }
     }
     return false;
