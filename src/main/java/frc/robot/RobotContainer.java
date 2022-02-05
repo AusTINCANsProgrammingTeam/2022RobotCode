@@ -113,16 +113,14 @@ public class RobotContainer {
     buttons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
     
     // CDS
-    buttons[Constants.YButton].whileHeld(CDSForwardCommand);
-    buttons[Constants.BButton].whileHeld(CDSReverseCommand);
+    buttons[Constants.leftBumperButton].whileHeld(CDSForwardCommand);
+    buttons[Constants.rightBumperButton].whileHeld(CDSReverseCommand);
   
     
     // Shooter
-    buttons[Constants.Xbutton].whenPressed(shooterPrime);
+    buttons[Constants.rightTriggerButton].whenPressed(shooterPrime);
     buttons[Constants.upbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
     buttons[Constants.downbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
-    buttons[Constants.Xbutton].whileHeld(CDSForwardCommand);
-    buttons[Constants.BButton].whileHeld(CDSReverseCommand);
     // Limelight
     buttons[Constants.AButton].whenPressed(limelightAlign);
   }

@@ -40,15 +40,12 @@ public class ShooterSubsystem extends SubsystemBase {
   private MotorController cargo_motorController;
   private SparkMaxPIDController kCargoController;
   private RelativeEncoder kCargoEncoder;
-  private NetworkTableEntry sbShooterRPM;
   private double currentRPM;
 
   public ShooterSubsystem() {
-    sbShooterRPM = RobotContainer.debugTab.add("shooterRPM", 0).getEntry();
 
     aimMode = 4;
     cargo_motorController = new MotorController("Shooter Cargo", Constants.shooterCargoID);
-    kCargoController = cargo_motorController.getPID();
     kCargoEncoder = cargo_motorController.getEncoder();
 
     shooter_motorController = new MotorController("Shooter", Constants.shooterID, 40, true);
@@ -57,10 +54,10 @@ public class ShooterSubsystem extends SubsystemBase {
     KShooterController.setP(6e-4);
     KShooterController.setI(1e-6);
     KShooterController.setD(0.0);
-
+/*
     hood_motorController = new MotorController("Hood", Constants.hoodID);
     KHoodController = hood_motorController.getPID();
-    KHoodEncoder = shooter_motorController.getEncoder();
+    KHoodEncoder = shooter_motorController.getEncoder();*/
 
   }
 
