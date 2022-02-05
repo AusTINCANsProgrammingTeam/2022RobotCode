@@ -45,7 +45,7 @@ public class ShooterPrime extends CommandBase {
     if(m_ShooterSubsystem.wheelReady()){
       m_ShooterSubsystem.runCargo(true);
       i++;
-      if(i==10){
+      if(i==10){ //Expected to add a 200ms delay
         return true;
       }
     }
