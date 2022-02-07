@@ -69,7 +69,7 @@ public class RobotContainer {
    // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
   private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem,limelightSubsystem,CDSSubsystem);
   private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem,shooterSubsystem);
-  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
+  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem,shooterSubsystem);
   private LimelightAlign limelightAlign = new LimelightAlign(limelightSubsystem,driveBaseSubsystem);
 
   // auton

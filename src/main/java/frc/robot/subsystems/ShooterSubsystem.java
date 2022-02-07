@@ -3,13 +3,10 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 
 import java.lang.Math;
 import com.revrobotics.CANSparkMax;
@@ -26,16 +23,12 @@ public class ShooterSubsystem extends SubsystemBase {
   private RelativeEncoder KShooterEncoder;
   private RelativeEncoder KHoodEncoder;
   private MotorController cargo_motorController;
-  private SparkMaxPIDController kCargoController;
-  private RelativeEncoder kCargoEncoder;
   private double currentRPM;
-  private double dashRPM;
 
   public ShooterSubsystem() {
     SmartDashboard.putNumber("RPMChange", 3000.0);
     aimMode = 4;
     cargo_motorController = new MotorController("Shooter Cargo", Constants.shooterCargoID);
-    kCargoEncoder = cargo_motorController.getEncoder();
     shooter_motorController = new MotorController("Shooter", Constants.shooterID, 40, true);
     KShooterController = shooter_motorController.getPID();
     KShooterEncoder = shooter_motorController.getEncoder();
@@ -43,7 +36,7 @@ public class ShooterSubsystem extends SubsystemBase {
     KShooterController.setI(1e-6);
     KShooterController.setD(0.0);
     KShooterController.setOutputRange(0, 1);
-/*
+    /*
     hood_motorController = new MotorController("Hood", Constants.hoodID);
     KHoodController = hood_motorController.getPID();
     KHoodEncoder = shooter_motorController.getEncoder();*/
@@ -63,9 +56,9 @@ public class ShooterSubsystem extends SubsystemBase {
     KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
   }
 
-  public void runCargo(boolean a,boolean r) {
+  public void runCargo(boolean a,boolean reversed) {
     if(a){
-      if(r){cargo_motorController.setSpeed(-0.2);}
+      if(reversed){cargo_motorController.setSpeed(-0.2);}
       else{cargo_motorController.setSpeed(0.2);}
     }else{
       cargo_motorController.setSpeed(0.0);
@@ -164,7 +157,6 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    //dashRPM = SmartDashboard.getNumber("RPMChange", 3000.0);
     SmartDashboard.putNumber("dist", getDistance());
     SmartDashboard.putNumber("RPM", KShooterEncoder.getVelocity());
   }
