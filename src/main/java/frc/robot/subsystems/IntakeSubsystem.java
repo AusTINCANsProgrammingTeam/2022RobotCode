@@ -74,17 +74,17 @@ public class IntakeSubsystem extends SubsystemBase {
   }
   */
 
-  /*public boolean[] getBeamBreakStatus() {
+  public boolean[] getBeamBreakStatus() {
     boolean frontStatus = frontBallSensor.get();
     boolean middleStatus = middleBallSensor.get();
     boolean finalStatus = finalBallSensor.get();
     boolean[] beamBreakArray = {frontStatus, middleStatus, finalStatus};
     return beamBreakArray;
-  }*/
+  }
   
-  /*public void periodic() {
+  public void periodic() {
     SmartDashboard.putBooleanArray("Beam Break", getBeamBreakStatus());
-  }*/
+  }
 
   /*
   public int getBallCount() {
