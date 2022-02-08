@@ -26,7 +26,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private double currentRPM;
 
   public ShooterSubsystem() {
-    SmartDashboard.putNumber("RPMChange", 3000.0);
     aimMode = 4;
     cargo_motorController = new MotorController("Shooter Cargo", Constants.shooterCargoID);
     shooter_motorController = new MotorController("Shooter", Constants.shooterID, 40, true);
