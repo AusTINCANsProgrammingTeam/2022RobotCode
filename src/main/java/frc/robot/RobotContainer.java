@@ -56,20 +56,20 @@ public class RobotContainer {
 
   // subsystems
   private static final DriveBaseSubsystem driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, false);
-  private final CDSSubsystem CDSSubsystem = new CDSSubsystem();
-  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(); 
-  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
-  private final LimelightSubsystem limelightSubsystem = new LimelightSubsystem();
+  // private final CDSSubsystem CDSSubsystem = new CDSSubsystem();
+  // private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(); 
+  // private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  // private final LimelightSubsystem limelightSubsystem = new LimelightSubsystem();
 
   // commands
   private final DriveBaseTeleopCommand driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
-  private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
-  private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
-   // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
-  private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem,limelightSubsystem);
-  private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
-  private LimelightAlign limelightAlign = new LimelightAlign(limelightSubsystem,driveBaseSubsystem);
+  // private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
+  // private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
+  //  // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
+  // private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem,limelightSubsystem);
+  // private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+  // private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
+  // private LimelightAlign limelightAlign = new LimelightAlign(limelightSubsystem,driveBaseSubsystem);
 
   // auton
   // private Trajectory[] mTrajectories;  // multiple trajectories

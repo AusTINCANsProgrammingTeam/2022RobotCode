@@ -54,12 +54,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.driveRightFrontIndex] = new MotorController("Differential Right Front", Constants.driveRightFront, Constants.driveBaseCurrentLimit, true);
     m_motorControllers[Constants.driveRightRearIndex] = new MotorController("Differential Right Rear", Constants.driveRightRear, Constants.driveBaseCurrentLimit, true);
 
-    // tuning PID, experimental values, multiply by 2
-    SmartDashboard.putNumber(m_motorControllers[Constants.driveLeftFrontIndex].getName() + " P Value", 0.00005);
-    SmartDashboard.putNumber(m_motorControllers[Constants.driveLeftRearIndex].getName() + " P Value", 0.00005);
-    SmartDashboard.putNumber(m_motorControllers[Constants.driveRightFrontIndex].getName() + " P Value", 0.00005);
-    SmartDashboard.putNumber(m_motorControllers[Constants.driveRightRearIndex].getName() + " P Value", 0.00005);
-
     // invert left side motors
     m_motorControllers[Constants.driveLeftFrontIndex].setInverted(true);
     m_motorControllers[Constants.driveLeftRearIndex].setInverted(true);
@@ -83,11 +77,17 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_extLeftEncoder.setReverseDirection(true);
     
     // internal encoders
-    m_internalLeftEncoder = m_motorControllers[Constants.kDriveLeftFrontIndex].getEncoder();
-    m_internalRightEncoder = m_motorControllers[Constants.kDriveRightFrontIndex].getEncoder();
+    m_internalLeftEncoder = m_motorControllers[Constants.driveLeftFrontIndex].getEncoder();
+    m_internalRightEncoder = m_motorControllers[Constants.driveRightFrontIndex].getEncoder();
 
     m_internalLeftEncoder.setPositionConversionFactor(2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter); // calculate circumference then convert to meters
     m_internalRightEncoder.setPositionConversionFactor(2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter);
+
+    // tuning PID, experimental values, multiply by 2
+    SmartDashboard.putNumber(m_motorControllers[Constants.driveLeftFrontIndex].getName() + " P Value", 0.00005);
+    SmartDashboard.putNumber(m_motorControllers[Constants.driveLeftRearIndex].getName() + " P Value", 0.00005);
+    SmartDashboard.putNumber(m_motorControllers[Constants.driveRightFrontIndex].getName() + " P Value", 0.00005);
+    SmartDashboard.putNumber(m_motorControllers[Constants.driveRightRearIndex].getName() + " P Value", 0.00005);
 
   }
 
@@ -156,11 +156,11 @@ public class DriveBaseSubsystem extends SubsystemBase {
   }
 
   public CANSparkMax getRightMotor() {
-    return m_motorControllers[Constants.kDriveRightFrontIndex].getSparkMax();
+    return m_motorControllers[Constants.driveRightFrontIndex].getSparkMax();
   }
 
   public CANSparkMax getLeftMotor() {
-    return m_motorControllers[Constants.kDriveLeftFrontIndex].getSparkMax();
+    return m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax();
   }
 
   // return speed of left side motors
@@ -245,3 +245,4 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // TODO: we can add more tankdrive co functions as extras later
 }
+                                                                                                                                                                                              
