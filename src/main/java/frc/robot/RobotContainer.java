@@ -94,22 +94,49 @@ public class RobotContainer {
           {
             System.out.println("Drivebase enabled");
             driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick);
-            driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
-            driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
             break;
           }
           case "CDSSubsystem": 
           {
             System.out.println("CDS enabled");
             CDSSubsystem = new CDSSubsystem();
-            CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
-            CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
             break;
           }
           case "IntakeSubsystem":
           {
             System.out.println("Intake enabled");
             intakeSubsystem = new IntakeSubsystem(); 
+            break;
+          }
+          case "ShooterSubsystem":
+          {
+            System.out.println("Shooter enabled");
+            shooterSubsystem = new ShooterSubsystem();
+            break;
+          }
+          case "LimelightSubsystem":
+          {
+            System.out.println("Limelight enabled");
+            limelightSubsystem = new LimelightSubsystem();
+            break;
+          }
+
+        }
+        switch (sub.toString()) {
+          case "DriveBaseSubsystem": 
+          {
+            driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
+            driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
+            break;
+          }
+          case "CDSSubsystem": 
+          {
+            CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
+            CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+            break;
+          }
+          case "IntakeSubsystem":
+          {
             intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
             intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
             beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
@@ -117,15 +144,11 @@ public class RobotContainer {
           }
           case "ShooterSubsystem":
           {
-            System.out.println("Shooter enabled");
-            shooterSubsystem = new ShooterSubsystem();
             shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
             break;
           }
           case "LimelightSubsystem":
           {
-            System.out.println("Limelight enabled");
-            limelightSubsystem = new LimelightSubsystem();
             limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
             break;
           }

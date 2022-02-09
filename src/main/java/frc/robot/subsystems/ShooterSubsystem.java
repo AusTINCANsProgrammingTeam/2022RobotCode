@@ -164,6 +164,7 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("MaxAccum",KShooterController.getIAccum());
     SmartDashboard.putNumber("dist", getDistance());
     SmartDashboard.putNumber("RPM", KShooterEncoder.getVelocity());
   }
