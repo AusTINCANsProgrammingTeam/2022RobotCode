@@ -61,15 +61,14 @@ public class RobotContainer {
   private static LimelightSubsystem limelightSubsystem;
 
   // commands
-  private final DriveBaseTeleopCommand driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
-  private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
-  private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
-
-   // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
-  private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem,limelightSubsystem,CDSSubsystem);
-  private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem,shooterSubsystem);
-  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem,shooterSubsystem);
-  private LimelightAlign limelightAlign = new LimelightAlign(limelightSubsystem,driveBaseSubsystem);
+  private static DriveBaseTeleopCommand driveBaseTeleopCommand;
+  private IntakeForwardCommand intakeForwardCommand;
+  private IntakeReverseCommand intakeReverseCommand;
+  private ShooterPrime shooterPrime;
+  private CDSForwardCommand CDSForwardCommand;
+  private CDSReverseCommand CDSReverseCommand;
+  private LimelightAlign limelightAlign;
+  private BeamBreakCommand beamBreakCommand;
 
   // auton
   // private Trajectory[] mTrajectories;  // multiple trajectories
@@ -95,7 +94,7 @@ public class RobotContainer {
           {
             System.out.println("Drivebase enabled");
             driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick);
-            //driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);/TODO: can't assign this, command is final!d
+            driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
             driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
             break;
           }
@@ -113,6 +112,7 @@ public class RobotContainer {
             intakeSubsystem = new IntakeSubsystem(); 
             intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
             intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
+            beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
             break;
           }
           case "ShooterSubsystem":

@@ -34,6 +34,7 @@ public class ShooterSubsystem extends SubsystemBase {
     KShooterEncoder = shooter_motorController.getEncoder();
     KShooterController.setP(5e-4);
     KShooterController.setI(6e-7);
+    KShooterController.setIMaxAccum(1, 0);
     KShooterController.setD(0.0);
 
     KShooterController.setOutputRange(0, 1);
@@ -53,8 +54,13 @@ public class ShooterSubsystem extends SubsystemBase {
   public void windFlywheel(double rpm) {
     // Winds Flywheel using PID control to passed rpm
     // double adjustedRPM = rpm * (Constants.kGearRatioIn / Constants.kGearRatioOut); TODO: reconsider using this
+    if(rpm == 0){
+      KShooterController.setReference(0, CANSparkMax.ControlType.kVoltage);
+      KShooterController.setIAccum(0);
+    } else{
     currentRPM = rpm;
     KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
+    }
   }
 
   public void runCargo(boolean a,boolean reversed) {
