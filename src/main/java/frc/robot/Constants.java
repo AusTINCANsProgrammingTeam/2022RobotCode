@@ -103,6 +103,7 @@ public final class Constants {
     public static final double TARMACAngle = 0.0; // Angle that the TARMAC aimMode adjusts to
     
     // Shooter Constants
+    public static final class Shooter{
     public static final int shooterID = 7; // ID of the shooter
     public static final int hoodID = 8; // ID of the hood;
     public static final double shooterHeight = 3;
@@ -118,4 +119,11 @@ public final class Constants {
     public static final double ballFlywheelratio = 2;
     public static final int shooterCargoID = 9;
     public static final double cargoRotation = 3;
+
+    public static final double kP =6e-4;
+    public static final double kI = 1e-6;
+    public static final double kD = 0.0;
+    public static final double kF = 0.0;
+    
+    }
 }

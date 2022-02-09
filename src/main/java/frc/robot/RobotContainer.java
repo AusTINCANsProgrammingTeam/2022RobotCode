@@ -106,7 +106,7 @@ public class RobotContainer {
     mButtons[Constants.leftBumperButton].whileHeld(intakeForwardCommand);
     mButtons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
     // Shooter
-    mButtons[Constants.Xbutton].whenPressed(shooterPrime);
+    mButtons[Constants.Xbutton].whileHeld(shooterPrime);
     mButtons[Constants.upbutton].whenPressed(new InstantCommand(ShooterSubsystem::cycleAimModeUp, ShooterSubsystem));
     mButtons[Constants.downbutton].whenPressed(new InstantCommand(ShooterSubsystem::cycleAimModeDown, ShooterSubsystem));
     mButtons[Constants.Xbutton].whileHeld(CDSForwardCommand);

@@ -34,6 +34,8 @@ public class ShooterPrime extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    m_ShooterSubsystem.windFlywheel(5.0);;
+    i = 0;
 
   }
 
