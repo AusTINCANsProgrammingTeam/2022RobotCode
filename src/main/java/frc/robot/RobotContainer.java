@@ -61,14 +61,15 @@ public class RobotContainer {
   private static LimelightSubsystem limelightSubsystem;
 
   // commands
-  private DriveBaseTeleopCommand driveBaseTeleopCommand;
-  private IntakeForwardCommand intakeForwardCommand;
-  private IntakeReverseCommand intakeReverseCommand;
-  private ShooterPrime shooterPrime;
-  private CDSForwardCommand CDSForwardCommand;
-  private CDSReverseCommand CDSReverseCommand;
-  private LimelightAlign limelightAlign;
+  private final DriveBaseTeleopCommand driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
+  private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
+  private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
 
+   // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
+  private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem,limelightSubsystem,CDSSubsystem);
+  private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem,shooterSubsystem);
+  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem,shooterSubsystem);
+  private LimelightAlign limelightAlign = new LimelightAlign(limelightSubsystem,driveBaseSubsystem);
 
   // auton
   // private Trajectory[] mTrajectories;  // multiple trajectories
@@ -94,7 +95,7 @@ public class RobotContainer {
           {
             System.out.println("Drivebase enabled");
             driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick);
-            driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
+            //driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);/TODO: can't assign this, command is final!d
             driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
             break;
           }
@@ -102,8 +103,8 @@ public class RobotContainer {
           {
             System.out.println("CDS enabled");
             CDSSubsystem = new CDSSubsystem();
-            CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-            CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
+            CDSForwardCommand = new CDSForwardCommand(CDSSubsystem,shooterSubsystem);
+            CDSReverseCommand = new CDSReverseCommand(CDSSubsystem,shooterSubsystem);
             break;
           }
           case "IntakeSubsystem":
@@ -118,7 +119,7 @@ public class RobotContainer {
           {
             System.out.println("Shooter enabled");
             shooterSubsystem = new ShooterSubsystem();
-            shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem);
+            shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem,CDSSubsystem);
             break;
           }
           case "LimelightSubsystem":
@@ -145,8 +146,7 @@ public class RobotContainer {
       e.printStackTrace();
     }
 
-//    intakeSubsystem.setDefaultCommand(beamBreakCommand);
-
+    driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
   }
 
   // Use this method to define your button->command mappings. Buttons can be
@@ -166,8 +166,8 @@ public class RobotContainer {
     // Shooter
     if (shooterSubsystem != null) {
       buttons[Constants.Xbutton].whenPressed(shooterPrime);
-      buttons[Constants.upbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
-      buttons[Constants.downbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
+      buttons[Constants.upPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
+      buttons[Constants.downPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
     }
 
     if (CDSSubsystem != null) {
