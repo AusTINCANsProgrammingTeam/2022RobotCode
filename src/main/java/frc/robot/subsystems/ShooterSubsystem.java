@@ -26,14 +26,16 @@ public class ShooterSubsystem extends SubsystemBase {
   private double currentRPM;
 
   public ShooterSubsystem() {
+    
     aimMode = 4;
     cargo_motorController = new MotorController("Shooter Cargo", Constants.shooterCargoID);
     shooter_motorController = new MotorController("Shooter", Constants.shooterID, 40, true);
     KShooterController = shooter_motorController.getPID();
     KShooterEncoder = shooter_motorController.getEncoder();
-    KShooterController.setP(6e-5);
-    KShooterController.setI(1e-6);
+    KShooterController.setP(5e-4);
+    KShooterController.setI(6e-7);
     KShooterController.setD(0.0);
+
     KShooterController.setOutputRange(0, 1);
     /*
     hood_motorController = new MotorController("Hood", Constants.hoodID);
@@ -148,7 +150,7 @@ public class ShooterSubsystem extends SubsystemBase {
         windFlywheel(Constants.TARMACRPM);
         break;
       case 4: //Case for TEST mode, just takes an RPM and winds
-        windFlywheel(3200.0);
+        windFlywheel(3700);
         break;
     }
   }

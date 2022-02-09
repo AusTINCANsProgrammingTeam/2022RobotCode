@@ -117,8 +117,8 @@ public class RobotContainer {
     
     // Shooter
     buttons[Constants.rightTriggerButton].whenPressed(shooterPrime);
-    buttons[Constants.upbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
-    buttons[Constants.downbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
+   // buttons[Constants.upPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
+   // buttons[Constants.downPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
     
     // Limelight
     buttons[Constants.AButton].whenPressed(limelightAlign);
