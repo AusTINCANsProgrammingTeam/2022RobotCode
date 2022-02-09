@@ -7,11 +7,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClimbSubsystem; 
 
-public class ClimbCommand extends CommandBase {
+public class ClimbUPCamand extends CommandBase {
   
   private final ClimbSubsystem m_subsystem;
   
-  public ClimbCommand(ClimbSubsystem s) {
+  public ClimbUPCamand(ClimbSubsystem s) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(s);
     m_subsystem = s;
@@ -30,7 +30,7 @@ public class ClimbCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    
+    m_subsystem.enableClimb(false, false);
   }
 
   // Returns true when the command should end.

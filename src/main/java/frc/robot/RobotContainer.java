@@ -33,12 +33,12 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
-import frc.robot.commands.BeamBreakCommand;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.ShooterPrime;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
-import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.ClimbDOWNCammand;
+import frc.robot.commands.ClimbUPCamand;
 
  // This class is where the bulk of the robot should be declared. Since Command-based is a
  // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -70,7 +70,8 @@ public class RobotContainer {
   private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem,limelightSubsystem);
   private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
   private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
-  private ClimbCommand climbCommand = new ClimbCommand(climbSubsystem);
+  private ClimbUPCamand climbUPCommand = new ClimbUPCamand(climbSubsystem);
+  private ClimbDOWNCammand climbDOWNCammand = new ClimbDOWNCammand(climbSubsystem);
   private LimelightAlign limelightAlign = new LimelightAlign(limelightSubsystem,driveBaseSubsystem);
 
   // auton
@@ -130,7 +131,8 @@ public class RobotContainer {
     buttons[Constants.AButton].whenPressed(limelightAlign);
 
     //Climb
-    buttons[Constants.LTrigger].whileHeld(climbCommand);
+    buttons[Constants.LTrigger].whileHeld(climbUPCommand);
+    buttons[Constants.RTrigger].whileHeld(climbDOWNCammand);
   }
 
   private void initializeTrajectories() throws IOException {

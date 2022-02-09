@@ -40,6 +40,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     //Example camera system, unsure if it goes here or not
     CameraServer.startAutomaticCapture();
+    //Not used at the moment, maby in the futue
     CvSink cvSink = CameraServer.getVideo();
     CvSource outputStream = CameraServer.putVideo("Blur", 640, 480);
   }
