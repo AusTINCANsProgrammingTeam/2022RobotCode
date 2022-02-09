@@ -94,6 +94,8 @@ public final class Constants {
     public static final int downbutton = 4; // Button for shooter mode
     public static final int upbutton = 5; // Button for shooter mode
     public static final int AButton = 2; //Button to align Limelight
+    public static final int LTrigger = 9; //Button For Climb
+    public static final int RTrigger = 8; //Button For Climb
 
     // Intake Contstants 
     //Check top of constants
@@ -141,4 +143,7 @@ public final class Constants {
     public static final double ballFlywheelratio = 2;
     public static final int shooterCargoID = 9;
     public static final double cargoRotation = 3;
+
+    public static final int kClimbMotorOneIndex = 1;
+    public static final int kClimbMotorTwoIndex = 2;
 }

@@ -38,8 +38,6 @@ public class ClimbSubsystem extends SubsystemBase {
 
     m_limitSwitch = new DigitalInput(Constants.kLimitSwitchChannel);
 
-    m_climbMotorControllerOne.getEncoder();
-
     //Example camera system, unsure if it goes here or not
     CameraServer.startAutomaticCapture();
     CvSink cvSink = CameraServer.getVideo();
@@ -50,10 +48,10 @@ public class ClimbSubsystem extends SubsystemBase {
     if (on) {
       if (up) {
         m_climbMotorControllerOne.getPID().setReference(25, CANSparkMax.ControlType.kPosition);
-        SmartDashboard.putNumber("Climb Hight", );
+        SmartDashboard.putNumber("Climb Hight", m_climbMotorControllerOne.getEncoder().getPosition());
       } else {
         m_climbMotorControllerOne.getPID().setReference(-25, CANSparkMax.ControlType.kPosition);
-        SmartDashboard.putNumber("Climb Hight", );
+        SmartDashboard.putNumber("Climb Hight", m_climbMotorControllerOne.getEncoder().getPosition());
       }
     } else {
       m_climbMotorControllerOne.setSpeed(0);

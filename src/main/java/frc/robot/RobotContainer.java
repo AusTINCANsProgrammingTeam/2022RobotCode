@@ -28,6 +28,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.CDSSubsystem;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.commands.IntakeForwardCommand;
@@ -37,6 +38,7 @@ import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.ShooterPrime;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
+import frc.robot.commands.ClimbCommand;
 
  // This class is where the bulk of the robot should be declared. Since Command-based is a
  // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -58,6 +60,7 @@ public class RobotContainer {
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(); 
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   private final LimelightSubsystem limelightSubsystem = new LimelightSubsystem();
+  private final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
 
   // commands
   private final DriveBaseTeleopCommand driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
@@ -67,6 +70,7 @@ public class RobotContainer {
   private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem,limelightSubsystem);
   private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
   private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
+  private ClimbCommand climbCommand = new ClimbCommand(climbSubsystem);
   private LimelightAlign limelightAlign = new LimelightAlign(limelightSubsystem,driveBaseSubsystem);
 
   // auton
@@ -124,6 +128,9 @@ public class RobotContainer {
     
     // Limelight
     buttons[Constants.AButton].whenPressed(limelightAlign);
+
+    //Climb
+    buttons[Constants.LTrigger].whileHeld(climbCommand);
   }
 
   private void initializeTrajectories() throws IOException {
