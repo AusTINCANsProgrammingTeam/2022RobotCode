@@ -102,8 +102,8 @@ public class RobotContainer {
           {
             System.out.println("CDS enabled");
             CDSSubsystem = new CDSSubsystem();
-            CDSForwardCommand = new CDSForwardCommand(CDSSubsystem,shooterSubsystem);
-            CDSReverseCommand = new CDSReverseCommand(CDSSubsystem,shooterSubsystem);
+            CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
+            CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
             break;
           }
           case "IntakeSubsystem":
@@ -119,7 +119,7 @@ public class RobotContainer {
           {
             System.out.println("Shooter enabled");
             shooterSubsystem = new ShooterSubsystem();
-            shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem,CDSSubsystem);
+            shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
             break;
           }
           case "LimelightSubsystem":
@@ -146,7 +146,7 @@ public class RobotContainer {
       e.printStackTrace();
     }
 
-    driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
+   
   }
 
   // Use this method to define your button->command mappings. Buttons can be
