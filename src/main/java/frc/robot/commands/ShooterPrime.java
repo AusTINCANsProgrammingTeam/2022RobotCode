@@ -58,7 +58,7 @@ public class ShooterPrime extends CommandBase {
         m_ShooterSubsystem.runCargo(true,true);
         m_CDSSubsystem.CDSBeltWheelControllerToggle(false);
         i++;
-        if(i==100){ //Expected to add a 200ms delay
+        if(i==100){ //Expected to add a 2000ms delay
           return true;
        // }
       }

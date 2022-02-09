@@ -30,7 +30,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public IntakeSubsystem() {
     intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID, 40);
-    //intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.intakeMotorTwoID, 40);
+    //TODO: Gutted code
+    //intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.intakeMotorTwoID, 40); 
     //CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.intakeWheelOneID, 40);
     //CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.intakeWheelTwoID, 40);
 
@@ -39,7 +40,7 @@ public class IntakeSubsystem extends SubsystemBase {
     finalBallSensor = new DigitalInput(Constants.finalBallSensorChannel); */
 
     DigitalInput[] sensorArray = {frontBallSensor, middleBallSensor, finalBallSensor};
-
+    //TODO: Gutted code
     // Remove invert=true parameter if wheels aren't running correctly
     //CDSWheelControllerOne.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
     //CDSWheelControllerTwo.getSparkMax().follow(intakeMotorControllerOne.getSparkMax(), true);
@@ -62,7 +63,7 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeMotorControllerOne.getSparkMax().set(0.0);
     SmartDashboard.putNumber("Intake Motor Speed", 0.0);
   }
-
+    //TODO: Gutted code
   /*
   public boolean getDirection() {
     // true = inverted, false = forward
