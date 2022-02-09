@@ -8,6 +8,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -19,35 +20,86 @@ public class IntakeSubsystem extends SubsystemBase {
   
   private MotorController intakeMotorControllerOne;
   private MotorController intakeMotorControllerTwo;
+  //private MotorController CDSWheelControllerOne;
+  //private MotorController CDSWheelControllerTwo;
+  private DigitalInput frontBallSensor;
+  private DigitalInput middleBallSensor;
+  private DigitalInput finalBallSensor;
+
+  private int ballCount = 0;
 
   public IntakeSubsystem() {
-    intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.kIntakeMotorOneID);
-    intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.kIntakeMotorTwoID);
+    intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID, 40);
+    //intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.intakeMotorTwoID, 40);
+    //CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.intakeWheelOneID, 40);
+    //CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.intakeWheelTwoID, 40);
 
-    intakeMotorControllerTwo.getSparkMax().follow(intakeMotorControllerTwo.getSparkMax());
+    frontBallSensor = new DigitalInput(Constants.initialBallSensorChannel);
+    middleBallSensor = new DigitalInput(Constants.middleBallSensorChannel);
+    finalBallSensor = new DigitalInput(Constants.finalBallSensorChannel); 
+
+    DigitalInput[] sensorArray = {frontBallSensor, middleBallSensor, finalBallSensor};
+
+    // Remove invert=true parameter if wheels aren't running correctly
+    //CDSWheelControllerOne.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
+    //CDSWheelControllerTwo.getSparkMax().follow(intakeMotorControllerOne.getSparkMax(), true);
+    intakeMotorControllerTwo.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
   }
 
-  public void IntakeSwitch(boolean on){    
-    if (on){
-      double intakeSmartSpeed = SmartDashboard.getNumber("Belt Speed", Constants.kCDSBeltSpeed);
-      
-      intakeMotorControllerOne.getSparkMax().set(intakeSmartSpeed);
-      SmartDashboard.putNumber("Intake Motor Speed", Constants.kIntakeMotorSpeed);
+  public void toggleIntake(boolean reverse) {
+    if (reverse) {
+      intakeMotorControllerOne.getSparkMax().set(-Constants.intakeMotorSpeed);
+      SmartDashboard.putString("Intake Motor Direction", "Reverse");
+      SmartDashboard.putNumber("Intake Motor Speed", -Constants.intakeMotorSpeed);
     } else {
-      intakeMotorControllerOne.getSparkMax().set(0);
-      SmartDashboard.putNumber("Intake Motor Speed", 0);
+      intakeMotorControllerOne.getSparkMax().set(Constants.intakeMotorSpeed);
+      SmartDashboard.putString("Intake Motor Direction", "Forward");
+      SmartDashboard.putNumber("Intake Motor Speed", Constants.intakeMotorSpeed);
     }
   }
-  
-  public void ForwardIntake(){
-    intakeMotorControllerOne.getSparkMax().setInverted(false);
-    SmartDashboard.putString("Intake Motor Direction", "Forward");
+
+  public void stopIntake() {
+    intakeMotorControllerOne.getSparkMax().set(0.0);
+    SmartDashboard.putNumber("Intake Motor Speed", 0.0);
   }
 
-  public void ReverseIntake(){
-    intakeMotorControllerOne.getSparkMax().setInverted(true);
-    SmartDashboard.putString("Intake Motor Direction", "Reverse");
+  public boolean getDirection() {
+    // true = inverted, false = forward
+    if (intakeMotorControllerOne.getSparkMax().get() > 0) {
+      return false;
+    } else {
+    return true;
+    }
+  }
+/*
+  public boolean[] getBeamBreakStatus() {
+    boolean frontStatus = frontBallSensor.get();
+    boolean middleStatus = middleBallSensor.get();
+    boolean finalStatus = finalBallSensor.get();
+    boolean[] beamBreakArray = {frontStatus, middleStatus, finalStatus};
+    return beamBreakArray;
   }
 
-  
-}
+  public int getBallCount() {
+    boolean[] beamBreakStatuses = this.getBeamBreakStatus();
+    // TODO: Possibly add more beambreaks once done with testing.
+    if (!beamBreakStatuses[0]) {
+      if (this.getDirection()){
+        ballCount--;
+      } else {
+        ballCount++;
+      }
+    }
+    return ballCount;
+  }
+*/
+  public void expelBalls() {
+    /*
+    if (ballCount > 2) {
+      this.toggleIntake(true);
+    }
+    this.stopIntake();
+    */
+  }
+
+}  //Don't delete, this is for main method.
