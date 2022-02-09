@@ -21,7 +21,7 @@ public final class Constants {
         DriveBaseSubsystem(false),
         CDSSubsystem      (true),
         IntakeSubsystem   (true),
-        ShooterSubsystem  (false),
+        ShooterSubsystem  (true),
         LimelightSubsystem(false);
 
         private final Boolean enabled; 
