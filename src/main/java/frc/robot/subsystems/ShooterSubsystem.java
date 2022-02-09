@@ -148,7 +148,7 @@ public class ShooterSubsystem extends SubsystemBase {
         windFlywheel(Constants.TARMACRPM);
         break;
       case 4: //Case for TEST mode, just takes an RPM and winds
-        windFlywheel(2700.0);
+        windFlywheel(3200.0);
         break;
     }
   }
