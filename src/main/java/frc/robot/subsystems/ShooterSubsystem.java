@@ -8,24 +8,13 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 import java.lang.Math;
-import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.SparkMaxRelativeEncoder;
-import com.revrobotics.CANSparkMax.ControlType;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
-
-import org.opencv.core.Mat;
-import com.revrobotics.RelativeEncoder;
 import frc.robot.common.hardware.MotorController;
 
 public class ShooterSubsystem extends SubsystemBase {
