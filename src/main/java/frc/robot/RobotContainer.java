@@ -95,7 +95,7 @@ public class RobotContainer {
           {
             System.out.println("Drivebase enabled");
             driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick);
-            driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
+            //driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);/TODO: can't assign this, command is final!d
             driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
             break;
           }
@@ -166,8 +166,8 @@ public class RobotContainer {
     // Shooter
     if (shooterSubsystem != null) {
       buttons[Constants.Xbutton].whenPressed(shooterPrime);
-      buttons[Constants.upbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
-      buttons[Constants.downbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
+      buttons[Constants.upPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
+      buttons[Constants.downPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
     }
 
     if (CDSSubsystem != null) {

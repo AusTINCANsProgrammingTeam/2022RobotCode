@@ -21,7 +21,7 @@ public final class Constants {
         DriveBaseSubsystem(false),
         CDSSubsystem      (false),
         IntakeSubsystem   (true),
-        ShooterSubsystem  (false),
+        ShooterSubsystem  (true),
         LimelightSubsystem(false);
 
         private final Boolean enabled; 
@@ -113,8 +113,8 @@ public final class Constants {
     public static final int rightTriggerButton = 8; // Button for intake 
     public static final int leftBumperButton = 6;  // Button to reverse intake
     public static final int Xbutton = 3; // Button for Shooter
-    public static final int downbutton = 11; // Button for shooter mode
-    public static final int upbutton = 12; // Button for shooter mode
+    public static final int downPOV = 4; // Button for shooter mode
+    public static final int upPOV = 5; // Button for shooter mode
     public static final int AButton = 2; //Button to align Limelight
 
 
