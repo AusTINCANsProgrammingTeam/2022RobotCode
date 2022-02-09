@@ -178,6 +178,7 @@ public class RobotContainer {
 	if (driveBaseSubsystem != null && limelightSubsystem != null) {
       buttons[Constants.AButton].whenPressed(limelightAlign);
     }
+  }
 
   private void initializeTrajectories() throws IOException {
     // String[] trajectoryJSON = {"One.wpilib.json", "Two.wpilib.json", "Three.wpilib.json", "Four.wpilib.json"};  // add new trajectories manually
