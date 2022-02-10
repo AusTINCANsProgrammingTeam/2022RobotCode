@@ -8,9 +8,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.DriverStation;
 
 /** Add your docs here. */
 public class IntakeSubsystem extends SubsystemBase {
@@ -18,17 +16,9 @@ public class IntakeSubsystem extends SubsystemBase {
   // here. Call these from Commands.
   
   private MotorController intakeMotorControllerOne;
-  private MotorController intakeMotorControllerTwo;
-  //private MotorController CDSWheelControllerOne;
-  //private MotorController CDSWheelControllerTwo;
-  private int ballCount = 0;
 
   public IntakeSubsystem() {
     intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID, 40);
-    //TODO: Gutted code
-    //intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.intakeMotorTwoID, 40); 
-    //CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.intakeWheelOneID, 40);
-    //CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.intakeWheelTwoID, 40);
   }
 
   public void toggleIntake(boolean reverse) {
