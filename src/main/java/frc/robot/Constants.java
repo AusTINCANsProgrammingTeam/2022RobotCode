@@ -4,6 +4,7 @@
 
 package frc.robot;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import frc.robot.subsystems.ClimbSubsystem;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -22,7 +23,8 @@ public final class Constants {
         CDSSubsystem      (true),
         IntakeSubsystem   (true),
         ShooterSubsystem  (true),
-        LimelightSubsystem(false);
+        LimelightSubsystem(false),
+        ClimbSubsystem    (true);
 
         private final Boolean enabled; 
         
