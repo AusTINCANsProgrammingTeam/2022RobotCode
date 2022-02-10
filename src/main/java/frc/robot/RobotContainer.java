@@ -56,39 +56,26 @@ public class RobotContainer {
 
 
   // subsystems
-<<<<<<< HEAD
-  private static final DriveBaseSubsystem driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick);
-  private final CDSSubsystem CDSSubsystem = new CDSSubsystem();
-  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(); 
-  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
-  private final LimelightSubsystem limelightSubsystem = new LimelightSubsystem();
-  private final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
-=======
+
+  private static ClimbSubsystem climbSubsystem;
   private static DriveBaseSubsystem driveBaseSubsystem;
   private static CDSSubsystem CDSSubsystem;
   private static IntakeSubsystem intakeSubsystem; 
   private static ShooterSubsystem shooterSubsystem;
   private static LimelightSubsystem limelightSubsystem;
->>>>>>> origin/main
 
   // commands
-  private final DriveBaseTeleopCommand driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
-  private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
-  private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
+  private DriveBaseTeleopCommand driveBaseTeleopCommand;
+  private IntakeForwardCommand intakeForwardCommand;
+  private IntakeReverseCommand intakeReverseCommand;
 
    // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
-<<<<<<< HEAD
-  private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem,limelightSubsystem);
-  private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
-  private ClimbUPCamand climbUPCommand = new ClimbUPCamand(climbSubsystem);
-  private ClimbDOWNCammand climbDOWNCammand = new ClimbDOWNCammand(climbSubsystem);
-=======
-  private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem,limelightSubsystem,CDSSubsystem);
-  private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem,shooterSubsystem);
-  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem,shooterSubsystem);
->>>>>>> origin/main
-  private LimelightAlign limelightAlign = new LimelightAlign(limelightSubsystem,driveBaseSubsystem);
+  private ClimbUPCamand climbUPCommand;
+  private ClimbDOWNCammand climbDOWNCammand;
+  private ShooterPrime shooterPrime;
+  private CDSForwardCommand CDSForwardCommand;
+  private CDSReverseCommand CDSReverseCommand;
+  private LimelightAlign limelightAlign;
 
   // auton
   // private Trajectory[] mTrajectories;  // multiple trajectories
@@ -114,7 +101,7 @@ public class RobotContainer {
           {
             System.out.println("Drivebase enabled");
             driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick);
-            //driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);/TODO: can't assign this, command is final!d
+            driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem); //TODO: can't assign this, command is final!d
             driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
             break;
           }
@@ -146,6 +133,13 @@ public class RobotContainer {
             System.out.println("Limelight enabled");
             limelightSubsystem = new LimelightSubsystem();
             limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
+            break;
+          }
+          case "ClimbSubsystem":
+          {
+            System.out.println("Climb enabled");
+            climbUPCommand = new ClimbUPCamand(climbSubsystem);
+            climbDOWNCammand = new ClimbDOWNCammand(climbSubsystem);
             break;
           }
 
@@ -183,36 +177,28 @@ public class RobotContainer {
     }
 
     // Shooter
-<<<<<<< HEAD
-    buttons[Constants.Xbutton].whenPressed(shooterPrime);
-    buttons[Constants.upbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
-    buttons[Constants.downbutton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
-    buttons[Constants.Xbutton].whileHeld(CDSForwardCommand);
-    buttons[Constants.BButton].whileHeld(CDSReverseCommand);
-    
-    // Limelight
-    buttons[Constants.AButton].whenPressed(limelightAlign);
-
-    //Climb
-    buttons[Constants.LTrigger].whileHeld(climbUPCommand);
-    buttons[Constants.RTrigger].whileHeld(climbDOWNCammand);
-=======
     if (shooterSubsystem != null) {
       buttons[Constants.Xbutton].whenPressed(shooterPrime);
       buttons[Constants.upPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
       buttons[Constants.downPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
     }
 
+    // CDS
     if (CDSSubsystem != null) {
       buttons[Constants.Xbutton].whileHeld(CDSForwardCommand);
       buttons[Constants.BButton].whileHeld(CDSReverseCommand);
     }
 	// Limelight
-	if (driveBaseSubsystem != null && limelightSubsystem != null) {
-      buttons[Constants.AButton].whenPressed(limelightAlign);
+	  if (driveBaseSubsystem != null && limelightSubsystem != null) {
+        buttons[Constants.AButton].whenPressed(limelightAlign);
     }
->>>>>>> origin/main
-  }
+
+    if (climbSubsystem != null)
+    {
+      buttons[Constants.LTrigger].whileHeld(climbUPCommand);
+      buttons[Constants.RTrigger].whileHeld(climbDOWNCammand);
+    }
+  } 
 
   private void initializeTrajectories() throws IOException {
     // String[] trajectoryJSON = {"One.wpilib.json", "Two.wpilib.json", "Three.wpilib.json", "Four.wpilib.json"};  // add new trajectories manually
