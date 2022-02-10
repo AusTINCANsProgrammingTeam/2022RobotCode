@@ -88,5 +88,4 @@ public class CDSSubsystem extends SubsystemBase {
     SmartDashboard.putString("Color Sensed", color.toString());
     return color;
   }
-
 }
