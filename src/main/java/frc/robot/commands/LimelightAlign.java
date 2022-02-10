@@ -10,12 +10,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class LimelightAlign extends CommandBase {
   private LimelightSubsystem m_LimelightSubsystem;
+  private DriveBaseSubsystem m_drivebaseSubsystem;
 
   /** Creates a new ShooterPrimary. */
   public LimelightAlign(LimelightSubsystem limelightSubsystem, DriveBaseSubsystem driveBaseSubsystem) {
     addRequirements(limelightSubsystem);
     addRequirements(driveBaseSubsystem);
     m_LimelightSubsystem = limelightSubsystem;
+    m_drivebaseSubsystem = driveBaseSubsystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -29,13 +31,14 @@ public class LimelightAlign extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_LimelightSubsystem.setMotors();
+    double adjustment = m_LimelightSubsystem.calculatePID();
+    m_drivebaseSubsystem.setSpeeds(adjustment*-1,adjustment );
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_LimelightSubsystem.stopMotors();
+    m_drivebaseSubsystem.setSpeeds(0,0);
     m_LimelightSubsystem.reset();
   }
 

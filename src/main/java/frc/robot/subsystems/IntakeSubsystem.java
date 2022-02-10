@@ -35,11 +35,11 @@ public class IntakeSubsystem extends SubsystemBase {
     //CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.intakeWheelOneID, 40);
     //CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.intakeWheelTwoID, 40);
 
-   /* frontBallSensor = new DigitalInput(Constants.initialBallSensorChannel);
+    /*frontBallSensor = new DigitalInput(Constants.initialBallSensorChannel);
     middleBallSensor = new DigitalInput(Constants.middleBallSensorChannel);
     finalBallSensor = new DigitalInput(Constants.finalBallSensorChannel); */
 
-    DigitalInput[] sensorArray = {frontBallSensor, middleBallSensor, finalBallSensor};
+    //DigitalInput[] sensorArray = {frontBallSensor, middleBallSensor, finalBallSensor};
     //TODO: Gutted code
     // Remove invert=true parameter if wheels aren't running correctly
     //CDSWheelControllerOne.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
@@ -75,16 +75,18 @@ public class IntakeSubsystem extends SubsystemBase {
   }
   */
 
-  public boolean[] getBeamBreakStatus() {
-    boolean frontStatus = frontBallSensor.get();
-    boolean middleStatus = middleBallSensor.get();
-    boolean finalStatus = finalBallSensor.get();
-    boolean[] beamBreakArray = {frontStatus, middleStatus, finalStatus};
+  /*public boolean[] getBeamBreakStatus() {
+    boolean[] beamBreakArray;
+    beamBreakArray = new boolean[3];
+    beamBreakArray[0] = frontBallSensor.get();
+    beamBreakArray[1] = middleBallSensor.get();
+    beamBreakArray[2] = finalBallSensor.get();
     return beamBreakArray;
-  }
+  }*/
   
   public void periodic() {
-    SmartDashboard.putBooleanArray("Beam Break", getBeamBreakStatus());
+    /*boolean[] statusArray = getBeamBreakStatus();
+    SmartDashboard.putBooleanArray("Beam Break", statusArray);*/
   }
 
   /*

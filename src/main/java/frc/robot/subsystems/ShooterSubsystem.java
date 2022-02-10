@@ -38,6 +38,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private RelativeEncoder kCargoEncoder;
   private SparkMaxPIDController kCargoController;
   private double currentRPM;
+  private double RPMIN = 3100;
 
   private double Pconstant;
   private double Iconstant;
@@ -82,10 +83,14 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
   public ShooterSubsystem() {
+<<<<<<< HEAD
 
   
 
 
+=======
+    SmartDashboard.putNumber("RPMIN", RPMIN);
+>>>>>>> ShooterTesting
     aimMode = 4;
     cargo_motorController = new MotorController("Shooter Cargo", Constants.Shooter.shooterCargoID);
     kCargoController = cargo_motorController.getPID();
@@ -94,7 +99,14 @@ public class ShooterSubsystem extends SubsystemBase {
     shooter_motorController = new MotorController("Shooter", Constants.Shooter.shooterID, 40, true);
     KShooterController = shooter_motorController.getPID();
     KShooterEncoder = shooter_motorController.getEncoder();
+<<<<<<< HEAD
    
+=======
+    KShooterController.setP(5e-4);
+    KShooterController.setI(6e-7);
+   KShooterController.setIMaxAccum(0.9, 0);
+    KShooterController.setD(0.0);
+>>>>>>> ShooterTesting
 
     hood_motorController = new MotorController("Hood", Constants.Shooter.hoodID);
     KHoodController = hood_motorController.getPID();
@@ -131,6 +143,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // Winds Flywheel using PID control to passed rpm
     // double adjustedRPM = rpm * (Constants.kGearRatioIn / Constants.kGearRatioOut); TODO: reconsider using this
+<<<<<<< HEAD
     if(rpm ==0.0){
       KShooterController.setReference(0.0, CANSparkMax.ControlType.kVoltage);
     }
@@ -143,6 +156,15 @@ public class ShooterSubsystem extends SubsystemBase {
     if (rpm == shooter_motorController.getEncoder().getVelocity() ){
       runCargo(true,false);
     }
+=======
+    if(rpm == 0){
+      KShooterController.setReference(0, CANSparkMax.ControlType.kVoltage);
+      KShooterController.setIAccum(0);
+    } else{
+    currentRPM = rpm;
+    KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
+    }
+>>>>>>> ShooterTesting
   }
 
   public void runCargo(boolean a,boolean reversed) {
@@ -249,7 +271,7 @@ public class ShooterSubsystem extends SubsystemBase {
         windFlywheel(Constants.TARMACRPM);
         break;
       case 4: //Case for TEST mode, just takes an RPM and winds
-        windFlywheel(3700);
+        windFlywheel(SmartDashboard.getNumber("RPMIN", RPMIN));
         break;
     }
     
@@ -258,6 +280,7 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("IAccum",KShooterController.getIAccum());
     SmartDashboard.putNumber("dist", getDistance());
     if(DShooterRPM.getDouble(0.0) != shooter_motorController.getEncoder().getVelocity()){
       DShooterRPM.setDouble(shooter_motorController.getEncoder().getVelocity());
