@@ -24,9 +24,10 @@ public class ShooterSubsystem extends SubsystemBase {
   private RelativeEncoder KHoodEncoder;
   private MotorController cargo_motorController;
   private double currentRPM;
+  private double RPMIN = 3100;
 
   public ShooterSubsystem() {
-    
+    SmartDashboard.putNumber("RPMIN", RPMIN);
     aimMode = 4;
     cargo_motorController = new MotorController("Shooter Cargo", Constants.shooterCargoID);
     shooter_motorController = new MotorController("Shooter", Constants.shooterID, 40, true);
@@ -34,7 +35,7 @@ public class ShooterSubsystem extends SubsystemBase {
     KShooterEncoder = shooter_motorController.getEncoder();
     KShooterController.setP(5e-4);
     KShooterController.setI(6e-7);
-    KShooterController.setIMaxAccum(1, 0);
+   KShooterController.setIMaxAccum(0.9, 0);
     KShooterController.setD(0.0);
 
     KShooterController.setOutputRange(0, 1);
@@ -156,7 +157,7 @@ public class ShooterSubsystem extends SubsystemBase {
         windFlywheel(Constants.TARMACRPM);
         break;
       case 4: //Case for TEST mode, just takes an RPM and winds
-        windFlywheel(3700);
+        windFlywheel(SmartDashboard.getNumber("RPMIN", RPMIN));
         break;
     }
   }
@@ -164,7 +165,7 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("MaxAccum",KShooterController.getIAccum());
+    SmartDashboard.putNumber("IAccum",KShooterController.getIAccum());
     SmartDashboard.putNumber("dist", getDistance());
     SmartDashboard.putNumber("RPM", KShooterEncoder.getVelocity());
   }

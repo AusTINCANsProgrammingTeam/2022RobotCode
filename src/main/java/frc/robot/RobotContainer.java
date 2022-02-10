@@ -55,18 +55,18 @@ public class RobotContainer {
 
   // subsystems
   private static DriveBaseSubsystem driveBaseSubsystem;
-  private static CDSSubsystem CDSSubsystem;
+  private static CDSSubsystem CDSSubsystem = new CDSSubsystem();
   private static IntakeSubsystem intakeSubsystem; 
-  private static ShooterSubsystem shooterSubsystem;
+  private static ShooterSubsystem             shooterSubsystem = new ShooterSubsystem();
   private static LimelightSubsystem limelightSubsystem;
 
   // commands
   private static DriveBaseTeleopCommand driveBaseTeleopCommand;
   private IntakeForwardCommand intakeForwardCommand;
   private IntakeReverseCommand intakeReverseCommand;
-  private ShooterPrime shooterPrime;
-  private CDSForwardCommand CDSForwardCommand;
-  private CDSReverseCommand CDSReverseCommand;
+  private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
+  private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
+  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
   private LimelightAlign limelightAlign;
   private BeamBreakCommand beamBreakCommand;
 
@@ -99,7 +99,7 @@ public class RobotContainer {
           case "CDSSubsystem": 
           {
             System.out.println("CDS enabled");
-            CDSSubsystem = new CDSSubsystem();
+//            CDSSubsystem = new CDSSubsystem();
             break;
           }
           case "IntakeSubsystem":
@@ -111,7 +111,7 @@ public class RobotContainer {
           case "ShooterSubsystem":
           {
             System.out.println("Shooter enabled");
-            shooterSubsystem = new ShooterSubsystem();
+           // shooterSubsystem = new ShooterSubsystem();
             break;
           }
           case "LimelightSubsystem":
@@ -131,8 +131,8 @@ public class RobotContainer {
           }
           case "CDSSubsystem": 
           {
-            CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
-            CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+            //CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
+            //CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
             break;
           }
           case "IntakeSubsystem":
@@ -144,7 +144,7 @@ public class RobotContainer {
           }
           case "ShooterSubsystem":
           {
-            shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
+            //shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
             break;
           }
           case "LimelightSubsystem":
@@ -188,14 +188,14 @@ public class RobotContainer {
 
     // Shooter
     if (shooterSubsystem != null) {
-      buttons[Constants.Xbutton].whenPressed(shooterPrime);
+      buttons[Constants.rightTriggerButton].whenPressed(shooterPrime);
       buttons[Constants.upPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
       buttons[Constants.downPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
     }
 
     if (CDSSubsystem != null) {
-      buttons[Constants.Xbutton].whileHeld(CDSForwardCommand);
-      buttons[Constants.BButton].whileHeld(CDSReverseCommand);
+      buttons[Constants.rightBumperButton].whileHeld(CDSForwardCommand);
+      buttons[Constants.leftBumperButton].whileHeld(CDSReverseCommand);
     }
 	// Limelight
 	if (driveBaseSubsystem != null && limelightSubsystem != null) {
