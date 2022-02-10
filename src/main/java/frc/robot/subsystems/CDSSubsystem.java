@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -86,8 +85,8 @@ public class CDSSubsystem extends SubsystemBase {
   public Color senseColor() {
     ColorSensorV3 colorSensor = new ColorSensorV3(Constants.colorSensorPort);
     Color color = colorSensor.getColor();
+    SmartDashboard.putString("Color Sensed", color.toString());
     return color;
-    
   }
 
-} //Don't delete, for main method.
+}
