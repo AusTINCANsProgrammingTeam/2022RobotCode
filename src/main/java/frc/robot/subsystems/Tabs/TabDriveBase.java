@@ -27,13 +27,14 @@ public class TabDriveBase {
     }
 
     public void periodic() {
-        //Constantly update the board
-        
-        double leftSpeed = mDriveBaseSubsystem.getLeftSpeed();
-        double rightSpeed = mDriveBaseSubsystem.getRightSpeed();
+        // constantly update the board
+        if (mDriveBaseSubsystem != null) { 
+            double leftSpeed = mDriveBaseSubsystem.getLeftSpeed();
+            double rightSpeed = mDriveBaseSubsystem.getRightSpeed();
 
-        sbLeftWheelSpeed.setDouble(leftSpeed);
-        sbRightWheelSpeed.setDouble(rightSpeed);
+            sbLeftWheelSpeed.setDouble(leftSpeed);
+            sbRightWheelSpeed.setDouble(rightSpeed);
+        }
         
     }
 }

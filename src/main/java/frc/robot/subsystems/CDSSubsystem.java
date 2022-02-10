@@ -45,7 +45,7 @@ public class CDSSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("CDS Wheel Controller Speed", -Constants.CDSWheelControllerSpeed);
       
       CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
-      CDSBeltController.getSparkMax().setIdleMode(IdleMode.kBrake);
+      CDSBeltController.setIdleMode(IdleMode.kBrake);
       SmartDashboard.putString("CDS Belt Direction", "Reverse");
       SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
     } else {

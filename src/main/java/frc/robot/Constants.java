@@ -16,6 +16,27 @@ import edu.wpi.first.wpilibj.I2C.Port;
  */
 
 public final class Constants {
+
+    public enum Subsystems {
+        // Change booleans to disable a subsystem in RobotContainer
+        DriveBaseSubsystem(true),
+        CDSSubsystem      (true),
+        IntakeSubsystem   (true),
+        ShooterSubsystem  (true),
+        LimelightSubsystem(false);
+
+        private final Boolean enabled; 
+        
+        Subsystems(Boolean b) {
+            this.enabled = b;
+        }
+
+        public final Boolean isEnabled() {
+            return this.enabled;
+        };
+    }
+    
+
     //Distance calculation constants
     public static final double goalHeight = 8.8; //Height of the goal in ft from the carpet
 
@@ -94,8 +115,8 @@ public final class Constants {
     public static final int rightTriggerButton = 8; // Button for intake 
     public static final int leftBumperButton = 6;  // Button to reverse intake
     public static final int Xbutton = 3; // Button for Shooter
-    public static final int downbutton = 4; // Button for shooter mode
-    public static final int upbutton = 5; // Button for shooter mode
+    public static final int downPOV = 4; // Button for shooter mode
+    public static final int upPOV = 5; // Button for shooter mode
     public static final int AButton = 2; //Button to align Limelight
 
 
