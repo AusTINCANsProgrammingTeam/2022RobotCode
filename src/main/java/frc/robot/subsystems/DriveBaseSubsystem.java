@@ -84,11 +84,16 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_internalRightEncoder.setPositionConversionFactor(2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter);
 
     // tuning PID, experimental values, multiply by 2
-    SmartDashboard.putNumber(m_motorControllers[Constants.driveLeftFrontIndex].getName() + " P Value", 0.00005);
-    SmartDashboard.putNumber(m_motorControllers[Constants.driveLeftRearIndex].getName() + " P Value", 0.00005);
-    SmartDashboard.putNumber(m_motorControllers[Constants.driveRightFrontIndex].getName() + " P Value", 0.00005);
-    SmartDashboard.putNumber(m_motorControllers[Constants.driveRightRearIndex].getName() + " P Value", 0.00005);
+    SmartDashboard.putNumber(m_motorControllers[Constants.driveLeftFrontIndex].getName() + " P Value", 0.000005);
+    SmartDashboard.putNumber(m_motorControllers[Constants.driveLeftRearIndex].getName() + " P Value", 0.000005);
+    SmartDashboard.putNumber(m_motorControllers[Constants.driveRightFrontIndex].getName() + " P Value", 0.000005);
+    SmartDashboard.putNumber(m_motorControllers[Constants.driveRightRearIndex].getName() + " P Value", 0.000005);
 
+
+    SmartDashboard.putNumber(m_motorControllers[Constants.driveRightRearIndex].getName() + " I Value", 0.0000025);
+    SmartDashboard.putNumber(m_motorControllers[Constants.driveRightRearIndex].getName() + " I Value", 0.0000025);
+    SmartDashboard.putNumber(m_motorControllers[Constants.driveRightRearIndex].getName() + " I Value", 0.0000025);
+    SmartDashboard.putNumber(m_motorControllers[Constants.driveRightRearIndex].getName() + " I Value", 0.0000025);
   }
 
   @Override
@@ -108,6 +113,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
       m_odometry.update(
         m_gyro.getRotation2d(), leftPosition, rightPosition);
     }
+
+    SmartDashboard.putNumber("Left IAccum", m_motorControllers[Constants.driveLeftFrontIndex].getPID().getIAccum());
+    SmartDashboard.putNumber("Right IAccum", m_motorControllers[Constants.driveRightFrontIndex].getPID().getIAccum());
 
     // Update the smart dashboard in here, runs a for loop so it does it for every motor
     for(int i = 0; i < m_motorControllers.length; i++) {
