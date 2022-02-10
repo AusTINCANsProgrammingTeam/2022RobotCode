@@ -3,10 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -19,7 +18,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 
 import frc.robot.common.hardware.MotorController;
-
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -36,9 +35,8 @@ public class ShooterSubsystem extends SubsystemBase {
   private RelativeEncoder KShooterEncoder;
   private RelativeEncoder KHoodEncoder;
   private MotorController cargo_motorController;
-  private SparkMaxPIDController kCargoController;
   private RelativeEncoder kCargoEncoder;
-  private NetworkTableEntry sbShooterRPM;
+  private SparkMaxPIDController kCargoController;
   private double currentRPM;
 
   private double Pconstant;
@@ -60,12 +58,17 @@ public class ShooterSubsystem extends SubsystemBase {
   private NetworkTableEntry PID_I = shooterTab.addPersistent("PID I", Constants.Shooter.kI).withPosition(1, 2).getEntry();
   private NetworkTableEntry PID_D = shooterTab.addPersistent("PID D", Constants.Shooter.kD).withPosition(2, 2).getEntry();
   private NetworkTableEntry PID_F = shooterTab.addPersistent("PID F", Constants.Shooter.kF).withPosition(0,1).getEntry();
+  private NetworkTableEntry PID_Izone = shooterTab.addPersistent("PID I Range", Constants.Shooter.kIZone).withPosition(4, 2).getEntry();
+  private NetworkTableEntry PID_MaxOutput = shooterTab.addPersistent("PID Peak Output", Constants.Shooter.kMaxOutput).withPosition(5, 2).getEntry();
+
   private NetworkTableEntry ShooterReverted = shooterTab.addPersistent("Shooter Reverted", false).withPosition(4,1).getEntry();
   private NetworkTableEntry IShootingMode = shooterTab.add("Shooting Mode",1).withPosition(0, 1).getEntry();
   private NetworkTableEntry DDistance = shooterTab.add("Distance to goal", 0.0).withPosition(1,1).getEntry();
   private NetworkTableEntry DShooterRPM = shooterTab.add("Shooter RPM", 0.0).withPosition(2,1).getEntry();
   private NetworkTableEntry BCargoRunning = shooterTab.add("Is the CDS Running",false).withPosition(3, 1).getEntry();
   private NetworkTableEntry DShooterRPMInput = shooterTab.add("Shooter RPM Input",0.0).withPosition(3, 2).getEntry();
+
+  
   
   //private NetworkTableEntry PID_F = shooterTab.addPersistent("PID F", Constants.Shooter.).withPosition(3, 2).getEntry();
   //private NetworkTableEntry PID_Izone = shooterTab.addPersistent("PID I Range", Constants.Shooter.).withPosition(4, 2).getEntry();
@@ -138,16 +141,18 @@ public class ShooterSubsystem extends SubsystemBase {
     }
     
     if (rpm == shooter_motorController.getEncoder().getVelocity() ){
-      runCargo(true);
+      runCargo(true,false);
     }
   }
 
-  public void runCargo(boolean a) {
+  public void runCargo(boolean a,boolean reversed) {
     if(a){
-      cargo_motorController.setSpeed(1.0);
+      if(reversed){cargo_motorController.setSpeed(-0.2);}
+      else{cargo_motorController.setSpeed(0.2);}
     }else{
       cargo_motorController.setSpeed(0.0);
     }
+
   }
 
   public boolean wheelReady(){
@@ -244,7 +249,7 @@ public class ShooterSubsystem extends SubsystemBase {
         windFlywheel(Constants.TARMACRPM);
         break;
       case 4: //Case for TEST mode, just takes an RPM and winds
-        windFlywheel(3000.0);
+        windFlywheel(3700);
         break;
     }
     

@@ -15,6 +15,27 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 
 public final class Constants {
+
+    public enum Subsystems {
+        // Change booleans to disable a subsystem in RobotContainer
+        DriveBaseSubsystem(false),
+        CDSSubsystem      (true),
+        IntakeSubsystem   (true),
+        ShooterSubsystem  (true),
+        LimelightSubsystem(false);
+
+        private final Boolean enabled; 
+        
+        Subsystems(Boolean b) {
+            this.enabled = b;
+        }
+
+        public final Boolean isEnabled() {
+            return this.enabled;
+        };
+    }
+    
+
     //Distance calculation constants
     public static final double goalHeight = 8.8; //Height of the goal in ft from the carpet
 
@@ -26,8 +47,8 @@ public final class Constants {
 
     public static final int driveRightFront = 1;
     public static final int driveRightRear = 2;
-    public static final int driveLeftFront = 3;
-    public static final int driveLeftRear = 4;
+    public static final int driveLeftFront = 7;
+    public static final int driveLeftRear = 8;
 
     // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
     public static final int driveLeftFrontIndex = 0;
@@ -66,7 +87,7 @@ public final class Constants {
     public static final int DBRightJoystickAxisY = 3;
 
     // Intake Contstants
-    public static final int intakeMotorOneID = 11;
+    public static final int intakeMotorOneID = 3;
     public static final int intakeMotorTwoID = 12;
     public static final int intakeWheelOneID = 3;
     public static final int intakeWheelTwoID = 4;
@@ -76,23 +97,26 @@ public final class Constants {
     public static final int finalBallSensorChannel = 2;
 
     //CDS Constants
-    public static final int CDSBeltID = 13;
-    public static final int CDSWheelControllerID = 14;
-    public static final double CDSBeltSpeed = 0.15;
-    public static final double CDSWheelControllerSpeed = 0.25;
+    public static final int CDSBeltID = 6;
+    public static final int CDSWheelControllerOneID = 11;
+    public static final int CDSWheelControllerTwoID = 12;
+    public static final double CDSBeltSpeed = 0.25;
+    public static final double CDSWheelControllerSpeed = 0.15;
 
     //Joystick Constants
     public static final int portNumber = 0;
     public static final int joystickButtonNumberOne = 1;
     public static final int joystickButtonNumberTwo = 2;
-    public static final int BButton = 2; // Button for hopper
-    public static final int YButton = 4; // Button for reverse hopper
-    public static final int rightBumperButton = 5; // Button for intake
+    public static final int BButton = 1; // Button for forward cds
+    public static final int YButton = 4; // Button for reverse cds
+    public static final int rightBumperButton = 5; // Button for intake 
+    public static final int rightTriggerButton = 8; // Button for intake 
     public static final int leftBumperButton = 6;  // Button to reverse intake
     public static final int Xbutton = 3; // Button for Shooter
-    public static final int downbutton = 4; // Button for shooter mode
-    public static final int upbutton = 5; // Button for shooter mode
+    public static final int downPOV = 4; // Button for shooter mode
+    public static final int upPOV = 5; // Button for shooter mode
     public static final int AButton = 2; //Button to align Limelight
+
 
     // Preset aim constants
     public static final double LOWRPM = 0.0; // RPM that the LOW aimMode winds to
@@ -117,13 +141,15 @@ public final class Constants {
     public static final double gearRatioOut = 14;
     public static final double gearDiameter = 4; // Gear diameter in inches
     public static final double ballFlywheelratio = 2;
-    public static final int shooterCargoID = 9;
+    public static final int shooterCargoID = 5;
     public static final double cargoRotation = 3;
 
     public static final double kP =6e-4;
     public static final double kI = 1e-6;
     public static final double kD = 0.0;
     public static final double kF = 0.0;
+    public static final double kIZone = 0.0;
+    public static final double kMaxOutput = 0.0;
     
     }
 }

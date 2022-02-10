@@ -3,16 +3,21 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CDSSubsystem;
+import frc.robot.subsystems.ShooterSubsystem; 
 
 public class CDSReverseCommand extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
   private final CDSSubsystem mCDSSubsystem;
-
-  public CDSReverseCommand(CDSSubsystem CDSSubsystem) {
+  private final ShooterSubsystem mShooterSubsystem;
+  
+  public CDSReverseCommand(CDSSubsystem CDSSubsystem, ShooterSubsystem shooterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(CDSSubsystem);
+    addRequirements(shooterSubsystem);
+    mShooterSubsystem = shooterSubsystem;
     mCDSSubsystem = CDSSubsystem;
   }
 
@@ -20,6 +25,7 @@ public class CDSReverseCommand extends CommandBase {
   @Override
   public void initialize() {
     mCDSSubsystem.CDSBeltWheelControllerToggle(true);
+    mShooterSubsystem.runCargo(true, false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -30,6 +36,7 @@ public class CDSReverseCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     mCDSSubsystem.stopCDS();
+    mShooterSubsystem.runCargo(false, false);
   }
 
   // Returns true when the command should end.
