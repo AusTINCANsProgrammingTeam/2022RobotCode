@@ -33,7 +33,6 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
-import frc.robot.commands.BeamBreakCommand;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.ShooterPrime;
 import frc.robot.commands.CDSForwardCommand;
@@ -68,7 +67,6 @@ public class RobotContainer {
   private CDSForwardCommand CDSForwardCommand;
   private CDSReverseCommand CDSReverseCommand;
   private LimelightAlign limelightAlign;
-  private BeamBreakCommand beamBreakCommand;
 
   // auton
   // private Trajectory[] mTrajectories;  // multiple trajectories
@@ -104,6 +102,7 @@ public class RobotContainer {
             CDSSubsystem = new CDSSubsystem();
             CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
             CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+            CDSSubsystem.getAllianceColor();
             break;
           }
           case "IntakeSubsystem":
@@ -112,7 +111,6 @@ public class RobotContainer {
             intakeSubsystem = new IntakeSubsystem(); 
             intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
             intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
-            beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
             break;
           }
           case "ShooterSubsystem":

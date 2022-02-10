@@ -79,6 +79,7 @@ public class CDSSubsystem extends SubsystemBase {
 
   public Alliance getAllianceColor() {
     Alliance alliance = DriverStation.getAlliance();
+    SmartDashboard.putString("Alliance Color", alliance.toString());
     return alliance;
   }
 
@@ -86,6 +87,7 @@ public class CDSSubsystem extends SubsystemBase {
     ColorSensorV3 colorSensor = new ColorSensorV3(Constants.colorSensorPort);
     Color color = colorSensor.getColor();
     return color;
+    
   }
 
 } //Don't delete, for main method.
