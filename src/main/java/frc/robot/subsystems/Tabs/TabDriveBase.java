@@ -36,19 +36,20 @@ public class TabDriveBase {
 
     public void periodic() {
         //Constantly update the board
-        
-        double leftSpeed = mDriveBaseSubsystem.getLeftSpeed();
-        double rightSpeed = mDriveBaseSubsystem.getRightSpeed();
-        double gyroAngle = mDriveBaseSubsystem.getGyroAngle();
-        double velocityConversionFactor = mDriveBaseSubsystem.getVelocityConversionFactor();
-        double positions[] = mDriveBaseSubsystem.getPositions();
+        if(mDriveBaseSubsystem != null) {
+            double leftSpeed = mDriveBaseSubsystem.getLeftSpeed();
+            double rightSpeed = mDriveBaseSubsystem.getRightSpeed();
+            double gyroAngle = mDriveBaseSubsystem.getGyroAngle();
+            double velocityConversionFactor = mDriveBaseSubsystem.getVelocityConversionFactor();
+            double positions[] = mDriveBaseSubsystem.getPositions();
 
-        sbLeftWheelSpeed.setDouble(leftSpeed);
-        sbRightWheelSpeed.setDouble(rightSpeed);
-        sbGyroAngle.setDouble(gyroAngle);
-        sbVelocityConversionFactor.setDouble(velocityConversionFactor);
-        sbLeftPosition.setDouble(positions[0]);
-        sbRightPosition.setDouble(positions[1]);
+            sbLeftWheelSpeed.setDouble(leftSpeed);
+            sbRightWheelSpeed.setDouble(rightSpeed);
+            sbGyroAngle.setDouble(gyroAngle);
+            sbVelocityConversionFactor.setDouble(velocityConversionFactor);
+            sbLeftPosition.setDouble(positions[0]);
+            sbRightPosition.setDouble(positions[1]);
+        }
         
     }
 }

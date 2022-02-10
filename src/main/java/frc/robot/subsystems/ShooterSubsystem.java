@@ -3,13 +3,10 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 
 import java.lang.Math;
 import com.revrobotics.CANSparkMax;
@@ -26,29 +23,24 @@ public class ShooterSubsystem extends SubsystemBase {
   private RelativeEncoder KShooterEncoder;
   private RelativeEncoder KHoodEncoder;
   private MotorController cargo_motorController;
-  private SparkMaxPIDController kCargoController;
-  private RelativeEncoder kCargoEncoder;
-  private NetworkTableEntry sbShooterRPM;
   private double currentRPM;
 
   public ShooterSubsystem() {
-    sbShooterRPM = RobotContainer.debugTab.add("shooterRPM", 0).getEntry();
-
+    
     aimMode = 4;
     cargo_motorController = new MotorController("Shooter Cargo", Constants.shooterCargoID);
-    kCargoController = cargo_motorController.getPID();
-    kCargoEncoder = cargo_motorController.getEncoder();
-
     shooter_motorController = new MotorController("Shooter", Constants.shooterID, 40, true);
     KShooterController = shooter_motorController.getPID();
     KShooterEncoder = shooter_motorController.getEncoder();
-    KShooterController.setP(6e-4);
-    KShooterController.setI(1e-6);
+    KShooterController.setP(5e-4);
+    KShooterController.setI(6e-7);
     KShooterController.setD(0.0);
 
+    KShooterController.setOutputRange(0, 1);
+    /*
     hood_motorController = new MotorController("Hood", Constants.hoodID);
     KHoodController = hood_motorController.getPID();
-    KHoodEncoder = shooter_motorController.getEncoder();
+    KHoodEncoder = shooter_motorController.getEncoder();*/
 
   }
 
@@ -65,12 +57,14 @@ public class ShooterSubsystem extends SubsystemBase {
     KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
   }
 
-  public void runCargo(boolean a) {
+  public void runCargo(boolean a,boolean reversed) {
     if(a){
-      cargo_motorController.setSpeed(1.0);
+      if(reversed){cargo_motorController.setSpeed(-0.2);}
+      else{cargo_motorController.setSpeed(0.2);}
     }else{
       cargo_motorController.setSpeed(0.0);
     }
+
   }
 
   public boolean wheelReady(){
@@ -156,7 +150,7 @@ public class ShooterSubsystem extends SubsystemBase {
         windFlywheel(Constants.TARMACRPM);
         break;
       case 4: //Case for TEST mode, just takes an RPM and winds
-        windFlywheel(3000.0);
+        windFlywheel(3700);
         break;
     }
   }
@@ -165,6 +159,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("dist", getDistance());
+    SmartDashboard.putNumber("RPM", KShooterEncoder.getVelocity());
   }
 
 }

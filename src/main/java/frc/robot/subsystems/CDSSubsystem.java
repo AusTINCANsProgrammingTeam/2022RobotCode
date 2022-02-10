@@ -6,6 +6,9 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.common.hardware.MotorController;
 //import edu.wpi.first.wpilibj.DigitalInput;
@@ -28,21 +31,22 @@ public class CDSSubsystem extends SubsystemBase {
 
   public void CDSBeltWheelControllerToggle(boolean reverse) {
     if (reverse) {
-      CDSWheelControllerOne.getSparkMax().set(-Constants.CDSWheelControllerSpeed);
+      CDSWheelControllerOne.getSparkMax().set(Constants.CDSWheelControllerSpeed);
       SmartDashboard.putString("CDS Wheel Controller Direction", "Reverse");
       SmartDashboard.putNumber("CDS Wheel Controller Speed", -Constants.CDSWheelControllerSpeed);
       
       CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
+      CDSBeltController.setIdleMode(IdleMode.kBrake);
       SmartDashboard.putString("CDS Belt Direction", "Reverse");
-      SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
+      SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
     } else {
       CDSWheelControllerOne.getSparkMax().set(Constants.CDSWheelControllerSpeed);
       SmartDashboard.putString("CDS Wheel Controller Direction", "Forward");
       SmartDashboard.putNumber("CDS Wheel Controller Speed", Constants.CDSWheelControllerSpeed);
       
-      CDSBeltController.getSparkMax().set(Constants.CDSBeltSpeed);
+      CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
       SmartDashboard.putString("CDS Belt Direction", "Forward");
-      SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
+      SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
     }
   }
 

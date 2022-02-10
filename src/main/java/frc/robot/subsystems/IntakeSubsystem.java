@@ -30,20 +30,21 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public IntakeSubsystem() {
     intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID, 40);
-    //intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.intakeMotorTwoID, 40);
+    //TODO: Gutted code
+    //intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.intakeMotorTwoID, 40); 
     //CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.intakeWheelOneID, 40);
     //CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.intakeWheelTwoID, 40);
 
-    frontBallSensor = new DigitalInput(Constants.initialBallSensorChannel);
+   /* frontBallSensor = new DigitalInput(Constants.initialBallSensorChannel);
     middleBallSensor = new DigitalInput(Constants.middleBallSensorChannel);
-    finalBallSensor = new DigitalInput(Constants.finalBallSensorChannel); 
+    finalBallSensor = new DigitalInput(Constants.finalBallSensorChannel); */
 
     DigitalInput[] sensorArray = {frontBallSensor, middleBallSensor, finalBallSensor};
-
+    //TODO: Gutted code
     // Remove invert=true parameter if wheels aren't running correctly
     //CDSWheelControllerOne.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
     //CDSWheelControllerTwo.getSparkMax().follow(intakeMotorControllerOne.getSparkMax(), true);
-    intakeMotorControllerTwo.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
+    //intakeMotorControllerTwo.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
   }
 
   public void toggleIntake(boolean reverse) {
@@ -62,7 +63,8 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeMotorControllerOne.getSparkMax().set(0.0);
     SmartDashboard.putNumber("Intake Motor Speed", 0.0);
   }
-
+    //TODO: Gutted code
+  /*
   public boolean getDirection() {
     // true = inverted, false = forward
     if (intakeMotorControllerOne.getSparkMax().get() > 0) {
@@ -71,7 +73,8 @@ public class IntakeSubsystem extends SubsystemBase {
     return true;
     }
   }
-/*
+  */
+
   public boolean[] getBeamBreakStatus() {
     boolean frontStatus = frontBallSensor.get();
     boolean middleStatus = middleBallSensor.get();
@@ -79,7 +82,12 @@ public class IntakeSubsystem extends SubsystemBase {
     boolean[] beamBreakArray = {frontStatus, middleStatus, finalStatus};
     return beamBreakArray;
   }
+  
+  public void periodic() {
+    SmartDashboard.putBooleanArray("Beam Break", getBeamBreakStatus());
+  }
 
+  /*
   public int getBallCount() {
     boolean[] beamBreakStatuses = this.getBeamBreakStatus();
     // TODO: Possibly add more beambreaks once done with testing.
@@ -92,14 +100,13 @@ public class IntakeSubsystem extends SubsystemBase {
     }
     return ballCount;
   }
-*/
+
   public void expelBalls() {
-    /*
     if (ballCount > 2) {
       this.toggleIntake(true);
     }
     this.stopIntake();
-    */
   }
+  */
 
 }  //Don't delete, this is for main method.
