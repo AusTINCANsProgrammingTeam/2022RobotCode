@@ -188,7 +188,7 @@ public class RobotContainer {
 
     // Shooter
     if (shooterSubsystem != null) {
-      buttons[Constants.rightTriggerButton].whenPressed(shooterPrime);
+      buttons[Constants.rightTriggerButton].whileHeld(shooterPrime);
       buttons[Constants.upPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
       buttons[Constants.downPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
     }

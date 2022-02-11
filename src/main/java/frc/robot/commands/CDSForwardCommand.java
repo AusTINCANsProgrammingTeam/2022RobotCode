@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import org.opencv.features2d.FastFeatureDetector;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ShooterSubsystem; 
@@ -26,6 +27,7 @@ public class CDSForwardCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
     mCDSSubsystem.CDSBeltWheelControllerToggle(false);
     mShooterSubsystem.runCargo(true, false);
     
