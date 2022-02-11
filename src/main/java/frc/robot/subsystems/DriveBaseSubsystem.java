@@ -77,7 +77,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   // Normal Arcade Drive
   public void arcadeDrive() {
     m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.DBLeftJoystickAxisY), 
-                                      m_driverJoystick.getRawAxis(Constants.DBRightJoystickAxisX));
+                                      -1* m_driverJoystick.getRawAxis(Constants.DBRightJoystickAxisX));
   }
 
   // Arcade Drive where you can only move forwards and backwards for testing
