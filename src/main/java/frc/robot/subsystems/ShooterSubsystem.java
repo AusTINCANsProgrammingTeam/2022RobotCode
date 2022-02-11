@@ -45,7 +45,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private double Dconstant;
   private double Fconstant;
   private double IMaxAccumconstant;
-  private double IMaxAccumIDconstantl;
+  private int IMaxAccumIDconstant;
   private int I_Zone;
   private double MaxOutput;
 
@@ -116,12 +116,12 @@ public class ShooterSubsystem extends SubsystemBase {
       Dconstant = PID_D.getDouble(0);
       Fconstant = PID_F.getDouble(0);
       IMaxAccumconstant = PID_IMaxAccum.getDouble(0);
-      IMaxAccumIDconstantl =(int)PID_IMaxAccumID.getDouble(0);
+      IMaxAccumIDconstant =(int)PID_IMaxAccumID.getDouble(0);
       shooter_motorController.getPID().setP(Pconstant);
       shooter_motorController.getPID().setI(Iconstant);
       shooter_motorController.getPID().setD(Dconstant);
       shooter_motorController.getPID().setFF(Fconstant);
-      shooter_motorController.getPID().setIMaxAccum(IMaxAccumconstant,IMaxAccumIDconstantl);
+      shooter_motorController.getPID().setIMaxAccum(IMaxAccumconstant, IMaxAccumIDconstant);
     }
   }
 
@@ -148,16 +148,15 @@ public class ShooterSubsystem extends SubsystemBase {
     KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
     }
     
-    if (rpm == shooter_motorController.getEncoder().getVelocity() ){
+    if (wheelReady()){
       runCargo(true,false);
     }
-    if(rpm == 0){
-      KShooterController.setReference(0, CANSparkMax.ControlType.kVoltage);
-      KShooterController.setIAccum(0);
-    } else{
-    currentRPM = rpm;
-    KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
+    else{
+      runCargo(false, false);
     }
+   
+      //KShooterController.setIAccum(0);
+
   }
 
   public void runCargo(boolean a,boolean reversed) {
@@ -172,6 +171,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public boolean wheelReady(){
     double flywheelSpeed = KShooterEncoder.getVelocity();
+    currentRPM = DShooterRPMInput.getDouble(0);
     if (flywheelSpeed > currentRPM - 15 && flywheelSpeed < currentRPM + 15) {
       return true;
     }
