@@ -47,9 +47,11 @@ public class ClimbSubsystem extends SubsystemBase {
   public void enableClimb(boolean on, boolean up){
     if (on) {
       if (up) {
+        m_climbMotorControllerOne.getEncoder().setPosition(0);
         m_climbMotorControllerOne.getPID().setReference(25, CANSparkMax.ControlType.kPosition);
         SmartDashboard.putNumber("Climb Hight", m_climbMotorControllerOne.getEncoder().getPosition());
       } else {
+        m_climbMotorControllerOne.getEncoder().setPosition(0);
         m_climbMotorControllerOne.getPID().setReference(-25, CANSparkMax.ControlType.kPosition);
         SmartDashboard.putNumber("Climb Hight", m_climbMotorControllerOne.getEncoder().getPosition());
       }
