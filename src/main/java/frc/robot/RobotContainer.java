@@ -100,9 +100,9 @@ public class RobotContainer {
           {
             System.out.println("CDS enabled");
             CDSSubsystem = new CDSSubsystem();
-            CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
-            CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
-            CDSSubsystem.getAllianceColor();
+            //CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
+            //CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+            //CDSSubsystem.getAllianceColor();
             break;
           }
           case "IntakeSubsystem":
@@ -117,7 +117,6 @@ public class RobotContainer {
           {
             System.out.println("Shooter enabled");
             shooterSubsystem = new ShooterSubsystem();
-            shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
             break;
           }
           case "LimelightSubsystem":
@@ -162,13 +161,18 @@ public class RobotContainer {
     }
 
     // Shooter
-    if (shooterSubsystem != null) {
+    if (shooterSubsystem != null && limelightSubsystem != null) {
+      shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
       buttons[Constants.Xbutton].whenPressed(shooterPrime);
       buttons[Constants.upPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
       buttons[Constants.downPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
     }
 
-    if (CDSSubsystem != null) {
+    if (CDSSubsystem != null && shooterSubsystem != null) {
+      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
+      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+      CDSSubsystem.getAllianceColor();
+
       buttons[Constants.Xbutton].whileHeld(CDSForwardCommand);
       buttons[Constants.BButton].whileHeld(CDSReverseCommand);
     }

@@ -22,7 +22,7 @@ public final class Constants {
         DriveBaseSubsystem(false),
         CDSSubsystem      (true),
         IntakeSubsystem   (false),
-        ShooterSubsystem  (false),
+        ShooterSubsystem  (true),
         LimelightSubsystem(false);
 
         private final Boolean enabled; 
