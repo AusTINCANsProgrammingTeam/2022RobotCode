@@ -99,7 +99,7 @@ public class RobotContainer {
           case "CDSSubsystem": 
           {
             System.out.println("CDS enabled");
-//            CDSSubsystem = new CDSSubsystem();
+            CDSSubsystem = new CDSSubsystem();
             break;
           }
           case "IntakeSubsystem":
@@ -111,45 +111,13 @@ public class RobotContainer {
           case "ShooterSubsystem":
           {
             System.out.println("Shooter enabled");
-           // shooterSubsystem = new ShooterSubsystem();
+            shooterSubsystem = new ShooterSubsystem();
             break;
           }
           case "LimelightSubsystem":
           {
             System.out.println("Limelight enabled");
             limelightSubsystem = new LimelightSubsystem();
-            break;
-          }
-
-        }
-        switch (sub.toString()) {
-          case "DriveBaseSubsystem": 
-          {
-            driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
-            driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
-            break;
-          }
-          case "CDSSubsystem": 
-          {
-            //CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
-            //CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
-            break;
-          }
-          case "IntakeSubsystem":
-          {
-            intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
-            intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
-            beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
-            break;
-          }
-          case "ShooterSubsystem":
-          {
-            //shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
-            break;
-          }
-          case "LimelightSubsystem":
-          {
-            limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
             break;
           }
 
@@ -179,6 +147,26 @@ public class RobotContainer {
   // it to a {@link
   // edu.wpi.first.wpilibj2.command.button.JoystickButton}.
   private void configureButtonBindings() {
+    //Initializes commands based on enabled subsystems
+      if(driveBaseSubsystem != null){
+        driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
+        driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
+      }
+      if(CDSSubsystem != null && shooterSubsystem != null){
+        CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
+        CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+      }
+      if(intakeSubsystem != null){
+        intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
+        intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
+        beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
+      }
+      if(shooterSubsystem != null && limelightSubsystem != null && CDSSubsystem != null){
+        shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
+      }
+      if(limelightSubsystem != null){
+        limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
+      }
 
     // Intake
     if(intakeSubsystem != null) {
