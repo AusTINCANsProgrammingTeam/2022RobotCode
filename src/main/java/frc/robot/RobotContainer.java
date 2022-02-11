@@ -161,7 +161,7 @@ public class RobotContainer {
     }
 
     // Shooter
-    if (shooterSubsystem != null && limelightSubsystem != null) {
+    if (shooterSubsystem != null) {
       shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
       buttons[Constants.Xbutton].whenPressed(shooterPrime);
       buttons[Constants.upPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
@@ -171,7 +171,6 @@ public class RobotContainer {
     if (CDSSubsystem != null && shooterSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
       CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
-      CDSSubsystem.getAllianceColor();
 
       buttons[Constants.Xbutton].whileHeld(CDSForwardCommand);
       buttons[Constants.BButton].whileHeld(CDSReverseCommand);
