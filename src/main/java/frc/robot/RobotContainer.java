@@ -155,40 +155,25 @@ public class RobotContainer {
       if(CDSSubsystem != null && shooterSubsystem != null){
         CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
         CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+        buttons[Constants.rightBumperButton].whileHeld(CDSForwardCommand);
+        buttons[Constants.leftBumperButton].whileHeld(CDSReverseCommand);
       }
       if(intakeSubsystem != null){
         intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
         intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
         beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
+        buttons[Constants.leftBumperButton].whileHeld(intakeForwardCommand);
+        buttons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
       }
       if(shooterSubsystem != null && limelightSubsystem != null && CDSSubsystem != null){
         shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
+        buttons[Constants.rightTriggerButton].whenPressed(shooterPrime);
+        buttons[Constants.upPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
+        buttons[Constants.downPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
       }
-      if(limelightSubsystem != null){
+      if(limelightSubsystem != null && driveBaseSubsystem != null){
         limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
       }
-
-    // Intake
-    if(intakeSubsystem != null) {
-      buttons[Constants.leftBumperButton].whileHeld(intakeForwardCommand);
-      buttons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
-    }
-
-    // Shooter
-    if (shooterSubsystem != null) {
-      buttons[Constants.rightTriggerButton].whenPressed(shooterPrime);
-      buttons[Constants.upPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
-      buttons[Constants.downPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
-    }
-
-    if (CDSSubsystem != null) {
-      buttons[Constants.rightBumperButton].whileHeld(CDSForwardCommand);
-      buttons[Constants.leftBumperButton].whileHeld(CDSReverseCommand);
-    }
-	// Limelight
-	if (driveBaseSubsystem != null && limelightSubsystem != null) {
-      buttons[Constants.AButton].whenPressed(limelightAlign);
-    }
   }
 
   private void initializeTrajectories() throws IOException {
