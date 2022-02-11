@@ -89,7 +89,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public ShooterSubsystem() {
     SmartDashboard.putNumber("RPMIN", RPMIN);
     aimMode = 4;
-    cargo_motorController = new MotorController("Shooter Cargo", Constants.Shooter.shooterCargoID);
+    cargo_motorController = new MotorController("Shooter Cargo", Constants.Shooter.shooterCargoID,40,true);
     kCargoController = cargo_motorController.getPID();
     kCargoEncoder = cargo_motorController.getEncoder();
     shooter_motorController = new MotorController("Shooter", Constants.Shooter.shooterID, 40, true);
@@ -101,7 +101,7 @@ public class ShooterSubsystem extends SubsystemBase {
     //KShooterController.setIMaxAccum(0.9, 0);
     //KShooterController.setD(0.0);
 
-    hood_motorController = new MotorController("Hood", Constants.Shooter.hoodID);
+    hood_motorController = new MotorController("Hood", Constants.Shooter.hoodID,40,true);
     KHoodController = hood_motorController.getPID();
     KHoodEncoder = shooter_motorController.getEncoder();
 

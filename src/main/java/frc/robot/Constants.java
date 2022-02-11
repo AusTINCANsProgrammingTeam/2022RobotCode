@@ -127,9 +127,9 @@ public final class Constants {
     public static final double TARMACAngle = 0.0; // Angle that the TARMAC aimMode adjusts to
     
     // Shooter Constants
-    public static final class Shooter{
-    public static final int shooterID = 7; // ID of the shooter
-    public static final int hoodID = 8; // ID of the hood;
+    public static class Shooter{
+    public static final int shooterID = 4; // ID of the shooter
+    public static final int hoodID = 0; // ID of the hood;
     public static final double shooterHeight = 3;
     public static final double highHeight = 8.0 + 8.0/12.0; // Height of the high goal in ft from the carpet
     public static final double lowHeight = 5.0 + 7.75/12.0; // Height of the low goal in ft from the carpet
@@ -153,5 +153,6 @@ public final class Constants {
     public static final double kMaxI = 0.9;
     public static final double kMaxISlotId = 0;
     
-    }
+    
+}
 }

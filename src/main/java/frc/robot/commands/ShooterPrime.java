@@ -20,7 +20,7 @@ public class ShooterPrime extends CommandBase {
   public ShooterPrime(ShooterSubsystem shooterSubsystem, LimelightSubsystem limelightSubsystem, CDSSubsystem cdsSubsystem) {
     addRequirements(shooterSubsystem);
     m_ShooterSubsystem = shooterSubsystem;
-    m_LimelightSubsystem = limelightSubsystem;
+    //m_LimelightSubsystem = limelightSubsystem;
     m_CDSSubsystem = cdsSubsystem;
     SmartDashboard.putBoolean("wheelReady", false);
 
@@ -30,16 +30,13 @@ public class ShooterPrime extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_ShooterSubsystem.prime();
-    i = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     m_ShooterSubsystem.windFlywheel(5.0);;
-    i = 0;
-    SmartDashboard.putNumber("please", 1);
+  
   }
 
   // Called once the command ends or is interrupted.
@@ -47,8 +44,7 @@ public class ShooterPrime extends CommandBase {
   public void end(boolean interrupted) {
     m_ShooterSubsystem.runCargo(false,false);
     m_ShooterSubsystem.windFlywheel(0);
-    m_CDSSubsystem.stopCDS();
-    SmartDashboard.putBoolean("wheelReady", false);
+    //SmartDashboard.putBoolean("wheelReady", false);
   }
 
   // Returns true when the command should end.
