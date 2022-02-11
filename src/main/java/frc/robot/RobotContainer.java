@@ -201,7 +201,7 @@ public class RobotContainer {
       //Ramsete Command for Pathweaver
       RamseteCommand ramseteCommand =
       new RamseteCommand(
-          trajectory,
+        trajectory,
         driveBaseSubsystem::getPose,
         new RamseteController(Constants.ramseteB, Constants.ramseteZeta), // ramsete follower to follow trajectory
         Constants.driveKinematics,
@@ -212,9 +212,7 @@ public class RobotContainer {
 
       return ramseteCommand.andThen(() -> driveBaseSubsystem.acceptWheelSpeeds(0,0));
     }
-    else {
-      return null;
-    }
+    return null;
   }
   
 

@@ -13,7 +13,10 @@ public class IntakeForwardCommand extends CommandBase {
   
   public IntakeForwardCommand(IntakeSubsystem intakeSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intakeSubsystem); 
+    if(intakeSubsystem != null) {
+      addRequirements(intakeSubsystem); 
+    }
+    
     mIntakeSubsystem = intakeSubsystem;
   }
 

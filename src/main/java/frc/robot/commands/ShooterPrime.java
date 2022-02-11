@@ -18,7 +18,9 @@ public class ShooterPrime extends CommandBase {
 
   /** Creates a new ShooterPrimary. */
   public ShooterPrime(ShooterSubsystem shooterSubsystem, LimelightSubsystem limelightSubsystem, CDSSubsystem cdsSubsystem) {
-    addRequirements(shooterSubsystem);
+    if(shooterSubsystem != null) {
+      addRequirements(shooterSubsystem);
+    }
     m_ShooterSubsystem = shooterSubsystem;
     m_LimelightSubsystem = limelightSubsystem;
     m_CDSSubsystem = cdsSubsystem;

@@ -44,9 +44,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {  
     m_driverJoystick = joystick;
     m_motorControllers = new MotorController[4];
-    m_gyro = new AHRS(I2C.Port.kMXP);
-    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d()); 
-    
+    m_gyro = new AHRS(I2C.Port.kMXP);    
 
     // motor controllers
     m_motorControllers[Constants.driveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.driveLeftFront, Constants.driveBaseCurrentLimit, true);
@@ -68,32 +66,37 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     this.usingExternal = usingExternal; // gets key if using external or internal encoders
 
-    // external encoders            
-    m_extLeftEncoder = new Encoder(Constants.leftEncoderDIOone, Constants.leftEncoderDIOtwo, 
-    false, Encoder.EncodingType.k2X); // TODO: confirm correct configuration for encoder
-    m_extRightEncoder = new Encoder(Constants.rightEncoderDIOone, Constants.rightEncoderDIOtwo, 
-    false, Encoder.EncodingType.k2X);
+    // // external encoders            
+    // m_extLeftEncoder = new Encoder(Constants.leftEncoderDIOone, Constants.leftEncoderDIOtwo, 
+    // false, Encoder.EncodingType.k2X); // TODO: confirm correct configuration for encoder
+    // m_extRightEncoder = new Encoder(Constants.rightEncoderDIOone, Constants.rightEncoderDIOtwo, 
+    // false, Encoder.EncodingType.k2X);
 
-    m_extLeftEncoder.setReverseDirection(true);
+    // m_extLeftEncoder.setReverseDirection(true);
     
     // internal encoders
     m_internalLeftEncoder = m_motorControllers[Constants.driveLeftFrontIndex].getEncoder();
     m_internalRightEncoder = m_motorControllers[Constants.driveRightFrontIndex].getEncoder();
 
-    m_internalLeftEncoder.setPositionConversionFactor(2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter); // calculate circumference then convert to meters
-    m_internalRightEncoder.setPositionConversionFactor(2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter);
+    // calculate circumference then convert to meters
+    // wheel radius in inches, want to convert meters
+    m_internalLeftEncoder.setPositionConversionFactor(Constants.gearRatio * 2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter); 
+    m_internalRightEncoder.setPositionConversionFactor(Constants.gearRatio * 2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter);
+
+    resetEncoders();
+    
+    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d()); 
 
     // tuning PID, experimental values, multiply by 2
-    SmartDashboard.putNumber(m_motorControllers[Constants.driveLeftFrontIndex].getName() + " P Value", 0.000005);
-    SmartDashboard.putNumber(m_motorControllers[Constants.driveLeftRearIndex].getName() + " P Value", 0.000005);
-    SmartDashboard.putNumber(m_motorControllers[Constants.driveRightFrontIndex].getName() + " P Value", 0.000005);
-    SmartDashboard.putNumber(m_motorControllers[Constants.driveRightRearIndex].getName() + " P Value", 0.000005);
+    m_motorControllers[Constants.driveLeftFrontIndex].getPID().setP(0.000005);
+    m_motorControllers[Constants.driveLeftRearIndex].getPID().setP(0.000005);
+    m_motorControllers[Constants.driveRightFrontIndex].getPID().setP(0.000005);
+    m_motorControllers[Constants.driveRightRearIndex].getPID().setP(0.000005);
 
-
-    SmartDashboard.putNumber(m_motorControllers[Constants.driveRightRearIndex].getName() + " I Value", 0.0000025);
-    SmartDashboard.putNumber(m_motorControllers[Constants.driveRightRearIndex].getName() + " I Value", 0.0000025);
-    SmartDashboard.putNumber(m_motorControllers[Constants.driveRightRearIndex].getName() + " I Value", 0.0000025);
-    SmartDashboard.putNumber(m_motorControllers[Constants.driveRightRearIndex].getName() + " I Value", 0.0000025);
+    m_motorControllers[Constants.driveLeftFrontIndex].getPID().setI(0.0000025);
+    m_motorControllers[Constants.driveLeftRearIndex].getPID().setI(0.0000025);
+    m_motorControllers[Constants.driveRightFrontIndex].getPID().setI(0.0000025);
+    m_motorControllers[Constants.driveRightRearIndex].getPID().setI(0.0000025);
   }
 
   @Override
@@ -182,8 +185,14 @@ public class DriveBaseSubsystem extends SubsystemBase {
   }
 
   public void resetEncoders() {
-    m_extLeftEncoder.reset();
-    m_extRightEncoder.reset();
+    if(usingExternal) {
+      m_extLeftEncoder.reset();
+      m_extRightEncoder.reset();
+    }
+    else {
+      m_internalLeftEncoder.setPosition(0);
+      m_internalRightEncoder.setPosition(0);
+    }
   }
 
   public void resetOdometry(Pose2d pose) {
@@ -246,8 +255,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   public double[] getPositions() {
     double[] positions = new double[2];
-    positions[0] = m_internalLeftEncoder.getPosition() * m_internalLeftEncoder.getPositionConversionFactor();
-    positions[1] = m_internalRightEncoder.getPosition() * m_internalRightEncoder.getPositionConversionFactor();
+    positions[0] = m_internalLeftEncoder.getPosition();
+    positions[1] = m_internalRightEncoder.getPosition();
     return positions;
   }
 

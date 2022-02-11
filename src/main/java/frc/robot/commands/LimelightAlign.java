@@ -13,8 +13,12 @@ public class LimelightAlign extends CommandBase {
 
   /** Creates a new ShooterPrimary. */
   public LimelightAlign(LimelightSubsystem limelightSubsystem, DriveBaseSubsystem driveBaseSubsystem) {
-    addRequirements(limelightSubsystem);
-    addRequirements(driveBaseSubsystem);
+    if(limelightSubsystem != null) {
+      addRequirements(limelightSubsystem);
+    }
+    if(driveBaseSubsystem != null) {
+      addRequirements(driveBaseSubsystem);
+    }
     m_LimelightSubsystem = limelightSubsystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
