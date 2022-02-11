@@ -44,6 +44,8 @@ public class ShooterSubsystem extends SubsystemBase {
   private double Iconstant;
   private double Dconstant;
   private double Fconstant;
+  private double IMaxAccumconstant;
+  private double IMaxAccumIDconstantl;
   private int I_Zone;
   private double MaxOutput;
 
@@ -59,8 +61,10 @@ public class ShooterSubsystem extends SubsystemBase {
   private NetworkTableEntry PID_I = shooterTab.addPersistent("PID I", Constants.Shooter.kI).withPosition(1, 2).getEntry();
   private NetworkTableEntry PID_D = shooterTab.addPersistent("PID D", Constants.Shooter.kD).withPosition(2, 2).getEntry();
   private NetworkTableEntry PID_F = shooterTab.addPersistent("PID F", Constants.Shooter.kF).withPosition(0,1).getEntry();
+  private NetworkTableEntry PID_IMaxAccum = shooterTab.addPersistent("PID I Max Accum", Constants.Shooter.kMaxI).withPosition(6,1).getEntry();
   private NetworkTableEntry PID_Izone = shooterTab.addPersistent("PID I Range", Constants.Shooter.kIZone).withPosition(4, 2).getEntry();
   private NetworkTableEntry PID_MaxOutput = shooterTab.addPersistent("PID Peak Output", Constants.Shooter.kMaxOutput).withPosition(5, 2).getEntry();
+  private NetworkTableEntry PID_IMaxAccumID = shooterTab.addPersistent("PID Peak Output Slot ID", Constants.Shooter.kMaxISlotId).withPosition(6,2).getEntry();
 
   private NetworkTableEntry ShooterReverted = shooterTab.addPersistent("Shooter Reverted", false).withPosition(4,1).getEntry();
   private NetworkTableEntry IShootingMode = shooterTab.add("Shooting Mode",1).withPosition(0, 1).getEntry();
@@ -83,30 +87,19 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
   public ShooterSubsystem() {
-<<<<<<< HEAD
-
-  
-
-
-=======
     SmartDashboard.putNumber("RPMIN", RPMIN);
->>>>>>> ShooterTesting
     aimMode = 4;
     cargo_motorController = new MotorController("Shooter Cargo", Constants.Shooter.shooterCargoID);
     kCargoController = cargo_motorController.getPID();
     kCargoEncoder = cargo_motorController.getEncoder();
-
     shooter_motorController = new MotorController("Shooter", Constants.Shooter.shooterID, 40, true);
     KShooterController = shooter_motorController.getPID();
     KShooterEncoder = shooter_motorController.getEncoder();
-<<<<<<< HEAD
-   
-=======
-    KShooterController.setP(5e-4);
-    KShooterController.setI(6e-7);
-   KShooterController.setIMaxAccum(0.9, 0);
-    KShooterController.setD(0.0);
->>>>>>> ShooterTesting
+
+    //KShooterController.setP(5e-4);
+    //KShooterController.setI(6e-7);
+    //KShooterController.setIMaxAccum(0.9, 0);
+    //KShooterController.setD(0.0);
 
     hood_motorController = new MotorController("Hood", Constants.Shooter.hoodID);
     KHoodController = hood_motorController.getPID();
@@ -122,10 +115,13 @@ public class ShooterSubsystem extends SubsystemBase {
       Iconstant = PID_I.getDouble(0);
       Dconstant = PID_D.getDouble(0);
       Fconstant = PID_F.getDouble(0);
+      IMaxAccumconstant = PID_IMaxAccum.getDouble(0);
+      IMaxAccumIDconstantl =(int)PID_IMaxAccumID.getDouble(0);
       shooter_motorController.getPID().setP(Pconstant);
       shooter_motorController.getPID().setI(Iconstant);
       shooter_motorController.getPID().setD(Dconstant);
       shooter_motorController.getPID().setFF(Fconstant);
+      shooter_motorController.getPID().setIMaxAccum(IMaxAccumconstant,IMaxAccumIDconstantl);
     }
   }
 
@@ -143,7 +139,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // Winds Flywheel using PID control to passed rpm
     // double adjustedRPM = rpm * (Constants.kGearRatioIn / Constants.kGearRatioOut); TODO: reconsider using this
-<<<<<<< HEAD
     if(rpm ==0.0){
       KShooterController.setReference(0.0, CANSparkMax.ControlType.kVoltage);
     }
@@ -156,7 +151,6 @@ public class ShooterSubsystem extends SubsystemBase {
     if (rpm == shooter_motorController.getEncoder().getVelocity() ){
       runCargo(true,false);
     }
-=======
     if(rpm == 0){
       KShooterController.setReference(0, CANSparkMax.ControlType.kVoltage);
       KShooterController.setIAccum(0);
@@ -164,7 +158,6 @@ public class ShooterSubsystem extends SubsystemBase {
     currentRPM = rpm;
     KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
     }
->>>>>>> ShooterTesting
   }
 
   public void runCargo(boolean a,boolean reversed) {
