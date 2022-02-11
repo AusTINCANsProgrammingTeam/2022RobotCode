@@ -68,9 +68,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     // // external encoders            
     // m_extLeftEncoder = new Encoder(Constants.leftEncoderDIOone, Constants.leftEncoderDIOtwo, 
-    // false, Encoder.EncodingType.k2X); // TODO: confirm correct configuration for encoder
+    //                          false, Encoder.EncodingType.k2X); // TODO: confirm correct configuration for encoder
     // m_extRightEncoder = new Encoder(Constants.rightEncoderDIOone, Constants.rightEncoderDIOtwo, 
-    // false, Encoder.EncodingType.k2X);
+    //                          false, Encoder.EncodingType.k2X);
 
     // m_extLeftEncoder.setReverseDirection(true);
     
@@ -80,23 +80,25 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     // calculate circumference then convert to meters
     // wheel radius in inches, want to convert meters
-    m_internalLeftEncoder.setPositionConversionFactor(Constants.gearRatio * 2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter); 
-    m_internalRightEncoder.setPositionConversionFactor(Constants.gearRatio * 2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter);
+    m_internalLeftEncoder.setPositionConversionFactor(
+              Constants.gearRatio * 2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter); 
+    m_internalRightEncoder.setPositionConversionFactor(
+              Constants.gearRatio * 2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter);
 
     resetEncoders();
     
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d()); 
 
-    // tuning PID, experimental values, multiply by 2
-    m_motorControllers[Constants.driveLeftFrontIndex].getPID().setP(0.000005);
-    m_motorControllers[Constants.driveLeftRearIndex].getPID().setP(0.000005);
-    m_motorControllers[Constants.driveRightFrontIndex].getPID().setP(0.000005);
-    m_motorControllers[Constants.driveRightRearIndex].getPID().setP(0.000005);
+    // tuning PID for each motor
+    for(int i = 0; i < 4; i++) {
+      m_motorControllers[Constants.driveLeftFront].getPID().setP(0.000005);
+      m_motorControllers[Constants.driveLeftFront].getPID().setI(0.0000025);
 
-    m_motorControllers[Constants.driveLeftFrontIndex].getPID().setI(0.0000025);
-    m_motorControllers[Constants.driveLeftRearIndex].getPID().setI(0.0000025);
-    m_motorControllers[Constants.driveRightFrontIndex].getPID().setI(0.0000025);
-    m_motorControllers[Constants.driveRightRearIndex].getPID().setI(0.0000025);
+      m_motorControllers[Constants.driveRightFront].getPID().setP(0.000005);
+      m_motorControllers[Constants.driveRightFront].getPID().setI(0.0000025);
+
+      // rear motors should follow
+    }
   }
 
   @Override
@@ -228,8 +230,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
     leftSpeed = leftSpeed * 60;   // convert it to rotation per minute
     rightSpeed = rightSpeed * 60;
 
-    SmartDashboard.putNumber("left speed (rpm): ", leftSpeed);
-    SmartDashboard.putNumber("right speed (rpm): ", rightSpeed);
+    SmartDashboard.putNumber("left speed (rpm) [biconsumer]", leftSpeed);
+    SmartDashboard.putNumber("right speed (rpm [biconsumer])", rightSpeed);
 
     m_motorControllers[Constants.driveLeftFrontIndex].getPID().setReference(leftSpeed, CANSparkMax.ControlType.kVelocity);
     m_motorControllers[Constants.driveRightFrontIndex].getPID().setReference(rightSpeed, CANSparkMax.ControlType.kVelocity);

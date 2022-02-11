@@ -60,7 +60,7 @@ public class RobotContainer {
   private static LimelightSubsystem limelightSubsystem;
 
   // commands
-  private DriveBaseTeleopCommand driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
+  private DriveBaseTeleopCommand driveBaseTeleopCommand;
   private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
   private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
 
@@ -197,7 +197,7 @@ public class RobotContainer {
   // Use this to pass the autonomous command to the main {@link Robot} class.
   // @return the command to run in autonomous
   public Command getAutonomousCommand() {
-    if (driveBaseSubsystem != null) {
+    if (driveBaseSubsystem != null && trajectory != null) {
       //Ramsete Command for Pathweaver
       RamseteCommand ramseteCommand =
       new RamseteCommand(
