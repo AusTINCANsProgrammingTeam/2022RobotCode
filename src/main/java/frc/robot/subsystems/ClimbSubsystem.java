@@ -30,19 +30,18 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public ClimbSubsystem() {
     //One is left, two is right
-    m_climbMotorControllerOne = new MotorController("Climb Motor One", Constants.kClimbMotorOneIndex);
-
-    m_climbMotorControllerTwo = new MotorController("Climb Motor Two", Constants.kClimbMotorTwoIndex);
+    m_climbMotorControllerOne = new MotorController("Climb Motor One", Constants.kClimbMotorOneIndex, 40, true);
+    m_climbMotorControllerTwo = new MotorController("Climb Motor Two", Constants.kClimbMotorTwoIndex, 40, true);
     m_climbMotorControllerTwo.setInverted(true);
     m_climbMotorControllerTwo.setFollow(m_climbMotorControllerOne);
 
     m_limitSwitch = new DigitalInput(Constants.kLimitSwitchChannel);
 
     //Example camera system, unsure if it goes here or not
-    CameraServer.startAutomaticCapture();
+    //CameraServer.startAutomaticCapture();
     //Not used at the moment, maby in the futue
-    CvSink cvSink = CameraServer.getVideo();
-    CvSource outputStream = CameraServer.putVideo("Blur", 640, 480);
+    //CvSink cvSink = CameraServer.getVideo();
+    //CvSource outputStream = CameraServer.putVideo("Blur", 640, 480);
   }
 
   public void enableClimb(boolean on, boolean up){

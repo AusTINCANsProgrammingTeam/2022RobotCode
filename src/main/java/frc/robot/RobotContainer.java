@@ -137,6 +137,8 @@ public class RobotContainer {
           case "ClimbSubsystem":
           {
             System.out.println("Climb enabled");
+            
+            climbSubsystem = new ClimbSubsystem();
             climbUPCommand = new ClimbUPCamand(climbSubsystem);
             climbDOWNCammand = new ClimbDOWNCammand(climbSubsystem);
             break;
@@ -158,7 +160,6 @@ public class RobotContainer {
       e.printStackTrace();
     }
 
-    driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
   }
 
   // Use this method to define your button->command mappings. Buttons can be

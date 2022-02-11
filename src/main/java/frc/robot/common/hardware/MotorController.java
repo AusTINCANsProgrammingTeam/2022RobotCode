@@ -28,7 +28,7 @@ public class MotorController {
         // Create default values for Spark Max motor controller
         mSparkMax.setSmartCurrentLimit(40); // default current limit is 40A
         mSparkMax.setIdleMode(CANSparkMax.IdleMode.kCoast); // default mode is Coast
-
+        mPIDController = mSparkMax.getPIDController();
         mEncoder = mSparkMax.getEncoder();
     }
 

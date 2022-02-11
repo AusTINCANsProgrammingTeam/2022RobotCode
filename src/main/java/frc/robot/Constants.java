@@ -20,9 +20,9 @@ public final class Constants {
     public enum Subsystems {
         // Change booleans to disable a subsystem in RobotContainer
         DriveBaseSubsystem(false),
-        CDSSubsystem      (true),
-        IntakeSubsystem   (true),
-        ShooterSubsystem  (true),
+        CDSSubsystem      (false),
+        IntakeSubsystem   (false),
+        ShooterSubsystem  (false),
         LimelightSubsystem(false),
         ClimbSubsystem    (true);
 
@@ -140,7 +140,8 @@ public final class Constants {
 
     // Climb Constants
     public static final int kLimitSwitchChannel = 0;    // TODO: get actual channel id and maybe add more limit switches and channels
-
+    public static final int kClimbMotorOneIndex = 9;
+    public static final int kClimbMotorTwoIndex = 10;
 
 
 
@@ -168,7 +169,4 @@ public final class Constants {
     public static final double ballFlywheelratio = 2;
     public static final int shooterCargoID = 5;
     public static final double cargoRotation = 3;
-
-    public static final int kClimbMotorOneIndex = 1;
-    public static final int kClimbMotorTwoIndex = 2;
 }
