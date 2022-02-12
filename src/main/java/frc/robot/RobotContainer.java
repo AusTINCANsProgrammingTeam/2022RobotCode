@@ -175,18 +175,20 @@ public class RobotContainer {
   }
 
   private void initializeTrajectories() throws IOException {
-    String[] trajectoryJSON = {"One.wpilib.json", "Two.wpilib.json", "Three.wpilib.json", "Four.wpilib.json"};  // add new trajectories manually
-    mTrajectories = new Trajectory[trajectoryJSON.length];
-    for(int i = 0; i < trajectoryJSON.length; i++) {
-    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON[i]);
-    Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-    mTrajectories[i] = trajectory;
-    }
+    
+    //String[] trajectoryJSON = {"One.wpilib.json", "Two.wpilib.json", "Three.wpilib.json", "Four.wpilib.json"};  // add new trajectories manually
+    //mTrajectories = new Trajectory[trajectoryJSON.length];
+    //for(int i = 0; i < trajectoryJSON.length; i++) {
+    //Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON[i]);
+    //Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    //mTrajectories[i] = trajectory;
+   // }
+    
 
     // to test auton with just a one straight path
-    //String trajectoryJSON = "Straight.wpilib.json";
-    //Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-    //trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    String trajectoryJSON = "Straight.wpilib.json";
+    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+    trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
   }
            
   // Use this to pass the autonomous command to the main {@link Robot} class.
