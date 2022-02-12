@@ -4,16 +4,24 @@
 
 package frc.robot.commands;
 
+import frc.robot.subsystems.CDSSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ShooterPrime extends CommandBase {
   private ShooterSubsystem m_ShooterSubsystem;
+  private LimelightSubsystem m_LimelightSubsystem;
+  private CDSSubsystem m_CDSSubsystem;
+  private int i;
 
   /** Creates a new ShooterPrimary. */
-  public ShooterPrime(ShooterSubsystem shooterSubsystem) {
+  public ShooterPrime(ShooterSubsystem shooterSubsystem, LimelightSubsystem limelightSubsystem, CDSSubsystem cdsSubsystem) {
     addRequirements(shooterSubsystem);
     m_ShooterSubsystem = shooterSubsystem;
+    m_LimelightSubsystem = limelightSubsystem;
+    m_CDSSubsystem = cdsSubsystem;
+    SmartDashboard.putBoolean("wheelReady", false);
 
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -22,7 +30,7 @@ public class ShooterPrime extends CommandBase {
   @Override
   public void initialize() {
     m_ShooterSubsystem.prime();
-
+    i = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -34,18 +42,25 @@ public class ShooterPrime extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (!interrupted){
-      //TODO: uncomment when cargoMotor exists 
-      m_ShooterSubsystem.shoot();
-    }
-    m_ShooterSubsystem.windFlywheel(0); //TODO: Look at this again, we don't want our flywheel to instantly switch off in the end
+    m_ShooterSubsystem.runCargo(false,false);
+    m_ShooterSubsystem.windFlywheel(0);
+    m_CDSSubsystem.stopCDS();
+    SmartDashboard.putBoolean("wheelReady", false);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     if(m_ShooterSubsystem.wheelReady()){
-      return true;
+      SmartDashboard.putBoolean("wheelReady", true);
+      //if(i > 0 || m_LimelightSubsystem.calculatePID() == 0.0){
+        m_ShooterSubsystem.runCargo(true,true);
+        m_CDSSubsystem.CDSBeltWheelControllerToggle(false);
+        i++;
+        if(i==100){ //Expected to add a 2000ms delay
+          return true;
+       // }
+      }
     }
     return false;
   }
