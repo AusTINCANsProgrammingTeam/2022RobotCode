@@ -172,6 +172,7 @@ public class RobotContainer {
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
       CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
       CDSSubsystem.getAllianceColor();
+      CDSSubsystem.senseColor();
 
       buttons[Constants.Xbutton].whileHeld(CDSForwardCommand);
       buttons[Constants.BButton].whileHeld(CDSReverseCommand);

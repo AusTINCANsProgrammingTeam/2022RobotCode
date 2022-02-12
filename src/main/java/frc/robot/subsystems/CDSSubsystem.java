@@ -73,6 +73,9 @@ public class CDSSubsystem extends SubsystemBase {
   }
   
   public void periodic() {
+    String ballColor = senseColor();
+    SmartDashboard.putString("Ball Color", ballColor);
+
     SmartDashboard.putBooleanArray("Beam Break", getBeamBreakStatus());
   }
 
@@ -82,10 +85,15 @@ public class CDSSubsystem extends SubsystemBase {
     return alliance;
   }
 
-  public Color senseColor() {
+  public String senseColor() {
     ColorSensorV3 colorSensor = new ColorSensorV3(Constants.colorSensorPort);
     Color color = colorSensor.getColor();
-    SmartDashboard.putString("Color Sensed", color.toString());
-    return color;
+    double redAmount = color.red;
+    double blueAmount = color.blue;
+    if (redAmount > blueAmount) {
+      return "Red"; 
+    } else {
+      return "Blue";
+    } 
   }
 }
