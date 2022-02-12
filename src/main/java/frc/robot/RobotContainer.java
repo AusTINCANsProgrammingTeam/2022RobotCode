@@ -161,7 +161,7 @@ public class RobotContainer {
     }
 
     // Shooter
-    if (shooterSubsystem != null && limelightSubsystem != null) {
+    if (shooterSubsystem != null) {
       shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
       buttons[Constants.Xbutton].whenPressed(shooterPrime);
       buttons[Constants.upPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
