@@ -64,11 +64,11 @@ public class CDSSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("CDS Belt Speed", 0.0);
   }
   
-  public boolean[] getBeamBreakStatus() {
-    boolean frontStatus = frontBallSensor.get();
-    boolean middleStatus = middleBallSensor.get();
-    boolean finalStatus = finalBallSensor.get();
-    boolean[] beamBreakArray = {frontStatus, middleStatus, finalStatus};
+  public int[] getBeamBreakStatus() {
+    int frontStatus = frontBallSensor.get() ? 1: 0;
+    int middleStatus = middleBallSensor.get() ? 1: 0;
+    int finalStatus = finalBallSensor.get() ? 1: 0;
+    int[] beamBreakArray = {frontStatus, middleStatus, finalStatus};
     return beamBreakArray;
   }
   
@@ -76,7 +76,9 @@ public class CDSSubsystem extends SubsystemBase {
     String ballColor = senseColor();
     SmartDashboard.putString("Ball Color", ballColor);
 
-    SmartDashboard.putBooleanArray("Beam Break", getBeamBreakStatus());
+    int[] beamBreakStatus = getBeamBreakStatus();
+    int ballCount = beamBreakStatus[0] + beamBreakStatus[1] + beamBreakStatus[2];
+    SmartDashboard.putNumber("Ball Count", ballCount);
   }
 
   public Alliance getAllianceColor() {
