@@ -51,7 +51,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void windFlywheel(double rpm) {
     // Winds Flywheel using PID control to passed rpm
-    double adjustedRPM = rpm * (Constants.gearRatioIn / Constants.GearRatioOut); //TODO: reconsider using this
+    double adjustedRPM = rpm * (Constants.gearRatioIn / Constants.gearRatioOut); //TODO: reconsider using this
     currentRPM = rpm;
     KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
   }
