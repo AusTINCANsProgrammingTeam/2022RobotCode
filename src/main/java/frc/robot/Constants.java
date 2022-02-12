@@ -79,13 +79,6 @@ public final class Constants {
     public static final double PDriveVel = 8.5;                   //Velocity
     public static final DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(0.5);    // Replace 0.5 with track width in meters
 
-    //Controller constants
-    public static final int DBJoystickPort = 0;
-    public static final int DBLeftJoystickAxisX = 0;
-    public static final int DBLeftJoystickAxisY = 1;
-    public static final int DBRightJoystickAxisX = 2;
-    public static final int DBRightJoystickAxisY = 3;
-
     // Intake Contstants
     public static final int intakeMotorOneID = 3;
     public static final int intakeMotorTwoID = 12;
@@ -103,20 +96,44 @@ public final class Constants {
     public static final double CDSBeltSpeed = 0.25;
     public static final double CDSWheelControllerSpeed = 0.15;
 
-    //Joystick Constants
-    public static final int portNumber = 0;
-    public static final int joystickButtonNumberOne = 1;
-    public static final int joystickButtonNumberTwo = 2;
-    public static final int BButton = 1; // Button for forward cds
-    public static final int YButton = 4; // Button for reverse cds
-    public static final int rightBumperButton = 5; // Button for intake 
-    public static final int rightTriggerButton = 8; // Button for intake 
-    public static final int leftBumperButton = 6;  // Button to reverse intake
-    public static final int Xbutton = 3; // Button for Shooter
-    public static final int downPOV = 4; // Button for shooter mode
-    public static final int upPOV = 5; // Button for shooter mode
-    public static final int AButton = 2; //Button to align Limelight
+    //Controller Constaints {
+        public static final int portNumber0 = 0;
+        public static final int protNumber1 = 1;
 
+        //Buttons not in use
+        public static final int XButton = 1;
+        public static final int AButton = 2;
+        public static final int BButton = 3;
+        public static final int YButton = 4;
+
+        //Intake Subsystem
+        public static final int LBumper = 5; //Intake forward
+        public static final int RBumper = 6; //Intake reverse
+
+        //CDS Subsystem
+        public static final int LTriggerButton = 7; //CDS forward
+        public static final int RTriggerButton = 8; //CDS reverse
+
+        //Shooter Prime/LimeLight
+        public static final int backButton = 9; //Button starts ShooterPrime
+        public static final int startButton = 10; //Button to align LimeLight
+
+        //Shooter Subsystem mode change
+        public static final int LJoystickButton = 11; //Button for Shooter mode
+        public static final int RJoystickButton = 12; //BUtton for Shooter mode
+
+        //POV's not in use
+        public static final int POVup = 0;
+        public static final int POVdown = 180;
+        public static final int POVright = 90;
+        public static final int POVleft = 270;
+
+        //DriveBase Subsystem
+        public static final int leftJoystickX = 0; //Unused but will easily be acidentaly activated if used
+        public static final int leftJoystickY = 1; //arcade forward / tank left turning
+        public static final int rightJoystickX = 2; //arcade turning
+        public static final int rightJoystickY = 3; //tank right turning
+    //}
 
     // Preset aim constants
     public static final double LOWRPM = 0.0; // RPM that the LOW aimMode winds to

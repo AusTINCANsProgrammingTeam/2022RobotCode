@@ -76,8 +76,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // Normal Arcade Drive
   public void arcadeDrive() {
-    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.DBLeftJoystickAxisY), 
-                                      m_driverJoystick.getRawAxis(Constants.DBRightJoystickAxisX));
+    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.leftJoystickY), 
+                                    m_driverJoystick.getRawAxis(Constants.rightJoystickX));
   }
 
   // Arcade Drive where you can only move forwards and backwards for testing
@@ -88,8 +88,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // tank drive, not used but good to have
   public void tankDrive() {
-    m_differentialDrive.tankDrive(m_driverJoystick.getRawAxis(Constants.DBLeftJoystickAxisY), 
-                                  m_driverJoystick.getRawAxis(Constants.DBRightJoystickAxisY));
+    m_differentialDrive.tankDrive(m_driverJoystick.getRawAxis(Constants.leftJoystickY), 
+                                  m_driverJoystick.getRawAxis(Constants.rightJoystickY));
   }
 
   public void setAutonVolts(double leftVolts, double rightVolts) {
