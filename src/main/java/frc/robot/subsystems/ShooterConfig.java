@@ -46,8 +46,8 @@ public class ShooterConfig {
 
     public static double[] Interprolate(ShooterConfig obj1, ShooterConfig obj2,double distance){
         double [] returnArray = new double [2];
-        returnArray[0] = (obj1.getVelocity()*(obj1.getDistance()-distance) + obj1.getVelocity()*(distance-obj2.getDistance()) )/(obj1.getDistance()-obj2.getDistance());;
-        returnArray[1] = ( obj2.getAngleDegrees()*(obj1.getDistance()-distance) + obj1.getAngleDegrees()*(distance-obj2.getDistance()) )/(obj1.getDistance()-obj2.getDistance());
+        returnArray[0] = (obj1.getVelocity()*(obj1.getDistance()-distance) + obj2.getVelocity()*(distance-obj2.getDistance()) )/(obj1.getDistance()-obj2.getDistance());;
+        returnArray[1] = ( obj2.getAngleDegrees()*(obj1.getDistance()-distance) + obj2.getAngleDegrees()*(distance-obj2.getDistance()) )/(obj1.getDistance()-obj2.getDistance());
         return returnArray;
  
     }
