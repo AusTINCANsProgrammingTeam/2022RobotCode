@@ -43,6 +43,7 @@ public final class Constants {
 
     public static final double wheelRadius = 3.0125;    // radius of wheel, use for calculating angular values
     public static final double gearRatio = 10.75;       // 10.75 : 1 gear ratio <--- kitbot
+                                                        // 10.75 wheel rotations : 1 motor rotation
     public static final double inchesInMeter = 39.3701;
 
     // Actual IDs on robot, used to activate the right motors
