@@ -21,6 +21,7 @@ public class ClimbUPCommand extends CommandBase {
   @Override
   public void initialize() {
     m_subsystem.enableClimb(true, true);
+    m_subsystem.periodic();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

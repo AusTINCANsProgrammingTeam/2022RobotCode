@@ -40,6 +40,7 @@ public class ClimbSubsystem extends SubsystemBase {
       if (up) {
         m_climbMotorControllerOne.getEncoder().setPosition(0);
         m_climbMotorControllerOne.getPID().setReference(25, CANSparkMax.ControlType.kPosition);
+        
       } else {
         m_climbMotorControllerOne.getEncoder().setPosition(0);
         m_climbMotorControllerOne.getPID().setReference(-25, CANSparkMax.ControlType.kPosition);
