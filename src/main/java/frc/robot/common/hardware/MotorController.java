@@ -19,7 +19,7 @@ public class MotorController {
     private double mI;
     private double mD;
 
-    private double mFF = 0;
+    private double mFF; // feedforward value
 
     // default constructor
     public MotorController(String name, int deviceID) {
@@ -46,6 +46,9 @@ public class MotorController {
             mP = SmartDashboard.getNumber(mName + " P Value", 0.000025);
             mI = SmartDashboard.getNumber(mName + " I Value", 0.0);
             mD = SmartDashboard.getNumber(mName + " D Value", 0.0);
+
+            mFF = SmartDashboard.getNumber(mName + " FF Value", 0.0);
+            
             mPIDController = mSparkMax.getPIDController();
             setPID();
         }
@@ -118,6 +121,7 @@ public class MotorController {
         mPIDController.setP(mP);
         mPIDController.setI(mI);
         mPIDController.setD(mD);
+
         SmartDashboard.putNumber(mName+" P Value", mP);
         SmartDashboard.putNumber(mName+" I Value", mI);
         SmartDashboard.putNumber(mName+" D Value", mD);

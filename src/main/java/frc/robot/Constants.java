@@ -34,13 +34,11 @@ public final class Constants {
             return this.enabled;
         };
     }
-    
 
-    //Distance calculation constants
-    public static final double goalHeight = 8.8; //Height of the goal in ft from the carpet
+
+    // DRIVEBASE Constants
 
     // Constants for wheel motors
-
     public static final double wheelRadius = 3.0125;    // radius of wheel, use for calculating angular values
     public static final double gearRatio = 10.75;       // 10.75 : 1 gear ratio <--- kitbot
                                                         // 10.75 motor rotations : 1 wheel rotation
@@ -63,23 +61,8 @@ public final class Constants {
     public static final double[] driveRightPID = {0.00035, 0.0000008, 0};
     public static final double[] driveLeftPID = {0.000005, 0.0000008, 0};
 
-    // Encoder constants
-    // TODO: Replace these with the correct ports
-    public static final int leftEncoderDIOone = 0;
-    public static final int leftEncoderDIOtwo = 1;
-    public static final int rightEncoderDIOone = 2;
-    public static final int rightEncoderDIOtwo = 3;
 
-    // Pathweaver constants, baselind values, units: meters per second
-    public static final double ramseteB = 2;      // Convergence, larger values are more aggressive
-    public static final double ramseteZeta = 0.7; // Damping, larger values offer more damping
-
-
-    // TODO: Calibrate robot with correct values - double check values with a proper test
-
-    // Note: below comments might not be entirely accurate
-
-    public static final double unitsPerRotation = 0.4787787204;
+    // AUTONOMOUS Constants
 
     // Volts, constants for ramseteCommand
     public static final double ksVolts = 0.13323;                      // Ks, 
@@ -88,10 +71,24 @@ public final class Constants {
 
     public static final double kpDriveVel = 2.1938;                    // Kp, Velocity
     public static final double trackWidth = 0.69;
-    public static final DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(trackWidth);    
-    // TODO: Replace 0.69 with actual track width in meters
+    public static final DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(trackWidth);
+    public static final double unitsPerRotation = 0.4787787204;
     
+    // Pathweaver constants, baselind values, units: meters per second
+    public static final double ramseteB = 2;      // Convergence, larger values are more aggressive
+    public static final double ramseteZeta = 0.7; // Damping, larger values offer more damping
 
+    // TODO: Replace 0.69 with actual track width in meters and run characterization on real robot
+
+
+    // Encoder constants
+    // TODO: Replace these with the correct ports
+    public static final int leftEncoderDIOone = 0;
+    public static final int leftEncoderDIOtwo = 1;
+    public static final int rightEncoderDIOone = 2;
+    public static final int rightEncoderDIOtwo = 3;
+
+    
     // Intake Contstants
     public static final int intakeMotorOneID = 3;
     public static final int intakeMotorTwoID = 12;
@@ -155,6 +152,9 @@ public final class Constants {
     public static final double LAUNCHAngle = 0.0; // Angle that the LAUNCH aimMode adjusts to
     public static final double TARMACRPM = 0.0; // RPM that the TARMAC aimMode winds to
     public static final double TARMACAngle = 0.0; // Angle that the TARMAC aimMode adjusts to
+
+    //Distance calculation constants
+    public static final double goalHeight = 8.8; //Height of the goal in ft from the carpet
     
     // Shooter Constants
     public static final int shooterID = 4; // ID of the shooter

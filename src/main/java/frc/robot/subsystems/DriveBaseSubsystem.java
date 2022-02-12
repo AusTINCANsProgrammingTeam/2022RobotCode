@@ -10,10 +10,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
-// import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
@@ -96,6 +94,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
 
+
     // set PID values
     m_motorControllers[Constants.driveRightFrontIndex].getPID().setP(Constants.driveRightPID[0]);
     m_motorControllers[Constants.driveRightFrontIndex].getPID().setI(Constants.driveRightPID[1]);
@@ -142,12 +141,13 @@ public class DriveBaseSubsystem extends SubsystemBase {
   // Normal Arcade Drive
   public void arcadeDrive() {
     m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.leftJoystickY), 
-                                    m_driverJoystick.getRawAxis(Constants.rightJoystickX));
+                                    -1 * m_driverJoystick.getRawAxis(Constants.rightJoystickX));
+    // x-axis of rotation joystick is inverted so multiply by -1
   }
 
   // Arcade Drive where you can only move forwards and backwards for testing
   public void arcadeDrive(double rotation) {
-    //m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.kDBLeftJoystickAxisY), rotation);
+    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.leftJoystickY), rotation);
   }
 
   //TODO: Make a command to switch modes (extra)
@@ -157,12 +157,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_differentialDrive.tankDrive(m_driverJoystick.getRawAxis(Constants.leftJoystickY), 
                                   m_driverJoystick.getRawAxis(Constants.rightJoystickY));
   }
-
-  // public void setAutonVolts(double leftVolts, double rightVolts) {
-  //   m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax().setVoltage(leftVolts);
-  //   m_motorControllers[Constants.driveRightFrontIndex].getSparkMax().setVoltage(rightVolts);
-  //   m_differentialDrive.feed();
-  // }
 
   @Override
   public void simulationPeriodic() {
@@ -257,10 +251,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.driveRightFrontIndex].getPID().setReference(rightSpeed, CANSparkMax.ControlType.kVelocity);
     m_differentialDrive.feed();
   }
-  
-  // public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-  //   return new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
-  // }
 
 
   // for debug/shuffleboard
@@ -268,11 +258,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
   // return gyro info
   public double getGyroAngle() {
     return m_gyro.getAngle();
-  }
-  
-  // returns velocity conversion factor from the internal encoder in order to calculate distances and speeds, avoiding the use of external encoders
-  public double getVelocityConversionFactor() {
-    return m_internalRightEncoder.getVelocityConversionFactor();
   }
 
   public double[] getPositions() {
