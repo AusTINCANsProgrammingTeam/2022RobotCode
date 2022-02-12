@@ -40,7 +40,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private RelativeEncoder kCargoEncoder;
   private SparkMaxPIDController kCargoController;
   private double currentRPM;
-  private double RPMIN = 3100;
 
   private double Pconstant;
   private double Iconstant;
