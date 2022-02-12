@@ -98,7 +98,7 @@ public final class Constants {
 
     //Controller Constaints {
         public static final int portNumber0 = 0;
-        public static final int protNumber1 = 1;
+        public static final int portNumber1 = 1;
 
         //Buttons not in use
         public static final int XButton = 1;
