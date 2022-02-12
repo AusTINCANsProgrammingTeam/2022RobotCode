@@ -104,6 +104,7 @@ public final class Constants {
     public static final double CDSBeltSpeed = 0.25; 
     public static final double CDSWheelControllerSpeed = 0.15;       
     public static final Port colorSensorPort = Port.kOnboard; //Placeholder Value, to be changed
+    public static final boolean competition = false; // false for testing, true for competition
 
     //Joystick Constants 
     public static final int portNumber = 0;

@@ -74,17 +74,19 @@ public class CDSSubsystem extends SubsystemBase {
   
   public void periodic() {
     String ballColor = senseColor();
+    String allianceColor = getAllianceColor();
     SmartDashboard.putString("Ball Color", ballColor);
+    SmartDashboard.putString("Alliance Color", allianceColor);
 
     int[] beamBreakStatus = getBeamBreakStatus();
     int ballCount = beamBreakStatus[0] + beamBreakStatus[1] + beamBreakStatus[2];
     SmartDashboard.putNumber("Ball Count", ballCount);
   }
 
-  public Alliance getAllianceColor() {
+  public String getAllianceColor() {
     Alliance alliance = DriverStation.getAlliance();
     SmartDashboard.putString("Alliance Color", alliance.toString());
-    return alliance;
+    return alliance.toString();
   }
 
   public String senseColor() {
