@@ -26,12 +26,12 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public ClimbSubsystem() {
     //One is left, two is right
-    m_climbMotorControllerOne = new MotorController("Climb Motor One", Constants.kClimbMotorOne, 40, true);
-    m_climbMotorControllerTwo = new MotorController("Climb Motor Two", Constants.kClimbMotorTwo, 40, true);
+    m_climbMotorControllerOne = new MotorController("Climb Motor One", Constants.ClimbMotorOne, 40, true);
+    m_climbMotorControllerTwo = new MotorController("Climb Motor Two", Constants.ClimbMotorTwo, 40, true);
     m_climbMotorControllerTwo.setInverted(true);
     m_climbMotorControllerTwo.setFollow(m_climbMotorControllerOne);
 
-    m_limitSwitch = new DigitalInput(Constants.kLimitSwitchChannel);
+    m_limitSwitch = new DigitalInput(Constants.LimitSwitchChannel);
 
   }
 
@@ -40,7 +40,7 @@ public class ClimbSubsystem extends SubsystemBase {
       if (up) {
         m_climbMotorControllerOne.getEncoder().setPosition(0);
         m_climbMotorControllerOne.getPID().setReference(25, CANSparkMax.ControlType.kPosition);
-        
+
       } else {
         m_climbMotorControllerOne.getEncoder().setPosition(0);
         m_climbMotorControllerOne.getPID().setReference(-25, CANSparkMax.ControlType.kPosition);

@@ -160,4 +160,9 @@ public final class Constants {
     public static final double ballFlywheelratio = 2;
     public static final int shooterCargoID = 5;
     public static final double cargoRotation = 3;
+
+    //Climb Constants
+    public static final int ClimbMotorOne = 10;
+    public static final int ClimbMotorTwo = 11;
+    public static final int LimitSwitchChannel = 12; //Check what number this needs to be 
 }

@@ -195,8 +195,8 @@ public class RobotContainer {
 
     if (climbSubsystem != null)
     {
-      buttons[Constants.LTrigger].whileHeld(climbUPCommand);
-      buttons[Constants.RTrigger].whileHeld(climbDOWNCommand);
+      buttons[Constants.AButton].whileHeld(climbUPCommand);
+      buttons[Constants.XButton].whileHeld(climbDOWNCommand);
     }
   } 
 
