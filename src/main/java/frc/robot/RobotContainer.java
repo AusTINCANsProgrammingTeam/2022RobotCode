@@ -55,7 +55,7 @@ public class RobotContainer {
 
   // subsystems
   private static DriveBaseSubsystem driveBaseSubsystem;
-  private static CDSSubsystem CDSSubsystem = new CDSSubsystem();
+  private static CDSSubsystem CDSSubsystem;
   private static IntakeSubsystem intakeSubsystem; 
   private static ShooterSubsystem shooterSubsystem;
   private static LimelightSubsystem limelightSubsystem;
@@ -65,16 +65,15 @@ public class RobotContainer {
   private IntakeForwardCommand intakeForwardCommand;
   private IntakeReverseCommand intakeReverseCommand;
   private ShooterPrime shooterPrime;
-  //private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
-  private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
+  private CDSForwardCommand CDSForwardCommand;
+  private CDSReverseCommand CDSReverseCommand; 
   private LimelightAlign limelightAlign;
   private BeamBreakCommand beamBreakCommand;
 
-  // auton
-  // private Trajectory[] mTrajectories;  // multiple trajectories
-  // private int trajectoryIndex = 0;
-  //private Trajectory trajectory;
+  
+  private Trajectory[] mTrajectories;  // multiple trajectories
+  private int trajectoryIndex = 0;
+  private Trajectory trajectory;
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
@@ -100,7 +99,7 @@ public class RobotContainer {
           case "CDSSubsystem": 
           {
             System.out.println("CDS enabled");
-//            CDSSubsystem = new CDSSubsystem();
+            CDSSubsystem = new CDSSubsystem();
             break;
           }
           case "IntakeSubsystem":
@@ -132,8 +131,8 @@ public class RobotContainer {
           }
           case "CDSSubsystem": 
           {
-            //CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
-            //CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+            CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+            CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
             break;
           }
           case "IntakeSubsystem":
@@ -162,15 +161,13 @@ public class RobotContainer {
     
 
     configureButtonBindings();
-    /*
+    
     try {
       initializeTrajectories();
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-
-   */
   }
 
   // Use this method to define your button->command mappings. Buttons can be
@@ -203,27 +200,27 @@ public class RobotContainer {
       buttons[Constants.AButton].whenPressed(limelightAlign);
     }
   }
-/*
+
   private void initializeTrajectories() throws IOException {
-    // String[] trajectoryJSON = {"One.wpilib.json", "Two.wpilib.json", "Three.wpilib.json", "Four.wpilib.json"};  // add new trajectories manually
-    // mTrajectories = new Trajectory[trajectoryJSON.length];
-    // for(int i = 0; i < trajectoryJSON.length; i++) {
-    //   Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON[i]);
-    //   Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-    //   mTrajectories[i] = trajectory;
-    // }
+    String[] trajectoryJSON = {"One.wpilib.json", "Two.wpilib.json", "Three.wpilib.json", "Four.wpilib.json"};  // add new trajectories manually
+    mTrajectories = new Trajectory[trajectoryJSON.length];
+    for(int i = 0; i < trajectoryJSON.length; i++) {
+    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON[i]);
+    Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    mTrajectories[i] = trajectory;
+    }
 
     // to test auton with just a one straight path
-    String trajectoryJSON = "Straight.wpilib.json";
-    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-    trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    //String trajectoryJSON = "Straight.wpilib.json";
+    //Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+    //trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
   }
-  */          
+           
   // Use this to pass the autonomous command to the main {@link Robot} class.
   // @return the command to run in autonomous
   public Command getAutonomousCommand() {
 
-    /*if (driveBaseSubsystem != null) {
+    if (driveBaseSubsystem != null) {
       //Ramsete Command for Pathweaver
       RamseteCommand ramseteCommand =
       new RamseteCommand(
@@ -249,7 +246,7 @@ public class RobotContainer {
 
       return ramseteCommand.andThen(() -> driveBaseSubsystem.setAutonVolts(0,0));
     }
-    */
+    
     return null;
   }
 

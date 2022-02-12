@@ -30,10 +30,10 @@ public class CDSSubsystem extends SubsystemBase {
   private NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private NetworkTable table = inst.getTable("SmartDashboard");
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
-  private NetworkTableEntry CDSWheelControllerDirection = CDSTab.add("CDS Wheel Direction", "Not Running").withPosition(0, 0).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
-  private NetworkTableEntry CDSBeltControllerDirection = CDSTab.add("CDS Belt Direction", "Not Running").withPosition(0, 1).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
-  private NetworkTableEntry CDSWheelControllerSpeed = CDSTab.add("CDS Wheel speed",0).withPosition(0,2).getEntry();
-  private NetworkTableEntry CDSBeltControllerSpeed = CDSTab.add("CDS Belt speed",0).withPosition(0, 3).getEntry();
+  private NetworkTableEntry CDSWheelControllerDirection = CDSTab.add("CDS Wheel Direction", "Not Running").withPosition(1, 0).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+  private NetworkTableEntry CDSBeltControllerDirection = CDSTab.add("CDS Belt Direction", "Not Running").withPosition(2, 0).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+  private NetworkTableEntry CDSWheelControllerSpeed = CDSTab.add("CDS Wheel speed",0).withPosition(3,0).getEntry();
+  private NetworkTableEntry CDSBeltControllerSpeed = CDSTab.add("CDS Belt speed",0).withPosition(4, 0).getEntry();
 
   public CDSSubsystem() {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
@@ -42,6 +42,7 @@ public class CDSSubsystem extends SubsystemBase {
 
     CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
   }
+  
 
   public void CDSBeltWheelControllerToggle(boolean reverse) {
     if (reverse) {
@@ -75,7 +76,7 @@ public class CDSSubsystem extends SubsystemBase {
   public void stopCDS() {
     CDSWheelControllerOne.getSparkMax().set(0.0);
     CDSBeltController.getSparkMax().set(0.0);
-    SmartDashboard.putNumber("CDS Belt Speed", 0.0);
+    //SmartDashboard.putNumber("CDS Belt Speed", 0.0);
   }
   @Override
     public void periodic() {
