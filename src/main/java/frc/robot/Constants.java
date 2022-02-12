@@ -4,7 +4,6 @@
 
 package frc.robot;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import frc.robot.subsystems.ClimbSubsystem;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -125,25 +124,15 @@ public final class Constants {
     //Check top of constants
     public static final double kIntakeMotorSpeed = 0.25;
 
-
-    //Climb Constants
-    //Check top of constants
-    //TODO: Fill in placeholder values
-
-
     //CDS Constants
     //Check top of constants
     public static final double kCDSWheelSpeed = 0.25;
     public static final double kCDSBeltSpeed = 0.25;
 
-    
-
     // Climb Constants
     public static final int kLimitSwitchChannel = 0;    // TODO: get actual channel id and maybe add more limit switches and channels
-    public static final int kClimbMotorOneIndex = 9;
-    public static final int kClimbMotorTwoIndex = 10;
-
-
+    public static final int kClimbMotorOne = 9;
+    public static final int kClimbMotorTwo = 10;
 
     // Preset aim constants
     public static final double LOWRPM = 0.0; // RPM that the LOW aimMode winds to

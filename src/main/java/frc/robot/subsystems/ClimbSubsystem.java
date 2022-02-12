@@ -11,10 +11,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMax;
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.CvSink;
-import edu.wpi.first.cscore.CvSource;
-
 
 /** Add your docs here. */
 public class ClimbSubsystem extends SubsystemBase {
@@ -30,18 +26,13 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public ClimbSubsystem() {
     //One is left, two is right
-    m_climbMotorControllerOne = new MotorController("Climb Motor One", Constants.kClimbMotorOneIndex, 40, true);
-    m_climbMotorControllerTwo = new MotorController("Climb Motor Two", Constants.kClimbMotorTwoIndex, 40, true);
+    m_climbMotorControllerOne = new MotorController("Climb Motor One", Constants.kClimbMotorOne, 40, true);
+    m_climbMotorControllerTwo = new MotorController("Climb Motor Two", Constants.kClimbMotorTwo, 40, true);
     m_climbMotorControllerTwo.setInverted(true);
     m_climbMotorControllerTwo.setFollow(m_climbMotorControllerOne);
 
     m_limitSwitch = new DigitalInput(Constants.kLimitSwitchChannel);
 
-    //Example camera system, unsure if it goes here or not
-    //CameraServer.startAutomaticCapture();
-    //Not used at the moment, maby in the futue
-    //CvSink cvSink = CameraServer.getVideo();
-    //CvSource outputStream = CameraServer.putVideo("Blur", 640, 480);
   }
 
   public void enableClimb(boolean on, boolean up){
@@ -49,15 +40,17 @@ public class ClimbSubsystem extends SubsystemBase {
       if (up) {
         m_climbMotorControllerOne.getEncoder().setPosition(0);
         m_climbMotorControllerOne.getPID().setReference(25, CANSparkMax.ControlType.kPosition);
-        SmartDashboard.putNumber("Climb Hight", m_climbMotorControllerOne.getEncoder().getPosition());
       } else {
         m_climbMotorControllerOne.getEncoder().setPosition(0);
         m_climbMotorControllerOne.getPID().setReference(-25, CANSparkMax.ControlType.kPosition);
-        SmartDashboard.putNumber("Climb Hight", m_climbMotorControllerOne.getEncoder().getPosition());
       }
     } else {
       m_climbMotorControllerOne.setSpeed(0);
     }
+  }
+
+  public void periodic() {
+    SmartDashboard.putNumber("Climb Hight", m_climbMotorControllerOne.getEncoder().getPosition());
   }
 
   public boolean getLimitSwitchVal() {
