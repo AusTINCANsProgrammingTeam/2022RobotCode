@@ -116,25 +116,20 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // Normal Arcade Drive
   public void arcadeDrive() {
-    if (Robot.isSimulation()) {
-      m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.DBLeftJoystickAxisY), 
-                                      -m_driverJoystick.getRawAxis(Constants.DBRightJoystickAxisX));
-    } else {
-      m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.DBLeftJoystickAxisY), 
-                                      m_driverJoystick.getRawAxis(Constants.DBRightJoystickAxisY));
-    }                                  
+    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.leftJoystickY), 
+                                    m_driverJoystick.getRawAxis(Constants.rightJoystickX));
   }
 
   // Arcade Drive where you can only move forwards and backwards for testing
   //TODO: Make a command to switch modes (only if we actually want this)
   public void arcadeDrive(double rotation) {
-    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.DBLeftJoystickAxisY), rotation);
+    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.leftJoystickY), rotation);
   }
 
   // tank drive, not used but good to have
   public void tankDrive() {
-    m_differentialDrive.tankDrive(m_driverJoystick.getRawAxis(Constants.DBLeftJoystickAxisY), 
-                                  m_driverJoystick.getRawAxis(Constants.DBRightJoystickAxisY));
+    m_differentialDrive.tankDrive(m_driverJoystick.getRawAxis(Constants.leftJoystickY), 
+                                  m_driverJoystick.getRawAxis(Constants.rightJoystickY));
   }
 
   public void setAutonVolts(double leftVolts, double rightVolts) {
