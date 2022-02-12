@@ -80,7 +80,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     // calculate circumference then convert to meters
     // wheel radius in inches, want to convert meters
-    // divide by gear ratio to get in terms of motor rotations
+    // divide by gear ratio to get in terms of motor rotations when multiplied to number of motor rotations
     m_internalLeftEncoder.setPositionConversionFactor(
               2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter / Constants.gearRatio); 
     m_internalRightEncoder.setPositionConversionFactor(
@@ -90,15 +90,10 @@ public class DriveBaseSubsystem extends SubsystemBase {
     
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d()); 
 
-    // tuning PID for each motor
-    for(int i = 0; i < 4; i++) {
-      m_motorControllers[Constants.driveLeftFront].getPID().setP(0.000005);
-      m_motorControllers[Constants.driveLeftFront].getPID().setI(0.0000025);
-
-      m_motorControllers[Constants.driveRightFront].getPID().setP(0.000005);
-      m_motorControllers[Constants.driveRightFront].getPID().setI(0.0000025);
-
-      // rear motors should follow
+    // tuning PID for each motor, go through every motor index: 0,1,2,3
+    for(int i = 0; i <= 3; i++) {
+      m_motorControllers[i].getPID().setP(0.000005);
+      m_motorControllers[i].getPID().setI(0.0000025);
     }
   }
 
@@ -219,7 +214,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     leftSpeed = leftSpeed * Constants.inchesInMeter;  // meters to inches to work with radius in inches
     rightSpeed = rightSpeed * Constants.inchesInMeter;
 
-    leftSpeed = leftSpeed / Constants.wheelRadius;  // convert it to angular velocities
+    leftSpeed = leftSpeed / Constants.wheelRadius;  // convert it to angular velocity
     rightSpeed = rightSpeed / Constants.wheelRadius;
 
     leftSpeed = leftSpeed / (2*Math.PI);    // convert it to rotations per second, 1 rotation = 2pi radians
@@ -228,9 +223,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
     leftSpeed = leftSpeed * 60;   // convert it to rotations per minute (rpm)
     rightSpeed = rightSpeed * 60; 
 
-    leftSpeed = leftSpeed / Constants.gearRatio;    // apply gear ratio of 1 : 10.75
-    rightSpeed = rightSpeed / Constants.gearRatio;  // in wheel terms right now, 
-                                                    // need to get into motor rotational terms
+    leftSpeed = leftSpeed * Constants.gearRatio;    // apply gear ratio of 10.75 motor rotations : 1 wheel rotation
+    rightSpeed = rightSpeed * Constants.gearRatio;  // in wheel terms right now, 
+                                                    // need to get into motor rotational terms to feed to internal pid
 
     SmartDashboard.putNumber("left speed (rpm) [biconsumer]", leftSpeed);
     SmartDashboard.putNumber("right speed (rpm [biconsumer])", rightSpeed);
