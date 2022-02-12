@@ -21,9 +21,8 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSBeltController;
   private MotorController CDSWheelControllerOne;
   private MotorController CDSWheelControllerTwo;
-  private DigitalInput frontBallSensor;
-  private DigitalInput middleBallSensor;
-  private DigitalInput finalBallSensor;
+  private ColorSensorV3 colorSensorOne;
+  private DigitalInput backBeamBreak;
 
   public CDSSubsystem() {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
@@ -32,9 +31,8 @@ public class CDSSubsystem extends SubsystemBase {
 
     CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
 
-    frontBallSensor = new DigitalInput(Constants.initialBallSensorChannel);
-    middleBallSensor = new DigitalInput(Constants.middleBallSensorChannel);
-    finalBallSensor = new DigitalInput(Constants.finalBallSensorChannel); 
+    colorSensorOne = new ColorSensorV3(Constants.colorSensorPort);
+    backBeamBreak = new DigitalInput(Constants.initialBallSensorChannel);
   }
 
   public void CDSBeltWheelControllerToggle(boolean reverse) {
@@ -65,10 +63,9 @@ public class CDSSubsystem extends SubsystemBase {
   }
   
   public int[] getBeamBreakStatus() {
-    int frontStatus = frontBallSensor.get() ? 1: 0;
-    int middleStatus = middleBallSensor.get() ? 1: 0;
-    int finalStatus = finalBallSensor.get() ? 1: 0;
-    int[] beamBreakArray = {frontStatus, middleStatus, finalStatus};
+    int frontStatus = colorSensorOne.getProximity();
+    int backStatus = backBeamBreak.get() ? 1: 0;
+    int[] beamBreakArray = {frontStatus, backStatus};
     return beamBreakArray;
   }
   
@@ -78,9 +75,13 @@ public class CDSSubsystem extends SubsystemBase {
     SmartDashboard.putString("Ball Color", ballColor);
     SmartDashboard.putString("Alliance Color", allianceColor);
 
+    // change to account for color sensor being included
     int[] beamBreakStatus = getBeamBreakStatus();
-    int ballCount = beamBreakStatus[0] + beamBreakStatus[1] + beamBreakStatus[2];
-    SmartDashboard.putNumber("Ball Count", ballCount);
+
+    SmartDashboard.putNumber("Beam Break Status", beamBreakStatus[0]);
+    SmartDashboard.putNumber("Beam Break Status", beamBreakStatus[1]);
+    // int ballCount = beamBreakStatus[0] + beamBreakStatus[1];
+    // SmartDashboard.putNumber("Ball Count", ballCount);
   }
 
   public String getAllianceColor() {
@@ -90,8 +91,7 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public String senseColor() {
-    ColorSensorV3 colorSensor = new ColorSensorV3(Constants.colorSensorPort);
-    Color color = colorSensor.getColor();
+    Color color = colorSensorOne.getColor();
     double redAmount = color.red;
     double blueAmount = color.blue;
     if (redAmount > blueAmount) {
