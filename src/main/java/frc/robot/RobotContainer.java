@@ -73,7 +73,7 @@ public class RobotContainer {
   // auton
   // private Trajectory[] mTrajectories;  // multiple trajectories
   // private int trajectoryIndex = 0;
-  private Trajectory trajectory;
+  //private Trajectory trajectory;
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
@@ -161,7 +161,7 @@ public class RobotContainer {
     
 
     configureButtonBindings();
-    
+    /*
     try {
       initializeTrajectories();
     } catch (IOException e) {
@@ -169,7 +169,7 @@ public class RobotContainer {
       e.printStackTrace();
     }
 
-   
+   */
   }
 
   // Use this method to define your button->command mappings. Buttons can be
@@ -202,7 +202,7 @@ public class RobotContainer {
       buttons[Constants.AButton].whenPressed(limelightAlign);
     }
   }
-
+/*
   private void initializeTrajectories() throws IOException {
     // String[] trajectoryJSON = {"One.wpilib.json", "Two.wpilib.json", "Three.wpilib.json", "Four.wpilib.json"};  // add new trajectories manually
     // mTrajectories = new Trajectory[trajectoryJSON.length];
@@ -217,11 +217,12 @@ public class RobotContainer {
     Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
     trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
   }
-            
+  */          
   // Use this to pass the autonomous command to the main {@link Robot} class.
   // @return the command to run in autonomous
   public Command getAutonomousCommand() {
-    if (driveBaseSubsystem != null) {
+
+    /*if (driveBaseSubsystem != null) {
       //Ramsete Command for Pathweaver
       RamseteCommand ramseteCommand =
       new RamseteCommand(
@@ -247,6 +248,7 @@ public class RobotContainer {
 
       return ramseteCommand.andThen(() -> driveBaseSubsystem.setAutonVolts(0,0));
     }
+    */
     return null;
   }
 

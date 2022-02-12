@@ -18,7 +18,7 @@ public final class Constants {
 
     public enum Subsystems {
         // Change booleans to disable a subsystem in RobotContainer
-        DriveBaseSubsystem(true),
+        DriveBaseSubsystem(false),
         CDSSubsystem      (true),
         IntakeSubsystem   (true),
         ShooterSubsystem  (true),
@@ -129,7 +129,7 @@ public final class Constants {
     // Shooter Constants
     public static final class Shooter{
     public static final int shooterID = 4; // ID of the shooter
-    public static final int hoodID = 0; // ID of the hood;
+    //public static final int hoodID = 0; // ID of the hood;
     public static final double shooterHeight = 3;
     public static final double highHeight = 8.0 + 8.0/12.0; // Height of the high goal in ft from the carpet
     public static final double lowHeight = 5.0 + 7.75/12.0; // Height of the low goal in ft from the carpet

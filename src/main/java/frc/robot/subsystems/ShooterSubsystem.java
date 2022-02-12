@@ -101,9 +101,9 @@ public class ShooterSubsystem extends SubsystemBase {
     //KShooterController.setIMaxAccum(0.9, 0);
     //KShooterController.setD(0.0);
 
-    hood_motorController = new MotorController("Hood", Constants.Shooter.hoodID,40,true);
-    KHoodController = hood_motorController.getPID();
-    KHoodEncoder = shooter_motorController.getEncoder();
+    //hood_motorController = new MotorController("Hood", Constants.Shooter.hoodID,40,true);
+    //KHoodController = hood_motorController.getPID();
+    //KHoodEncoder = shooter_motorController.getEncoder();
 
   }
   public void updatePID(){
