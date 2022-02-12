@@ -57,8 +57,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.driveRightRearIndex] = new MotorController("Differential Right Rear", Constants.driveRightRear, Constants.driveBaseCurrentLimit);
 
     // invert left side motors
-    m_motorControllers[Constants.driveLeftFrontIndex].setInverted(true);
-    m_motorControllers[Constants.driveLeftRearIndex].setInverted(true);
+    m_motorControllers[Constants.driveRightFrontIndex].setInverted(true);
+    m_motorControllers[Constants.driveRightRearIndex].setInverted(true);
 
     //Forces middle and rear motors of each side to follow the first
     m_motorControllers[Constants.driveLeftRearIndex].setFollow(m_motorControllers[Constants.driveLeftFrontIndex]);
@@ -140,14 +140,14 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // Normal Arcade Drive
   public void arcadeDrive() {
-    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.leftJoystickY), 
-                                    -1 * m_driverJoystick.getRawAxis(Constants.rightJoystickX));
+    m_differentialDrive.arcadeDrive(-1 * m_driverJoystick.getRawAxis(Constants.leftJoystickY), 
+                                        m_driverJoystick.getRawAxis(Constants.rightJoystickX));
     // x-axis of rotation joystick is inverted so multiply by -1
   }
 
   // Arcade Drive where you can only move forwards and backwards for testing
   public void arcadeDrive(double rotation) {
-    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.leftJoystickY), rotation);
+    m_differentialDrive.arcadeDrive(-1 * m_driverJoystick.getRawAxis(Constants.leftJoystickY), rotation);
   }
 
   //TODO: Make a command to switch modes (extra)
