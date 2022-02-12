@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 // import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import com.revrobotics.CANSparkMax;
@@ -38,13 +39,17 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private RelativeEncoder m_internalLeftEncoder;
   private RelativeEncoder m_internalRightEncoder;
 
+  private SimpleMotorFeedforward m_sMotorFeedforward;
+
   private boolean usingExternal = false;
 
   
   public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {  
     m_driverJoystick = joystick;
     m_motorControllers = new MotorController[4];
-    m_gyro = new AHRS(I2C.Port.kMXP);    
+    m_gyro = new AHRS(I2C.Port.kMXP);
+
+    m_sMotorFeedforward = new SimpleMotorFeedforward(Constants.ksVolts, Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter);
 
     // motor controllers
     m_motorControllers[Constants.driveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.driveLeftFront, Constants.driveBaseCurrentLimit, true);
@@ -110,6 +115,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
     else {  // internal
       double leftPosition = m_internalLeftEncoder.getPosition();    // automatically applies conversion factor
       double rightPosition = m_internalRightEncoder.getPosition();
+
+      SmartDashboard.putNumber("Left position", leftPosition);
+      SmartDashboard.putNumber("Right position", rightPosition);
 
       m_odometry.update(
         m_gyro.getRotation2d(), leftPosition, rightPosition);
@@ -213,6 +221,15 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     leftSpeed = leftSpeed * Constants.inchesInMeter;  // meters to inches to work with radius in inches
     rightSpeed = rightSpeed * Constants.inchesInMeter;
+
+
+    // // set feedforward constrainty
+    // m_motorControllers[Constants.driveLeftFrontIndex].getPID().setFF(m_sMotorFeedforward.calculate(leftSpeed));
+    // m_motorControllers[Constants.driveLeftRearIndex].getPID().setFF(m_sMotorFeedforward.calculate(leftSpeed));
+
+    // m_motorControllers[Constants.driveRightFrontIndex].getPID().setFF(m_sMotorFeedforward.calculate(rightSpeed));
+    // m_motorControllers[Constants.driveRightRearIndex].getPID().setFF(m_sMotorFeedforward.calculate(rightSpeed));
+
 
     leftSpeed = leftSpeed / Constants.wheelRadius;  // convert it to angular velocity
     rightSpeed = rightSpeed / Constants.wheelRadius;
