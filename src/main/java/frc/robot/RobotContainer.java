@@ -50,7 +50,7 @@ public class RobotContainer {
   public static ShuffleboardTab debugTab;
 
   // The robot's subsystems and commands are defined here...
-  private static final Joystick driverJoystick = new Joystick(Constants.portNumber);
+  private static final Joystick driverJoystick = new Joystick(Constants.portNumber0);
   private JoystickButton[] buttons = new JoystickButton[11];
 
 
@@ -172,25 +172,25 @@ public class RobotContainer {
 
     // Intake
     if(intakeSubsystem != null) {
-      buttons[Constants.leftBumperButton].whileHeld(intakeForwardCommand);
-      buttons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
+      buttons[Constants.LBumper].whileHeld(intakeForwardCommand);
+      buttons[Constants.RBumper].whileHeld(intakeReverseCommand);
     }
 
     // Shooter
     if (shooterSubsystem != null) {
-      buttons[Constants.Xbutton].whenPressed(shooterPrime);
-      buttons[Constants.upPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
-      buttons[Constants.downPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
+      buttons[Constants.backButton].whenPressed(shooterPrime);
+      buttons[Constants.LJoystickButton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
+      buttons[Constants.RJoystickButton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
     }
 
-    // CDS
+    //CDS
     if (CDSSubsystem != null) {
-      buttons[Constants.Xbutton].whileHeld(CDSForwardCommand);
-      buttons[Constants.BButton].whileHeld(CDSReverseCommand);
+      buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
+      buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
     }
 	// Limelight
-	  if (driveBaseSubsystem != null && limelightSubsystem != null) {
-        buttons[Constants.AButton].whenPressed(limelightAlign);
+	if (driveBaseSubsystem != null && limelightSubsystem != null) {
+      buttons[Constants.startButton].whenPressed(limelightAlign);
     }
 
     if (climbSubsystem != null)
