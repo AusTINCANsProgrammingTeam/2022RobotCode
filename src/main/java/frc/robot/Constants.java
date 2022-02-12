@@ -19,10 +19,10 @@ public final class Constants {
     public enum Subsystems {
         // Change booleans to disable a subsystem in RobotContainer
         DriveBaseSubsystem(true),
-        CDSSubsystem      (false),
-        IntakeSubsystem   (false),
-        ShooterSubsystem  (false),
-        LimelightSubsystem(false);
+        CDSSubsystem      (true),
+        IntakeSubsystem   (true),
+        ShooterSubsystem  (true),
+        LimelightSubsystem(true);
 
         private final Boolean enabled; 
         
@@ -159,6 +159,4 @@ public final class Constants {
     public static final double ballFlywheelratio = 2;
     public static final int shooterCargoID = 5;
     public static final double cargoRotation = 3;
-
-    public static final double GearRatioOut = 0; //Idk if need But It fix errors in Shooter Sub
 }
