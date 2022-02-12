@@ -63,9 +63,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     m_motorControllers = new MotorController[4];
     m_gyro1 = new ADXRS450_Gyro();
+    m_gyro = new AnalogGyro(1);
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), new Pose2d(6.732000, 4.743371, new Rotation2d(2.70526)));
-    
-    
 
     // motor controllers
     m_motorControllers[Constants.driveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.driveLeftFront);
@@ -82,9 +81,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.driveRightRearIndex].setFollow(m_motorControllers[Constants.driveRightFrontIndex]);
 
     if (Robot.isSimulation()) {
-      m_gyro = new AnalogGyro(1);
       m_gyroSim = new AnalogGyroSim(m_gyro);
-
       m_leftEncoderSim = new EncoderSim(m_leftEncoder);
       m_rightEncoderSim = new EncoderSim(m_rightEncoder);
 

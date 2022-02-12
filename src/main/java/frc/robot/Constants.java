@@ -100,7 +100,7 @@ public final class Constants {
     public static final double LAUNCHAngle = 0.0; // Angle that the LAUNCH aimMode adjusts to
     public static final double TARMACRPM = 0.0; // RPM that the TARMAC aimMode winds to
     public static final double TARMACAngle = 0.0; // Angle that the TARMAC aimMode adjusts to
-    
+
     // Shooter Constants
     public static final int shooterID = 7; // ID of the shooter
     public static final int hoodID = 8; // ID of the hood;
