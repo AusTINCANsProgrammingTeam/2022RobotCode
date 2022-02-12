@@ -122,38 +122,7 @@ public class RobotContainer {
           }
 
         }
-        switch (sub.toString()) {
-          case "DriveBaseSubsystem": 
-          {
-            driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
-            driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
-            break;
-          }
-          case "CDSSubsystem": 
-          {
-            CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-            CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
-            break;
-          }
-          case "IntakeSubsystem":
-          {
-            intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
-            intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
-            beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
-            break;
-          }
-          case "ShooterSubsystem":
-          {
-            shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
-            break;
-          }
-          case "LimelightSubsystem":
-          {
-            limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
-            break;
-          }
-
-        }
+        
       }
     }
 
@@ -177,28 +146,33 @@ public class RobotContainer {
   // it to a {@link
   // edu.wpi.first.wpilibj2.command.button.JoystickButton}.
   private void configureButtonBindings() {
-
-    // Intake
-    if(intakeSubsystem != null) {
-      buttons[Constants.leftBumperButton].whileHeld(intakeForwardCommand);
-      buttons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
-    }
-
-    // Shooter
-    if (shooterSubsystem != null) {
-      buttons[Constants.Xbutton].whileHeld(shooterPrime);
-      buttons[Constants.upPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
-      buttons[Constants.downPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
-    }
-
-    if (CDSSubsystem != null) {
-      buttons[Constants.rightBumperButton].whileHeld(CDSForwardCommand);
-      buttons[Constants.leftBumperButton].whileHeld(CDSReverseCommand);
-    }
-	// Limelight
-	if (driveBaseSubsystem != null && limelightSubsystem != null) {
-      buttons[Constants.AButton].whenPressed(limelightAlign);
-    }
+    //Initializes commands based on enabled subsystems
+      if(driveBaseSubsystem != null){
+        driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
+        driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
+      }
+      if(CDSSubsystem != null && shooterSubsystem != null){
+        CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+        CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
+        buttons[Constants.rightBumperButton].whileHeld(CDSForwardCommand);
+        buttons[Constants.leftBumperButton].whileHeld(CDSReverseCommand);
+      }
+      if(intakeSubsystem != null){
+        intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
+        intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
+        beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
+        buttons[Constants.leftBumperButton].whileHeld(intakeForwardCommand);
+        buttons[Constants.rightBumperButton].whileHeld(intakeReverseCommand);
+      }
+      if(shooterSubsystem != null && limelightSubsystem != null && CDSSubsystem != null){
+        shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
+        buttons[Constants.rightTriggerButton].whenPressed(shooterPrime);
+        buttons[Constants.upPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
+        buttons[Constants.downPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
+      }
+      if(limelightSubsystem != null && driveBaseSubsystem != null){
+        limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
+      }
   }
 
   private void initializeTrajectories() throws IOException {
