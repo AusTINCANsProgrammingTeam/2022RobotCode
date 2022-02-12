@@ -48,14 +48,15 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_driverJoystick = joystick;
     m_motorControllers = new MotorController[4];
     m_gyro = new AHRS(I2C.Port.kMXP);
+    m_gyro.reset(); // resets the heading of the robot to 0
 
     m_sMotorFeedforward = new SimpleMotorFeedforward(Constants.ksVolts, Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter);
 
     // motor controllers
     m_motorControllers[Constants.driveLeftFrontIndex] = new MotorController("Differential Left Front", Constants.driveLeftFront, Constants.driveBaseCurrentLimit, true);
-    m_motorControllers[Constants.driveLeftRearIndex] = new MotorController("Differential Left Rear", Constants.driveLeftRear, Constants.driveBaseCurrentLimit, true);
+    m_motorControllers[Constants.driveLeftRearIndex] = new MotorController("Differential Left Rear", Constants.driveLeftRear, Constants.driveBaseCurrentLimit);
     m_motorControllers[Constants.driveRightFrontIndex] = new MotorController("Differential Right Front", Constants.driveRightFront, Constants.driveBaseCurrentLimit, true);
-    m_motorControllers[Constants.driveRightRearIndex] = new MotorController("Differential Right Rear", Constants.driveRightRear, Constants.driveBaseCurrentLimit, true);
+    m_motorControllers[Constants.driveRightRearIndex] = new MotorController("Differential Right Rear", Constants.driveRightRear, Constants.driveBaseCurrentLimit);
 
     // invert left side motors
     m_motorControllers[Constants.driveLeftFrontIndex].setInverted(true);
@@ -91,15 +92,20 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_internalRightEncoder.setPositionConversionFactor(
               2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter / Constants.gearRatio);
 
-    resetEncoders();
+    resetEncoders();  // reset encoders to reset position and velocity values
     
-    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d()); 
+    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
 
-    // tuning PID for each motor, go through every motor index: 0,1,2,3
-    for(int i = 0; i <= 3; i++) {
-      m_motorControllers[i].getPID().setP(0.000005);
-      m_motorControllers[i].getPID().setI(0.0000025);
-    }
+    // set PID values
+    m_motorControllers[Constants.driveRightFrontIndex].getPID().setP(Constants.driveRightPID[0]);
+    m_motorControllers[Constants.driveRightFrontIndex].getPID().setI(Constants.driveRightPID[1]);
+    m_motorControllers[Constants.driveRightFrontIndex].getPID().setD(Constants.driveRightPID[2]);
+
+    m_motorControllers[Constants.driveLeftFrontIndex].getPID().setP(Constants.driveLeftPID[0]);
+    m_motorControllers[Constants.driveLeftFrontIndex].getPID().setI(Constants.driveLeftPID[1]);
+    m_motorControllers[Constants.driveLeftFrontIndex].getPID().setD(Constants.driveLeftPID[2]);
+
+    // rear motor pid controllers should follow
   }
 
   @Override
@@ -126,10 +132,10 @@ public class DriveBaseSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Left IAccum", m_motorControllers[Constants.driveLeftFrontIndex].getPID().getIAccum());
     SmartDashboard.putNumber("Right IAccum", m_motorControllers[Constants.driveRightFrontIndex].getPID().getIAccum());
 
-    // Update the smart dashboard in here, runs a for loop so it does it for every motor
-    for(int i = 0; i < m_motorControllers.length; i++) {
-      m_motorControllers[i].updateSmartDashboard();
-    }
+    // Update the smart dashboard in here
+    // updates pid values of leaders only not the followers
+    m_motorControllers[Constants.driveLeftFrontIndex].updateSmartDashboard();
+    m_motorControllers[Constants.driveRightFrontIndex].updateSmartDashboard();
  
   }
 

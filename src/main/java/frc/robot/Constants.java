@@ -59,6 +59,10 @@ public final class Constants {
     public static final int driveRightRearIndex = 3;
     public static final int driveBaseCurrentLimit = 40;
 
+    // drive base pid values
+    public static final double[] driveRightPID = {0.00035, 0.0000008, 0};
+    public static final double[] driveLeftPID = {0.000005, 0.0000008, 0};
+
     // Encoder constants
     // TODO: Replace these with the correct ports
     public static final int leftEncoderDIOone = 0;

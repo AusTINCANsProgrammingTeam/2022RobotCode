@@ -138,8 +138,7 @@ public class RobotContainer {
     
     initializeTrajectories();
 
-    // set default command for drive base (schedules it)
-    driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
+    
   }
 
   // Use this method to define your button->command mappings. Buttons can be

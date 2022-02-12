@@ -19,6 +19,8 @@ public class MotorController {
     private double mI;
     private double mD;
 
+    private double mFF = 0;
+
     // default constructor
     public MotorController(String name, int deviceID) {
         mName = name;
@@ -119,6 +121,8 @@ public class MotorController {
         SmartDashboard.putNumber(mName+" P Value", mP);
         SmartDashboard.putNumber(mName+" I Value", mI);
         SmartDashboard.putNumber(mName+" D Value", mD);
+
+        SmartDashboard.putNumber(mName + " FF Value", mFF);
     }
 
     // Updates the Smart Dashboard and checks the PID values to determine if update is needed
@@ -136,6 +140,10 @@ public class MotorController {
             if (SmartDashboard.getNumber(mName + " D Value", mD) != mD) {
                 mD = SmartDashboard.getNumber(mName + " D Value", mD);
                 mPIDController.setD(mD);
+            }
+            if (SmartDashboard.getNumber(mName + " FF Value", mFF) != mFF) {
+                mFF = SmartDashboard.getNumber(mName + " FF Value", mFF);
+                mPIDController.setFF(mFF);
             }
         }
     }
