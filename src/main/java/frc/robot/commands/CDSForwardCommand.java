@@ -8,18 +8,18 @@ import org.opencv.features2d.FastFeatureDetector;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CDSSubsystem;
-import frc.robot.subsystems.ShooterSubsystem; 
+//import frc.robot.subsystems.ShooterSubsystem; 
 
 public class CDSForwardCommand extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
   private final CDSSubsystem mCDSSubsystem;
-  private final ShooterSubsystem mShooterSubsystem;
+  //private final ShooterSubsystem mShooterSubsystem;
   
-  public CDSForwardCommand(CDSSubsystem CDSSubsystem, ShooterSubsystem shooterSubsystem) {
+  public CDSForwardCommand(CDSSubsystem CDSSubsystem) {
     //Use addRequirements() here to declare subsystem dependencies.
     addRequirements(CDSSubsystem); 
-    addRequirements(shooterSubsystem);
-    mShooterSubsystem = shooterSubsystem;
+    //addRequirements(shooterSubsystem);
+    //mShooterSubsystem = shooterSubsystem;
     mCDSSubsystem = CDSSubsystem;
   }
 
@@ -27,7 +27,7 @@ public class CDSForwardCommand extends CommandBase {
   @Override
   public void initialize() {
     mCDSSubsystem.CDSBeltWheelControllerToggle(false);
-    mShooterSubsystem.runCargo(true, false);
+    //mShooterSubsystem.runCargo(true, false);
     
   }
 
@@ -39,7 +39,7 @@ public class CDSForwardCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     mCDSSubsystem.stopCDS();
-    mShooterSubsystem.runCargo(false, false);
+    //mShooterSubsystem.runCargo(false, false);
   }
 
   // Returns true when the command should end.

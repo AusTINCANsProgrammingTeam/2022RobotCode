@@ -143,14 +143,15 @@ public final class Constants {
     public static final double ballFlywheelratio = 2;
     public static final int shooterCargoID = 5;
     public static final double cargoRotation = 3;
-    public static final double kP =5e-4;
+    public static final double kP =6e-4;
     public static final double kI = 6e-7;
     public static final double kD = 0.0;
     public static final double kF = 0.0;
     public static final double kIZone = 0.9;
-    public static final double kMaxOutput = 0.0;
+    public static final double kMaxOutput = 0;
     public static final double kMaxI = 0.9;
     public static final double kMaxISlotId = 0;
+    public static final double kMinOutput =1;
     }
     
     

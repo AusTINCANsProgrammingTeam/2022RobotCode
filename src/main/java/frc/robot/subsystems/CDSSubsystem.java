@@ -12,6 +12,12 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.common.hardware.MotorController;
 //import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /** Add your docs here. */
 public class CDSSubsystem extends SubsystemBase {
@@ -20,6 +26,14 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSBeltController;
   private MotorController CDSWheelControllerOne;
   private MotorController CDSWheelControllerTwo;
+
+  private NetworkTableInstance inst = NetworkTableInstance.getDefault();
+  private NetworkTable table = inst.getTable("SmartDashboard");
+  private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
+  private NetworkTableEntry CDSWheelControllerDirection = CDSTab.add("CDS Wheel Direction", "Not Running").withPosition(0, 0).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+  private NetworkTableEntry CDSBeltControllerDirection = CDSTab.add("CDS Belt Direction", "Not Running").withPosition(0, 1).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+  private NetworkTableEntry CDSWheelControllerSpeed = CDSTab.add("CDS Wheel speed",0).withPosition(0,2).getEntry();
+  private NetworkTableEntry CDSBeltControllerSpeed = CDSTab.add("CDS Belt speed",0).withPosition(0, 3).getEntry();
 
   public CDSSubsystem() {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
@@ -32,21 +46,29 @@ public class CDSSubsystem extends SubsystemBase {
   public void CDSBeltWheelControllerToggle(boolean reverse) {
     if (reverse) {
       CDSWheelControllerOne.getSparkMax().set(Constants.CDSWheelControllerSpeed);
-      SmartDashboard.putString("CDS Wheel Controller Direction", "Reverse");
-      SmartDashboard.putNumber("CDS Wheel Controller Speed", -Constants.CDSWheelControllerSpeed);
+      CDSWheelControllerDirection.setString("Reverse");
+
+      //SmartDashboard.putString("CDS Wheel Controller Direction", "Reverse");
+      //SmartDashboard.putNumber("CDS Wheel Controller Speed", -Constants.CDSWheelControllerSpeed);
       
       CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
       CDSBeltController.setIdleMode(IdleMode.kBrake);
-      SmartDashboard.putString("CDS Belt Direction", "Reverse");
-      SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
+      CDSBeltControllerDirection.setString("Reverse");
+
+      //SmartDashboard.putString("CDS Belt Direction", "Reverse");
+      //SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
     } else {
       CDSWheelControllerOne.getSparkMax().set(Constants.CDSWheelControllerSpeed);
-      SmartDashboard.putString("CDS Wheel Controller Direction", "Forward");
-      SmartDashboard.putNumber("CDS Wheel Controller Speed", Constants.CDSWheelControllerSpeed);
+      CDSWheelControllerDirection.setString("Forward");
+      
+      //SmartDashboard.putString("CDS Wheel Controller Direction", "Forward");
+      //SmartDashboard.putNumber("CDS Wheel Controller Speed", Constants.CDSWheelControllerSpeed);
       
       CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
-      SmartDashboard.putString("CDS Belt Direction", "Forward");
-      SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
+      CDSBeltControllerDirection.setString("Forward");
+      
+      //SmartDashboard.putString("CDS Belt Direction", "Forward");
+      //SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
     }
   }
 
@@ -54,6 +76,11 @@ public class CDSSubsystem extends SubsystemBase {
     CDSWheelControllerOne.getSparkMax().set(0.0);
     CDSBeltController.getSparkMax().set(0.0);
     SmartDashboard.putNumber("CDS Belt Speed", 0.0);
-
-}
+  }
+  @Override
+    public void periodic() {
+      CDSBeltControllerSpeed.setDouble(CDSBeltController.getEncoder().getVelocity());
+      CDSWheelControllerSpeed.setDouble(CDSWheelControllerTwo.getEncoder().getVelocity());
+  
+    }
 } //Don't delete, for main method.

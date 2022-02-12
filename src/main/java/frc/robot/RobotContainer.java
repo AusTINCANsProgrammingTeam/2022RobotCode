@@ -57,16 +57,17 @@ public class RobotContainer {
   private static DriveBaseSubsystem driveBaseSubsystem;
   private static CDSSubsystem CDSSubsystem = new CDSSubsystem();
   private static IntakeSubsystem intakeSubsystem; 
-  private static ShooterSubsystem             shooterSubsystem = new ShooterSubsystem();
+  private static ShooterSubsystem shooterSubsystem;
   private static LimelightSubsystem limelightSubsystem;
 
   // commands
   private static DriveBaseTeleopCommand driveBaseTeleopCommand;
   private IntakeForwardCommand intakeForwardCommand;
   private IntakeReverseCommand intakeReverseCommand;
-  private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
-  private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
-  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+  private ShooterPrime shooterPrime;
+  //private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
+  private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
   private LimelightAlign limelightAlign;
   private BeamBreakCommand beamBreakCommand;
 
@@ -111,7 +112,7 @@ public class RobotContainer {
           case "ShooterSubsystem":
           {
             System.out.println("Shooter enabled");
-           // shooterSubsystem = new ShooterSubsystem();
+            shooterSubsystem = new ShooterSubsystem();
             break;
           }
           case "LimelightSubsystem":
@@ -144,7 +145,7 @@ public class RobotContainer {
           }
           case "ShooterSubsystem":
           {
-            //shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
+            shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
             break;
           }
           case "LimelightSubsystem":
@@ -188,7 +189,7 @@ public class RobotContainer {
 
     // Shooter
     if (shooterSubsystem != null) {
-      buttons[Constants.rightTriggerButton].whenPressed(shooterPrime);
+      buttons[Constants.Xbutton].whileHeld(shooterPrime);
       buttons[Constants.upPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
       buttons[Constants.downPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
     }

@@ -21,7 +21,7 @@ public class ShooterPrime extends CommandBase {
     addRequirements(shooterSubsystem);
     m_ShooterSubsystem = shooterSubsystem;
     //m_LimelightSubsystem = limelightSubsystem;
-    m_CDSSubsystem = cdsSubsystem;
+    //m_CDSSubsystem = cdsSubsystem;
     SmartDashboard.putBoolean("wheelReady", false);
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -30,6 +30,7 @@ public class ShooterPrime extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_ShooterSubsystem.resetidelay();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -44,23 +45,16 @@ public class ShooterPrime extends CommandBase {
   public void end(boolean interrupted) {
     m_ShooterSubsystem.runCargo(false,false);
     m_ShooterSubsystem.windFlywheel(0);
+    m_ShooterSubsystem.SetCargoBoolean(false);
+    
+    
     //SmartDashboard.putBoolean("wheelReady", false);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_ShooterSubsystem.wheelReady()){
-      SmartDashboard.putBoolean("wheelReady", true);
-      //if(i > 0 || m_LimelightSubsystem.calculatePID() == 0.0){
-        m_ShooterSubsystem.runCargo(true,true);
-        m_CDSSubsystem.CDSBeltWheelControllerToggle(false);
-        i++;
-        if(i==100){ //Expected to add a 2000ms delay
-          return true;
-       // }
-      }
-    }
+   
     return false;
   }
 }

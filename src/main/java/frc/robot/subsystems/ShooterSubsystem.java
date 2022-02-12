@@ -48,30 +48,35 @@ public class ShooterSubsystem extends SubsystemBase {
   private int IMaxAccumIDconstant;
   private int I_Zone;
   private double MaxOutput;
+  private int idelay;
 
 
 
   private NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private NetworkTable table = inst.getTable("SmartDashboard");
-  private ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
+  private ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter Tab");
 
 
   private NetworkTableEntry dashTunePid = shooterTab.add("Tune PID", true).withPosition(0, 0).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
-  private NetworkTableEntry PID_P = shooterTab.addPersistent("PID P", Constants.Shooter.kP).withPosition(0, 2).getEntry();
-  private NetworkTableEntry PID_I = shooterTab.addPersistent("PID I", Constants.Shooter.kI).withPosition(1, 2).getEntry();
-  private NetworkTableEntry PID_D = shooterTab.addPersistent("PID D", Constants.Shooter.kD).withPosition(2, 2).getEntry();
-  private NetworkTableEntry PID_F = shooterTab.addPersistent("PID F", Constants.Shooter.kF).withPosition(0,1).getEntry();
-  private NetworkTableEntry PID_IMaxAccum = shooterTab.addPersistent("PID I Max Accum", Constants.Shooter.kMaxI).withPosition(6,1).getEntry();
-  private NetworkTableEntry PID_Izone = shooterTab.addPersistent("PID I Range", Constants.Shooter.kIZone).withPosition(4, 2).getEntry();
-  private NetworkTableEntry PID_MaxOutput = shooterTab.addPersistent("PID Peak Output", Constants.Shooter.kMaxOutput).withPosition(5, 2).getEntry();
-  private NetworkTableEntry PID_IMaxAccumID = shooterTab.addPersistent("PID Peak Output Slot ID", Constants.Shooter.kMaxISlotId).withPosition(6,2).getEntry();
+  private NetworkTableEntry PID_P = shooterTab.addPersistent("PID P", Constants.Shooter.kP).withPosition(0, 1).getEntry();
+  private NetworkTableEntry PID_I = shooterTab.addPersistent("PID I", Constants.Shooter.kI).withPosition(0, 2).getEntry();
+  private NetworkTableEntry PID_D = shooterTab.addPersistent("PID D", Constants.Shooter.kD).withPosition(0, 3).getEntry();
+  private NetworkTableEntry PID_F = shooterTab.addPersistent("PID F", Constants.Shooter.kF).withPosition(0,4).getEntry();
+  private NetworkTableEntry PID_IMaxAccum = shooterTab.addPersistent("PID I Max Accum", Constants.Shooter.kMaxI).withPosition(0,5).getEntry();
+  private NetworkTableEntry PID_Izone = shooterTab.addPersistent("PID I Range", Constants.Shooter.kIZone).withPosition(1, 0).getEntry();
+  private NetworkTableEntry PID_MaxOutput = shooterTab.addPersistent("PID Peak Output", Constants.Shooter.kMaxOutput).withPosition(1, 1).getEntry();
+  private NetworkTableEntry PID_MinOutput = shooterTab.addPersistent("PID Min Out ", Constants.Shooter.kMinOutput).withPosition(1,2).getEntry();
+  private NetworkTableEntry PID_IMaxAccumID = shooterTab.addPersistent("PID Peak Output Slot ID", Constants.Shooter.kMaxISlotId).withPosition(1,3).getEntry();
 
-  private NetworkTableEntry ShooterReverted = shooterTab.addPersistent("Shooter Reverted", false).withPosition(4,1).getEntry();
-  private NetworkTableEntry IShootingMode = shooterTab.add("Shooting Mode",1).withPosition(0, 1).getEntry();
-  private NetworkTableEntry DDistance = shooterTab.add("Distance to goal", 0.0).withPosition(1,1).getEntry();
+  private NetworkTableEntry ShooterReverted = shooterTab.addPersistent("Shooter Reverted", false).withPosition(1,4).getEntry();
+  private NetworkTableEntry DShootingMode = shooterTab.add("Shooting Mode",1).withPosition(1, 5).getEntry();
+  private NetworkTableEntry DDistance = shooterTab.add("Distance to goal", 0.0).withPosition(2,0).getEntry();
   private NetworkTableEntry DShooterRPM = shooterTab.add("Shooter RPM", 0.0).withPosition(2,1).getEntry();
-  private NetworkTableEntry BCargoRunning = shooterTab.add("Is the CDS Running",false).withPosition(3, 1).getEntry();
-  private NetworkTableEntry DShooterRPMInput = shooterTab.add("Shooter RPM Input",0.0).withPosition(3, 2).getEntry();
+  private NetworkTableEntry BCargoRunning = shooterTab.add("Is the CDS Running",false).withPosition(2, 2).getEntry();
+  private NetworkTableEntry DShooterRPMInput = shooterTab.add("Shooter RPM Input",2000).withPosition(2, 3).getEntry();
+  private NetworkTableEntry IDelayTable = shooterTab.add("Current I delay",0).withPosition(2, 4).getEntry();
+  private double MaxOutputConstant;
+  private double MinOutputConstant;
 
   
   
@@ -87,7 +92,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
   public ShooterSubsystem() {
-    SmartDashboard.putNumber("RPMIN", RPMIN);
+    //SmartDashboard.putNumber("RPMIN", RPMIN);
     aimMode = 4;
     cargo_motorController = new MotorController("Shooter Cargo", Constants.Shooter.shooterCargoID,40,true);
     kCargoController = cargo_motorController.getPID();
@@ -98,7 +103,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     //KShooterController.setP(5e-4);
     //KShooterController.setI(6e-7);
-    //KShooterController.setIMaxAccum(0.9, 0);
+    KShooterController.setIMaxAccum(0.9, 0);
     //KShooterController.setD(0.0);
 
     //hood_motorController = new MotorController("Hood", Constants.Shooter.hoodID,40,true);
@@ -115,8 +120,11 @@ public class ShooterSubsystem extends SubsystemBase {
       Iconstant = PID_I.getDouble(0);
       Dconstant = PID_D.getDouble(0);
       Fconstant = PID_F.getDouble(0);
+      MaxOutputConstant = PID_MaxOutput.getDouble(0);
+      MinOutputConstant = PID_MinOutput.getDouble(0);
       IMaxAccumconstant = PID_IMaxAccum.getDouble(0);
       IMaxAccumIDconstant =(int)PID_IMaxAccumID.getDouble(0);
+      shooter_motorController.getPID().setOutputRange(MaxOutputConstant, MinOutputConstant);
       shooter_motorController.getPID().setP(Pconstant);
       shooter_motorController.getPID().setI(Iconstant);
       shooter_motorController.getPID().setD(Dconstant);
@@ -130,7 +138,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // Adjusts Hood using PID control to passed angle a
   }
-
+  public void resetidelay(){
+    idelay = 0;
+  }
   public double getVelocityInput(){
     return DShooterRPMInput.getDouble(0.0);
   }
@@ -147,16 +157,26 @@ public class ShooterSubsystem extends SubsystemBase {
     rpm = DShooterRPMInput.getDouble(0);
     KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
     }
-    
+
     if (wheelReady()){
-      runCargo(true,false);
+      BCargoRunning.setBoolean(true);
+      idelay++;
+      if (idelay==50){
+      runCargo(true,true);
+      }
+
+
     }
     else{
       runCargo(false, false);
     }
+    
    
       //KShooterController.setIAccum(0);
 
+  }
+  public void  SetCargoBoolean(boolean a){
+    BCargoRunning.setBoolean(a);
   }
 
   public void runCargo(boolean a,boolean reversed) {
@@ -173,27 +193,34 @@ public class ShooterSubsystem extends SubsystemBase {
     double flywheelSpeed = KShooterEncoder.getVelocity();
     currentRPM = DShooterRPMInput.getDouble(0);
     if (flywheelSpeed > currentRPM - 15 && flywheelSpeed < currentRPM + 15) {
+      
       return true;
     }
+    else{
     return false;
+    }
   }
-
-  public void setAimMode(int m) {
-    aimMode = m;
+  public void setAimMode(Double m) {
+    DShootingMode.setDouble(m);
   }
 
   public void cycleAimModeUp() {
-    aimMode++;
-    if (aimMode > 3) {
-      aimMode = 0;
+    double ShooterAimMode = DShootingMode.getDouble(0);
+    ShooterAimMode ++;
+    if (ShooterAimMode>3){
+      ShooterAimMode = 0;
     }
+    setAimMode(ShooterAimMode);
+    
   }
 
   public void cycleAimModeDown() {
-    aimMode--;
-    if (aimMode < 0) {
-      aimMode = 3;
+    double ShooterAimMode = DShootingMode.getDouble(0);
+    ShooterAimMode--;
+    if (ShooterAimMode < 0) {
+      ShooterAimMode = 3;
     }
+    setAimMode(ShooterAimMode);
   }
 
   public double getTY() {
@@ -237,7 +264,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
   public void prime() {
-    int aimMode = (int)IShootingMode.getDouble(0);
+     int aimMode = (int)DShootingMode.getDouble(0);
     // Check what aimMode is active, gets distance if AUTO, winds flywheel, adjusts
     // hood correspondingly
     
@@ -275,19 +302,19 @@ public class ShooterSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("IAccum",KShooterController.getIAccum());
     SmartDashboard.putNumber("dist", getDistance());
+    IDelayTable.setNumber(idelay);
     if(DShooterRPM.getDouble(0.0) != shooter_motorController.getEncoder().getVelocity()){
       DShooterRPM.setDouble(shooter_motorController.getEncoder().getVelocity());
     }
     if(DDistance.getDouble(0.0)!= getDistance()){
       DDistance.setDouble(getDistance());
     }
-    if (BCargoRunning.getBoolean(false)!= (kCargoEncoder.getVelocity()>1.0)){
-      BCargoRunning.setBoolean(kCargoEncoder.getVelocity()>1.0);
-
-    }
     if (dashTunePid.getBoolean(false)){
-      updatePID();
-      dashTunePid.setBoolean(false);
+      if ((shooter_motorController.getPID().getP() != PID_P.getDouble(0))||(shooter_motorController.getPID().getI() != PID_I.getDouble(0)) ||(shooter_motorController.getPID().getD() != PID_D.getDouble(0))) {
+        updatePID();
+      }
+     
+      //dashTunePid.setBoolean(false);
 
     }
     if (ShooterReverted.getBoolean(false)!= shooter_motorController.getEncoder().getInverted()){
