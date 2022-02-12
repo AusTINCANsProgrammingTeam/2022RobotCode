@@ -131,13 +131,10 @@ public class RobotContainer {
         }
       }
     }
-
-    
+   
     configureButtonBindings();
     
     initializeTrajectories();
-
-    
   }
 
   // Use this method to define your button->command mappings. Buttons can be
