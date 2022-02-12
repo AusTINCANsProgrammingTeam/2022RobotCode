@@ -12,6 +12,8 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.Shooter;
 
 import java.lang.Math;
+
+import com.fasterxml.jackson.annotation.JacksonInject.Value;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -52,6 +54,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
 
+
   private NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private NetworkTable table = inst.getTable("SmartDashboard");
   private ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter Tab");
@@ -69,14 +72,19 @@ public class ShooterSubsystem extends SubsystemBase {
   private NetworkTableEntry PID_IMaxAccumID = shooterTab.addPersistent("PID Peak Output Slot ID", Constants.Shooter.kMaxISlotId).withPosition(1,3).getEntry();
 
   private NetworkTableEntry ShooterReverted = shooterTab.addPersistent("Shooter Reverted", false).withPosition(1,4).getEntry();
-  private NetworkTableEntry DShootingMode = shooterTab.add("Shooting Mode",1).withPosition(1, 5).getEntry();
+  private NetworkTableEntry DShootingMode = shooterTab.add("Shooting Mode",4).withPosition(1, 5).getEntry();
   private NetworkTableEntry DDistance = shooterTab.add("Distance to goal", 0.0).withPosition(2,0).getEntry();
   private NetworkTableEntry DShooterRPM = shooterTab.add("Shooter RPM", 0.0).withPosition(2,1).getEntry();
   private NetworkTableEntry BCargoRunning = shooterTab.add("Is the CDS Running",false).withPosition(2, 2).getEntry();
   private NetworkTableEntry DShooterRPMInput = shooterTab.add("Shooter RPM Input",2000).withPosition(2, 3).getEntry();
-  private NetworkTableEntry IDelayTable = shooterTab.add("Current I delay",0).withPosition(2, 4).getEntry();
+  private NetworkTableEntry IDelayTable = shooterTab.add("Current I delay",0).withPosition(2, 4).getEntry(); //Delay before the CDS deliver the ball for the PID to stablize the speed
   private double MaxOutputConstant;
   private double MinOutputConstant;
+  private ShooterConfig[] DistanceArray;
+
+
+
+
 
   
   
@@ -100,6 +108,31 @@ public class ShooterSubsystem extends SubsystemBase {
     shooter_motorController = new MotorController("Shooter", Constants.Shooter.shooterID, 40, true);
     KShooterController = shooter_motorController.getPID();
     KShooterEncoder = shooter_motorController.getEncoder();
+    
+    DistanceArray[0] = new ShooterConfig(0,0, 0);
+    DistanceArray[1] = new ShooterConfig(0, 0, 0);
+    DistanceArray[2] = new ShooterConfig(0,0, 0);
+    DistanceArray[3] = new ShooterConfig(0,0, 0);
+    DistanceArray[4] = new ShooterConfig(0,0, 0);
+    DistanceArray[5] = new ShooterConfig(0,0, 0);
+    DistanceArray[6] = new ShooterConfig(0,0, 0);
+    DistanceArray[7] = new ShooterConfig(0,0, 0);
+    DistanceArray[8] = new ShooterConfig(0,0, 0);
+    DistanceArray[9] = new ShooterConfig(0,0, 0);
+    DistanceArray[10] = new ShooterConfig(0,0, 0);
+    DistanceArray[11] = new ShooterConfig(0,0, 0);
+    DistanceArray[12] = new ShooterConfig(0,0, 0);
+    DistanceArray[13] = new ShooterConfig(0,0, 0);
+    DistanceArray[14] = new ShooterConfig(0,0, 0);
+    DistanceArray[15] = new ShooterConfig(0,0, 0);
+    DistanceArray[16] = new ShooterConfig(0,0, 0);
+    DistanceArray[17] = new ShooterConfig(0,0, 0);
+    DistanceArray[18] = new ShooterConfig(0,0, 0);
+    DistanceArray[19] = new ShooterConfig(0,0, 0);
+    
+
+
+
 
     //KShooterController.setP(5e-4);
     //KShooterController.setI(6e-7);
@@ -132,7 +165,20 @@ public class ShooterSubsystem extends SubsystemBase {
       shooter_motorController.getPID().setIMaxAccum(IMaxAccumconstant, IMaxAccumIDconstant);
     }
   }
-
+  public double[] lookup(double Currentdistance){
+    if (Currentdistance < DistanceArray[0].getDistance()){
+      return DistanceArray[0].getVelocityAndAngle();
+    }
+    int i =0;
+    while(i<DistanceArray.length){
+      i++;
+      if (Currentdistance >= DistanceArray[i].getDistance()){
+        return ShooterConfig.Interprolate(DistanceArray[i-1], DistanceArray[i], Currentdistance);
+      }
+      
+    }
+    return DistanceArray[DistanceArray.length].getVelocityAndAngle();
+  }
   public void adjustHood(double a) {
     KHoodController.setReference(a, CANSparkMax.ControlType.kPosition);
 
@@ -154,14 +200,14 @@ public class ShooterSubsystem extends SubsystemBase {
     }
     else
     {
-    rpm = DShooterRPMInput.getDouble(0);
     KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
     }
 
     if (wheelReady()){
       BCargoRunning.setBoolean(true);
       idelay++;
-      if (idelay==50){
+      //25 miliseconds delay
+      if (idelay==25){
       runCargo(true,true);
       }
 
@@ -291,7 +337,7 @@ public class ShooterSubsystem extends SubsystemBase {
         windFlywheel(Constants.TARMACRPM);
         break;
       case 4: //Case for TEST mode, just takes an RPM and winds
-        windFlywheel(SmartDashboard.getNumber("RPMIN", RPMIN));
+        windFlywheel(DShooterRPMInput.getDouble(0));
         break;
     }
     
@@ -300,8 +346,8 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("IAccum",KShooterController.getIAccum());
-    SmartDashboard.putNumber("dist", getDistance());
+    //SmartDashboard.putNumber("IAccum",KShooterController.getIAccum());
+    //SmartDashboard.putNumber("dist", getDistance());
     IDelayTable.setNumber(idelay);
     if(DShooterRPM.getDouble(0.0) != shooter_motorController.getEncoder().getVelocity()){
       DShooterRPM.setDouble(shooter_motorController.getEncoder().getVelocity());
