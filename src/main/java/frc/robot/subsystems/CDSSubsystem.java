@@ -26,10 +26,10 @@ public class CDSSubsystem extends SubsystemBase {
 
   public CDSSubsystem() {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
-    CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerOneID, 40);
-    CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerTwoID, 40);
+    //CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerOneID, 40);
+    //CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerTwoID, 40);
 
-    CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
+    //CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
 
     colorSensorOne = new ColorSensorV3(Constants.colorSensorPort);
     backBeamBreak = new DigitalInput(Constants.initialBallSensorChannel);
@@ -62,26 +62,24 @@ public class CDSSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("CDS Belt Speed", 0.0);
   }
   
-  public int[] getBeamBreakStatus() {
-    int frontStatus = colorSensorOne.getProximity();
+  public int[] getSensorStatus() {
+    int frontStatus = colorSensorOne.getProximity() > 800 ? 1: 0;
     int backStatus = backBeamBreak.get() ? 1: 0;
     int[] beamBreakArray = {frontStatus, backStatus};
     return beamBreakArray;
   }
   
   public void periodic() {
+    // Color sensing
     String ballColor = senseColor();
     String allianceColor = getAllianceColor();
     SmartDashboard.putString("Ball Color", ballColor);
     SmartDashboard.putString("Alliance Color", allianceColor);
 
-    // change to account for color sensor being included
-    int[] beamBreakStatus = getBeamBreakStatus();
-
-    SmartDashboard.putNumber("Beam Break Status", beamBreakStatus[0]);
-    SmartDashboard.putNumber("Beam Break Status", beamBreakStatus[1]);
-    // int ballCount = beamBreakStatus[0] + beamBreakStatus[1];
-    // SmartDashboard.putNumber("Ball Count", ballCount);
+    // Ball indexing
+    int[] sensorStatus = getSensorStatus();
+    int ballCount = sensorStatus[0] + sensorStatus[1];
+    SmartDashboard.putNumber("Ball Count", ballCount);
   }
 
   public String getAllianceColor() {

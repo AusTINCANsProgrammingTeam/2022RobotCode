@@ -136,12 +136,12 @@ public class RobotContainer {
 
     configureButtonBindings();
     
-    try {
+   /* try {
       initializeTrajectories();
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
-    }
+    }*/
 
    
   }
@@ -194,8 +194,8 @@ public class RobotContainer {
 
     // to test auton with just a one straight path
     String trajectoryJSON = "Straight.wpilib.json";
-    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-    trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    //Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+   // trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
   }
             
   // Use this to pass the autonomous command to the main {@link Robot} class.

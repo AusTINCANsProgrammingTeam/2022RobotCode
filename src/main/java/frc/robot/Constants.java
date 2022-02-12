@@ -22,7 +22,7 @@ public final class Constants {
         DriveBaseSubsystem(false),
         CDSSubsystem      (true),
         IntakeSubsystem   (false),
-        ShooterSubsystem  (true),
+        ShooterSubsystem  (false),
         LimelightSubsystem(false);
 
         private final Boolean enabled; 
@@ -81,7 +81,7 @@ public final class Constants {
     public static final DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(0.5);    // Replace 0.5 with track width in meters
 
     //Controller constants
-    public static final int DBJoystickPort = 0;
+   // public static final int DBJoystickPort = 0;
     public static final int DBLeftJoystickAxisX = 0;
     public static final int DBLeftJoystickAxisY = 1;
     public static final int DBRightJoystickAxisX = 2;
