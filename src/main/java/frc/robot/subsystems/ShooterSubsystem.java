@@ -76,7 +76,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public boolean wheelReady(){
     double flywheelSpeed = KShooterEncoder.getVelocity();
-    if (flywheelSpeed > currentRPM - 15 && flywheelSpeed < currentRPM + 15) {
+    if (flywheelSpeed > currentRPM - 10 && flywheelSpeed < currentRPM + 10) {
       return true;
     }
     return false;
