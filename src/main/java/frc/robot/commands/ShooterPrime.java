@@ -54,13 +54,13 @@ public class ShooterPrime extends CommandBase {
   public boolean isFinished() {
     if(m_ShooterSubsystem.wheelReady()){
       SmartDashboard.putBoolean("wheelReady", true);
-      //if(i > 0 || m_LimelightSubsystem.calculatePID() == 0.0){
+      if(i > 0 || m_LimelightSubsystem.calculatePID() == 0.0){
         m_ShooterSubsystem.runCargo(true,true);
         m_CDSSubsystem.CDSBeltWheelControllerToggle(false);
         i++;
-        if(i==100){ //Expected to add a 2000ms delay
+        if(i>=100){ //Expected to add a 2000ms delay
           return true;
-       // }
+        }
       }
     }
     return false;

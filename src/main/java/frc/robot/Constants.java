@@ -22,7 +22,7 @@ public final class Constants {
         CDSSubsystem      (true),
         IntakeSubsystem   (true),
         ShooterSubsystem  (true),
-        LimelightSubsystem(false);
+        LimelightSubsystem(true);
 
         private final Boolean enabled; 
         
@@ -134,8 +134,8 @@ public final class Constants {
     public static final double lowHeight = 5.0 + 7.75/12.0; // Height of the low goal in ft from the carpet
     public static final double airboneTime = 1.2;
     public static final double gravity = 32;
-    public static final double LLHeight = 8.5/12.0; // Height of the limelight in ft from the carpet
-    public static final double LLAngle = 29.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as exact as possible
+    public static final double LLHeight = 3.0 + 7.0/12.0; // Height of the limelight in ft from the carpet
+    public static final double LLAngle = 40.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as exact as possible
     public static final double gearRatioIn = 34;
     public static final double gearRatioOut = 14;
     public static final double gearDiameter = 4; // Gear diameter in inches

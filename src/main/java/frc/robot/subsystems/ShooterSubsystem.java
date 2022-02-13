@@ -24,7 +24,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private RelativeEncoder KHoodEncoder;
   private MotorController cargo_motorController;
   private double currentRPM;
-  private double RPMIN = 3100;
+  private double RPMIN = 3500;
 
   public ShooterSubsystem() {
     SmartDashboard.putNumber("RPMIN", RPMIN);

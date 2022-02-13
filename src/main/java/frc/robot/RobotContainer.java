@@ -55,18 +55,18 @@ public class RobotContainer {
 
   // subsystems
   private static DriveBaseSubsystem driveBaseSubsystem;
-  private static CDSSubsystem CDSSubsystem = new CDSSubsystem();
+  private static CDSSubsystem CDSSubsystem;
   private static IntakeSubsystem intakeSubsystem; 
-  private static ShooterSubsystem             shooterSubsystem = new ShooterSubsystem();
+  private static ShooterSubsystem shooterSubsystem;
   private static LimelightSubsystem limelightSubsystem;
 
   // commands
   private static DriveBaseTeleopCommand driveBaseTeleopCommand;
   private IntakeForwardCommand intakeForwardCommand;
   private IntakeReverseCommand intakeReverseCommand;
-  private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
-  private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
-  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+  private ShooterPrime shooterPrime;
+  private CDSForwardCommand CDSForwardCommand;
+  private CDSReverseCommand CDSReverseCommand;
   private LimelightAlign limelightAlign;
   private BeamBreakCommand beamBreakCommand;
 
@@ -135,9 +135,7 @@ public class RobotContainer {
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
-    }
-
-   
+    }   
   }
 
   // Use this method to define your button->command mappings. Buttons can be
@@ -168,11 +166,12 @@ public class RobotContainer {
       if(shooterSubsystem != null && limelightSubsystem != null && CDSSubsystem != null){
         shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
         buttons[Constants.rightTriggerButton].whenPressed(shooterPrime);
-        buttons[Constants.upPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
-        buttons[Constants.downPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
+        //buttons[Constants.upPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
+        //buttons[Constants.downPOV].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
       }
       if(limelightSubsystem != null && driveBaseSubsystem != null){
         limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
+        buttons[Constants.BButton].whenPressed(limelightAlign);
       }
   }
 
