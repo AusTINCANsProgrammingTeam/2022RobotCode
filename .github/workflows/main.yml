@@ -12,7 +12,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
+  # Build job
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -32,3 +32,10 @@ jobs:
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
       run: ./gradlew build
+  # Simulate Job
+  simulate:
+    timeoutInMinutes: 5
+    # Runs a simulation to spot check crashes
+    steps:
+    - name: Run simulation to check for runtime errors
+      run: ./gradlew simulateJava
