@@ -135,7 +135,10 @@ public final class Constants {
         public static final int rightJoystickY = 3; //tank right turning
     //}
 
-    // Preset aim constants
+  
+    // Shooter Constants
+    public static final class Shooter{
+    //Preset Aim constants
     public static final double LOWRPM = 0.0; // RPM that the LOW aimMode winds to
     public static final double LOWAngle = 0.0; // Angle that the LOW aimMode adjusts to
     public static final double LAUNCHRPM = 0.0; // RPM that the LAUNCH aimMode winds to
@@ -143,8 +146,6 @@ public final class Constants {
     public static final double TARMACRPM = 0.0; // RPM that the TARMAC aimMode winds to
     public static final double TARMACAngle = 0.0; // Angle that the TARMAC aimMode adjusts to
     
-    // Shooter Constants
-    public static final class Shooter{
     public static final int shooterID = 4; // ID of the shooter
     //public static final int hoodID = 0; // ID of the hood;
     public static final double shooterHeight = 3;

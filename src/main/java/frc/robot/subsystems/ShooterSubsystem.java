@@ -128,6 +128,7 @@ public class ShooterSubsystem extends SubsystemBase {
     DistanceArray[17] = new ShooterConfig(0,0, 0);
     DistanceArray[18] = new ShooterConfig(0,0, 0);
     DistanceArray[19] = new ShooterConfig(0,0, 0);
+    //TODO:FIll lookup table
     
 
 
@@ -168,9 +169,7 @@ public class ShooterSubsystem extends SubsystemBase {
     if (Currentdistance < DistanceArray[0].getDistance()){
       return DistanceArray[0].getVelocityAndAngle();
     }
-    int i =0;
-    while(i<DistanceArray.length){
-      i++;
+    for(int i=0;i<DistanceArray.length;i++){
       if (Currentdistance >= DistanceArray[i].getDistance()){
         return ShooterConfig.Interprolate(DistanceArray[i-1], DistanceArray[i], Currentdistance);
       }
@@ -205,7 +204,7 @@ public class ShooterSubsystem extends SubsystemBase {
     if (wheelReady()){
       BCargoRunning.setBoolean(true);
       idelay++;
-      //25 miliseconds delay
+      //500 miliseconds delay
       if (idelay==25){
       runCargo(true,true);
       }
@@ -316,8 +315,8 @@ public class ShooterSubsystem extends SubsystemBase {
     switch (aimMode) {
       case 0: // Case for LOW mode, winds flywheel to preset RPM and adjusts hood to preset
               // angle
-        adjustHood(Constants.LOWAngle);
-        windFlywheel(Constants.LOWRPM);
+        adjustHood(Constants.Shooter.LOWAngle);
+        windFlywheel(Constants.Shooter.LOWRPM);
         break;
       case 1: // Case for AUTO mode, calculates trajectory and winds flywheel/adjusts hood to
               // a dynamic state
@@ -327,13 +326,13 @@ public class ShooterSubsystem extends SubsystemBase {
         break;
       case 2: // Case for LAUNCH mode, winds flywheel to preset RPM and adjusts hood to preset
               // angle
-        adjustHood(Constants.LAUNCHAngle);
-        windFlywheel(Constants.LAUNCHRPM);
+        adjustHood(Constants.Shooter.LAUNCHAngle);
+        windFlywheel(Constants.Shooter.LAUNCHRPM);
         break;
       case 3: // Case for TARMAC mode, winds flywheel to preset RPM and adjusts hood to preset
               // angle
-        adjustHood(Constants.TARMACAngle);
-        windFlywheel(Constants.TARMACRPM);
+        adjustHood(Constants.Shooter.TARMACAngle);
+        windFlywheel(Constants.Shooter.TARMACRPM);
         break;
       case 4: //Case for TEST mode, just takes an RPM and winds
         windFlywheel(DShooterRPMInput.getDouble(0));

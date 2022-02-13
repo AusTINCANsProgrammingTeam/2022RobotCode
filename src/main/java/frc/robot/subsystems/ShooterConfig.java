@@ -15,10 +15,6 @@ public class ShooterConfig {
     double Distance;
     double Angle;
     double RPM;
-    double d;
-    double velocityreturn;
-    double thetareturn;
-    double [] returnArray;
     
 
     public ShooterConfig(double DDistance, double DAngle, double DRPM ){
