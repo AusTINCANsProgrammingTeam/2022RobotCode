@@ -90,7 +90,7 @@ public final class Constants {
 
     
     // Intake Contstants
-    public static final int intakeMotorOneID = 3;
+    public static final int intakeMotorOneID = 13;
     public static final int intakeMotorTwoID = 12;
     public static final int intakeWheelOneID = 3;
     public static final int intakeWheelTwoID = 4;
@@ -157,7 +157,7 @@ public final class Constants {
     public static final double goalHeight = 8.8; //Height of the goal in ft from the carpet
     
     // Shooter Constants
-    public static final int shooterID = 4; // ID of the shooter
+    public static final int shooterID = 14; // ID of the shooter
     public static final int hoodID = 0; // ID of the hood;
     public static final double shooterHeight = 3;
     public static final double highHeight = 8.0 + 8.0/12.0; // Height of the high goal in ft from the carpet
