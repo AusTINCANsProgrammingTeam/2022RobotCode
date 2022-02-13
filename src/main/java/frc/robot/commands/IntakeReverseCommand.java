@@ -10,9 +10,10 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class IntakeReverseCommand extends CommandBase {
   /** Creates a new IntakeReverseCommand. */
   private IntakeSubsystem mIntakeSubsystem;
+
   public IntakeReverseCommand(IntakeSubsystem intakeSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intakeSubsystem); 
+    addRequirements(intakeSubsystem);
     mIntakeSubsystem = intakeSubsystem;
   }
 
@@ -30,7 +31,6 @@ public class IntakeReverseCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     mIntakeSubsystem.stopIntake();
-
   }
 
   // Returns true when the command should end.
