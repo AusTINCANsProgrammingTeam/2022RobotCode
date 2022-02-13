@@ -4,14 +4,9 @@
 
 package frc;
 
-import java.io.IOError;
-import java.io.IOException;
-import java.security.AccessControlException;
 import java.util.ArrayList;
 
 import com.revrobotics.ColorSensorV3;
-
-import org.jcp.xml.dsig.internal.dom.DOMTransform;
 
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
@@ -21,13 +16,13 @@ import edu.wpi.first.wpilibj.util.Color;
 public class ColorSensorMuxed {
     private ColorSensorV3 sensors;
     private I2C i2cMux;
-    private final int i2cMuxAddr = 0x70;
+    private final int tca9548Addr = 0x70;
     private ArrayList<Byte> i2cPorts;
 
 
     public ColorSensorMuxed(int... ports) {
         sensors = new ColorSensorV3(Port.kOnboard);
-        i2cMux = new I2C(Port.kOnboard, i2cMuxAddr);
+        i2cMux = new I2C(Port.kOnboard, tca9548Addr);
         for (int p : ports) {
             byte muxCtrl = (byte)(1 << p);
 
@@ -55,7 +50,7 @@ public class ColorSensorMuxed {
             if (setI2cPort(p)) { 
                 colors[i] = sensors.getColor();
             } else {
-                
+                 System.err.print("TCA9548 I2C Mux communication error");
             }
         }
         return colors;
