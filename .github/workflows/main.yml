@@ -36,4 +36,4 @@ jobs:
 
     # Runs a simulation to spot check crashes
     - name: Run simulation to check for runtime errors
-      run: ./gradlew simulateJava
+      run: ./gradlew simulateJava 2>&1 | grep "The robot program quit unexpectedly" && exit -1
