@@ -14,9 +14,7 @@ public class BeamBreakCommand extends CommandBase {
 
   public BeamBreakCommand(IntakeSubsystem intakeSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    if(intakeSubsystem != null) {
-      addRequirements(intakeSubsystem); 
-    }
+    addRequirements(intakeSubsystem); 
     mIntakeSubsystem = intakeSubsystem;
   }
 

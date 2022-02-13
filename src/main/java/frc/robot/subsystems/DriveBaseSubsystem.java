@@ -60,7 +60,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.driveRightFrontIndex].setInverted(true);
     m_motorControllers[Constants.driveRightRearIndex].setInverted(true);
 
-    //Forces middle and rear motors of each side to follow the first
+    // Forces rear motors of each side to follow the first
     m_motorControllers[Constants.driveLeftRearIndex].setFollow(m_motorControllers[Constants.driveLeftFrontIndex]);
     m_motorControllers[Constants.driveRightRearIndex].setFollow(m_motorControllers[Constants.driveRightFrontIndex]);
 
@@ -68,30 +68,35 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_differentialDrive = new DifferentialDrive(m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax(), 
                                           m_motorControllers[Constants.driveRightFrontIndex].getSparkMax());
 
+
     this.usingExternal = usingExternal; // gets key if using external or internal encoders
 
-    // // external encoders            
-    // m_extLeftEncoder = new Encoder(Constants.leftEncoderDIOone, Constants.leftEncoderDIOtwo, 
-    //                          false, Encoder.EncodingType.k2X); // TODO: confirm correct configuration for encoder
-    // m_extRightEncoder = new Encoder(Constants.rightEncoderDIOone, Constants.rightEncoderDIOtwo, 
-    //                          false, Encoder.EncodingType.k2X);
+    if(usingExternal) {
+      // external encoders            
+      m_extLeftEncoder = new Encoder(Constants.leftEncoderDIOone, Constants.leftEncoderDIOtwo, 
+                              false, Encoder.EncodingType.k2X); // TODO: confirm correct configuration for encoder
+      m_extRightEncoder = new Encoder(Constants.rightEncoderDIOone, Constants.rightEncoderDIOtwo, 
+                              false, Encoder.EncodingType.k2X);
 
-    // m_extLeftEncoder.setReverseDirection(true);
-    
-    // internal encoders
-    m_internalLeftEncoder = m_motorControllers[Constants.driveLeftFrontIndex].getEncoder();
-    m_internalRightEncoder = m_motorControllers[Constants.driveRightFrontIndex].getEncoder();
+      m_extRightEncoder.setReverseDirection(true);
+    }
+    else {
+      // internal encoders
+      m_internalLeftEncoder = m_motorControllers[Constants.driveLeftFrontIndex].getEncoder();
+      m_internalRightEncoder = m_motorControllers[Constants.driveRightFrontIndex].getEncoder();
 
-    // calculate circumference then convert to meters
-    // wheel radius in inches, want to convert meters
-    // divide by gear ratio to get in terms of motor rotations when multiplied to number of motor rotations
-    m_internalLeftEncoder.setPositionConversionFactor(
-              2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter / Constants.gearRatio); 
-    m_internalRightEncoder.setPositionConversionFactor(
-              2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter / Constants.gearRatio);
+      // calculate circumference then convert to meters
+      // wheel radius in inches, want to convert meters
+      // divide by gear ratio to get in terms of motor rotations when multiplied to number of motor rotations
+      m_internalLeftEncoder.setPositionConversionFactor(
+                2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter / Constants.gearRatio); 
+      m_internalRightEncoder.setPositionConversionFactor(
+                2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter / Constants.gearRatio);
+    }
 
     resetEncoders();  // reset encoders to reset position and velocity values
     
+
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
 
 
@@ -109,7 +114,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-
     // update odometry
 
     // checks which encoders are being used: external or internal
@@ -128,21 +132,18 @@ public class DriveBaseSubsystem extends SubsystemBase {
         m_gyro.getRotation2d(), leftPosition, rightPosition);
     }
 
-    SmartDashboard.putNumber("Left IAccum", m_motorControllers[Constants.driveLeftFrontIndex].getPID().getIAccum());
-    SmartDashboard.putNumber("Right IAccum", m_motorControllers[Constants.driveRightFrontIndex].getPID().getIAccum());
+    // Update the smart dashboard here
 
-    // Update the smart dashboard in here
     // updates pid values of leaders only not the followers
     m_motorControllers[Constants.driveLeftFrontIndex].updateSmartDashboard();
     m_motorControllers[Constants.driveRightFrontIndex].updateSmartDashboard();
- 
   }
 
   // Normal Arcade Drive
   public void arcadeDrive() {
     m_differentialDrive.arcadeDrive(-1 * m_driverJoystick.getRawAxis(Constants.leftJoystickY), 
                                         m_driverJoystick.getRawAxis(Constants.rightJoystickX));
-    // x-axis of rotation joystick is inverted so multiply by -1
+    // joystick has y-axis flipped so up is negative why down is positive
   }
 
   // Arcade Drive where you can only move forwards and backwards for testing
@@ -150,21 +151,18 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_differentialDrive.arcadeDrive(-1 * m_driverJoystick.getRawAxis(Constants.leftJoystickY), rotation);
   }
 
-  //TODO: Make a command to switch modes (extra)
+  // TODO: Make a command to switch modes (extra)
 
   // tank drive, not used but good to have
+  // TODO: check tankdrive if joystick axes are working
   public void tankDrive() {
-    m_differentialDrive.tankDrive(m_driverJoystick.getRawAxis(Constants.leftJoystickY), 
-                                  m_driverJoystick.getRawAxis(Constants.rightJoystickY));
+    m_differentialDrive.tankDrive(-1 * m_driverJoystick.getRawAxis(Constants.leftJoystickY), 
+                                  -1 * m_driverJoystick.getRawAxis(Constants.rightJoystickY));
   }
 
   @Override
   public void simulationPeriodic() {
     // Currently serves no purpose
-  }
-
-  public void driveFunction() {
-    // currently serves no purpose
   }
 
   public void stopMotorsFunction() {
@@ -225,10 +223,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     // // set feedforward constrainty
     // m_motorControllers[Constants.driveLeftFrontIndex].getPID().setFF(m_sMotorFeedforward.calculate(leftSpeed));
-    // m_motorControllers[Constants.driveLeftRearIndex].getPID().setFF(m_sMotorFeedforward.calculate(leftSpeed));
-
     // m_motorControllers[Constants.driveRightFrontIndex].getPID().setFF(m_sMotorFeedforward.calculate(rightSpeed));
-    // m_motorControllers[Constants.driveRightRearIndex].getPID().setFF(m_sMotorFeedforward.calculate(rightSpeed));
 
 
     leftSpeed = leftSpeed / Constants.wheelRadius;  // convert it to angular velocity
@@ -255,9 +250,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // for debug/shuffleboard
 
-  // return gyro info
-  public double getGyroAngle() {
-    return m_gyro.getAngle();
+  // return gyro
+  public AHRS getGyro() {
+    return m_gyro;
   }
 
   public double[] getPositions() {
@@ -266,7 +261,5 @@ public class DriveBaseSubsystem extends SubsystemBase {
     positions[1] = m_internalRightEncoder.getPosition();
     return positions;
   }
-
-  // TODO: we can add more tankdrive co functions as extras later
 }
                                                                                                                                                                                               

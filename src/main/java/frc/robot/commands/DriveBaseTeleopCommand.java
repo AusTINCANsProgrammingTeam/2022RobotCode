@@ -13,11 +13,8 @@ public class DriveBaseTeleopCommand extends CommandBase {
   private final DriveBaseSubsystem subsystem;
 
   public DriveBaseTeleopCommand(DriveBaseSubsystem s) {
-    if(s != null) {
-      addRequirements(s);
-    }
-    subsystem = s;
-    
+    addRequirements(s);
+    subsystem = s; 
   }
 
   @Override

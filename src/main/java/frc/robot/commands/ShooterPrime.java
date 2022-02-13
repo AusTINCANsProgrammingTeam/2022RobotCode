@@ -18,12 +18,11 @@ public class ShooterPrime extends CommandBase {
 
   /** Creates a new ShooterPrimary. */
   public ShooterPrime(ShooterSubsystem shooterSubsystem, LimelightSubsystem limelightSubsystem, CDSSubsystem cdsSubsystem) {
-    if(shooterSubsystem != null) {
-      addRequirements(shooterSubsystem);
-    }
+    addRequirements(shooterSubsystem);
     m_ShooterSubsystem = shooterSubsystem;
     m_LimelightSubsystem = limelightSubsystem;
     m_CDSSubsystem = cdsSubsystem;
+    
     SmartDashboard.putBoolean("wheelReady", false);
 
     // Use addRequirements() here to declare subsystem dependencies.

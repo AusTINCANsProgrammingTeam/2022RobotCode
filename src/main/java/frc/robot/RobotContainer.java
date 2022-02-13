@@ -60,14 +60,14 @@ public class RobotContainer {
 
   // commands
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
-  private IntakeForwardCommand intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
-  private IntakeReverseCommand intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
+  private IntakeForwardCommand intakeForwardCommand;
+  private IntakeReverseCommand intakeReverseCommand;
 
-   // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
-  private ShooterPrime shooterPrime = new ShooterPrime(shooterSubsystem,limelightSubsystem,CDSSubsystem);
-  private CDSForwardCommand CDSForwardCommand = new CDSForwardCommand(CDSSubsystem,shooterSubsystem);
-  private CDSReverseCommand CDSReverseCommand = new CDSReverseCommand(CDSSubsystem,shooterSubsystem);
-  private LimelightAlign limelightAlign = new LimelightAlign(limelightSubsystem,driveBaseSubsystem);
+   // private BeamBreakCommand beamBreakCommand;
+  private ShooterPrime shooterPrime;
+  private CDSForwardCommand CDSForwardCommand;
+  private CDSReverseCommand CDSReverseCommand;
+  private LimelightAlign limelightAlign;
 
   // auton
   // private Trajectory[] mTrajectories;  // multiple trajectories
@@ -78,11 +78,19 @@ public class RobotContainer {
   public RobotContainer() {
     debugTab = Shuffleboard.getTab("debug");
 
-    // Configure the button bindings
+    initSubsystems();
+    initCommands();
+
+    // initialize the button bindings
     for (int i = 1; i < buttons.length; i++) {
       buttons[i] = new JoystickButton(driverJoystick, i);
     }
+    configureButtonBindings();
+    
+    initializeTrajectories();
+  }
 
+  private void initSubsystems() {
     // subsystems
     for (Constants.Subsystems sub : Constants.Subsystems.values()) {
       if (sub.isEnabled()) {
@@ -93,48 +101,58 @@ public class RobotContainer {
           {
             System.out.println("Drivebase enabled");
             driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, false); // TODO: change boolean based on if using external encoders
-            driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
-            driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
             break;
           }
           case "CDSSubsystem": 
           {
             System.out.println("CDS enabled");
             CDSSubsystem = new CDSSubsystem();
-            CDSForwardCommand = new CDSForwardCommand(CDSSubsystem,shooterSubsystem);
-            CDSReverseCommand = new CDSReverseCommand(CDSSubsystem,shooterSubsystem);
             break;
           }
           case "IntakeSubsystem":
           {
             System.out.println("Intake enabled");
             intakeSubsystem = new IntakeSubsystem(); 
-            intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
-            intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
             break;
           }
           case "ShooterSubsystem":
           {
             System.out.println("Shooter enabled");
             shooterSubsystem = new ShooterSubsystem();
-            shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem,CDSSubsystem);
             break;
           }
           case "LimelightSubsystem":
           {
             System.out.println("Limelight enabled");
             limelightSubsystem = new LimelightSubsystem();
-            limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
             break;
           }
 
         }
       }
     }
-   
-    configureButtonBindings();
-    
-    initializeTrajectories();
+  }
+
+  private void initCommands() {
+    //Initializes commands based on enabled subsystems
+    if(driveBaseSubsystem != null){
+      driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
+      driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
+    }
+    if(CDSSubsystem != null && shooterSubsystem != null){
+      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
+      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+    }
+    if(intakeSubsystem != null){
+      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
+      intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
+    }
+    if(shooterSubsystem != null && limelightSubsystem != null && CDSSubsystem != null){
+      shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
+    }
+    if(limelightSubsystem != null && driveBaseSubsystem != null){
+      limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
+    }
   }
 
   // Use this method to define your button->command mappings. Buttons can be
@@ -146,39 +164,33 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Intake
-    if(intakeSubsystem != null) {
+    if(intakeForwardCommand != null && intakeReverseCommand != null) {
       buttons[Constants.LBumper].whileHeld(intakeForwardCommand);
       buttons[Constants.RBumper].whileHeld(intakeReverseCommand);
     }
 
     // Shooter
-    if (shooterSubsystem != null) {
+    if (shooterSubsystem != null && shooterPrime != null) {
       buttons[Constants.backButton].whenPressed(shooterPrime);
       buttons[Constants.LJoystickButton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
       buttons[Constants.RJoystickButton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
     }
 
     //CDS
-    if (CDSSubsystem != null) {
+    if (CDSForwardCommand != null && CDSReverseCommand != null) {
       buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
       buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
     }
-	// Limelight
-	if (driveBaseSubsystem != null && limelightSubsystem != null) {
+
+	  // Limelight
+	  if (limelightAlign != null) {
       buttons[Constants.startButton].whenPressed(limelightAlign);
     }
+
   }
 
   private void initializeTrajectories() {
-    // String[] trajectoryJSON = {"One.wpilib.json", "Two.wpilib.json", "Three.wpilib.json", "Four.wpilib.json"};  // add new trajectories manually
-    // mTrajectories = new Trajectory[trajectoryJSON.length];
-    // for(int i = 0; i < trajectoryJSON.length; i++) {
-    //   Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON[i]);
-    //   Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-    //   mTrajectories[i] = trajectory;
-    // }
-
-    // to test auton with just a one straight path
+    // auton with just a one straight path
     String trajectoryJSON = "paths/Straight.wpilib.json";
     try { 
       Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON); // goes to scr/main/deploy/paths
