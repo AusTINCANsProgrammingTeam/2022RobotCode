@@ -35,6 +35,5 @@ jobs:
       run: ./gradlew build
 
     # Runs a simulation to spot check crashes
-    steps:
     - name: Run simulation to check for runtime errors
       run: ./gradlew simulateJava
