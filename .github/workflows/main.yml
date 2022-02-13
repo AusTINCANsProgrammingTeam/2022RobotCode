@@ -34,5 +34,5 @@ jobs:
 
     # Runs a simulation to spot check crashes
     - name: Run simulation to check for runtime errors
-      run: timeout 1m bash -c "./gradlew simulateJava 2>&1 | awk -v rc=0 '/The robot program quit unexpectedly/ { rc=1 } 1; END {exit rc}'"
+      run: timeout 1m bash -c "./gradlew simulateJava 2>&1" | awk -v rc=0 '/The robot program quit unexpectedly/ { rc=1 } 1; END {exit rc}'
       # One-liner stolen from https://stackoverflow.com/questions/27447705/grep-without-filtering 
