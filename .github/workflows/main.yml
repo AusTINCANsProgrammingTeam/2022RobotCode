@@ -40,7 +40,7 @@ jobs:
     # This grabs the WPILib docker container
     container: wpilib/roborio-cross-ubuntu:2022-18.04
 
-    timeoutInMinutes: 5
+    timeout-minutes: 5
     # Runs a simulation to spot check crashes
     steps:
     - name: Run simulation to check for runtime errors
