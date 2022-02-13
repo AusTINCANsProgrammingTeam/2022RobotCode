@@ -34,6 +34,12 @@ jobs:
       run: ./gradlew build
   # Simulate Job
   simulate:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # This grabs the WPILib docker container
+    container: wpilib/roborio-cross-ubuntu:2022-18.04
+
     timeoutInMinutes: 5
     # Runs a simulation to spot check crashes
     steps:
