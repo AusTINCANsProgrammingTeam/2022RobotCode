@@ -56,4 +56,18 @@ public class ColorSensorMuxed {
         return colors;
     }
 
+    public int[] getProximities() {
+        int[] proximities = new int[i2cPorts.size()];
+        int i = 0;
+        for (Byte p : i2cPorts)
+        {
+            if (setI2cPort(p)) { 
+                proximities[i] = sensors.getProximity();
+            } else {
+                 System.err.print("TCA9548 I2C Mux communication error");
+            }
+        }
+        return proximities;
+    }
+
 }
