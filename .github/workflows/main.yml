@@ -12,13 +12,14 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # Build job
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     # This grabs the WPILib docker container
     container: wpilib/roborio-cross-ubuntu:2022-18.04
+
+    timeout-minutes: 5
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -32,15 +33,7 @@ jobs:
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
       run: ./gradlew build
-  # Simulate Job
-  simulate:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
 
-    # This grabs the WPILib docker container
-    container: wpilib/roborio-cross-ubuntu:2022-18.04
-
-    timeout-minutes: 5
     # Runs a simulation to spot check crashes
     steps:
     - name: Run simulation to check for runtime errors
