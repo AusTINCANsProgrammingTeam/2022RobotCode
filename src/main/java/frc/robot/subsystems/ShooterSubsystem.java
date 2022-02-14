@@ -54,8 +54,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
 
-  private NetworkTableInstance inst = NetworkTableInstance.getDefault();
-  private NetworkTable table = inst.getTable("SmartDashboard");
+
   private ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter Tab");
 
 

@@ -171,6 +171,7 @@ public class RobotContainer {
       }
       if(limelightSubsystem != null && driveBaseSubsystem != null){
         limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
+        buttons[Constants.BButton].whenPressed(limelightAlign);
       }
   }
 
