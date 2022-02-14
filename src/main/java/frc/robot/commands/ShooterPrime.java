@@ -20,8 +20,14 @@ public class ShooterPrime extends CommandBase {
   public ShooterPrime(ShooterSubsystem shooterSubsystem, LimelightSubsystem limelightSubsystem, CDSSubsystem cdsSubsystem) {
     addRequirements(shooterSubsystem);
     m_ShooterSubsystem = shooterSubsystem;
+<<<<<<< HEAD
     //m_LimelightSubsystem = limelightSubsystem;
     //m_CDSSubsystem = cdsSubsystem;
+=======
+    m_LimelightSubsystem = limelightSubsystem;
+    m_CDSSubsystem = cdsSubsystem;
+    
+>>>>>>> origin/main
     SmartDashboard.putBoolean("wheelReady", false);
 
     // Use addRequirements() here to declare subsystem dependencies.

@@ -18,11 +18,11 @@ public final class Constants {
 
     public enum Subsystems {
         // Change booleans to disable a subsystem in RobotContainer
-        DriveBaseSubsystem(false),
+        DriveBaseSubsystem(true),
         CDSSubsystem      (true),
         IntakeSubsystem   (true),
         ShooterSubsystem  (true),
-        LimelightSubsystem(false);
+        LimelightSubsystem(true);
 
         private final Boolean enabled; 
         
@@ -34,21 +34,21 @@ public final class Constants {
             return this.enabled;
         };
     }
-    
 
-    //Distance calculation constants
-    public static final double goalHeight = 8.8; //Height of the goal in ft from the carpet
 
-    // TODO: Swap placeholder motor IDs & Button Ports and Numbers for real ones
+    // DRIVEBASE Constants
+
     // Constants for wheel motors
-    // Actual IDs on robot, used to activate the right motors
-    // TODO: Values to be changed, these are placeholder values for now
-    // Might be reversed
+    public static final double wheelRadius = 3.0125;    // radius of wheel, use for calculating angular values
+    public static final double gearRatio = 10.75;       // 10.75 : 1 gear ratio <--- kitbot
+                                                        // 10.75 motor rotations : 1 wheel rotation
+    public static final double inchesInMeter = 39.3701;
 
-    public static final int driveRightFront = 1;
-    public static final int driveRightRear = 2;
-    public static final int driveLeftFront = 7;
-    public static final int driveLeftRear = 8;
+    // Actual IDs on robot, used to activate the right motors
+    public static final int driveLeftFront = 1;
+    public static final int driveLeftRear = 2;
+    public static final int driveRightFront = 3;
+    public static final int driveRightRear = 4;
 
     // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
     public static final int driveLeftFrontIndex = 0;
@@ -57,6 +57,30 @@ public final class Constants {
     public static final int driveRightRearIndex = 3;
     public static final int driveBaseCurrentLimit = 40;
 
+    // drive base pid values
+    public static final double[] driveRightPID = {0.00035, 0.0000008, 0};
+    public static final double[] driveLeftPID = {0.000005, 0.0000008, 0};
+
+
+    // AUTONOMOUS Constants
+
+    // Volts, constants for ramseteCommand
+    public static final double ksVolts = 0.13323;                      // Ks, 
+    public static final double kvVoltSecondsPerMeter = 2.8295;         // Kv, Velocity
+    public static final double kaVoltSecondsSquaredPerMeter = 0.31462; // Ka, Accelleration
+
+    public static final double kpDriveVel = 2.1938;                    // Kp, Velocity
+    public static final double trackWidth = 0.69;
+    public static final DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(trackWidth);
+    public static final double unitsPerRotation = 0.4787787204;
+    
+    // Pathweaver constants, baselind values, units: meters per second
+    public static final double ramseteB = 2;      // Convergence, larger values are more aggressive
+    public static final double ramseteZeta = 0.7; // Damping, larger values offer more damping
+
+    // TODO: Replace 0.69 with actual track width in meters and run characterization on real robot
+
+
     // Encoder constants
     // TODO: Replace these with the correct ports
     public static final int leftEncoderDIOone = 0;
@@ -64,21 +88,7 @@ public final class Constants {
     public static final int rightEncoderDIOone = 2;
     public static final int rightEncoderDIOtwo = 3;
 
-    // Pathweaver constants
-    public static final double ramseteB = 2; //Convergence, larger values are more aggressive
-    public static final double ramseteZeta = 0.7; //Damping, larger values offer more damping
-
-    // TODO: Calibrate robot with correct values - These are just placeholers
-
-    // Note: below comments might not be entirely accurate
-    public static final double sVolts = 0.22;
-
-    // Volts
-    public static final double vVoltSecondsPerMeter = 1.98;       //Velocity
-    public static final double aVoltSecondsSquaredPerMeter = 0.2; //Accelleration
-    public static final double PDriveVel = 8.5;                   //Velocity
-    public static final DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(0.5);    // Replace 0.5 with track width in meters
-
+    
     // Intake Contstants
     public static final int intakeMotorOneID = 3;
     public static final int intakeMotorTwoID = 12;
@@ -96,7 +106,7 @@ public final class Constants {
     public static final double CDSBeltSpeed = 0.25;
     public static final double CDSWheelControllerSpeed = 0.15;
 
-    //Controller Constaints {
+    //Controller Constants {
         public static final int portNumber0 = 0;
         public static final int portNumber1 = 1;
 
@@ -144,6 +154,14 @@ public final class Constants {
     public static final double LAUNCHAngle = 0.0; // Angle that the LAUNCH aimMode adjusts to
     public static final double TARMACRPM = 0.0; // RPM that the TARMAC aimMode winds to
     public static final double TARMACAngle = 0.0; // Angle that the TARMAC aimMode adjusts to
+<<<<<<< HEAD
+=======
+
+    //Distance calculation constants
+    public static final double goalHeight = 8.8; //Height of the goal in ft from the carpet
+    
+    // Shooter Constants
+>>>>>>> origin/main
     public static final int shooterID = 4; // ID of the shooter
     //public static final int hoodID = 0; // ID of the hood;
     public static final double shooterHeight = 3;
@@ -159,6 +177,7 @@ public final class Constants {
     public static final double ballFlywheelratio = 2;
     public static final int shooterCargoID = 5;
     public static final double cargoRotation = 3;
+<<<<<<< HEAD
     public static final double kP =6e-4;
     public static final double kI = 6e-7;
     public static final double kD = 0.0;
@@ -173,4 +192,6 @@ public final class Constants {
     }
     
     
+=======
+>>>>>>> origin/main
 }
