@@ -18,6 +18,8 @@ public class MotorController {
     private double mI;
     private double mD;
 
+    private double mFF; // feedforward value
+
     // default constructor
     public MotorController(String name, int deviceID) {
         mName = name;
@@ -40,9 +42,12 @@ public class MotorController {
         // If enablePid has any number of booleans greater than 0 we are enabling pid
         if (enablePid.length > 0)
         {
-            mP = SmartDashboard.getNumber(mName + " P Value", 1.0);
+            mP = SmartDashboard.getNumber(mName + " P Value", 0.000025);
             mI = SmartDashboard.getNumber(mName + " I Value", 0.0);
             mD = SmartDashboard.getNumber(mName + " D Value", 0.0);
+
+            mFF = SmartDashboard.getNumber(mName + " FF Value", 0.0);
+            
             mPIDController = mSparkMax.getPIDController();
             setPID();
         }
@@ -88,6 +93,10 @@ public class MotorController {
         mSparkMax.setInverted(b);
     }
 
+    public String getName() {
+        return this.mName;
+    }
+
     // get speeds of wheel side
     public double getSpeed() {
         // Check first that mEncoder has been instantiated
@@ -111,9 +120,12 @@ public class MotorController {
         mPIDController.setP(mP);
         mPIDController.setI(mI);
         mPIDController.setD(mD);
+
         SmartDashboard.putNumber(mName+" P Value", mP);
         SmartDashboard.putNumber(mName+" I Value", mI);
         SmartDashboard.putNumber(mName+" D Value", mD);
+
+        SmartDashboard.putNumber(mName + " FF Value", mFF);
     }
 
     // Updates the Smart Dashboard and checks the PID values to determine if update is needed
@@ -131,6 +143,10 @@ public class MotorController {
             if (SmartDashboard.getNumber(mName + " D Value", mD) != mD) {
                 mD = SmartDashboard.getNumber(mName + " D Value", mD);
                 mPIDController.setD(mD);
+            }
+            if (SmartDashboard.getNumber(mName + " FF Value", mFF) != mFF) {
+                mFF = SmartDashboard.getNumber(mName + " FF Value", mFF);
+                mPIDController.setFF(mFF);
             }
         }
     }
