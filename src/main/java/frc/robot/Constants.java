@@ -19,11 +19,11 @@ public final class Constants {
 
     public enum Subsystems {
         // Change booleans to disable a subsystem in RobotContainer
-        DriveBaseSubsystem(false),
+        DriveBaseSubsystem(true),
         CDSSubsystem      (true),
-        IntakeSubsystem   (false),
-        ShooterSubsystem  (false),
-        LimelightSubsystem(false);
+        IntakeSubsystem   (true),
+        ShooterSubsystem  (true),
+        LimelightSubsystem(true);
 
         private final Boolean enabled; 
         
