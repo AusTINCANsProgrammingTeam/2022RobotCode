@@ -60,20 +60,6 @@ public class RobotContainer {
   private static LimelightSubsystem limelightSubsystem;
 
   // commands
-<<<<<<< HEAD
-  private static DriveBaseTeleopCommand driveBaseTeleopCommand;
-  private IntakeForwardCommand intakeForwardCommand;
-  private IntakeReverseCommand intakeReverseCommand;
-  private ShooterPrime shooterPrime;
-  private CDSForwardCommand CDSForwardCommand;
-  private CDSReverseCommand CDSReverseCommand; 
-  private LimelightAlign limelightAlign;
-  private BeamBreakCommand beamBreakCommand;
-
-  
-  private Trajectory[] mTrajectories;  // multiple trajectories
-  private int trajectoryIndex = 0;
-=======
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
   private IntakeForwardCommand intakeForwardCommand;
   private IntakeReverseCommand intakeReverseCommand;
@@ -87,7 +73,6 @@ public class RobotContainer {
   // auton
   // private Trajectory[] mTrajectories;  // multiple trajectories
   // private int trajectoryIndex = 0;
->>>>>>> origin/main
   private Trajectory trajectory;
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
@@ -116,11 +101,7 @@ public class RobotContainer {
           case "DriveBaseSubsystem": 
           {
             System.out.println("Drivebase enabled");
-<<<<<<< HEAD
-            driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick);
-=======
             driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, false); // TODO: change boolean based on if using external encoders
->>>>>>> origin/main
             break;
           }
           case "CDSSubsystem": 
@@ -161,8 +142,8 @@ public class RobotContainer {
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
     }
     if(CDSSubsystem != null && shooterSubsystem != null){
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
-      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
     }
     if(intakeSubsystem != null){
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
@@ -183,53 +164,6 @@ public class RobotContainer {
   // it to a {@link
   // edu.wpi.first.wpilibj2.command.button.JoystickButton}.
   private void configureButtonBindings() {
-<<<<<<< HEAD
-    //Initializes commands based on enabled subsystems
-      if(driveBaseSubsystem != null){
-        driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
-        driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
-      }
-      if(CDSSubsystem != null && shooterSubsystem != null){
-        CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-        CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
-        buttons[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
-        buttons[Constants.LTriggerButton].whileHeld(CDSReverseCommand);
-      }
-      if(intakeSubsystem != null){
-        intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
-        intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
-        beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
-        buttons[Constants.LTriggerButton].whileHeld(intakeForwardCommand);
-        buttons[Constants.RTriggerButton].whileHeld(intakeReverseCommand);
-      }
-      if(shooterSubsystem != null && limelightSubsystem != null && CDSSubsystem != null){
-        shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
-        buttons[Constants.RTriggerButton].whenPressed(shooterPrime);
-        buttons[Constants.POVup].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
-        buttons[Constants.POVdown].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
-      }
-      if(limelightSubsystem != null && driveBaseSubsystem != null){
-        limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
-        buttons[Constants.BButton].whenPressed(limelightAlign);
-      }
-  }
-
-  private void initializeTrajectories() throws IOException {
-    
-    //String[] trajectoryJSON = {"One.wpilib.json", "Two.wpilib.json", "Three.wpilib.json", "Four.wpilib.json"};  // add new trajectories manually
-    //mTrajectories = new Trajectory[trajectoryJSON.length];
-    //for(int i = 0; i < trajectoryJSON.length; i++) {
-    //Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON[i]);
-    //Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-    //mTrajectories[i] = trajectory;
-   // }
-    
-
-    // to test auton with just a one straight path
-    String trajectoryJSON = "Straight.wpilib.json";
-    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-    trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-=======
 
     // Intake
     if(intakeForwardCommand != null && intakeReverseCommand != null) {
@@ -268,18 +202,12 @@ public class RobotContainer {
       DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
     }
     
->>>>>>> origin/main
   }
            
   // Use this to pass the autonomous command to the main {@link Robot} class.
   // @return the command to run in autonomous
   public Command getAutonomousCommand() {
-<<<<<<< HEAD
-
-    if (driveBaseSubsystem != null) {
-=======
     if (driveBaseSubsystem != null && trajectory != null) {
->>>>>>> origin/main
       //Ramsete Command for Pathweaver
       RamseteCommand ramseteCommand =
       new RamseteCommand(
