@@ -23,16 +23,20 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSWheelControllerTwo;
   private ColorSensorV3 colorSensorOne;
   private DigitalInput backBeamBreak;
+  private String allianceColor;
 
   public CDSSubsystem() {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
-    //CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerOneID, 40);
-    //CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerTwoID, 40);
+    CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerOneID, 40);
+    CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerTwoID, 40);
 
-    //CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
+    CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
 
     colorSensorOne = new ColorSensorV3(Constants.colorSensorPort);
     backBeamBreak = new DigitalInput(Constants.initialBallSensorChannel);
+
+    String allianceColor = DriverStation.getAlliance().toString();
+    SmartDashboard.putString("Alliance Color", allianceColor);
   }
 
   public void CDSBeltWheelControllerToggle(boolean reverse) {
@@ -72,7 +76,6 @@ public class CDSSubsystem extends SubsystemBase {
   public void periodic() {
     // Color sensing
     String ballColor = senseColor();
-    String allianceColor = getAllianceColor();
     SmartDashboard.putString("Ball Color", ballColor);
     SmartDashboard.putString("Alliance Color", allianceColor);
 
@@ -82,11 +85,12 @@ public class CDSSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Ball Count", ballCount);
   }
 
+  /*
   public String getAllianceColor() {
     Alliance alliance = DriverStation.getAlliance();
     SmartDashboard.putString("Alliance Color", alliance.toString());
     return alliance.toString();
-  }
+  }*/
 
   public String senseColor() {
     Color color = colorSensorOne.getColor();

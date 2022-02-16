@@ -25,7 +25,6 @@ public class CDSForwardCommand extends CommandBase {
   @Override
   public void initialize() {
     mCDSSubsystem.CDSBeltWheelControllerToggle(false);
-    mCDSSubsystem.getAllianceColor();
     //mShooterSubsystem.runCargo(true, false); <----------------- uncomment once done with testing
   }
 
