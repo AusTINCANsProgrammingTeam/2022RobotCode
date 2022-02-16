@@ -59,17 +59,17 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
   private NetworkTableEntry dashTunePid = shooterTab.add("Tune PID", true).withPosition(0, 0).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
-  private NetworkTableEntry PID_P = shooterTab.addPersistent("PID P", Constants.Shooter.kP).withPosition(0, 1).getEntry();
-  private NetworkTableEntry PID_I = shooterTab.addPersistent("PID I", Constants.Shooter.kI).withPosition(0, 2).getEntry();
-  private NetworkTableEntry PID_D = shooterTab.addPersistent("PID D", Constants.Shooter.kD).withPosition(0, 3).getEntry();
-  private NetworkTableEntry PID_F = shooterTab.addPersistent("PID F", Constants.Shooter.kF).withPosition(0,4).getEntry();
-  private NetworkTableEntry PID_IMaxAccum = shooterTab.addPersistent("PID I Max Accum", Constants.Shooter.kMaxI).withPosition(0,5).getEntry();
-  private NetworkTableEntry PID_Izone = shooterTab.addPersistent("PID I Range", Constants.Shooter.kIZone).withPosition(1, 0).getEntry();
-  private NetworkTableEntry PID_MaxOutput = shooterTab.addPersistent("PID Peak Output", Constants.Shooter.kMaxOutput).withPosition(1, 1).getEntry();
-  private NetworkTableEntry PID_MinOutput = shooterTab.addPersistent("PID Min Out ", Constants.Shooter.kMinOutput).withPosition(1,2).getEntry();
-  private NetworkTableEntry PID_IMaxAccumID = shooterTab.addPersistent("PID Peak Output Slot ID", Constants.Shooter.kMaxISlotId).withPosition(1,3).getEntry();
+  private NetworkTableEntry PID_P = shooterTab.add("PID P", Constants.Shooter.kP).withPosition(0, 1).getEntry();
+  private NetworkTableEntry PID_I = shooterTab.add("PID I", Constants.Shooter.kI).withPosition(0, 2).getEntry();
+  private NetworkTableEntry PID_D = shooterTab.add("PID D", Constants.Shooter.kD).withPosition(0, 3).getEntry();
+  private NetworkTableEntry PID_F = shooterTab.add("PID F", Constants.Shooter.kF).withPosition(0,4).getEntry();
+  private NetworkTableEntry PID_IMaxAccum = shooterTab.add("PID I Max Accum", Constants.Shooter.kMaxI).withPosition(0,5).getEntry();
+  private NetworkTableEntry PID_Izone = shooterTab.add("PID I Range", Constants.Shooter.kIZone).withPosition(1, 0).getEntry();
+  private NetworkTableEntry PID_MaxOutput = shooterTab.add("PID Peak Output", Constants.Shooter.kMaxOutput).withPosition(1, 1).getEntry();
+  private NetworkTableEntry PID_MinOutput = shooterTab.add("PID Min Out ", Constants.Shooter.kMinOutput).withPosition(1,2).getEntry();
+  private NetworkTableEntry PID_IMaxAccumID = shooterTab.add("PID Peak Output Slot ID", Constants.Shooter.kMaxISlotId).withPosition(1,3).getEntry();
 
-  private NetworkTableEntry ShooterReverted = shooterTab.addPersistent("Shooter Reverted", false).withPosition(1,4).getEntry();
+  private NetworkTableEntry ShooterReverted = shooterTab.add("Shooter Reverted", false).withPosition(1,4).getEntry();
   private NetworkTableEntry DShootingMode = shooterTab.add("Shooting Mode",4).withPosition(1, 5).getEntry();
   private NetworkTableEntry DDistance = shooterTab.add("Distance to goal", 0.0).withPosition(2,0).getEntry();
   private NetworkTableEntry DShooterRPM = shooterTab.add("Shooter RPM", 0.0).withPosition(2,1).getEntry();

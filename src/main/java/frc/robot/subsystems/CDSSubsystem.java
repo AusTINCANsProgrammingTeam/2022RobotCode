@@ -11,9 +11,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import frc.robot.common.hardware.MotorController;
 //import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
