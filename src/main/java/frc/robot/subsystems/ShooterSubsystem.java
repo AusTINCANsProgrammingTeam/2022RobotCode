@@ -16,66 +16,70 @@ import frc.robot.common.hardware.MotorController;
 
 public class ShooterSubsystem extends SubsystemBase {
   private int aimMode; // 0 is LOW, 1 is AUTO, 2 is LAUNCH, 3 is TARMAC, 4 is TEST
-  private MotorController shooter_motorController;
-  private MotorController hood_motorController;
-  private SparkMaxPIDController KShooterController;
-  private SparkMaxPIDController KHoodController;
-  private RelativeEncoder KShooterEncoder;
-  private RelativeEncoder KHoodEncoder;
-  private MotorController cargo_motorController;
+  private MotorController flywheelController;
+  private MotorController hoodController;
+  private SparkMaxPIDController flywheelPID;
+  private SparkMaxPIDController hoodPID;
+  private RelativeEncoder flywheelEncoder;
+  private RelativeEncoder hoodEncoder;
+  private MotorController stopperController;
   private double currentRPM;
   private double RPMIN = 3500;
 
   public ShooterSubsystem() {
     SmartDashboard.putNumber("RPMIN", RPMIN);
     aimMode = 4;
-    cargo_motorController = new MotorController("Shooter Cargo", Constants.shooterCargoID);
-    shooter_motorController = new MotorController("Shooter", Constants.shooterID, 40, true);
-    KShooterController = shooter_motorController.getPID();
-    KShooterEncoder = shooter_motorController.getEncoder();
-    KShooterController.setP(5e-4);
-    KShooterController.setI(6e-7);
-   KShooterController.setIMaxAccum(0.9, 0);
-    KShooterController.setD(0.0);
-
-    KShooterController.setOutputRange(0, 1);
-    /*
-    hood_motorController = new MotorController("Hood", Constants.hoodID);
-    KHoodController = hood_motorController.getPID();
-    KHoodEncoder = shooter_motorController.getEncoder();*/
-
+    // Initializes the SparkMAX for the flywheel
+    flywheelController = new MotorController("Flywheel", Constants.shooterID, 40, true);
+    flywheelPID = flywheelController.getPID();
+    flywheelEncoder = flywheelController.getEncoder();
+    // Initializes the SparkMAX for the hood
+    hoodController = new MotorController("Hood", Constants.hoodID);
+    hoodPID = hoodController.getPID();
+    hoodEncoder = hoodController.getEncoder();
+    // Initializes the SparkMax for the cargo stopper
+    stopperController = new MotorController("Shooter Cargo", Constants.shooterCargoID);
+    // Initializes PID for the flywheel
+    flywheelPID.setP(5e-4);
+    flywheelPID.setI(6e-7);
+    flywheelPID.setIMaxAccum(0.9, 0);
+    flywheelPID.setD(0.0);
+    flywheelPID.setOutputRange(0, 1);
+    // Initializes PID for the hood
+    hoodPID.setP(0.0);
+    hoodPID.setI(0.0);
+    hoodPID.setD(0.0);
+    hoodPID.setOutputRange(0, 1);
   }
 
   public void adjustHood(double a) {
-    KHoodController.setReference(a, CANSparkMax.ControlType.kPosition);
-
     // Adjusts Hood using PID control to passed angle a
+    hoodPID.setReference(a, CANSparkMax.ControlType.kPosition);
   }
 
   public void windFlywheel(double rpm) {
     // Winds Flywheel using PID control to passed rpm
-    // double adjustedRPM = rpm * (Constants.kGearRatioIn / Constants.kGearRatioOut); TODO: reconsider using this
     if(rpm == 0){
-      KShooterController.setReference(0, CANSparkMax.ControlType.kVoltage);
-      KShooterController.setIAccum(0);
+      flywheelPID.setReference(0, CANSparkMax.ControlType.kVoltage);
+      flywheelPID.setIAccum(0);
     } else{
     currentRPM = rpm;
-    KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
+    flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
     }
   }
 
   public void runCargo(boolean a,boolean reversed) {
     if(a){
-      if(reversed){cargo_motorController.setSpeed(-0.2);}
-      else{cargo_motorController.setSpeed(0.2);}
+      if(reversed){stopperController.setSpeed(-0.2);}
+      else{stopperController.setSpeed(0.2);}
     }else{
-      cargo_motorController.setSpeed(0.0);
+      stopperController.setSpeed(0.0);
     }
 
   }
 
   public boolean wheelReady(){
-    double flywheelSpeed = KShooterEncoder.getVelocity();
+    double flywheelSpeed = flywheelEncoder.getVelocity();
     if (flywheelSpeed > currentRPM - 10 && flywheelSpeed < currentRPM + 10) {
       return true;
     }
@@ -156,7 +160,7 @@ public class ShooterSubsystem extends SubsystemBase {
         adjustHood(Constants.TARMACAngle);
         windFlywheel(Constants.TARMACRPM);
         break;
-      case 4: //Case for TEST mode, just takes an RPM and winds
+      case 4: // Case for TEST mode, just takes an RPM and winds
         windFlywheel(SmartDashboard.getNumber("RPMIN", RPMIN));
         break;
     }
@@ -165,9 +169,9 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("IAccum",KShooterController.getIAccum());
+    SmartDashboard.putNumber("IAccum",flywheelPID.getIAccum());
     SmartDashboard.putNumber("dist", getDistance());
-    SmartDashboard.putNumber("RPM", KShooterEncoder.getVelocity());
+    SmartDashboard.putNumber("RPM", flywheelEncoder.getVelocity());
   }
 
 }
