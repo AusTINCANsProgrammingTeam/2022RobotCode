@@ -34,21 +34,21 @@ public final class Constants {
             return this.enabled;
         };
     }
-    
 
-    //Distance calculation constants
-    public static final double goalHeight = 8.8; //Height of the goal in ft from the carpet
 
-    // TODO: Swap placeholder motor IDs & Button Ports and Numbers for real ones
+    // DRIVEBASE Constants
+
     // Constants for wheel motors
-    // Actual IDs on robot, used to activate the right motors
-    // TODO: Values to be changed, these are placeholder values for now
-    // Might be reversed
+    public static final double wheelRadius = 3.0125;    // radius of wheel, use for calculating angular values
+    public static final double gearRatio = 10.75;       // 10.75 : 1 gear ratio <--- kitbot
+                                                        // 10.75 motor rotations : 1 wheel rotation
+    public static final double inchesInMeter = 39.3701;
 
-    public static final int driveRightFront = 1;
-    public static final int driveRightRear = 2;
-    public static final int driveLeftFront = 7;
-    public static final int driveLeftRear = 8;
+    // Actual IDs on robot, used to activate the right motors
+    public static final int driveLeftFront = 1;
+    public static final int driveLeftRear = 2;
+    public static final int driveRightFront = 3;
+    public static final int driveRightRear = 4;
 
     // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
     public static final int driveLeftFrontIndex = 0;
@@ -57,6 +57,30 @@ public final class Constants {
     public static final int driveRightRearIndex = 3;
     public static final int driveBaseCurrentLimit = 40;
 
+    // drive base pid values
+    public static final double[] driveRightPID = {0.00035, 0.0000008, 0};
+    public static final double[] driveLeftPID = {0.000005, 0.0000008, 0};
+
+
+    // AUTONOMOUS Constants
+
+    // Volts, constants for ramseteCommand
+    public static final double ksVolts = 0.13323;                      // Ks, 
+    public static final double kvVoltSecondsPerMeter = 2.8295;         // Kv, Velocity
+    public static final double kaVoltSecondsSquaredPerMeter = 0.31462; // Ka, Accelleration
+
+    public static final double kpDriveVel = 2.1938;                    // Kp, Velocity
+    public static final double trackWidth = 0.69;
+    public static final DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(trackWidth);
+    public static final double unitsPerRotation = 0.4787787204;
+    
+    // Pathweaver constants, baselind values, units: meters per second
+    public static final double ramseteB = 2;      // Convergence, larger values are more aggressive
+    public static final double ramseteZeta = 0.7; // Damping, larger values offer more damping
+
+    // TODO: Replace 0.69 with actual track width in meters and run characterization on real robot
+
+
     // Encoder constants
     // TODO: Replace these with the correct ports
     public static final int leftEncoderDIOone = 0;
@@ -64,28 +88,7 @@ public final class Constants {
     public static final int rightEncoderDIOone = 2;
     public static final int rightEncoderDIOtwo = 3;
 
-    // Pathweaver constants
-    public static final double ramseteB = 2; //Convergence, larger values are more aggressive
-    public static final double ramseteZeta = 0.7; //Damping, larger values offer more damping
-
-    // TODO: Calibrate robot with correct values - These are just placeholers
-
-    // Note: below comments might not be entirely accurate
-    public static final double sVolts = 0.22;
-
-    // Volts
-    public static final double vVoltSecondsPerMeter = 1.98;       //Velocity
-    public static final double aVoltSecondsSquaredPerMeter = 0.2; //Accelleration
-    public static final double PDriveVel = 8.5;                   //Velocity
-    public static final DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(0.5);    // Replace 0.5 with track width in meters
-
-    //Controller constants
-    public static final int DBJoystickPort = 0;
-    public static final int DBLeftJoystickAxisX = 0;
-    public static final int DBLeftJoystickAxisY = 1;
-    public static final int DBRightJoystickAxisX = 2;
-    public static final int DBRightJoystickAxisY = 3;
-
+    
     // Intake Contstants
     public static final int intakeMotorOneID = 3;
     public static final int intakeMotorTwoID = 12;
@@ -103,20 +106,44 @@ public final class Constants {
     public static final double CDSBeltSpeed = 0.25;
     public static final double CDSWheelControllerSpeed = 0.15;
 
-    //Joystick Constants
-    public static final int portNumber = 0;
-    public static final int joystickButtonNumberOne = 1;
-    public static final int joystickButtonNumberTwo = 2;
-    public static final int BButton = 1; // Button for forward cds
-    public static final int YButton = 4; // Button for reverse cds
-    public static final int rightBumperButton = 5; // Button for intake 
-    public static final int rightTriggerButton = 8; // Button for intake 
-    public static final int leftBumperButton = 6;  // Button to reverse intake
-    public static final int Xbutton = 3; // Button for Shooter
-    public static final int downPOV = 4; // Button for shooter mode
-    public static final int upPOV = 5; // Button for shooter mode
-    public static final int AButton = 2; //Button to align Limelight
+    //Controller Constants {
+        public static final int portNumber0 = 0;
+        public static final int portNumber1 = 1;
 
+        //Buttons not in use
+        public static final int XButton = 1;
+        public static final int AButton = 2;
+        public static final int BButton = 3;
+        public static final int YButton = 4;
+
+        //Intake Subsystem
+        public static final int LBumper = 5; //Intake forward
+        public static final int RBumper = 6; //Intake reverse
+
+        //CDS Subsystem
+        public static final int LTriggerButton = 7; //CDS forward
+        public static final int RTriggerButton = 8; //CDS reverse
+
+        //Shooter Prime/LimeLight
+        public static final int backButton = 9; //Button starts ShooterPrime
+        public static final int startButton = 10; //Button to align LimeLight
+
+        //Shooter Subsystem mode change
+        public static final int LJoystickButton = 11; //Button for Shooter mode
+        public static final int RJoystickButton = 12; //BUtton for Shooter mode
+
+        //POV's not in use
+        public static final int POVup = 0;
+        public static final int POVdown = 180;
+        public static final int POVright = 90;
+        public static final int POVleft = 270;
+
+        //DriveBase Subsystem
+        public static final int leftJoystickX = 0; //Unused but will easily be acidentaly activated if used
+        public static final int leftJoystickY = 1; //arcade forward / tank left turning
+        public static final int rightJoystickX = 2; //arcade turning
+        public static final int rightJoystickY = 3; //tank right turning
+    //}
 
     // Preset aim constants
     public static final double LOWRPM = 0.0; // RPM that the LOW aimMode winds to
@@ -125,6 +152,9 @@ public final class Constants {
     public static final double LAUNCHAngle = 0.0; // Angle that the LAUNCH aimMode adjusts to
     public static final double TARMACRPM = 0.0; // RPM that the TARMAC aimMode winds to
     public static final double TARMACAngle = 0.0; // Angle that the TARMAC aimMode adjusts to
+
+    //Distance calculation constants
+    public static final double goalHeight = 8.8; //Height of the goal in ft from the carpet
     
     // Shooter Constants
     public static final int shooterID = 4; // ID of the shooter

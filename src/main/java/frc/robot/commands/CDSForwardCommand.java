@@ -17,7 +17,7 @@ public class CDSForwardCommand extends CommandBase {
   
   public CDSForwardCommand(CDSSubsystem CDSSubsystem, ShooterSubsystem shooterSubsystem) {
     //Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(CDSSubsystem); 
+    addRequirements(CDSSubsystem);
     addRequirements(shooterSubsystem);
     mShooterSubsystem = shooterSubsystem;
     mCDSSubsystem = CDSSubsystem;
