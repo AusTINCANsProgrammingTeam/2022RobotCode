@@ -77,8 +77,7 @@ public class CDSSubsystem extends SubsystemBase {
     // Color sensing
     String ballColor = senseColor();
     SmartDashboard.putString("Ball Color", ballColor);
-    SmartDashboard.putString("Alliance Color", allianceColor);
-
+    
     // Ball indexing
     int[] sensorStatus = getSensorStatus();
     int ballCount = sensorStatus[0] + sensorStatus[1];
