@@ -72,12 +72,13 @@ public class CDSSubsystem extends SubsystemBase {
     int[] beamBreakArray = {frontStatus, backStatus};
     return beamBreakArray;
   }
-  
+
   public void periodic() {
     // Color sensing
     String ballColor = senseColor();
     SmartDashboard.putString("Ball Color", ballColor);
-    
+    SmartDashboard.putBoolean("Ball Color Match", ballColor == allianceColor);
+
     // Ball indexing
     int[] sensorStatus = getSensorStatus();
     int ballCount = sensorStatus[0] + sensorStatus[1];
