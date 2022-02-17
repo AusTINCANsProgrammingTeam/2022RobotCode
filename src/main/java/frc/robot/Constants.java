@@ -47,8 +47,8 @@ public final class Constants {
     // Actual IDs on robot, used to activate the right motors
     public static final int driveLeftFront = 1;
     public static final int driveLeftRear = 2;
-    public static final int driveRightFront = 3;
-    public static final int driveRightRear = 4;
+    public static final int driveRightFront = 7;
+    public static final int driveRightRear = 8;
 
     // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
     public static final int driveLeftFrontIndex = 0;
@@ -90,10 +90,10 @@ public final class Constants {
 
     
     // Intake Contstants
-    public static final int intakeMotorOneID = 13;
+    public static final int intakeMotorOneID = 3;
     public static final int intakeMotorTwoID = 12;
-    public static final int intakeWheelOneID = 3;
-    public static final int intakeWheelTwoID = 4;
+    public static final int intakeWheelOneID = 12;
+    public static final int intakeWheelTwoID = 11;
     public static final double intakeMotorSpeed = 0.70;
     public static final int initialBallSensorChannel = 0;
     public static final int middleBallSensorChannel = 1;
@@ -157,7 +157,7 @@ public final class Constants {
     public static final double goalHeight = 8.8; //Height of the goal in ft from the carpet
     
     // Shooter Constants
-    public static final int shooterID = 14; // ID of the shooter
+    public static final int shooterID = 4; // ID of the shooter
     public static final int hoodID = 0; // ID of the hood;
     public static final double shooterHeight = 3;
     public static final double highHeight = 8.0 + 8.0/12.0; // Height of the high goal in ft from the carpet
