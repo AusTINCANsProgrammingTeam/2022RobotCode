@@ -30,14 +30,28 @@ public class ShooterPrime extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_ShooterSubsystem.resetidelay();
+    i  = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     m_ShooterSubsystem.prime();
-  
+    if (m_ShooterSubsystem.wheelReady()){
+      m_ShooterSubsystem.SetCargoBoolean(true);
+      i++;
+      //500 miliseconds delay
+      if (i==50){
+      m_ShooterSubsystem.runCargo(true,true);
+      }
+
+
+    }
+    else{
+      m_ShooterSubsystem.runCargo(false, false);
+    }
+    m_ShooterSubsystem.UpdateIdelay(i);
+
   }
 
   // Called once the command ends or is interrupted.
@@ -46,6 +60,7 @@ public class ShooterPrime extends CommandBase {
     m_ShooterSubsystem.runCargo(false,false);
     m_ShooterSubsystem.windFlywheel(0);
     m_ShooterSubsystem.SetCargoBoolean(false);
+    m_ShooterSubsystem.UpdateIdelay(0);
     
     
     //SmartDashboard.putBoolean("wheelReady", false);

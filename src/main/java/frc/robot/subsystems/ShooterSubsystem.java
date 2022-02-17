@@ -49,7 +49,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private int IMaxAccumIDconstant;
   private int I_Zone;
   private double MaxOutput;
-  private int idelay;
+
 
 
 
@@ -79,7 +79,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private double MaxOutputConstant;
   private double MinOutputConstant;
   private ShooterConfig[] DistanceArray;
-  private double IndexArray;
 
 
 
@@ -166,9 +165,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // Adjusts Hood using PID control to passed angle a
   }
-  public void resetidelay(){
-    idelay = 0;
-  }
   public double getVelocityInput(){
     return DShooterRPMInput.getDouble(0.0);
   }
@@ -184,19 +180,7 @@ public class ShooterSubsystem extends SubsystemBase {
     {
     KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
     }
-    if (wheelReady()){
-      BCargoRunning.setBoolean(true);
-      idelay++;
-      //500 miliseconds delay
-      if (idelay==25){
-      runCargo(true,true);
-      }
-
-
-    }
-    else{
-      runCargo(false, false);
-    }
+    
 
   
     
@@ -206,6 +190,9 @@ public class ShooterSubsystem extends SubsystemBase {
   }
   public void  SetCargoBoolean(boolean a){
     BCargoRunning.setBoolean(a);
+  }
+  public void UpdateIdelay(double i){
+    IDelayTable.setDouble(i);
   }
 
   public void runCargo(boolean a,boolean reversed) {
@@ -332,7 +319,6 @@ public class ShooterSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     //SmartDashboard.putNumber("IAccum",KShooterController.getIAccum());
     //SmartDashboard.putNumber("dist", getDistance());
-    IDelayTable.setNumber(idelay);
     if(DShooterRPM.getDouble(0.0) != shooter_motorController.getEncoder().getVelocity()){
       DShooterRPM.setDouble(shooter_motorController.getEncoder().getVelocity());
     }
