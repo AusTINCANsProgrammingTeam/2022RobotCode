@@ -66,10 +66,11 @@ public final class Constants {
 
     // Volts, constants for ramseteCommand
     public static final double ksVolts = 0.13323;                      // Ks, 
-    public static final double kvVoltSecondsPerMeter = 2.8295;         // Kv, Velocity
+    public static final double kvVoltSecondsPerMeter = 2.8295;         // Kv, Velocity, feedforward
     public static final double kaVoltSecondsSquaredPerMeter = 0.31462; // Ka, Accelleration
 
-    public static final double kpDriveVel = 2.1938;                    // Kp, Velocity
+    //public static final double kpDriveVel = 2.1938;                    // Kp, Velocity
+    public static final double arbFeedForward = 8.6045E-07;               // voltage applied to the motor after the result of the specified control mode
     public static final double trackWidth = 0.69;
     public static final DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(trackWidth);
     public static final double unitsPerRotation = 0.4787787204;

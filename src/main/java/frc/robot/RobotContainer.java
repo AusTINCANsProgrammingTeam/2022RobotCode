@@ -191,7 +191,7 @@ public class RobotContainer {
 
   private void initializeTrajectories() {
     // auton with just a one straight path
-    String trajectoryJSON = "paths/Straight.wpilib.json";
+    String trajectoryJSON = "paths/RightCurve.wpilib.json";
     try { 
       Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON); // goes to scr/main/deploy/paths
       trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
