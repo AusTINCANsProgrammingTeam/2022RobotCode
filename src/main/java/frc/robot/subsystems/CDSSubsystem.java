@@ -21,6 +21,7 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSWheelControllerOne;
   private MotorController CDSWheelControllerTwo;
   private ColorSensorV3 colorSensorOne;
+  private ColorSensorV3 colorSensorTwo;
   private DigitalInput backBeamBreak;
   private String allianceColor;
   private boolean runningCDS = false;
@@ -33,7 +34,8 @@ public class CDSSubsystem extends SubsystemBase {
 
     CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
 
-    colorSensorOne = new ColorSensorV3(Constants.colorSensorPort);
+    colorSensorOne = new ColorSensorV3(Constants.colorSensorPort1);
+    colorSensorTwo = new ColorSensorV3(Constants.colorSensorPort2);
     backBeamBreak = new DigitalInput(Constants.initialBallSensorChannel);
 
     String allianceColor = DriverStation.getAlliance().toString();
@@ -81,8 +83,9 @@ public class CDSSubsystem extends SubsystemBase {
   
   public int[] getSensorStatus() {
     int frontStatus = colorSensorOne.getProximity() > 800 ? 1: 0;
+    int middleStatus = colorSensorTwo.getProximity() > 800 ? 1: 0;
     int backStatus = backBeamBreak.get() ? 1: 0;
-    int[] beamBreakArray = {backStatus, frontStatus};
+    int[] beamBreakArray = {backStatus, middleStatus, frontStatus};
     return beamBreakArray;
   }
 
@@ -91,7 +94,8 @@ public class CDSSubsystem extends SubsystemBase {
     // Setpoint 2 @ Second beam break
     int[] sensorStatus = getSensorStatus();
     
-    for (int i=0; i < sensorStatus.length; i++) {
+    // Start at 1 to skip over the centering wheel status 
+    for (int i=1; i < sensorStatus.length; i++) {
       if (sensorStatus[i] == 0) {
         return i;
       } 
@@ -107,12 +111,12 @@ public class CDSSubsystem extends SubsystemBase {
 
     // Ball indexing
     int[] sensorStatus = getSensorStatus();
-    int ballCount = sensorStatus[0] + sensorStatus[1];
+    int ballCount = sensorStatus[0] + sensorStatus[1] + sensorStatus[2];
     SmartDashboard.putNumber("Ball Count", ballCount);
 
     // Send ball to setpoint
     if (!runningCDS) {
-      if (sensorStatus[1] == 1) {  //1 means sensor is activated
+      if (sensorStatus[2] == 1) {  //1 means sensor is activated
         int nextOpenSensor = getNextOpenSensor();
 
         if (nextOpenSensor != -1) {
@@ -130,7 +134,7 @@ public class CDSSubsystem extends SubsystemBase {
         stopCDS();
         runningCDS = false;
         setpointIndex = -1;
-      } else if ((sensorStatus[1] == 0) && (CDSWheelControllerOne.getSparkMax().get() != 0)) {
+      } else if ((sensorStatus[2] == 0) && (CDSWheelControllerOne.getSparkMax().get() != 0)) {
           stopCDSWheel();
       }
     }
