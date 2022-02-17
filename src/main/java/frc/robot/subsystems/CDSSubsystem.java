@@ -24,6 +24,7 @@ public class CDSSubsystem extends SubsystemBase {
   private ColorSensorV3 colorSensorOne;
   private DigitalInput backBeamBreak;
   private String allianceColor;
+  private boolean runningCDS = false;
 
   public CDSSubsystem() {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
@@ -39,21 +40,28 @@ public class CDSSubsystem extends SubsystemBase {
     SmartDashboard.putString("Alliance Color", allianceColor);
   }
 
-  public void CDSBeltWheelControllerToggle(boolean reverse) {
+  public void CDSWheelControllerToggle(boolean reverse) {
     if (reverse) {
       CDSWheelControllerOne.getSparkMax().set(Constants.CDSWheelControllerSpeed);
       SmartDashboard.putString("CDS Wheel Controller Direction", "Reverse");
       SmartDashboard.putNumber("CDS Wheel Controller Speed", -Constants.CDSWheelControllerSpeed);
-      
-      CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
-      CDSBeltController.setIdleMode(IdleMode.kBrake);
-      SmartDashboard.putString("CDS Belt Direction", "Reverse");
-      SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
+  
     } else {
       CDSWheelControllerOne.getSparkMax().set(Constants.CDSWheelControllerSpeed);
       SmartDashboard.putString("CDS Wheel Controller Direction", "Forward");
       SmartDashboard.putNumber("CDS Wheel Controller Speed", Constants.CDSWheelControllerSpeed);
       
+    }
+  }
+
+  public void CDSBeltToggle(boolean reverse){
+    if(reverse){
+      CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
+      CDSBeltController.setIdleMode(IdleMode.kBrake);
+      SmartDashboard.putString("CDS Belt Direction", "Reverse");
+      SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
+
+    }else{
       CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
       SmartDashboard.putString("CDS Belt Direction", "Forward");
       SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
@@ -69,8 +77,26 @@ public class CDSSubsystem extends SubsystemBase {
   public int[] getSensorStatus() {
     int frontStatus = colorSensorOne.getProximity() > 800 ? 1: 0;
     int backStatus = backBeamBreak.get() ? 1: 0;
-    int[] beamBreakArray = {frontStatus, backStatus};
+    int[] beamBreakArray = {backStatus, frontStatus};
     return beamBreakArray;
+  }
+
+  public int getNextOpenSensor() {
+    // Setpoint 1 @ Shooter Stopper Wheel
+    // Setpoint 2 @ Second beam break
+    int[] sensorStatus = getSensorStatus();
+    
+    for (int i=0; i < sensorStatus.length; i++) {
+      if (sensorStatus[i] == 1) {
+        return i;
+      } 
+    }
+ 
+    return -1;
+  }
+
+  public void sendToSetpoint(int setpointIndex) {
+    
   }
 
   public void periodic() {
@@ -83,6 +109,24 @@ public class CDSSubsystem extends SubsystemBase {
     int[] sensorStatus = getSensorStatus();
     int ballCount = sensorStatus[0] + sensorStatus[1];
     SmartDashboard.putNumber("Ball Count", ballCount);
+
+    // Send ball to setpoint
+    if (!runningCDS) {
+      if (sensorStatus[1] == 1) {
+        int nextOpenSensor = getNextOpenSensor();
+
+        if (nextOpenSensor != -1) {
+          // There is an open setpoint avaliable, run CDS
+          runningCDS = true;
+          
+          CDSWheelControllerToggle(true); // run wheel
+          CDSBeltToggle(false); // run belt
+          
+        }
+      }
+    } else {
+      // Check if ball has reached setpoint, stop if it has
+    }
   }
 
   /*

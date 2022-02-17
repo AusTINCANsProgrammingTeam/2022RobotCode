@@ -24,7 +24,8 @@ public class CDSReverseCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mCDSSubsystem.CDSBeltWheelControllerToggle(true);
+    mCDSSubsystem.CDSWheelControllerToggle(true);
+    mCDSSubsystem.CDSBeltToggle(true);
     mShooterSubsystem.runCargo(true, false);
   }
 
