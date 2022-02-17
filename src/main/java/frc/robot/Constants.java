@@ -99,14 +99,14 @@ public final class Constants {
   public static final int middleBallSensorChannel = 1;
   public static final int finalBallSensorChannel = 2;
 
-    //CDS Constants
-    public static final int CDSBeltID = 6;
+  // CDS Constants
+  public static final int CDSBeltID = 6;
     public static final int CDSWheelControllerOneID = 11;   
     public static final int CDSWheelControllerTwoID = 12;   
-    public static final double CDSBeltSpeed = 0.25;
-    public static final double CDSWheelControllerSpeed = 0.15;
-    public static final Port colorSensorPort = Port.kOnboard; //Placeholder Value, to be changed
-    public static final boolean competition = false; // false for testing, true for competition
+  public static final double CDSBeltSpeed = 0.25;
+  public static final double CDSWheelControllerSpeed = 0.15;
+  public static final Port colorSensorPort = Port.kOnboard; // Placeholder Value, to be changed
+  public static final boolean competition = false; // false for testing, true for competition
 
   // Controller Constants {
   public static final int portNumber0 = 0;
