@@ -4,54 +4,47 @@
 
 package frc;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.util.Color;
 
-/** Add your docs here. */
+/* Wrapper for ColorSensorV3 that uses a TCA9548A I2C multiplexer to
+   access up to 8 color sensors with the same device address */
 public class ColorSensorMuxed {
     private ColorSensorV3 sensors;
     private I2C i2cMux;
     private final int tca9548Addr = 0x70;
-    private ArrayList<Byte> i2cPorts;
+    private ArrayList<Integer> i2cPorts;
 
 
-    public ColorSensorMuxed(int... ports) throws IOException {
+    public ColorSensorMuxed(int... ports) {
         i2cMux = new I2C(Port.kOnboard, tca9548Addr);
-        i2cPorts = new ArrayList<Byte>();
+        i2cPorts = new ArrayList<Integer>();
         for (int p : ports) {
-            byte muxCtrl = (byte)(1 << p);
-
-            if (setI2cPort(muxCtrl)) {
-                i2cPorts.add(Byte.valueOf((byte)(1 << p)));
-                // Initialize each port, only need to keep last object
+            if (setI2cPort(p)) {
+                i2cPorts.add(p);
+                // Initialize each device, only need to keep last object
                 sensors = new ColorSensorV3(Port.kOnboard);
-                System.out.println("Added port " + p);
             } else {
-                throw new IOException("Failed to add port " + p);
-            }
-
-        }
-        for (Byte b : i2cPorts) {
-            setI2cPort((byte)b);
-            if(!sensors.isConnected()) {
-                throw new IOException("Failed to add port " + b);
+                DriverStation.reportError("Could not initialize color sensor on I2C port " + p, false);
             }
 
         }
 
     }
 
-    // returns true if successful
-    private boolean setI2cPort(byte p) {
-        byte[] muxCtrlReg = {p};
+    // @returns true if successful
+    private boolean setI2cPort(int port) {
+        // Each bit in the TCA9548 control register corresponds to an I2C port to enable 
+        byte[] muxCtrlReg = {(byte)(1 << port)};
         byte[] muxCtrlRegRead = new byte[1];
-        //False for success from I2C
+        // Write to TCA9548 control register and readback and verify
+        // (I2C class returns false for I2C transaction successes.)
         boolean ret = i2cMux.writeBulk(muxCtrlReg);
         ret |= i2cMux.readOnly(muxCtrlRegRead, muxCtrlRegRead.length);
         ret |= muxCtrlRegRead[0] != muxCtrlReg[0];
@@ -62,12 +55,13 @@ public class ColorSensorMuxed {
     public Color[] getColors() {
         Color[] colors = new Color[i2cPorts.size()];
         int i = 0;
-        for (Byte p : i2cPorts)
+        for (int p : i2cPorts)
         {
             if (setI2cPort(p)) { 
                 colors[i] = sensors.getColor();
             } else {
-                 System.err.print("TCA9548 I2C Mux communication error");
+                DriverStation.reportError("Failed to get color from sensor on I2C port " + p, false);
+                colors[i] = new Color(0,0,0);
             }
             i++;
         }
@@ -77,12 +71,13 @@ public class ColorSensorMuxed {
     public int[] getProximities() {
         int[] proximities = new int[i2cPorts.size()];
         int i = 0;
-        for (Byte p : i2cPorts)
+        for (int p : i2cPorts)
         {
             if (setI2cPort(p)) { 
                 proximities[i] = sensors.getProximity();
             } else {
-                 System.err.print("TCA9548 I2C Mux communication error");
+                DriverStation.reportError("Failed to get proximity from sensor on I2C port " + p, false);
+                proximities[i] = 0;
             }
         }
         return proximities;
