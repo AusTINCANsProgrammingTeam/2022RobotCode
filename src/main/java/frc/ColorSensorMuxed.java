@@ -4,6 +4,7 @@
 
 package frc;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import com.revrobotics.ColorSensorV3;
@@ -20,25 +21,41 @@ public class ColorSensorMuxed {
     private ArrayList<Byte> i2cPorts;
 
 
-    public ColorSensorMuxed(int... ports) {
-        sensors = new ColorSensorV3(Port.kOnboard);
+    public ColorSensorMuxed(int... ports) throws IOException {
         i2cMux = new I2C(Port.kOnboard, tca9548Addr);
+        i2cPorts = new ArrayList<Byte>();
         for (int p : ports) {
             byte muxCtrl = (byte)(1 << p);
 
-            if (setI2cPort(muxCtrl) && sensors.isConnected()) {
+            if (setI2cPort(muxCtrl)) {
                 i2cPorts.add(Byte.valueOf((byte)(1 << p)));
+                // Initialize each port, only need to keep last object
+                sensors = new ColorSensorV3(Port.kOnboard);
+                System.out.println("Added port " + p);
+            } else {
+                throw new IOException("Failed to add port " + p);
             }
+
         }
+        for (Byte b : i2cPorts) {
+            setI2cPort((byte)b);
+            if(!sensors.isConnected()) {
+                throw new IOException("Failed to add port " + b);
+            }
+
+        }
+
     }
 
+    // returns true if successful
     private boolean setI2cPort(byte p) {
         byte[] muxCtrlReg = {p};
         byte[] muxCtrlRegRead = new byte[1];
+        //False for success from I2C
         boolean ret = i2cMux.writeBulk(muxCtrlReg);
-        ret &= i2cMux.readOnly(muxCtrlRegRead, muxCtrlRegRead.length);
-        ret &= muxCtrlRegRead[0] == muxCtrlReg[0];
-        return ret;
+        ret |= i2cMux.readOnly(muxCtrlRegRead, muxCtrlRegRead.length);
+        ret |= muxCtrlRegRead[0] != muxCtrlReg[0];
+        return !ret;
 
     }
 
@@ -52,6 +69,7 @@ public class ColorSensorMuxed {
             } else {
                  System.err.print("TCA9548 I2C Mux communication error");
             }
+            i++;
         }
         return colors;
     }
