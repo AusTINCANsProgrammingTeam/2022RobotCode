@@ -27,6 +27,7 @@ import edu.wpi.first.math.controller.RamseteController;
 
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.CDSSubsystem;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 
@@ -36,6 +37,8 @@ import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.ShooterPrime;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
+import frc.robot.commands.ClimbDOWNCommand;
+import frc.robot.commands.ClimbUPCommand;
 
  // This class is where the bulk of the robot should be declared. Since Command-based is a
  // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -52,6 +55,8 @@ public class RobotContainer {
 
 
   // subsystems
+
+  private static ClimbSubsystem climbSubsystem;
   private static DriveBaseSubsystem driveBaseSubsystem;
   private static CDSSubsystem CDSSubsystem;
   private static IntakeSubsystem intakeSubsystem; 
@@ -62,8 +67,10 @@ public class RobotContainer {
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
   private IntakeForwardCommand intakeForwardCommand;
   private IntakeReverseCommand intakeReverseCommand;
+  private ClimbUPCommand climbUPCommand;
+  private ClimbDOWNCommand climbDOWNCommand;
 
-   // private BeamBreakCommand beamBreakCommand;
+  // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
   private ShooterPrime shooterPrime;
   private CDSForwardCommand CDSForwardCommand;
   private CDSReverseCommand CDSReverseCommand;
@@ -100,7 +107,7 @@ public class RobotContainer {
           case "DriveBaseSubsystem": 
           {
             System.out.println("Drivebase enabled");
-            driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, false); // TODO: change boolean based on if using external encoders
+            driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, false);
             break;
           }
           case "CDSSubsystem": 
@@ -125,6 +132,15 @@ public class RobotContainer {
           {
             System.out.println("Limelight enabled");
             limelightSubsystem = new LimelightSubsystem();
+            break;
+          }
+          case "ClimbSubsystem":
+          {
+            System.out.println("Climb enabled");
+            
+            climbSubsystem = new ClimbSubsystem();
+            climbUPCommand = new ClimbUPCommand(climbSubsystem);
+            climbDOWNCommand = new ClimbDOWNCommand(climbSubsystem);
             break;
           }
 
@@ -187,7 +203,12 @@ public class RobotContainer {
       buttons[Constants.startButton].whenPressed(limelightAlign);
     }
 
-  }
+    if (climbSubsystem != null)
+    {
+      buttons[Constants.AButton].whileHeld(climbUPCommand);
+      buttons[Constants.XButton].whileHeld(climbDOWNCommand);
+    }
+  } 
 
   private void initializeTrajectories() {
     // auton with just a one straight path
