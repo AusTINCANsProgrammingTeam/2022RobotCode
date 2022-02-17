@@ -23,7 +23,8 @@ public final class Constants {
         CDSSubsystem      (true),
         IntakeSubsystem   (true),
         ShooterSubsystem  (true),
-        LimelightSubsystem(true);
+        LimelightSubsystem(true),
+        ClimbSubsystem    (true);
 
         private final Boolean enabled; 
         
@@ -48,8 +49,8 @@ public final class Constants {
     // Actual IDs on robot, used to activate the right motors
     public static final int driveLeftFront = 1;
     public static final int driveLeftRear = 2;
-    public static final int driveRightFront = 3;
-    public static final int driveRightRear = 4;
+    public static final int driveRightFront = 7;
+    public static final int driveRightRear = 8;
 
     // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
     public static final int driveLeftFrontIndex = 0;
@@ -93,8 +94,8 @@ public final class Constants {
     // Intake Contstants
     public static final int intakeMotorOneID = 3;
     public static final int intakeMotorTwoID = 12;
-    public static final int intakeWheelOneID = 3;
-    public static final int intakeWheelTwoID = 4;
+    public static final int intakeWheelOneID = 12;
+    public static final int intakeWheelTwoID = 11;
     public static final double intakeMotorSpeed = 0.70;
     public static final int initialBallSensorChannel = 0;
     public static final int middleBallSensorChannel = 1;
@@ -175,4 +176,9 @@ public final class Constants {
     public static final double ballFlywheelratio = 2;
     public static final int shooterCargoID = 5;
     public static final double cargoRotation = 3;
+
+    //Climb Constants
+    public static final int ClimbMotorOne = 10;
+    public static final int ClimbMotorTwo = 11;
+    public static final int LimitSwitchChannel = 12; //Check what number this needs to be 
 }
