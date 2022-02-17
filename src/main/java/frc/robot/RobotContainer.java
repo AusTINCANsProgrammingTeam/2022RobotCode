@@ -114,6 +114,9 @@ public class RobotContainer {
           {
             System.out.println("CDS enabled");
             CDSSubsystem = new CDSSubsystem();
+            //CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
+            //CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+            //CDSSubsystem.getAllianceColor();
             break;
           }
           case "IntakeSubsystem":
@@ -193,6 +196,12 @@ public class RobotContainer {
     }
 
     //CDS
+    if (CDSSubsystem != null && shooterSubsystem != null) {
+      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
+      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+      CDSSubsystem.senseColor();
+    }
+    
     if (CDSForwardCommand != null && CDSReverseCommand != null) {
       buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
       buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
