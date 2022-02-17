@@ -44,8 +44,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public static ADIS16448_IMU m_gyro2; //Non-native gyro, might use later
   private AnalogGyro m_gyro1;
   private final DifferentialDriveOdometry m_odometry;
-  public static Encoder m_leftEncoder;
-  public static Encoder m_rightEncoder;
   private EncoderSim m_leftEncoderSim;
   private EncoderSim m_rightEncoderSim;
 
@@ -72,8 +70,13 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_gyro = new AHRS(I2C.Port.kMXP);
     m_gyro.reset(); // resets the heading of the robot to 0
     m_gyro1 = new AnalogGyro(1);
-    m_LEncoderForSim = new Encoder(0, 1);
-    m_REncoderForSim = new Encoder(2, 3);
+
+    if (Robot.isSimulation()) {
+      if (usingExternal == true) {
+        m_LEncoderForSim = new Encoder(0, 1);
+        m_REncoderForSim = new Encoder(2, 3);
+      }
+    }
 
     m_sMotorFeedforward = new SimpleMotorFeedforward(Constants.ksVolts, Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter);
 
@@ -330,4 +333,3 @@ public class DriveBaseSubsystem extends SubsystemBase {
     return positions;
   }
 }
-                                                                                                                                                                                              
