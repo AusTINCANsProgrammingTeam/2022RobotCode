@@ -38,11 +38,12 @@ public class ShooterPrime extends CommandBase {
   public void execute() {
     m_ShooterSubsystem.prime();
     if (m_ShooterSubsystem.wheelReady()){
-      m_ShooterSubsystem.SetCargoBoolean(true);
       i++;
-      //500 miliseconds delay
+      //1000 miliseconds delay
       if (i==50){
-      m_ShooterSubsystem.runCargo(true,true);
+        m_ShooterSubsystem.runCargo(true,true);
+        m_ShooterSubsystem.SetCargoBoolean(true);
+
       }
 
 

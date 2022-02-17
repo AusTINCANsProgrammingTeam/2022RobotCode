@@ -148,36 +148,36 @@ public final class Constants {
   
     // Shooter Constants
     public static final class Shooter{
-    public static final double LOWRPM = 0.0; // RPM that the LOW aimMode winds to
-    public static final double LOWAngle = 0.0; // Angle that the LOW aimMode adjusts to
-    public static final double LAUNCHRPM = 0.0; // RPM that the LAUNCH aimMode winds to
-    public static final double LAUNCHAngle = 0.0; // Angle that the LAUNCH aimMode adjusts to
-    public static final double TARMACRPM = 0.0; // RPM that the TARMAC aimMode winds to
-    public static final double TARMACAngle = 0.0; // Angle that the TARMAC aimMode adjusts to
-    public static final int shooterID = 4; // ID of the shooter
-    //public static final int hoodID = 0; // ID of the hood;
-    public static final double shooterHeight = 3;
-    public static final double highHeight = 8.0 + 8.0/12.0; // Height of the high goal in ft from the carpet
-    public static final double lowHeight = 5.0 + 7.75/12.0; // Height of the low goal in ft from the carpet
-    public static final double airboneTime = 1.2;
-    public static final double gravity = 32;
-    public static final double LLHeight = 8.5/12.0; // Height of the limelight in ft from the carpet
-    public static final double LLAngle = 29.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as exact as possible
-    public static final double gearRatioIn = 34;
-    public static final double gearRatioOut = 14;
-    public static final double gearDiameter = 4; // Gear diameter in inches
-    public static final double ballFlywheelratio = 2;
-    public static final int shooterCargoID = 5;
-    public static final double cargoRotation = 3;
-    public static final double kP =6e-4;
-    public static final double kI = 6e-7;
-    public static final double kD = 0.0;
-    public static final double kF = 0.0;
-    public static final double kIZone = 0.9;
-    public static final double kMaxOutput = 0;
-    public static final double kMaxI = 0.9;
-    public static final double kMaxISlotId = 0;
-    public static final double kMinOutput =1;
+        public static final double LOWRPM = 0.0; // RPM that the LOW aimMode winds to
+        public static final double LOWAngle = 0.0; // Angle that the LOW aimMode adjusts to
+        public static final double LAUNCHRPM = 0.0; // RPM that the LAUNCH aimMode winds to
+        public static final double LAUNCHAngle = 0.0; // Angle that the LAUNCH aimMode adjusts to
+        public static final double TARMACRPM = 0.0; // RPM that the TARMAC aimMode winds to
+        public static final double TARMACAngle = 0.0; // Angle that the TARMAC aimMode adjusts to
+        public static final int shooterID = 4; // ID of the shooter
+        //public static final int hoodID = 0; // ID of the hood;
+        public static final double shooterHeight = 3;
+        public static final double highHeight = 8.0 + 8.0/12.0; // Height of the high goal in ft from the carpet
+        public static final double lowHeight = 5.0 + 7.75/12.0; // Height of the low goal in ft from the carpet
+        public static final double airboneTime = 1.2;
+        public static final double gravity = 32;
+        public static final double LLHeight = 8.5/12.0; // Height of the limelight in ft from the carpet
+        public static final double LLAngle = 29.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as exact as possible
+        public static final double gearRatioIn = 34;
+        public static final double gearRatioOut = 14;
+        public static final double gearDiameter = 4; // Gear diameter in inches
+        public static final double ballFlywheelratio = 2;
+        public static final int shooterCargoID = 5;
+        public static final double cargoRotation = 3;
+        public static final double kP =6e-4;
+        public static final double kI = 6e-7;
+        public static final double kD = 0.0;
+        public static final double kF = 0.0;
+        public static final double kIZone = 0.9;
+        public static final double kMaxOutput = 0;
+        public static final double kMaxI = 0.9;
+        public static final double kMaxISlotId = 0;
+        public static final double kMinOutput =1;
 
     
     }
