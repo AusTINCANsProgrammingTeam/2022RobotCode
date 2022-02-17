@@ -42,12 +42,16 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private AHRS m_gyro;
   private AnalogGyroSim m_gyroSim;
   public static ADIS16448_IMU m_gyro2; //Non-native gyro, might use later
-  public static AnalogGyro m_gyro1;
+  private AnalogGyro m_gyro1;
   private final DifferentialDriveOdometry m_odometry;
   public static Encoder m_leftEncoder;
   public static Encoder m_rightEncoder;
   private EncoderSim m_leftEncoderSim;
   private EncoderSim m_rightEncoderSim;
+
+  //Encoders for Sim
+  private Encoder m_LEncoderForSim;
+  private Encoder m_REncoderForSim;
  
   // external encoders
   private Encoder m_extRightEncoder;
@@ -68,6 +72,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_gyro = new AHRS(I2C.Port.kMXP);
     m_gyro.reset(); // resets the heading of the robot to 0
     m_gyro1 = new AnalogGyro(1);
+    m_LEncoderForSim = new Encoder(0, 1);
+    m_REncoderForSim = new Encoder(2, 3);
 
     m_sMotorFeedforward = new SimpleMotorFeedforward(Constants.ksVolts, Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter);
 
@@ -94,9 +100,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     if(usingExternal) {
       // external encoders            
-      m_extLeftEncoder = new Encoder(Constants.leftEncoderDIOone, Constants.leftEncoderDIOtwo, 
+      m_extLeftEncoder = new Encoder(Constants.leftEncoderDIOone, Constants.leftEncoderDIOtwo,
                               false, Encoder.EncodingType.k2X); // TODO: confirm correct configuration for encoder
-      m_extRightEncoder = new Encoder(Constants.rightEncoderDIOone, Constants.rightEncoderDIOtwo, 
+      m_extRightEncoder = new Encoder(Constants.rightEncoderDIOone, Constants.rightEncoderDIOtwo,
                               false, Encoder.EncodingType.k2X);
 
       m_extRightEncoder.setReverseDirection(true);
@@ -117,9 +123,13 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     if (Robot.isSimulation()) {
       m_gyroSim = new AnalogGyroSim(m_gyro1);
-      m_leftEncoderSim = new EncoderSim(m_extLeftEncoder);
-      m_rightEncoderSim = new EncoderSim(m_extRightEncoder);
-
+      if (usingExternal == true) {
+        m_leftEncoderSim  = new EncoderSim(m_extLeftEncoder);
+        m_rightEncoderSim = new EncoderSim(m_extRightEncoder);
+      } else { 
+        m_leftEncoderSim  = new EncoderSim(m_LEncoderForSim);
+        m_rightEncoderSim = new EncoderSim(m_REncoderForSim);
+      }
       SmartDashboard.putData("Field", m_field);
       
       m_DifferentialDrivetrainSim = new DifferentialDrivetrainSim(
@@ -130,8 +140,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
         Units.inchesToMeters(3), // The robot wheel radius
         1,                       // The track width
         VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005)
-      );
-        // standard deviations for measurement noise: x and y: 0.001m heading: 0.001 rad  l and r velocity: 0.1m/s  l and r position: 0.005m
+      ); // standard deviations for measurement noise: x and y: 0.001m heading: 0.001 rad  l and r velocity: 0.1m/s  l and r position: 0.005m
     }
 
     resetEncoders();  // reset encoders to reset position and velocity values
@@ -219,8 +228,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_gyroSim.setAngle(-m_DifferentialDrivetrainSim.getHeading().getDegrees());
 
     m_odometry.update(m_gyro.getRotation2d(),
-                    m_leftEncoder.getDistance(),
-                    m_rightEncoder.getDistance());
+                    m_leftEncoderSim.getDistance(),
+                    m_rightEncoderSim.getDistance());
     m_field.setRobotPose(m_odometry.getPoseMeters());
   }
 
