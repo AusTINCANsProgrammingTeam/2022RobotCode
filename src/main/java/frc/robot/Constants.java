@@ -101,8 +101,8 @@ public final class Constants {
 
     //CDS Constants                         
     public static final int CDSBeltID = 6;                  
-    public static final int CDSWheelControllerOneID = 11;   
-    public static final int CDSWheelControllerTwoID = 12;   
+    public static final int CDSWheelControllerOneID = 16; //change motor id later   
+    public static final int CDSWheelControllerTwoID = 17;   
     public static final double CDSBeltSpeed = 0.25; 
     public static final double CDSWheelControllerSpeed = 0.15;       
     public static final Port colorSensorPort = Port.kOnboard; //Placeholder Value, to be changed
