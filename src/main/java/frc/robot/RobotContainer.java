@@ -51,7 +51,7 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private static final Joystick driverJoystick = new Joystick(Constants.portNumber0);
-  private JoystickButton[] buttons = new JoystickButton[11];
+  private JoystickButton[] buttons = new JoystickButton[13];
 
 
   // subsystems
