@@ -35,6 +35,67 @@ public final class Constants {
         };
     }
 
+    public enum AimModes {
+        AUTO,
+        //TODO: Plug real values in for these aimModes
+        LOW(0.0,0.0){
+            @Override
+            public AimModes previous(){
+                return values()[values().length - 1];
+            }
+        },
+        EJECT(0.0,0.0),
+        LAUNCH(0.0,0.0),
+        TARMAC(0.0,0.0),
+        TEST(){
+            @Override
+            public AimModes next(){
+                return values()[0];
+            }
+        };
+
+        private final double RPM;
+        private final double angle;
+        private final double distance;
+
+        AimModes(){
+            //Used for auto mode ONLY
+            this.RPM = 0.0;
+            this.angle = 0.0;
+            this.distance = 0.0;
+        }
+
+        AimModes(double rpm, double a){
+            this.RPM = rpm;
+            this.angle = a;
+            this.distance = 0.0;
+        }
+        
+        AimModes(double dist){
+            this.RPM = 0.0;
+            this.angle = 0.0;
+            this.distance = dist;
+        }
+
+        public final double getRPM() {
+            return RPM;
+        }
+
+        public final double getAngle() {
+            return angle;
+        }
+
+        public final double getDistance() {
+            return distance;
+        }
+        public AimModes next(){
+            return values()[ordinal() + 1];
+        }
+        public AimModes previous(){
+            return values()[ordinal() - 1];
+        }
+    }
+
 
     // DRIVEBASE Constants
 
@@ -144,17 +205,6 @@ public final class Constants {
         public static final int rightJoystickX = 2; //arcade turning
         public static final int rightJoystickY = 3; //tank right turning
     //}
-
-    // Preset aim constants
-    public static final double LOWRPM = 0.0; // RPM that the LOW aimMode winds to
-    public static final double LOWAngle = 0.0; // Angle that the LOW aimMode adjusts to
-    public static final double LAUNCHRPM = 0.0; // RPM that the LAUNCH aimMode winds to
-    public static final double LAUNCHAngle = 0.0; // Angle that the LAUNCH aimMode adjusts to
-    public static final double TARMACRPM = 0.0; // RPM that the TARMAC aimMode winds to
-    public static final double TARMACAngle = 0.0; // Angle that the TARMAC aimMode adjusts to
-
-    //Distance calculation constants
-    public static final double goalHeight = 8.8; //Height of the goal in ft from the carpet
     
     // Shooter Constants
     public static final int shooterID = 4; // ID of the shooter

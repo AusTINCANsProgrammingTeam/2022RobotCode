@@ -7,6 +7,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.AimModes;
 
 import java.lang.Math;
 import com.revrobotics.CANSparkMax;
@@ -15,7 +16,6 @@ import com.revrobotics.SparkMaxPIDController;
 import frc.robot.common.hardware.MotorController;
 
 public class ShooterSubsystem extends SubsystemBase {
-  private int aimMode; // 0 is LOW, 1 is AUTO, 2 is LAUNCH, 3 is TARMAC, 4 is TEST
   private MotorController flywheelController;
   private MotorController hoodController;
   private SparkMaxPIDController flywheelPID;
@@ -23,12 +23,13 @@ public class ShooterSubsystem extends SubsystemBase {
   private RelativeEncoder flywheelEncoder;
   private RelativeEncoder hoodEncoder;
   private MotorController stopperController;
+  private AimModes aimMode;
   private double currentRPM;
   private double RPMIN = 3500;
 
   public ShooterSubsystem() {
     SmartDashboard.putNumber("RPMIN", RPMIN);
-    aimMode = 4;
+    aimMode = AimModes.TEST;
     // Initializes the SparkMAX for the flywheel
     flywheelController = new MotorController("Flywheel", Constants.shooterID, 40, true);
     flywheelPID = flywheelController.getPID();
@@ -37,7 +38,7 @@ public class ShooterSubsystem extends SubsystemBase {
     hoodController = new MotorController("Hood", Constants.hoodID);
     hoodPID = hoodController.getPID();
     hoodEncoder = hoodController.getEncoder();
-    // Initializes the SparkMax for the cargo stopper
+    // Initializes the SparkMAX for the cargo stopper
     stopperController = new MotorController("Shooter Cargo", Constants.shooterCargoID);
     // Initializes PID for the flywheel
     flywheelPID.setP(5e-4);
@@ -87,21 +88,15 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setAimMode(int m) {
-    aimMode = m;
+    aimMode = AimModes.values()[m];
   }
 
-  public void cycleAimModeUp() {
-    aimMode++;
-    if (aimMode > 3) {
-      aimMode = 0;
-    }
+  public void cycleAimModeNext() {
+    aimMode.next();
   }
 
-  public void cycleAimModeDown() {
-    aimMode--;
-    if (aimMode < 0) {
-      aimMode = 3;
-    }
+  public void cycleAimModePrevious() {
+    aimMode.previous();
   }
 
   public double getTY() {
@@ -136,42 +131,44 @@ public class ShooterSubsystem extends SubsystemBase {
     // Check what aimMode is active, gets distance if AUTO, winds flywheel, adjusts
     // hood correspondingly
     switch (aimMode) {
-      case 0: // Case for LOW mode, winds flywheel to preset RPM and adjusts hood to preset
-              // angle
-        adjustHood(Constants.LOWAngle);
-        windFlywheel(Constants.LOWRPM);
+      case EJECT: // aimMode used to eject unwanted balls from the shooter
+        adjustHood(aimMode.getAngle());
+        windFlywheel(aimMode.getRPM());
         break;
-      case 1: // Case for AUTO mode, calculates trajectory and winds flywheel/adjusts hood to
-              // a dynamic state
+      case LOW: // aimMode used to dump into the low goal from ~1ft
+        adjustHood(aimMode.getAngle());
+        windFlywheel(aimMode.getRPM());
+        break;
+      case TARMAC: // aimMode used to shoot into the high goal from ~2ft
+        adjustHood(aimMode.getAngle());
+        windFlywheel(aimMode.getRPM());
+        break;
+      case LAUNCH: // aimMode used to shoot into the high goal from the launchpad
+        adjustHood(aimMode.getAngle());
+        windFlywheel(aimMode.getRPM());
+        break;
+      case AUTO: // aimMode used to automatically shoot into the high goal
         adjustHood(ProjectilePrediction(Constants.shooterHeight, 0, Constants.highHeight, getDistance(),
             Constants.gravity, Constants.airboneTime)[1]);
-
         windFlywheel((int) (Math.ceil(ProjectilePrediction(Constants.shooterHeight, 0, Constants.highHeight,
             getDistance(), 32, Constants.airboneTime)[0])));
-
         break;
-      case 2: // Case for LAUNCH mode, winds flywheel to preset RPM and adjusts hood to preset
-              // angle
-        adjustHood(Constants.LAUNCHAngle);
-        windFlywheel(Constants.LAUNCHRPM);
-        break;
-      case 3: // Case for TARMAC mode, winds flywheel to preset RPM and adjusts hood to preset
-              // angle
-        adjustHood(Constants.TARMACAngle);
-        windFlywheel(Constants.TARMACRPM);
-        break;
-      case 4: // Case for TEST mode, just takes an RPM and winds
+      case TEST: // aimMode to take a RPM from the dashboard
         windFlywheel(SmartDashboard.getNumber("RPMIN", RPMIN));
         break;
     }
   }
 
+  public void updateSmartDashboard() {
+    SmartDashboard.putString("AimMode", "");
+    SmartDashboard.putNumber("IAccum",flywheelPID.getIAccum());
+    SmartDashboard.putNumber("Distance", getDistance());
+    SmartDashboard.putNumber("RPM", flywheelEncoder.getVelocity());
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("IAccum",flywheelPID.getIAccum());
-    SmartDashboard.putNumber("dist", getDistance());
-    SmartDashboard.putNumber("RPM", flywheelEncoder.getVelocity());
   }
 
 }

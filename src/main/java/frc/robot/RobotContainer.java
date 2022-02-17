@@ -172,8 +172,8 @@ public class RobotContainer {
     // Shooter
     if (shooterSubsystem != null && shooterPrime != null) {
       buttons[Constants.backButton].whenPressed(shooterPrime);
-      buttons[Constants.LJoystickButton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
-      buttons[Constants.RJoystickButton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
+      buttons[Constants.LJoystickButton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
+      buttons[Constants.RJoystickButton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
     }
 
     //CDS
