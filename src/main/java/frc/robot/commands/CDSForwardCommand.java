@@ -24,7 +24,7 @@ public class CDSForwardCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mCDSSubsystem.CDSWheelControllerToggle(false);
+    mCDSSubsystem.CDSWheelToggle(false);
     mCDSSubsystem.CDSBeltToggle(false);
     //mShooterSubsystem.runCargo(true, false); <----------------- uncomment once done with testing
   }
