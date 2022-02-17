@@ -39,7 +39,7 @@ public class IntakeSubsystem extends SubsystemBase {
     middleBallSensor = new DigitalInput(Constants.middleBallSensorChannel);
     finalBallSensor = new DigitalInput(Constants.finalBallSensorChannel); */
 
-    //DigitalInput[] sensorArray = {frontBallSensor, middleBallSensor, finalBallSensor};
+    DigitalInput[] sensorArray = {frontBallSensor, middleBallSensor, finalBallSensor};
     //TODO: Gutted code
     // Remove invert=true parameter if wheels aren't running correctly
     //CDSWheelControllerOne.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());

@@ -79,7 +79,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private double MaxOutputConstant;
   private double MinOutputConstant;
   private ShooterConfig[] DistanceArray;
-
+  private double IndexArray;
 
 
 
@@ -107,37 +107,20 @@ public class ShooterSubsystem extends SubsystemBase {
     KShooterController = shooter_motorController.getPID();
     KShooterEncoder = shooter_motorController.getEncoder();
     
-    DistanceArray[0] = new ShooterConfig(0,0, 0);
-    DistanceArray[1] = new ShooterConfig(0, 0, 0);
-    DistanceArray[2] = new ShooterConfig(0,0, 0);
-    DistanceArray[3] = new ShooterConfig(0,0, 0);
-    DistanceArray[4] = new ShooterConfig(0,0, 0);
-    DistanceArray[5] = new ShooterConfig(0,0, 0);
-    DistanceArray[6] = new ShooterConfig(0,0, 0);
-    DistanceArray[7] = new ShooterConfig(0,0, 0);
-    DistanceArray[8] = new ShooterConfig(0,0, 0);
-    DistanceArray[9] = new ShooterConfig(0,0, 0);
-    DistanceArray[10] = new ShooterConfig(0,0, 0);
-    DistanceArray[11] = new ShooterConfig(0,0, 0);
-    DistanceArray[12] = new ShooterConfig(0,0, 0);
-    DistanceArray[13] = new ShooterConfig(0,0, 0);
-    DistanceArray[14] = new ShooterConfig(0,0, 0);
-    DistanceArray[15] = new ShooterConfig(0,0, 0);
-    DistanceArray[16] = new ShooterConfig(0,0, 0);
-    DistanceArray[17] = new ShooterConfig(0,0, 0);
-    DistanceArray[18] = new ShooterConfig(0,0, 0);
-    DistanceArray[19] = new ShooterConfig(0,0, 0);
+    DistanceArray[0] = new ShooterConfig(5,64,2263);
+    DistanceArray[1] = new ShooterConfig(10,80,3065);
+    DistanceArray[2] = new ShooterConfig(15,82,3420);
+
+   
     //TODO:FIll lookup table
+
+
     
 
 
 
-
-    //KShooterController.setP(5e-4);
-    //KShooterController.setI(6e-7);
     KShooterController.setIMaxAccum(0.9, 0);
-    //KShooterController.setD(0.0);
-
+    //TODO: Set it up when the hood is avaliable
     //hood_motorController = new MotorController("Hood", Constants.Shooter.hoodID,40,true);
     //KHoodController = hood_motorController.getPID();
     //KHoodEncoder = shooter_motorController.getEncoder();
@@ -168,14 +151,16 @@ public class ShooterSubsystem extends SubsystemBase {
     if (Currentdistance < DistanceArray[0].getDistance()){
       return DistanceArray[0].getVelocityAndAngle();
     }
-    for(int i=0;i<DistanceArray.length;i++){
+    for(int i=1;i<DistanceArray.length;i++){
       if (Currentdistance >= DistanceArray[i].getDistance()){
-        return ShooterConfig.Interprolate(DistanceArray[i-1], DistanceArray[i], Currentdistance);
+        return ShooterConfig.interpolate(DistanceArray[i-1], DistanceArray[i], Currentdistance);
       }
       
     }
-    return DistanceArray[DistanceArray.length].getVelocityAndAngle();
+    return DistanceArray[DistanceArray.length-1].getVelocityAndAngle();
   }
+
+
   public void adjustHood(double a) {
     KHoodController.setReference(a, CANSparkMax.ControlType.kPosition);
 
@@ -199,7 +184,6 @@ public class ShooterSubsystem extends SubsystemBase {
     {
     KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
     }
-
     if (wheelReady()){
       BCargoRunning.setBoolean(true);
       idelay++;
@@ -213,6 +197,8 @@ public class ShooterSubsystem extends SubsystemBase {
     else{
       runCargo(false, false);
     }
+
+  
     
    
       //KShooterController.setIAccum(0);
@@ -235,13 +221,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public boolean wheelReady(){
     double flywheelSpeed = KShooterEncoder.getVelocity();
     currentRPM = DShooterRPMInput.getDouble(0);
-    if (flywheelSpeed > currentRPM - 15 && flywheelSpeed < currentRPM + 15) {
-      
-      return true;
-    }
-    else{
-    return false;
-    }
+    return (flywheelSpeed > currentRPM - 15 && flywheelSpeed < currentRPM + 15);
   }
   public void setAimMode(Double m) {
     DShootingMode.setDouble(m);
@@ -287,7 +267,11 @@ public class ShooterSubsystem extends SubsystemBase {
     adjustHood(ProjectilePrediction(Constants.Shooter.shooterHeight, 0, Constants.Shooter.highHeight, getDistance(),Constants.Shooter.gravity, Constants.Shooter.airboneTime)[1]);
     windFlywheel((int) (Math.ceil(ProjectilePrediction(Constants.Shooter.shooterHeight, 0, Constants.Shooter.highHeight,getDistance(), 32, Constants.Shooter.airboneTime)[0])));
   }
-
+  public void lookuptablemode(double distance){
+    double [] returnarray = lookup(distance);
+    windFlywheel(returnarray[0]);
+    //adjusthood(returnarray[1]);
+  }
 
   public double[] ProjectilePrediction(double y0, double x0, double y, double x, double g, double t) {
     x = x + 1; // Applies an offset to target goal center
@@ -335,6 +319,9 @@ public class ShooterSubsystem extends SubsystemBase {
         break;
       case 4: //Case for TEST mode, just takes an RPM and winds
         windFlywheel(DShooterRPMInput.getDouble(0));
+        break;
+      case 5:
+        lookup(getDistance());
         break;
     }
     
