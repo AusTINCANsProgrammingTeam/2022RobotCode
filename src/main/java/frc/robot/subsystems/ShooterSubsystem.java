@@ -207,30 +207,29 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public boolean wheelReady(){
     double flywheelSpeed = KShooterEncoder.getVelocity();
-    currentRPM = DShooterRPMInput.getDouble(0);
+    
     return (flywheelSpeed > currentRPM - 15 && flywheelSpeed < currentRPM + 15);
   }
-  public void setAimMode(Double m) {
-    DShootingMode.setDouble(m);
+  public void setAimMode(int m) {
+    aimMode = m;
+    DShootingMode.setNumber(aimMode);
+
   }
 
   public void cycleAimModeUp() {
-    double ShooterAimMode = DShootingMode.getDouble(0);
-    ShooterAimMode ++;
-    if (ShooterAimMode>3){
-      ShooterAimMode = 0;
+    aimMode ++;
+    if (aimMode>3){
+      aimMode = 0;
     }
-    setAimMode(ShooterAimMode);
-    
+    DShootingMode.setNumber(aimMode);
   }
 
   public void cycleAimModeDown() {
-    double ShooterAimMode = DShootingMode.getDouble(0);
-    ShooterAimMode--;
-    if (ShooterAimMode < 0) {
-      ShooterAimMode = 3;
+    aimMode--;
+    if (aimMode < 0) {
+      aimMode = 3;
     }
-    setAimMode(ShooterAimMode);
+    DShootingMode.setNumber(aimMode);
   }
 
   public double getTY() {
@@ -253,6 +252,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public void automode(){
     adjustHood(ProjectilePrediction(Constants.Shooter.shooterHeight, 0, Constants.Shooter.highHeight, getDistance(),Constants.Shooter.gravity, Constants.Shooter.airboneTime)[1]);
     windFlywheel((int) (Math.ceil(ProjectilePrediction(Constants.Shooter.shooterHeight, 0, Constants.Shooter.highHeight,getDistance(), 32, Constants.Shooter.airboneTime)[0])));
+    currentRPM = (int) (Math.ceil(ProjectilePrediction(Constants.Shooter.shooterHeight, 0, Constants.Shooter.highHeight,getDistance(), 32, Constants.Shooter.airboneTime)[0]));
   }
   public void lookuptablemode(double distance){
     double [] returnarray = lookup(distance);
@@ -278,7 +278,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
   public void prime() {
-     int aimMode = (int)DShootingMode.getDouble(0);
     // Check what aimMode is active, gets distance if AUTO, winds flywheel, adjusts
     // hood correspondingly
     
@@ -287,6 +286,7 @@ public class ShooterSubsystem extends SubsystemBase {
               // angle
         adjustHood(Constants.Shooter.LOWAngle);
         windFlywheel(Constants.Shooter.LOWRPM);
+        currentRPM = Constants.Shooter.LOWRPM;
         break;
       case 1: // Case for AUTO mode, calculates trajectory and winds flywheel/adjusts hood to
               // a dynamic state
@@ -298,17 +298,22 @@ public class ShooterSubsystem extends SubsystemBase {
               // angle
         adjustHood(Constants.Shooter.LAUNCHAngle);
         windFlywheel(Constants.Shooter.LAUNCHRPM);
+        currentRPM = Constants.Shooter.LAUNCHRPM;
         break;
       case 3: // Case for TARMAC mode, winds flywheel to preset RPM and adjusts hood to preset
               // angle
         adjustHood(Constants.Shooter.TARMACAngle);
         windFlywheel(Constants.Shooter.TARMACRPM);
+        currentRPM = Constants.Shooter.TARMACRPM;
         break;
       case 4: //Case for TEST mode, just takes an RPM and winds
         windFlywheel(DShooterRPMInput.getDouble(0));
+        currentRPM = DShooterRPMInput.getDouble(0);
         break;
       case 5:
-        lookup(getDistance());
+        windFlywheel(lookup(getDistance())[0]);
+        currentRPM = lookup(getDistance())[0];
+
         break;
     }
     
@@ -336,6 +341,10 @@ public class ShooterSubsystem extends SubsystemBase {
     if (ShooterReverted.getBoolean(false)!= shooter_motorController.getEncoder().getInverted()){
       shooter_motorController.setInverted(ShooterReverted.getBoolean(false));
     }
+    if ((int)DShootingMode.getNumber(0) != aimMode){
+      aimMode = (int)DShootingMode.getNumber(0);
+    }
+
   }
 
 }
