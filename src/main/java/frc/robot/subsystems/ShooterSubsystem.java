@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -51,6 +52,7 @@ public class ShooterSubsystem extends SubsystemBase {
     hoodPID.setI(0.0);
     hoodPID.setD(0.0);
     hoodPID.setOutputRange(0, 1);
+    
   }
 
   public void adjustHood(double a) {
@@ -107,19 +109,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public double getDistance() {
     // Uses Limelight to find distance to High Goal
     SmartDashboard.putNumber("ty", getTY());
-    return (Constants.highHeight - Constants.LLHeight) / Math.tan(Math.toRadians((getTY() + Constants.LLAngle))); // Return distance in
-                                                                                                   // feet
-  }
-
-  public double[] ProjectilePrediction(double y0, double x0, double y, double x, double g, double t) {
-    x = x + 1; // Applies an offset to target goal center
-    double hoodAngle = Math.toDegrees(Math.atan((y - y0 + 1 / 2 * g * (Math.pow(t, 2))) / x)); //Finds angle to shoot at
-    double velocity = Math.abs(x / (Math.cos(Math.toRadians(hoodAngle)) * t)); //Finds velocity in feet per second to shoot at
-    double[] returnArray = new double[2];
-    returnArray[0] = UnitConversion(velocity, Constants.gearDiameter); //Converts FPS to RPM
-    returnArray[1] = hoodAngle;
-    return returnArray;
-
+    return (Constants.highHeight - Constants.LLHeight) / Math.tan(Math.toRadians((getTY() + Constants.LLAngle))); // Return distance in ft
   }
 
   public double UnitConversion(double KBallSpeed, double GearDiameter) {
@@ -148,10 +138,7 @@ public class ShooterSubsystem extends SubsystemBase {
         windFlywheel(aimMode.getRPM());
         break;
       case AUTO: // aimMode used to automatically shoot into the high goal
-        adjustHood(ProjectilePrediction(Constants.shooterHeight, 0, Constants.highHeight, getDistance(),
-            Constants.gravity, Constants.airboneTime)[1]);
-        windFlywheel((int) (Math.ceil(ProjectilePrediction(Constants.shooterHeight, 0, Constants.highHeight,
-            getDistance(), 32, Constants.airboneTime)[0])));
+
         break;
       case TEST: // aimMode to take a RPM from the dashboard
         windFlywheel(SmartDashboard.getNumber("RPMIN", RPMIN));
