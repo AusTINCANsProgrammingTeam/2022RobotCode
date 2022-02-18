@@ -82,6 +82,11 @@ public class CDSSubsystem extends SubsystemBase {
     CDSWheelControllerOne.getSparkMax().set(0.0);
     SmartDashboard.putNumber("CDS Wheel Speed", 0.0);
   }
+
+  public void CDSEject() {
+    // TODO: Add intake object to interface with
+    // Reverse both intake and CDS motors
+  }
   
   public int[] getSensorStatus() {
     int frontStatus = colorSensorOne.getProximity() > 800 ? 1: 0;
