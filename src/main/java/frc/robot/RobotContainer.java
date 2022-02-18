@@ -9,8 +9,13 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.subsystems.DriveBaseSubsystem;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
@@ -69,14 +74,16 @@ public class RobotContainer {
   private CDSReverseCommand CDSReverseCommand;
   private LimelightAlign limelightAlign;
 
-  // auton
-  // private Trajectory[] mTrajectories;  // multiple trajectories
-  // private int trajectoryIndex = 0;
+  //auton
+  private List<Trajectory> mTrajectories;  // multiple trajectories
+  private int trajectoryIndex = 0;
   private Trajectory trajectory;
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
     debugTab = Shuffleboard.getTab("debug");
+
+    mTrajectories = new ArrayList<Trajectory>();
 
     initSubsystems();
     initCommands();
@@ -198,6 +205,39 @@ public class RobotContainer {
 
     } catch (IOException ex) {
       DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+    }
+
+    // method to intialize multiple trajectories in one auton route
+    // TODO: some sort of sendable chooser on shuffle board get the desire route
+    String routeName = "RouteA";
+
+    File f = new File("Autos/" + routeName);  // get file with all the names of the path for the auton routine
+    Scanner fileScanner;
+    List<String> trajectoryJSONList = new ArrayList<String>();
+
+    try {
+      fileScanner = new Scanner(f);
+      while(fileScanner.hasNextLine()) {
+        trajectoryJSONList.add(fileScanner.nextLine().split("\\.")[0]);  // get name of file not the (.path)
+      }
+
+      if(trajectoryJSONList != null) {
+        for(String name : trajectoryJSONList) {
+          String pathName = "paths/" + name + ".wpilib.json";
+          Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(pathName); // goes to scr/main/deploy/paths
+          Trajectory trajectory;
+          try {
+            trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+            mTrajectories.add(trajectory);
+          } catch (IOException e) {
+            System.out.println("***Unable to create individual trajectories.");
+          }
+        }
+      }  
+
+      fileScanner.close();
+    } catch (FileNotFoundException e) {
+      System.out.println("***Trajectory List unable to be created.");
     }
     
   }
