@@ -35,7 +35,6 @@ import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.ShooterPrime;
-import frc.robot.commands.BeamBreakCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
 import frc.robot.commands.ClimbDOWNCommand;
@@ -199,8 +198,8 @@ public class RobotContainer {
 
     //CDS
     if (CDSSubsystem != null && shooterSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
-      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
       CDSSubsystem.senseColor();
     }
     
