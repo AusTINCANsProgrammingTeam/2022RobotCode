@@ -154,8 +154,10 @@ public class CDSSubsystem extends SubsystemBase {
     double redAmount = color.red;
     double blueAmount = color.blue;
     if (redAmount > blueAmount) {
-      return "Red";
+      SmartDashboard.putString("Ball Color", "Red");
+      return "Red"; 
     } else {
+      SmartDashboard.putString("Ball Color", "Blue");
       return "Blue";
     } 
   }
