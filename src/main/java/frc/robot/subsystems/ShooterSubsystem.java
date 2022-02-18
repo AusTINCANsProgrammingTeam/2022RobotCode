@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.Shooter;
-
 import java.lang.Math;
 
 import com.fasterxml.jackson.annotation.JacksonInject.Value;
@@ -166,8 +165,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void adjustHood(double a) {
     KHoodController.setReference(a, CANSparkMax.ControlType.kPosition);
-
     // Adjusts Hood using PID control to passed angle a
+
   }
   public double getVelocityInput(){
     return DShooterRPMInput.getDouble(0.0);
@@ -182,6 +181,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
     else
     {
+
     KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
     }
     

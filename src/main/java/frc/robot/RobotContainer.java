@@ -9,14 +9,14 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.subsystems.DriveBaseSubsystem;
 
+import edu.wpi.first.wpilibj.Joystick;
 import java.io.IOException;
 import java.nio.file.Path;
-
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.math.controller.PIDController;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -24,12 +24,14 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
 import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.subsystems.CDSSubsystem;
 
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
@@ -77,8 +79,8 @@ public class RobotContainer {
   private LimelightAlign limelightAlign;
 
   // auton
-  // private Trajectory[] mTrajectories;  // multiple trajectories
-  // private int trajectoryIndex = 0;
+  private Trajectory[] mTrajectories;  // multiple trajectories
+  private int trajectoryIndex = 0;
   private Trajectory trajectory;
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
