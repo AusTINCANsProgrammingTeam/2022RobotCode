@@ -149,6 +149,10 @@ public final class Constants {
   
     // Shooter Constants
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8dada1c7b2802dc3eea5fd19e4dc673d82c56d9a
 
     public static final class Shooter{
         public static final double LOWRPM = 0.0; // RPM that the LOW aimMode winds to
@@ -188,6 +192,7 @@ public final class Constants {
       //Climb Constants
     public static final int ClimbMotorOne = 10;
     public static final int ClimbMotorTwo = 11;
+<<<<<<< HEAD
 =======
     public static final int shooterID = 4; // ID of the shooter
     public static final int hoodID = 0; // ID of the hood;
@@ -209,6 +214,8 @@ public final class Constants {
     public static final int ClimbMotorOne = 9; //Placeholder
     public static final int ClimbMotorTwo = 10; //Placeholder
 >>>>>>> b9f9ec88f951faefa4f30baafc9c3554c9e53d8b
+=======
+>>>>>>> 8dada1c7b2802dc3eea5fd19e4dc673d82c56d9a
     public static final int LimitSwitchChannel = 12; //Check what number this needs to be 
     
 }
