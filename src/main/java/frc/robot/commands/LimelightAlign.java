@@ -31,13 +31,13 @@ public class LimelightAlign extends CommandBase {
   @Override
   public void execute() {
     double adjustment = m_LimelightSubsystem.calculatePID();
-    m_drivebaseSubsystem.setSpeeds(adjustment*-1,adjustment );
+    m_drivebaseSubsystem.setSpeeds(adjustment * -1, adjustment);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_drivebaseSubsystem.setSpeeds(0,0);
+    m_drivebaseSubsystem.setSpeeds(0, 0);
     m_LimelightSubsystem.reset();
   }
 
