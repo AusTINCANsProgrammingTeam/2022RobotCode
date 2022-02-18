@@ -73,8 +73,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     if (Robot.isSimulation()) {
       if (!usingExternal) {
-        m_LEncoderForSim = new Encoder(0, 1);
-        m_REncoderForSim = new Encoder(2, 3);
+        m_LEncoderForSim = new Encoder(1, 2);
+        m_REncoderForSim = new Encoder(3, 4);
       }
     }
 
