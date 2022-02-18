@@ -7,7 +7,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
 import java.lang.Math;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -47,13 +46,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void adjustHood(double a) {
     KHoodController.setReference(a, CANSparkMax.ControlType.kPosition);
-
     // Adjusts Hood using PID control to passed angle a
+
   }
 
   public void windFlywheel(double rpm) {
     // Winds Flywheel using PID control to passed rpm
-    // double adjustedRPM = rpm * (Constants.kGearRatioIn / Constants.kGearRatioOut); TODO: reconsider using this
+    double adjustedRPM = rpm * (Constants.gearRatioIn / Constants.gearRatioOut); //TODO: reconsider using this
     currentRPM = rpm;
     KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
   }
