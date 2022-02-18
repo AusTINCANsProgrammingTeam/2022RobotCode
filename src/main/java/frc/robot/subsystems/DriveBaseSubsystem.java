@@ -5,13 +5,25 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.common.hardware.MotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.ADIS16448_IMU;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
@@ -19,16 +31,26 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveBaseSubsystem extends SubsystemBase {
 
-  private Joystick m_driverJoystick;
-  private MotorController[] m_motorControllers;
-  private DifferentialDrive m_differentialDrive;
+  private final Joystick m_driverJoystick;
+  private final MotorController[] m_motorControllers;
+  private final DifferentialDrive m_differentialDrive;
+  private DifferentialDrivetrainSim m_DifferentialDrivetrainSim;
+  public final Field2d m_field = new Field2d();
   private AHRS m_gyro;
-  private DifferentialDriveOdometry m_odometry;
+  private AnalogGyroSim m_gyroSim;
+  public static ADIS16448_IMU m_gyro2; //Non-native gyro, might use later
+  private AnalogGyro m_gyro1;
+  private final DifferentialDriveOdometry m_odometry;
+  private EncoderSim m_leftEncoderSim;
+  private EncoderSim m_rightEncoderSim;
 
+  //Encoders for Sim
+  private Encoder m_LEncoderForSim;
+  private Encoder m_REncoderForSim;
+ 
   // external encoders
   private Encoder m_extRightEncoder;
   private Encoder m_extLeftEncoder;
@@ -36,7 +58,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
   // internal encoders
   private RelativeEncoder m_internalLeftEncoder;
   private RelativeEncoder m_internalRightEncoder;
-
   private SimpleMotorFeedforward m_sMotorFeedforward;
 
   private boolean usingExternal = false;
@@ -44,9 +65,18 @@ public class DriveBaseSubsystem extends SubsystemBase {
   
   public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {  
     m_driverJoystick = joystick;
+
     m_motorControllers = new MotorController[4];
     m_gyro = new AHRS(I2C.Port.kMXP);
     m_gyro.reset(); // resets the heading of the robot to 0
+    m_gyro1 = new AnalogGyro(1);
+
+    if (Robot.isSimulation()) {
+      if (!usingExternal) {
+        m_LEncoderForSim = new Encoder(1, 2);
+        m_REncoderForSim = new Encoder(3, 4);
+      }
+    }
 
     m_sMotorFeedforward = new SimpleMotorFeedforward(Constants.ksVolts, Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter);
 
@@ -73,9 +103,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     if(usingExternal) {
       // external encoders            
-      m_extLeftEncoder = new Encoder(Constants.leftEncoderDIOone, Constants.leftEncoderDIOtwo, 
+      m_extLeftEncoder = new Encoder(Constants.leftEncoderDIOone, Constants.leftEncoderDIOtwo,
                               false, Encoder.EncodingType.k2X); // TODO: confirm correct configuration for encoder
-      m_extRightEncoder = new Encoder(Constants.rightEncoderDIOone, Constants.rightEncoderDIOtwo, 
+      m_extRightEncoder = new Encoder(Constants.rightEncoderDIOone, Constants.rightEncoderDIOtwo,
                               false, Encoder.EncodingType.k2X);
 
       m_extRightEncoder.setReverseDirection(true);
@@ -92,6 +122,28 @@ public class DriveBaseSubsystem extends SubsystemBase {
                 2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter / Constants.gearRatio); 
       m_internalRightEncoder.setPositionConversionFactor(
                 2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter / Constants.gearRatio);
+    }
+
+    if (Robot.isSimulation()) {
+      m_gyroSim = new AnalogGyroSim(m_gyro1);
+      if (usingExternal == true) {
+        m_leftEncoderSim  = new EncoderSim(m_extLeftEncoder);
+        m_rightEncoderSim = new EncoderSim(m_extRightEncoder);
+      } else { 
+        m_leftEncoderSim  = new EncoderSim(m_LEncoderForSim);
+        m_rightEncoderSim = new EncoderSim(m_REncoderForSim);
+      }
+      SmartDashboard.putData("Field", m_field);
+      
+      m_DifferentialDrivetrainSim = new DifferentialDrivetrainSim(
+        DCMotor.getNEO(2),       // 2 NEO motors on each side of the drivetrain.
+        7.29,                    // 7.29:1 gearing reduction.
+        10,                      // MOI of 7.5 kg m^2 (from CAD model).
+        60.0,                    // mass of the robot
+        Units.inchesToMeters(3), // The robot wheel radius
+        1,                       // The track width
+        VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005)
+      ); // standard deviations for measurement noise: x and y: 0.001m heading: 0.001 rad  l and r velocity: 0.1m/s  l and r position: 0.005m
     }
 
     resetEncoders();  // reset encoders to reset position and velocity values
@@ -121,7 +173,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
       m_odometry.update(
         m_gyro.getRotation2d(), m_extLeftEncoder.getDistance(), m_extRightEncoder.getDistance());
     }
-    else {  // internal
+    else { // internal
       double leftPosition = m_internalLeftEncoder.getPosition();    // automatically applies conversion factor
       double rightPosition = m_internalRightEncoder.getPosition();
 
@@ -162,7 +214,26 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    // Currently serves no purpose
+    m_DifferentialDrivetrainSim.setInputs(-m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax().get() * RobotController.getInputVoltage(),
+                                          -m_motorControllers[Constants.driveRightFrontIndex].getSparkMax().get() * RobotController.getInputVoltage());
+
+    m_gyroSim.setAngle(-m_DifferentialDrivetrainSim.getHeading().getDegrees());
+
+    m_DifferentialDrivetrainSim.update(0.01);
+
+    SmartDashboard.putNumber("LMotor",m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax().get() );
+    SmartDashboard.putNumber("RMotor",m_motorControllers[Constants.driveRightFrontIndex].getSparkMax().get() );
+
+    m_leftEncoderSim.setDistance(m_DifferentialDrivetrainSim.getLeftPositionMeters());
+    m_leftEncoderSim.setRate(m_DifferentialDrivetrainSim.getLeftVelocityMetersPerSecond());
+    m_rightEncoderSim.setDistance(m_DifferentialDrivetrainSim.getRightPositionMeters());
+    m_rightEncoderSim.setRate(m_DifferentialDrivetrainSim.getRightVelocityMetersPerSecond());
+    m_gyroSim.setAngle(-m_DifferentialDrivetrainSim.getHeading().getDegrees());
+
+    m_odometry.update(m_gyro.getRotation2d(),
+                    m_leftEncoderSim.getDistance(),
+                    m_rightEncoderSim.getDistance());
+    m_field.setRobotPose(m_odometry.getPoseMeters());
   }
 
   public void stopMotorsFunction() {

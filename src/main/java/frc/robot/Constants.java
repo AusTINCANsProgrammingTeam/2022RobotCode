@@ -93,7 +93,6 @@ public final class Constants {
     
     // Intake Contstants
     public static final int intakeMotorOneID = 3;
-    public static final int intakeMotorTwoID = 12;
     public static final double intakeMotorSpeed = 0.70;
     public static final int initialBallSensorChannel = 0;
     public static final int middleBallSensorChannel = 1;
@@ -101,8 +100,8 @@ public final class Constants {
 
     //CDS Constants                         
     public static final int CDSBeltID = 6;                  
-    public static final int CDSWheelControllerOneID = 16; //change motor id later   
-    public static final int CDSWheelControllerTwoID = 17;   
+    public static final int CDSWheelControllerOneID = 11;   
+    public static final int CDSWheelControllerTwoID = 12;   
     public static final double CDSBeltSpeed = 0.25; 
     public static final double CDSWheelControllerSpeed = 0.15;       
     public static final Port colorSensorPort = Port.kOnboard; //Placeholder Value, to be changed
@@ -149,6 +148,7 @@ public final class Constants {
 
   
     // Shooter Constants
+<<<<<<< HEAD
 
     public static final class Shooter{
         public static final double LOWRPM = 0.0; // RPM that the LOW aimMode winds to
@@ -188,6 +188,27 @@ public final class Constants {
       //Climb Constants
     public static final int ClimbMotorOne = 10;
     public static final int ClimbMotorTwo = 11;
+=======
+    public static final int shooterID = 4; // ID of the shooter
+    public static final int hoodID = 0; // ID of the hood;
+    public static final double shooterHeight = 3;
+    public static final double highHeight = 8.0 + 8.0/12.0; // Height of the high goal in ft from the carpet
+    public static final double lowHeight = 5.0 + 7.75/12.0; // Height of the low goal in ft from the carpet
+    public static final double airboneTime = 1.2;
+    public static final double gravity = 32;
+    public static final double LLHeight = 8.5/12.0; // Height of the limelight in ft from the carpet
+    public static final double LLAngle = 29.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as exact as possible
+    public static final double gearRatioIn = 34;
+    public static final double gearRatioOut = 14;
+    public static final double gearDiameter = 4; // Gear diameter in inches
+    public static final double ballFlywheelratio = 2;
+    public static final int shooterCargoID = 5;
+    public static final double cargoRotation = 3;
+
+    //Climb Constants
+    public static final int ClimbMotorOne = 9; //Placeholder
+    public static final int ClimbMotorTwo = 10; //Placeholder
+>>>>>>> b9f9ec88f951faefa4f30baafc9c3554c9e53d8b
     public static final int LimitSwitchChannel = 12; //Check what number this needs to be 
     
 }

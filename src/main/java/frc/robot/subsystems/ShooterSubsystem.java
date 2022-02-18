@@ -8,9 +8,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+<<<<<<< HEAD
 import frc.robot.RobotContainer;
 import frc.robot.Constants.Shooter;
 
+=======
+>>>>>>> b9f9ec88f951faefa4f30baafc9c3554c9e53d8b
 import java.lang.Math;
 
 import com.fasterxml.jackson.annotation.JacksonInject.Value;
@@ -166,8 +169,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void adjustHood(double a) {
     KHoodController.setReference(a, CANSparkMax.ControlType.kPosition);
-
     // Adjusts Hood using PID control to passed angle a
+
   }
   public double getVelocityInput(){
     return DShooterRPMInput.getDouble(0.0);
@@ -176,12 +179,17 @@ public class ShooterSubsystem extends SubsystemBase {
   public void windFlywheel(double rpm) {
 
     // Winds Flywheel using PID control to passed rpm
+<<<<<<< HEAD
     // double adjustedRPM = rpm * (Constants.kGearRatioIn / Constants.kGearRatioOut); TODO: reconsider using this
     if(rpm ==0.0){
       KShooterController.setReference(0.0, CANSparkMax.ControlType.kVoltage);
     }
     else
     {
+=======
+    double adjustedRPM = rpm * (Constants.gearRatioIn / Constants.gearRatioOut); //TODO: reconsider using this
+    currentRPM = rpm;
+>>>>>>> b9f9ec88f951faefa4f30baafc9c3554c9e53d8b
     KShooterController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
     }
     
