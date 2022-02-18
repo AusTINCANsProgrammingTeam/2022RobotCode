@@ -148,11 +148,6 @@ public final class Constants {
 
   
     // Shooter Constants
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> 8dada1c7b2802dc3eea5fd19e4dc673d82c56d9a
 
     public static final class Shooter{
         public static final double LOWRPM = 0.0; // RPM that the LOW aimMode winds to
@@ -190,32 +185,8 @@ public final class Constants {
     }
 
       //Climb Constants
-    public static final int ClimbMotorOne = 10;
-    public static final int ClimbMotorTwo = 11;
-<<<<<<< HEAD
-=======
-    public static final int shooterID = 4; // ID of the shooter
-    public static final int hoodID = 0; // ID of the hood;
-    public static final double shooterHeight = 3;
-    public static final double highHeight = 8.0 + 8.0/12.0; // Height of the high goal in ft from the carpet
-    public static final double lowHeight = 5.0 + 7.75/12.0; // Height of the low goal in ft from the carpet
-    public static final double airboneTime = 1.2;
-    public static final double gravity = 32;
-    public static final double LLHeight = 8.5/12.0; // Height of the limelight in ft from the carpet
-    public static final double LLAngle = 29.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as exact as possible
-    public static final double gearRatioIn = 34;
-    public static final double gearRatioOut = 14;
-    public static final double gearDiameter = 4; // Gear diameter in inches
-    public static final double ballFlywheelratio = 2;
-    public static final int shooterCargoID = 5;
-    public static final double cargoRotation = 3;
-
-    //Climb Constants
-    public static final int ClimbMotorOne = 9; //Placeholder
-    public static final int ClimbMotorTwo = 10; //Placeholder
->>>>>>> b9f9ec88f951faefa4f30baafc9c3554c9e53d8b
-=======
->>>>>>> 8dada1c7b2802dc3eea5fd19e4dc673d82c56d9a
+    public static final int ClimbMotorOne = 9;
+    public static final int ClimbMotorTwo = 10;
     public static final int LimitSwitchChannel = 12; //Check what number this needs to be 
     
 }
