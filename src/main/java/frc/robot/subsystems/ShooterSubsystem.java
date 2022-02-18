@@ -34,7 +34,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public class ShooterSubsystem extends SubsystemBase {
-  private int aimMode; // 0 is LOW, 1 is AUTO, 2 is LAUNCH, 3 is TARMAC, 4 is TEST
+  private double aimMode; // 0 is LOW, 1 is AUTO, 2 is LAUNCH, 3 is TARMAC, 4 is TEST
   private MotorController shooter_motorController;
   private MotorController hood_motorController;
   private SparkMaxPIDController KShooterController;
@@ -215,9 +215,9 @@ public class ShooterSubsystem extends SubsystemBase {
     
     return (flywheelSpeed > currentRPM - 15 && flywheelSpeed < currentRPM + 15);
   }
-  public void setAimMode(int m) {
+  public void setAimMode(Double m) {
     aimMode = m;
-    DShootingMode.setNumber(aimMode);
+    DShootingMode.setDouble(aimMode);
 
   }
 
@@ -226,7 +226,7 @@ public class ShooterSubsystem extends SubsystemBase {
     if (aimMode>3){
       aimMode = 0;
     }
-    DShootingMode.setNumber(aimMode);
+    DShootingMode.setDouble(aimMode);
   }
 
   public void cycleAimModeDown() {
@@ -234,7 +234,7 @@ public class ShooterSubsystem extends SubsystemBase {
     if (aimMode < 0) {
       aimMode = 3;
     }
-    DShootingMode.setNumber(aimMode);
+    DShootingMode.setDouble(aimMode);
   }
 
   public double getTY() {
@@ -286,7 +286,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // Check what aimMode is active, gets distance if AUTO, winds flywheel, adjusts
     // hood correspondingly
     
-    switch (aimMode) {
+    switch ((int)aimMode) {
       case 0: // Case for LOW mode, winds flywheel to preset RPM and adjusts hood to preset
               // angle
         adjustHood(Constants.Shooter.LOWAngle);
@@ -346,8 +346,8 @@ public class ShooterSubsystem extends SubsystemBase {
     if (ShooterReverted.getBoolean(false)!= shooter_motorController.getEncoder().getInverted()){
       shooter_motorController.setInverted(ShooterReverted.getBoolean(false));
     }
-    if ((int)DShootingMode.getNumber(0) != aimMode){
-      aimMode = (int)DShootingMode.getNumber(0);
+    if (DShootingMode.getDouble(0) != aimMode){
+      aimMode = DShootingMode.getDouble(0);
     }
 
   }
