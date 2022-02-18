@@ -18,13 +18,11 @@ public class LimelightSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private PIDController m_PidController;
-  private DriveBaseSubsystem m_DriveBaseSubsystem;
   private boolean isFinished;
 
   public LimelightSubsystem() {
     m_PidController = new PIDController(6e-3, 0, 0);
     m_PidController.setTolerance(2.0);
-    m_DriveBaseSubsystem = RobotContainer.getDriveBase();
     isFinished = false;
   }
 
@@ -45,15 +43,6 @@ public class LimelightSubsystem extends SubsystemBase {
     }
   }
 
-  public void setMotors(){
-    //Sets drive motors to align based on our calculations
-    double adjustment = calculatePID();
-    m_DriveBaseSubsystem.setSpeeds(-1 * adjustment, adjustment);
-  }
-
-  public void stopMotors(){
-    m_DriveBaseSubsystem.setSpeeds(0.0, 0.0);
-  }
 
   public boolean getFinished(){
     return isFinished;

@@ -150,6 +150,7 @@ public class RobotContainer {
           }
 
         }
+        
       }
     }
   }
@@ -161,8 +162,8 @@ public class RobotContainer {
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
     }
     if(CDSSubsystem != null && shooterSubsystem != null){
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
-      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
     }
     if(intakeSubsystem != null){
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
@@ -199,8 +200,8 @@ public class RobotContainer {
 
     //CDS
     if (CDSSubsystem != null && shooterSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
-      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
       CDSSubsystem.senseColor();
     }
     
@@ -233,7 +234,7 @@ public class RobotContainer {
     }
     
   }
-            
+           
   // Use this to pass the autonomous command to the main {@link Robot} class.
   // @return the command to run in autonomous
   public Command getAutonomousCommand() {
@@ -252,6 +253,7 @@ public class RobotContainer {
 
       return ramseteCommand.andThen(() -> driveBaseSubsystem.acceptWheelSpeeds(0,0));
     }
+    
     return null;
   }
   

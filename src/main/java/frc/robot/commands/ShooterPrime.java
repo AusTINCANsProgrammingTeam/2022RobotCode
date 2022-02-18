@@ -20,9 +20,8 @@ public class ShooterPrime extends CommandBase {
   public ShooterPrime(ShooterSubsystem shooterSubsystem, LimelightSubsystem limelightSubsystem, CDSSubsystem cdsSubsystem) {
     addRequirements(shooterSubsystem);
     m_ShooterSubsystem = shooterSubsystem;
-    m_LimelightSubsystem = limelightSubsystem;
-    m_CDSSubsystem = cdsSubsystem;
-    
+    //m_LimelightSubsystem = limelightSubsystem;
+    //m_CDSSubsystem = cdsSubsystem;
     SmartDashboard.putBoolean("wheelReady", false);
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -31,14 +30,29 @@ public class ShooterPrime extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_ShooterSubsystem.prime();
-    i = 0;
+    i  = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+    m_ShooterSubsystem.prime();
+    if (m_ShooterSubsystem.wheelReady()){
+      i++;
+      //1000 miliseconds delay
+      if (i==50){
+        m_ShooterSubsystem.runCargo(true,true);
+        m_ShooterSubsystem.SetCargoBoolean(true);
+
+      }
+
+
+    }
+    else{
+      m_ShooterSubsystem.runCargo(false, false);
+    }
+    m_ShooterSubsystem.UpdateIdelay(i);
+
   }
 
   // Called once the command ends or is interrupted.
@@ -46,24 +60,17 @@ public class ShooterPrime extends CommandBase {
   public void end(boolean interrupted) {
     m_ShooterSubsystem.runCargo(false,false);
     m_ShooterSubsystem.windFlywheel(0);
-    m_CDSSubsystem.stopCDS();
-    SmartDashboard.putBoolean("wheelReady", false);
+    m_ShooterSubsystem.SetCargoBoolean(false);
+    m_ShooterSubsystem.UpdateIdelay(0);
+    
+    
+    //SmartDashboard.putBoolean("wheelReady", false);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_ShooterSubsystem.wheelReady()){
-      SmartDashboard.putBoolean("wheelReady", true);
-      //if(i > 0 || m_LimelightSubsystem.calculatePID() == 0.0){
-        m_ShooterSubsystem.runCargo(true,true);
-        m_CDSSubsystem.CDSBeltWheelControllerToggle(false);
-        i++;
-        if(i==100){ //Expected to add a 2000ms delay
-          return true;
-       // }
-      }
-    }
+   
     return false;
   }
 }
