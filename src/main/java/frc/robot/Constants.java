@@ -92,7 +92,7 @@ public final class Constants {
 
     
     // Intake Contstants
-    public static final int intakeMotorOneID = 3;
+    public static final int intakeMotorOneID = 11;
     public static final int intakeMotorTwoID = 12;
     public static final double intakeMotorSpeed = 0.70;
     public static final int initialBallSensorChannel = 0;
@@ -101,8 +101,8 @@ public final class Constants {
 
     //CDS Constants                         
     public static final int CDSBeltID = 6;                  
-    public static final int CDSWheelControllerOneID = 16; //change motor id later   
-    public static final int CDSWheelControllerTwoID = 17;   
+    public static final int CDSWheelControllerOneID = 11;   
+    public static final int CDSWheelControllerTwoID = 12;   
     public static final double CDSBeltSpeed = 0.25; 
     public static final double CDSWheelControllerSpeed = 0.15;       
     public static final Port colorSensorPort = Port.kOnboard; //Placeholder Value, to be changed
@@ -176,7 +176,7 @@ public final class Constants {
     public static final double cargoRotation = 3;
 
     //Climb Constants
-    public static final int ClimbMotorOne = 10;
-    public static final int ClimbMotorTwo = 11;
+    public static final int ClimbMotorOne = 9; //Placeholder
+    public static final int ClimbMotorTwo = 10; //Placeholder
     public static final int LimitSwitchChannel = 12; //Check what number this needs to be 
 }
