@@ -72,7 +72,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_gyro1 = new AnalogGyro(1);
 
     if (Robot.isSimulation()) {
-      if (usingExternal == true) {
+      if (!usingExternal) {
         m_LEncoderForSim = new Encoder(0, 1);
         m_REncoderForSim = new Encoder(2, 3);
       }
