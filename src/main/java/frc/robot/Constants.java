@@ -92,8 +92,7 @@ public final class Constants {
 
     
     // Intake Contstants
-    public static final int intakeMotorOneID = 11;
-    public static final int intakeMotorTwoID = 12;
+    public static final int intakeMotorOneID = 3;
     public static final double intakeMotorSpeed = 0.70;
     public static final int initialBallSensorChannel = 0;
     public static final int middleBallSensorChannel = 1;
