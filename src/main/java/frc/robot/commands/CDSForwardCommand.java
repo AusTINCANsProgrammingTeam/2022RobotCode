@@ -3,9 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
-
 import org.opencv.features2d.FastFeatureDetector;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ShooterSubsystem; 
@@ -27,8 +25,7 @@ public class CDSForwardCommand extends CommandBase {
   @Override
   public void initialize() {
     mCDSSubsystem.CDSBeltWheelControllerToggle(false);
-    mShooterSubsystem.runCargo(true, false);
-    
+    //mShooterSubsystem.runCargo(true, false); <----------------- uncomment once done with testing
   }
 
   // Called every time the scheduler runs while the command is scheduled.
