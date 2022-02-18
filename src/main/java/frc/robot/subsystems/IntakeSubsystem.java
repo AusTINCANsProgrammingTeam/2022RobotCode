@@ -4,21 +4,22 @@
 
 package frc.robot.subsystems;
 
-//import edu.wpi.first.wpilibj2.*;
+// import edu.wpi.first.wpilibj2.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** Add your docs here. */
 public class IntakeSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  
+
   private MotorController intakeMotorControllerOne;
 
   public IntakeSubsystem() {
-    intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID, 40);
+    intakeMotorControllerOne =
+        new MotorController("Intake Motor One", Constants.intakeMotorOneID, 40);
   }
 
   public void toggleIntake(boolean reverse) {
@@ -37,7 +38,7 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeMotorControllerOne.getSparkMax().set(0.0);
     SmartDashboard.putNumber("Intake Motor Speed", 0.0);
   }
-    //TODO: Gutted code
+  // TODO: Gutted code
   /*
   public boolean getDirection() {
     // true = inverted, false = forward
@@ -57,7 +58,7 @@ public class IntakeSubsystem extends SubsystemBase {
     beamBreakArray[2] = finalBallSensor.get();
     return beamBreakArray;
   }*/
-  
+
   public void periodic() {
     /*boolean[] statusArray = getBeamBreakStatus();
     SmartDashboard.putBooleanArray("Beam Break", statusArray);*/
@@ -85,5 +86,4 @@ public class IntakeSubsystem extends SubsystemBase {
   }
   */
 
-}  //Don't delete, this is for main method.
-
+} // Don't delete, this is for main method.

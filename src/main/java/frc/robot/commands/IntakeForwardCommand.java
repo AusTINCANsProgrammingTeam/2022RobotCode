@@ -5,15 +5,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IntakeSubsystem; 
+import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeForwardCommand extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
   private final IntakeSubsystem mIntakeSubsystem;
-  
+
   public IntakeForwardCommand(IntakeSubsystem intakeSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intakeSubsystem); 
+    addRequirements(intakeSubsystem);
     mIntakeSubsystem = intakeSubsystem;
   }
 
