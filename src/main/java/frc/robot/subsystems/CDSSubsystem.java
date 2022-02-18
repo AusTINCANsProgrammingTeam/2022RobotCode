@@ -71,12 +71,14 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public void stopCDS() {
+    // stops all motors in the CDS
     CDSWheelControllerOne.getSparkMax().set(0.0);
     CDSBeltController.getSparkMax().set(0.0);
     SmartDashboard.putNumber("CDS Speed", 0.0);
   }
 
   public void stopCDSWheel() {
+    // Stops only the centering wheels
     CDSWheelControllerOne.getSparkMax().set(0.0);
     SmartDashboard.putNumber("CDS Wheel Speed", 0.0);
   }
