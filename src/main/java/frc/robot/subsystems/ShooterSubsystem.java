@@ -105,6 +105,8 @@ public class ShooterSubsystem extends SubsystemBase {
     shooter_motorController = new MotorController("Shooter", Constants.Shooter.shooterID, 40, true);
     KShooterController = shooter_motorController.getPID();
     KShooterEncoder = shooter_motorController.getEncoder();
+    
+    DistanceArray = new ShooterConfig[3];
 
     
     DistanceArray[0] = new ShooterConfig(5,64,2263);
