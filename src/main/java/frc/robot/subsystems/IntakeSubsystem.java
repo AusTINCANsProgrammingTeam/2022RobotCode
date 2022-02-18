@@ -8,10 +8,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-
 
 /** Add your docs here. */
 public class IntakeSubsystem extends SubsystemBase {
@@ -19,17 +16,10 @@ public class IntakeSubsystem extends SubsystemBase {
   // here. Call these from Commands.
   
   private MotorController intakeMotorControllerOne;
-  private MotorController intakeMotorControllerTwo;
-  //private MotorController CDSWheelControllerOne;
-  //private MotorController CDSWheelControllerTwo;
-  private DigitalInput frontBallSensor;
-  private DigitalInput middleBallSensor;
-  private DigitalInput finalBallSensor;
-
-  private int ballCount = 0;
 
   public IntakeSubsystem() {
     intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID, 40);
+
     //TODO: Gutted code
     //intakeMotorControllerTwo = new MotorController("Intake Motor Two", Constants.intakeMotorTwoID, 40); 
     //CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.intakeWheelOneID, 40);
@@ -45,6 +35,7 @@ public class IntakeSubsystem extends SubsystemBase {
     //CDSWheelControllerOne.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
     //CDSWheelControllerTwo.getSparkMax().follow(intakeMotorControllerOne.getSparkMax(), true);
     //intakeMotorControllerTwo.getSparkMax().follow(intakeMotorControllerOne.getSparkMax());
+
   }
 
   public void toggleIntake(boolean reverse) {
@@ -112,3 +103,4 @@ public class IntakeSubsystem extends SubsystemBase {
   */
 
 }  //Don't delete, this is for main method.
+

@@ -3,11 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
+import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkMax.IdleMode;
+
 
 import frc.robot.common.hardware.MotorController;
 //import edu.wpi.first.wpilibj.DigitalInput;
@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
+
 /** Add your docs here. */
 public class CDSSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
@@ -23,6 +24,9 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSBeltController;
   private MotorController CDSWheelControllerOne;
   private MotorController CDSWheelControllerTwo;
+  private ColorSensorV3 colorSensorOne;
+  private DigitalInput backBeamBreak;
+  private String allianceColor;
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry CDSWheelControllerDirection = CDSTab.add("CDS Wheel Direction", "Not Running").withPosition(1, 0).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
@@ -36,6 +40,12 @@ public class CDSSubsystem extends SubsystemBase {
     CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerTwoID, 40);
 
     CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
+
+    colorSensorOne = new ColorSensorV3(Constants.colorSensorPort);
+    backBeamBreak = new DigitalInput(Constants.initialBallSensorChannel);
+
+    String allianceColor = DriverStation.getAlliance().toString();
+    SmartDashboard.putString("Alliance Color", allianceColor);
   }
   
 
@@ -62,16 +72,56 @@ public class CDSSubsystem extends SubsystemBase {
 
     }
   }
+    
+  public int[] getSensorStatus() {
+    int frontStatus = colorSensorOne.getProximity() > 800 ? 1: 0;
+    int backStatus = backBeamBreak.get() ? 1: 0;
+    int[] beamBreakArray = {frontStatus, backStatus};
+    return beamBreakArray;
+  }
+
+
+  /*
+  public String getAllianceColor() {
+    Alliance alliance = DriverStation.getAlliance();
+    SmartDashboard.putString("Alliance Color", alliance.toString());
+    return alliance.toString();
+  }*/
+
+  public String senseColor() {
+    Color color = colorSensorOne.getColor();
+    double redAmount = color.red;
+    double blueAmount = color.blue;
+    if (redAmount > blueAmount) {
+      SmartDashboard.putString("Ball Color", "Red");
+      return "Red"; 
+    } else {
+      SmartDashboard.putString("Ball Color", "Blue");
+      return "Blue";
+    } 
+  }
 
   public void stopCDS() {
     CDSWheelControllerOne.getSparkMax().set(0.0);
     CDSBeltController.getSparkMax().set(0.0);
+
     }
 
   @Override
     public void periodic() {
       CDSBeltControllerSpeed.setDouble(CDSBeltController.getEncoder().getVelocity());
       CDSWheelControllerSpeed.setDouble(CDSWheelControllerTwo.getEncoder().getVelocity());
+      String ballColor = senseColor();
+      SmartDashboard.putString("Ball Color", ballColor);
+      SmartDashboard.putBoolean("Ball Color Match", ballColor == allianceColor);
+
+      // Ball indexing
+      int[] sensorStatus = getSensorStatus();
+      int ballCount = sensorStatus[0] + sensorStatus[1];
+      SmartDashboard.putNumber("Ball Count", ballCount);
+  }
   
-    }
-} //Don't delete, for main method.
+
+
+}
+
