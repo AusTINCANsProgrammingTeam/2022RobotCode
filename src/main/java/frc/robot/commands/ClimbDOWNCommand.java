@@ -20,15 +20,13 @@ public class ClimbDOWNCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.enableClimb(true, false);
-    m_subsystem.periodic();
 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+    m_subsystem.enableClimb(true, false);
   }
 
   // Called once the command ends or is interrupted.

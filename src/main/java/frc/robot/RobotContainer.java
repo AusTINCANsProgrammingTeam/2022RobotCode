@@ -138,7 +138,7 @@ public class RobotContainer {
           {
             System.out.println("Climb enabled");
             
-            climbSubsystem = new ClimbSubsystem();
+            climbSubsystem = new ClimbSubsystem(null);
             climbUPCommand = new ClimbUPCommand(climbSubsystem);
             climbDOWNCommand = new ClimbDOWNCommand(climbSubsystem);
             break;
