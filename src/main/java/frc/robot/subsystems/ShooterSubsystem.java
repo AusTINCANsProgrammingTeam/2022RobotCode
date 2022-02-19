@@ -190,11 +190,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
   }
 
-  public void SetCargoBoolean(boolean a) {
+  public void setCargoBoolean(boolean a) {
     BCargoRunning.setBoolean(a);
   }
 
-  public void UpdateIdelay(double i) {
+  public void updateIdelay(double i) {
     IDelayTable.setDouble(i);
   }
 

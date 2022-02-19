@@ -10,23 +10,25 @@ import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class ShooterPrime extends CommandBase {
+public class ShooterPressed extends CommandBase {
   private ShooterSubsystem m_ShooterSubsystem;
   private LimelightSubsystem m_LimelightSubsystem;
   private CDSSubsystem m_CDSSubsystem;
   private int i;
+  private boolean LLEnabled;
 
-  /** Creates a new ShooterPrimary. */
-  public ShooterPrime(
+  /** Creates a new ShooterPressed. */
+  public ShooterPressed(
       ShooterSubsystem shooterSubsystem,
       LimelightSubsystem limelightSubsystem,
-      CDSSubsystem cdsSubsystem) {
+      CDSSubsystem cdsSubsystem,
+      boolean... llEnabled) {
     addRequirements(shooterSubsystem);
     m_ShooterSubsystem = shooterSubsystem;
     m_LimelightSubsystem = limelightSubsystem;
     // m_CDSSubsystem = cdsSubsystem;
     SmartDashboard.putBoolean("wheelReady", false);
-
+    LLEnabled = llEnabled.length > 0;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -40,22 +42,6 @@ public class ShooterPrime extends CommandBase {
   @Override
   public void execute() {
     m_ShooterSubsystem.prime();
-    if (m_ShooterSubsystem.wheelReady()) {
-      if (i > 0 || m_LimelightSubsystem.calculatePID() == 0.0) {
-        i++;
-        m_ShooterSubsystem.runCargo(true, true);
-        m_ShooterSubsystem.SetCargoBoolean(true);
-        if (i >= 50) {// 1000 miliseconds delay
-          i = 0;
-          m_ShooterSubsystem.runCargo(false, false);
-          m_ShooterSubsystem.SetCargoBoolean(false);
-        }
-
-      } else {
-        m_ShooterSubsystem.runCargo(false, false);
-      }
-    }
-      m_ShooterSubsystem.UpdateIdelay(i);
   }
 
   // Called once the command ends or is interrupted.
@@ -63,8 +49,8 @@ public class ShooterPrime extends CommandBase {
   public void end(boolean interrupted) {
     m_ShooterSubsystem.runCargo(false, false);
     m_ShooterSubsystem.windFlywheel(0);
-    m_ShooterSubsystem.SetCargoBoolean(false);
-    m_ShooterSubsystem.UpdateIdelay(0);
+    m_ShooterSubsystem.setCargoBoolean(false);
+    m_ShooterSubsystem.updateIdelay(0);
 
     // SmartDashboard.putBoolean("wheelReady", false);
   }
@@ -72,6 +58,20 @@ public class ShooterPrime extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (m_ShooterSubsystem.wheelReady()) {
+      if (i > 0 || !LLEnabled || m_LimelightSubsystem.calculatePID() == 0.0) {
+        i++;
+        m_ShooterSubsystem.runCargo(true, true);
+        m_ShooterSubsystem.setCargoBoolean(true);
+        if (i >= 50) {// 1000 miliseconds delay
+          return true;
+        }
+
+      } else {
+        m_ShooterSubsystem.runCargo(false, false);
+      }
+    }
+      m_ShooterSubsystem.updateIdelay(i);
+      return false;
   }
 }
