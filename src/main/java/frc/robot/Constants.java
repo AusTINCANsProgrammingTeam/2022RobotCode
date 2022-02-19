@@ -111,7 +111,7 @@ public final class Constants {
   public static final double CDSWheelControllerSpeed = 0.15;
   public static final Port colorSensorPort = Port.kOnboard; // Placeholder Value, to be changed
 
-// spotless:off
+  // spotless:off
   // Controller Constants {
     public static final int portNumber0 = 0;
     public static final int portNumber1 = 1;
@@ -151,7 +151,6 @@ public final class Constants {
     public static final int rightJoystickY = 3; // tank right turning
   //}
 //spotless:on
-
 
   // Preset aim constants
 
