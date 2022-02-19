@@ -3,12 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Constants.AimModes;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -20,6 +15,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.AimModes;
 import frc.robot.common.hardware.MotorController;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -32,7 +28,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private MotorController stopperController;
   private AimModes aimMode;
 
-
   private double targetRPM;
   private double Pconstant;
   private double Iconstant;
@@ -44,7 +39,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private double MaxOutput;
 
   private ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter Tab");
-  //TODO: Fine for now, but we really need to fix this tab when we have shuffleboard decided
+  // TODO: Fine for now, but we really need to fix this tab when we have shuffleboard decided
   private NetworkTableEntry dashTunePid =
       shooterTab
           .add("Tune PID", true)
@@ -133,7 +128,6 @@ public class ShooterSubsystem extends SubsystemBase {
     // TODO:FIll lookup table
   }
 
-  
   public void updatePID() {
 
     if (dashTunePid.getBoolean(false)) {
@@ -179,14 +173,13 @@ public class ShooterSubsystem extends SubsystemBase {
   public void windFlywheel(double rpm) {
 
     // Winds Flywheel using PID control to passed rpm
-    if(rpm == 0){
+    if (rpm == 0) {
       flywheelPID.setReference(0, CANSparkMax.ControlType.kVoltage);
       flywheelPID.setIAccum(0);
-    } else{
-    targetRPM = rpm;
-    flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
+    } else {
+      targetRPM = rpm;
+      flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
     }
-
   }
 
   public void setCargoBoolean(boolean a) {
@@ -209,7 +202,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
   }
 
-  public boolean wheelReady(){
+  public boolean wheelReady() {
     double flywheelSpeed = flywheelEncoder.getVelocity();
     return (flywheelSpeed > targetRPM - 10 && flywheelSpeed < targetRPM + 10);
   }
@@ -241,7 +234,8 @@ public class ShooterSubsystem extends SubsystemBase {
   public double getDistance() {
     // Uses Limelight to find distance to High Goal
     SmartDashboard.putNumber("ty", getTY());
-    return (Constants.Shooter.highHeight - Constants.Shooter.LLHeight) / Math.tan(Math.toRadians((getTY() + Constants.Shooter.LLAngle))); // Return distance in ft
+    return (Constants.Shooter.highHeight - Constants.Shooter.LLHeight)
+        / Math.tan(Math.toRadians((getTY() + Constants.Shooter.LLAngle))); // Return distance in ft
   }
 
   public void prime() {
@@ -257,7 +251,7 @@ public class ShooterSubsystem extends SubsystemBase {
         break;
       case AUTO: // aimMode used to automatically shoot into the high goal
         windFlywheel(lookup(getDistance())[0]);
-        //TODO: Also adjust hood here
+        // TODO: Also adjust hood here
         break;
       case TEST: // aimMode to take a RPM from the dashboard
         windFlywheel(DShooterRPMInput.getDouble(0));
@@ -267,7 +261,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void updateSmartDashboard() {
     SmartDashboard.putString("AimMode", "");
-    SmartDashboard.putNumber("IAccum",flywheelPID.getIAccum());
+    SmartDashboard.putNumber("IAccum", flywheelPID.getIAccum());
     SmartDashboard.putNumber("Distance", getDistance());
     SmartDashboard.putNumber("RPM", flywheelEncoder.getVelocity());
   }
@@ -293,7 +287,7 @@ public class ShooterSubsystem extends SubsystemBase {
       flywheelController.setInverted(ShooterInverted.getBoolean(false));
     }
     if (DShootingMode.getDouble(0) != aimMode.ordinal()) {
-      setAimMode((int)DShootingMode.getDouble(0));
+      setAimMode((int) DShootingMode.getDouble(0));
     }
   }
 }

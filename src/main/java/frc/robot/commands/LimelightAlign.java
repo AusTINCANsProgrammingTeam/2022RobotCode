@@ -4,18 +4,18 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class LimelightAlign extends CommandBase {
   private LimelightSubsystem m_LimelightSubsystem;
   private DriveBaseSubsystem m_drivebaseSubsystem;
 
   /** Creates a new ShooterPrimary. */
-  public LimelightAlign(LimelightSubsystem limelightSubsystem, DriveBaseSubsystem driveBaseSubsystem) {
+  public LimelightAlign(
+      LimelightSubsystem limelightSubsystem, DriveBaseSubsystem driveBaseSubsystem) {
     addRequirements(limelightSubsystem);
     addRequirements(driveBaseSubsystem);
     m_LimelightSubsystem = limelightSubsystem;
@@ -33,7 +33,7 @@ public class LimelightAlign extends CommandBase {
   public void execute() {
     SmartDashboard.putNumber("exec", 1);
     double adjustment = m_LimelightSubsystem.calculatePID();
-    m_drivebaseSubsystem.setSpeeds(adjustment, adjustment*-1);
+    m_drivebaseSubsystem.setSpeeds(adjustment, adjustment * -1);
   }
 
   // Called once the command ends or is interrupted.

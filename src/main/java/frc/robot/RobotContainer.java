@@ -33,7 +33,6 @@ import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import java.io.IOException;
 import java.nio.file.Path;
-import frc.robot.Constants;
 
 // This class is where the bulk of the robot should be declared. Since Command-based is a
 // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -98,18 +97,18 @@ public class RobotContainer {
 
         // System.out.println((String) k + " " + subSysEnables.get((String) k));
         switch (sub.toString()) {
-          case "DriveBaseSubsystem": 
-          {
-            System.out.println("Drivebase enabled");
-            driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, false);
-            break;
-          }
-          case "CDSSubsystem": 
-          {
-            System.out.println("CDS enabled");
-            CDSSubsystem = new CDSSubsystem();
-            break;
-          }
+          case "DriveBaseSubsystem":
+            {
+              System.out.println("Drivebase enabled");
+              driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, false);
+              break;
+            }
+          case "CDSSubsystem":
+            {
+              System.out.println("CDS enabled");
+              CDSSubsystem = new CDSSubsystem();
+              break;
+            }
           case "IntakeSubsystem":
             {
               System.out.println("Intake enabled");
@@ -156,8 +155,10 @@ public class RobotContainer {
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
     }
     if (shooterSubsystem != null && CDSSubsystem != null) {
-       shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, CDSSubsystem,(limelightSubsystem != null));
-      shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, CDSSubsystem,true);
+      shooterHeld =
+          new ShooterHeld(
+              shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
+      shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, CDSSubsystem, true);
     }
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
@@ -181,17 +182,19 @@ public class RobotContainer {
     // Shooter
     if (shooterSubsystem != null && shooterHeld != null) {
       buttons[Constants.backButton].whenPressed(shooterHeld);
-      buttons[Constants.LJoystickButton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
-      buttons[Constants.RJoystickButton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
+      buttons[Constants.LJoystickButton].whenPressed(
+          new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
+      buttons[Constants.RJoystickButton].whenPressed(
+          new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
     }
 
     if (CDSForwardCommand != null && CDSReverseCommand != null) {
       buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
       buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
-        //CDSSubsystem.getAllianceColor();
-        CDSSubsystem.senseColor();
+      // CDSSubsystem.getAllianceColor();
+      CDSSubsystem.senseColor();
     }
-    
+
     // Limelight
     if (limelightAlign != null) {
       buttons[Constants.startButton].whenPressed(limelightAlign);
