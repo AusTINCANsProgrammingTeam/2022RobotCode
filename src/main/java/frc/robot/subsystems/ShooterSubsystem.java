@@ -242,7 +242,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public double getDistance() {
     // Uses Limelight to find distance to High Goal
     SmartDashboard.putNumber("ty", getTY());
-    return (Constants.Shooter.highHeight - Constants.Shooter.LLHeight) / Math.tan(Math.toRadians((getTY() + Constants.LLAngle))); // Return distance in ft
+    return (Constants.Shooter.highHeight - Constants.Shooter.LLHeight) / Math.tan(Math.toRadians((getTY() + Constants.Shooter.LLAngle))); // Return distance in ft
   }
 
   public void prime() {
