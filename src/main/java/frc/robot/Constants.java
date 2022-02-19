@@ -208,24 +208,26 @@ public final class Constants {
   // }
 
     // Shooter Constants
-    public static final int shooterID = 4; // ID of the shooter
-    // public static final int hoodID = 0; // ID of the hood;
-    public static final int shooterCargoID = 5;
+    public static final class Shooter{
+        public static final int shooterID = 4; // ID of the shooter
+        // public static final int hoodID = 0; // ID of the hood;
+        public static final int shooterCargoID = 5;
 
-    public static final double highHeight = 8.0 + 8.0 / 12.0; // Height of the high goal in ft from the carpet
-    public static final double lowHeight = 5.0 + 7.75 / 12.0; // Height of the low goal in ft from the carpet
-    public static final double LLHeight = 3.0 + 7.0/12.0; // Height of the limelight in ft from the carpet
-    public static final double LLAngle = 40.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as exact as possible
+        public static final double highHeight = 8.0 + 8.0 / 12.0; // Height of the high goal in ft from the carpet
+        public static final double lowHeight = 5.0 + 7.75 / 12.0; // Height of the low goal in ft from the carpet
+        public static final double LLHeight = 3.0 + 7.0/12.0; // Height of the limelight in ft from the carpet
+        public static final double LLAngle = 40.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as exact as possible
 
-    public static final double kP = 6e-4;
-    public static final double kI = 6e-7;
-    public static final double kD = 0.0;
-    public static final double kF = 0.0;
-    public static final double kIZone = 0.9;
+        public static final double kP = 6e-4;
+        public static final double kI = 6e-7;
+        public static final double kD = 0.0;
+        public static final double kF = 0.0;
+        public static final double kIZone = 0.9;
     public static final double kMaxOutput = 0;
     public static final double kMaxI = 0.9;
     public static final double kMaxISlotId = 0;
     public static final double kMinOutput = 1;
+    }
     
     // Climb Constants
     public static final int ClimbMotorOne = 9;
