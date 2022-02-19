@@ -40,6 +40,7 @@ import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.ShooterPrime;
+import frc.robot.commands.AutonCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
 import frc.robot.commands.ClimbDOWNCommand;
@@ -82,6 +83,7 @@ public class RobotContainer {
   private LimelightAlign limelightAlign;
 
   //auton
+  private AutonCommand mAuton;
   private List<Trajectory> mTrajectories;  // multiple trajectories
   private int trajectoryIndex = 0;
   private Trajectory trajectory;
@@ -89,6 +91,8 @@ public class RobotContainer {
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
     debugTab = Shuffleboard.getTab("debug");
+
+    mAuton = new AutonCommand(driveBaseSubsystem);
 
     mTrajectories = new ArrayList<Trajectory>();
 
@@ -225,52 +229,6 @@ public class RobotContainer {
       buttons[Constants.XButton].whileHeld(climbDOWNCommand);
     }
   } 
-
-  private void initializeTrajectories() {
-    // auton with just a one straight path
-    String trajectoryJSON = "paths/RightCurve.wpilib.json";
-    try { 
-      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON); // goes to scr/main/deploy/paths
-      trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-
-    } catch (IOException ex) {
-      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-    }
-
-    // method to intialize multiple trajectories in one auton route
-    // TODO: some sort of sendable chooser on shuffle board get the desire route
-    String routeName = "RouteA";
-
-    File f = new File("Autos/" + routeName);  // get file with all the names of the path for the auton routine
-    Scanner fileScanner;
-    List<String> trajectoryJSONList = new ArrayList<String>();
-
-    try {
-      fileScanner = new Scanner(f);
-      while(fileScanner.hasNextLine()) {
-        trajectoryJSONList.add(fileScanner.nextLine().split("\\.")[0]);  // get name of file not the (.path)
-      }
-
-      if(trajectoryJSONList != null) {
-        for(String name : trajectoryJSONList) {
-          String pathName = "paths/" + name + ".wpilib.json";
-          Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(pathName); // goes to scr/main/deploy/paths
-          Trajectory trajectory;
-          try {
-            trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-            mTrajectories.add(trajectory);
-          } catch (IOException e) {
-            System.out.println("***Unable to create individual trajectories.");
-          }
-        }
-      }  
-
-      fileScanner.close();
-    } catch (FileNotFoundException e) {
-      System.out.println("***Trajectory List unable to be created.");
-    }
-    
-  }
             
   // Use this to pass the autonomous command to the main {@link Robot} class.
   // @return the command to run in autonomous
@@ -289,6 +247,7 @@ public class RobotContainer {
       driveBaseSubsystem.resetOdometry(trajectory.getInitialPose());
 
       return ramseteCommand.andThen(() -> driveBaseSubsystem.acceptWheelSpeeds(0,0));
+      //
     }
     return null;
   }
