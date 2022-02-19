@@ -41,7 +41,7 @@ public class MotorController {
         mSparkMax.setIdleMode(CANSparkMax.IdleMode.kCoast); // default mode is Coast
 
         // If enablePid has any number of booleans greater than 0 we are enabling pid
-        if (enablePid.length > 0)
+        if (enablePid.length > 0 && enablePid[0])
         {
             mP = SmartDashboard.getNumber(mName + " P Value", 0.000025);
             mI = SmartDashboard.getNumber(mName + " I Value", 0.0);

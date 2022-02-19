@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.ColorSensorMuxed;
 
 public class CDSSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
@@ -21,12 +22,13 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSBeltController;
   private MotorController CDSWheelControllerOne;
   private MotorController CDSWheelControllerTwo;
-  private ColorSensorV3 colorSensorOne;
-  private ColorSensorV3 colorSensorTwo;
-  private DigitalInput backBeamBreak;
+  //private ColorSensorV3 colorSensorOne;
+  //private ColorSensorV3 colorSensorTwo;
+  //private DigitalInput backBeamBreak;
   private String allianceColor;
   private boolean runningCDS = false;
   private int setpointIndex;
+  private ColorSensorMuxed colorSensors;
 
   public CDSSubsystem() {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
@@ -35,9 +37,11 @@ public class CDSSubsystem extends SubsystemBase {
 
     CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
 
-    colorSensorOne = new ColorSensorV3(Constants.colorSensorPort1);
-    colorSensorTwo = new ColorSensorV3(Constants.colorSensorPort2);
-    backBeamBreak = new DigitalInput(Constants.initialBallSensorChannel);
+    ColorSensorMuxed colorSensors = new ColorSensorMuxed(0, 2);
+    
+    //colorSensorOne = new ColorSensorV3(Constants.colorSensorPort1);
+    //colorSensorTwo = new ColorSensorV3(Constants.colorSensorPort2);
+    //backBeamBreak = new DigitalInput(Constants.initialBallSensorChannel);
 
     String allianceColor = DriverStation.getAlliance().toString();
     SmartDashboard.putString("Alliance Color", allianceColor);
@@ -83,16 +87,13 @@ public class CDSSubsystem extends SubsystemBase {
     CDSWheelControllerOne.getSparkMax().set(0.0);
     SmartDashboard.putNumber("CDS Wheel Speed", 0.0);
   }
-
-  public void CDSEject() {
-    // TODO: Add intake object to interface with
-    // Reverse both intake and CDS motors
-  }
   
   public int[] getSensorStatus() {
-    int frontStatus = colorSensorOne.getProximity() > 800 ? 1: 0;
-    int middleStatus = colorSensorTwo.getProximity() > 800 ? 1: 0;
-    int backStatus = backBeamBreak.get() ? 1: 0;
+    int[] sensorStatuses = colorSensors.getProximities();
+
+    int frontStatus = sensorStatuses[0] > 800 ? 1: 0;
+    int middleStatus = sensorStatuses[1] > 800 ? 1: 0;
+    int backStatus = sensorStatuses[2] > 800 ? 1: 0;
     int[] beamBreakArray = {backStatus, middleStatus, frontStatus};
     return beamBreakArray;
   }
@@ -156,9 +157,10 @@ public class CDSSubsystem extends SubsystemBase {
   }*/
 
   public String senseColor() {
-    Color color = colorSensorOne.getColor();
-    double redAmount = color.red;
-    double blueAmount = color.blue;
+
+    Color[] colors = colorSensors.getColors();
+    double redAmount = colors[0].red;
+    double blueAmount = colors[0].blue;
     if (redAmount > blueAmount) {
       SmartDashboard.putString("Ball Color", "Red");
       return "Red"; 
