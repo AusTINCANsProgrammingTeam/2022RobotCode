@@ -17,27 +17,16 @@ import edu.wpi.first.wpilibj.I2C.Port;
  */
 public final class Constants {
 
-<<<<<<< HEAD
-    public enum Subsystems {
-        // Change booleans to disable a subsystem in RobotContainer
-        DriveBaseSubsystem(true),
-        CDSSubsystem      (false),
-        IntakeSubsystem   (false),
-        ShooterSubsystem  (false),
-        LimelightSubsystem(false),
-        ClimbSubsystem    (false);
-=======
   public enum Subsystems {
     // Change booleans to disable a subsystem in RobotContainer
     // spotless:off
     DriveBaseSubsystem(true),
-    CDSSubsystem      (true),
-    IntakeSubsystem   (true),
-    ShooterSubsystem  (true),
-    LimelightSubsystem(true),
-    ClimbSubsystem    (true);
+    CDSSubsystem      (false),
+    IntakeSubsystem   (false),
+    ShooterSubsystem  (false),
+    LimelightSubsystem(false),
+    ClimbSubsystem    (false);
     // spotless:on
->>>>>>> origin/main
 
     private final Boolean enabled;
 
@@ -96,24 +85,6 @@ public final class Constants {
       return RPM;
     }
 
-<<<<<<< HEAD
-    // AUTONOMOUS Constants
-    public static final double delaytaxi = 1.0; // 1 second wait time
-    // Volts, constants for ramseteCommand
-    public static final double ksVolts = 0.13323;                      // Ks, 
-    public static final double kvVoltSecondsPerMeter = 2.8295;         // Kv, Velocity, feedforward
-    public static final double kaVoltSecondsSquaredPerMeter = 0.31462; // Ka, Accelleration
-
-    //public static final double kpDriveVel = 2.1938;                    // Kp, Velocity
-    public static final double arbFeedForward = 8.6045E-07;               // voltage applied to the motor after the result of the specified control mode
-    public static final double trackWidth = 0.69;
-    public static final DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(trackWidth);
-    public static final double unitsPerRotation = 0.4787787204;
-    
-    // Pathweaver constants, baselind values, units: meters per second
-    public static final double ramseteB = 2;      // Convergence, larger values are more aggressive
-    public static final double ramseteZeta = 0.7; // Damping, larger values offer more damping
-=======
     public final double getAngle() {
       return angle;
     }
@@ -125,7 +96,6 @@ public final class Constants {
     public AimModes next() {
       return values()[ordinal() + 1];
     }
->>>>>>> origin/main
 
     public AimModes previous() {
       return values()[ordinal() - 1];
@@ -161,11 +131,13 @@ public final class Constants {
   // AUTONOMOUS Constants
 
   // Volts, constants for ramseteCommand
-  public static final double ksVolts = 0.13323; // Ks,
+  public static final double ksVolts = 0.13323; // Ks
   public static final double kvVoltSecondsPerMeter = 2.8295; // Kv, Velocity
   public static final double kaVoltSecondsSquaredPerMeter = 0.31462; // Ka, Accelleration
 
   public static final double kpDriveVel = 2.1938; // Kp, Velocity
+  public static final double arbFeedForward =
+      8.6045E-07; // voltage applied to the motor after the result of the specified control mode
   public static final double trackWidth = 0.69;
   public static final DifferentialDriveKinematics driveKinematics =
       new DifferentialDriveKinematics(trackWidth);
@@ -174,6 +146,8 @@ public final class Constants {
   // Pathweaver constants, baselind values, units: meters per second
   public static final double ramseteB = 2; // Convergence, larger values are more aggressive
   public static final double ramseteZeta = 0.7; // Damping, larger values offer more damping
+
+  public static final double delaytaxi = 1.0; // 1 second wait time
 
   // TODO: Replace 0.69 with actual track width in meters and run characterization on real robot
 

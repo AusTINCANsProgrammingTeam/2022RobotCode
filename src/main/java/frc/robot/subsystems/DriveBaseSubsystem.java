@@ -324,15 +324,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
         leftSpeed * Constants.inchesInMeter; // meters to inches to work with radius in inches
     rightSpeed = rightSpeed * Constants.inchesInMeter;
 
-<<<<<<< HEAD
-    leftSpeed = leftSpeed / Constants.wheelRadius;  // convert it to angular velocity
-=======
-    // // set feedforward constrainty
-    // m_motorControllers[Constants.driveLeftFrontIndex].getPID().setFF(m_sMotorFeedforward.calculate(leftSpeed));
-    // m_motorControllers[Constants.driveRightFrontIndex].getPID().setFF(m_sMotorFeedforward.calculate(rightSpeed));
-
     leftSpeed = leftSpeed / Constants.wheelRadius; // convert it to angular velocity
->>>>>>> origin/main
     rightSpeed = rightSpeed / Constants.wheelRadius;
 
     leftSpeed =
@@ -351,21 +343,18 @@ public class DriveBaseSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("left speed (rpm) [biconsumer]", leftSpeed);
     SmartDashboard.putNumber("right speed (rpm [biconsumer])", rightSpeed);
 
-<<<<<<< HEAD
-    m_motorControllers[Constants.driveLeftFrontIndex].getPID().setReference(leftSpeed, CANSparkMax.ControlType.kVelocity, 0, Constants.arbFeedForward);
-    m_motorControllers[Constants.driveRightFrontIndex].getPID().setReference(rightSpeed, CANSparkMax.ControlType.kVelocity, 0, Constants.arbFeedForward);
-
-    // m_motorControllers[Constants.driveLeftFrontIndex].getPID().setReference(leftSpeed, CANSparkMax.ControlType.kVelocity);
-    // m_motorControllers[Constants.driveRightFrontIndex].getPID().setReference(rightSpeed, CANSparkMax.ControlType.kVelocity);
-
-=======
     m_motorControllers[Constants.driveLeftFrontIndex]
         .getPID()
-        .setReference(leftSpeed, CANSparkMax.ControlType.kVelocity);
+        .setReference(leftSpeed, CANSparkMax.ControlType.kVelocity, 0, Constants.arbFeedForward);
     m_motorControllers[Constants.driveRightFrontIndex]
         .getPID()
-        .setReference(rightSpeed, CANSparkMax.ControlType.kVelocity);
->>>>>>> origin/main
+        .setReference(rightSpeed, CANSparkMax.ControlType.kVelocity, 0, Constants.arbFeedForward);
+
+    // m_motorControllers[Constants.driveLeftFrontIndex].getPID().setReference(leftSpeed,
+    // CANSparkMax.ControlType.kVelocity);
+    // m_motorControllers[Constants.driveRightFrontIndex].getPID().setReference(rightSpeed,
+    // CANSparkMax.ControlType.kVelocity);
+
     m_differentialDrive.feed();
   }
 

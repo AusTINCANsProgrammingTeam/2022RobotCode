@@ -30,19 +30,12 @@ public class TabDriveBase {
     // gets the DriveBase tab, if it doesn't exist, create it with the name "DriveBase"
     ShuffleboardTab dtTab = Shuffleboard.getTab("DriveBase");
 
-<<<<<<< HEAD
-        sbLeftWheelSpeed = dtTab.add("Left Wheel Speed", 0).withSize(2, 2).withPosition(0, 0).getEntry();
-        sbRightWheelSpeed = dtTab.add("Right Wheel Speed", 0).withSize(2, 2).withPosition(6, 0).getEntry();
-        sbGyroAngle = dtTab.add("Gyro Angle", 0).withSize(2, 2).withPosition(3, 0).getEntry();
-        Shuffleboard.getTab("DriveBase").add(mGyro);    // adds a gyro compass indicator
-=======
     sbLeftWheelSpeed =
         dtTab.add("Left Wheel Speed", 0).withSize(2, 2).withPosition(0, 0).getEntry();
     sbRightWheelSpeed =
         dtTab.add("Right Wheel Speed", 0).withSize(2, 2).withPosition(6, 0).getEntry();
     sbGyroAngle = dtTab.add("Gyro Angle", 0).withSize(2, 2).withPosition(4, 0).getEntry();
     Shuffleboard.getTab("DriveBase").add(mGyro); // adds a gyro compass indicator
->>>>>>> origin/main
 
     sbLeftPosition = dtTab.add("Left Position", 0).withSize(2, 2).withPosition(0, 3).getEntry();
     sbRightPosition = dtTab.add("Right Position", 0).withSize(2, 2).withPosition(6, 3).getEntry();

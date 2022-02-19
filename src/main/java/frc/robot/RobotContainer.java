@@ -4,41 +4,13 @@
 
 package frc.robot;
 
-<<<<<<< HEAD
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.commands.DriveBaseTeleopCommand;
-import frc.robot.subsystems.DriveBaseSubsystem;
-
-=======
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
->>>>>>> origin/main
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-<<<<<<< HEAD
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
-import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.CDSSubsystem;
-import frc.robot.subsystems.ClimbSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LimelightSubsystem;
-
-import frc.robot.commands.IntakeForwardCommand;
-import frc.robot.commands.IntakeReverseCommand;
-import frc.robot.commands.LimelightAlign;
-import frc.robot.commands.ShooterPrime;
-=======
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
->>>>>>> origin/main
+import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
 import frc.robot.commands.ClimbDOWNCommand;
@@ -54,24 +26,12 @@ import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import java.io.IOException;
-import java.nio.file.Path;
 
-<<<<<<< HEAD
-import frc.robot.commands.AutonModes;
-
- // This class is where the bulk of the robot should be declared. Since Command-based is a
- // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- // perieodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- // subsystems, commands, and button mappings) should be declared here. 
- 
-=======
 // This class is where the bulk of the robot should be declared. Since Command-based is a
 // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
 // perieodic methods (other than the scheduler calls). Instead, the structure of the robot
 // (including
 // subsystems, commands, and button mappings) should be declared here.
->>>>>>> origin/main
 
 public class RobotContainer {
   public static ShuffleboardTab debugTab;
@@ -102,16 +62,9 @@ public class RobotContainer {
   private CDSReverseCommand CDSReverseCommand;
   private LimelightAlign limelightAlign;
 
-<<<<<<< HEAD
-  //auton
+  // auton
   private AutonModes autonModes;
   private Command chosenAutonMode;
-=======
-  // auton
-  private Trajectory[] mTrajectories; // multiple trajectories
-  private int trajectoryIndex = 0;
-  private Trajectory trajectory;
->>>>>>> origin/main
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
@@ -125,13 +78,8 @@ public class RobotContainer {
       buttons[i] = new JoystickButton(driverJoystick, i);
     }
     configureButtonBindings();
-<<<<<<< HEAD
-    
-    initAuton();   
-=======
 
-    initializeTrajectories();
->>>>>>> origin/main
+    initAuton();
   }
 
   private void initSubsystems() {
@@ -232,16 +180,6 @@ public class RobotContainer {
           new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
     }
 
-<<<<<<< HEAD
-    // CDS
-    if (CDSSubsystem != null && shooterSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
-      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
-      CDSSubsystem.senseColor();
-    }
-    
-=======
->>>>>>> origin/main
     if (CDSForwardCommand != null && CDSReverseCommand != null) {
       buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
       buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
@@ -254,15 +192,11 @@ public class RobotContainer {
       buttons[Constants.startButton].whenPressed(limelightAlign);
     }
 
-<<<<<<< HEAD
     // Climb
-=======
->>>>>>> origin/main
     if (climbSubsystem != null) {
       buttons[Constants.AButton].whileHeld(climbUPCommand);
       buttons[Constants.XButton].whileHeld(climbDOWNCommand);
     }
-<<<<<<< HEAD
   }
 
   public Command getAutonomousCommand() {
@@ -270,52 +204,17 @@ public class RobotContainer {
   }
 
   private void initAuton() {
-    autonModes = new AutonModes(driveBaseSubsystem, shooterSubsystem, limelightSubsystem, CDSSubsystem, intakeSubsystem);
+    autonModes =
+        new AutonModes(
+            driveBaseSubsystem,
+            shooterSubsystem,
+            limelightSubsystem,
+            CDSSubsystem,
+            intakeSubsystem);
 
     // TODO: add a sendable chooser
     String commandName = "taxi";
     chosenAutonMode = autonModes.getChosenCommand(commandName);
-=======
-  }
-
-  private void initializeTrajectories() {
-    // auton with just a one straight path
-    String trajectoryJSON = "paths/Straight.wpilib.json";
-    try {
-      Path trajectoryPath =
-          Filesystem.getDeployDirectory()
-              .toPath()
-              .resolve(trajectoryJSON); // goes to scr/main/deploy/paths
-      trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-
-    } catch (IOException ex) {
-      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-    }
-  }
-
-  // Use this to pass the autonomous command to the main {@link Robot} class.
-  // @return the command to run in autonomous
-  public Command getAutonomousCommand() {
-    if (driveBaseSubsystem != null && trajectory != null) {
-      // Ramsete Command for Pathweaver
-      RamseteCommand ramseteCommand =
-          new RamseteCommand(
-              trajectory,
-              driveBaseSubsystem::getPose,
-              new RamseteController(
-                  Constants.ramseteB,
-                  Constants.ramseteZeta), // ramsete follower to follow trajectory
-              Constants.driveKinematics,
-              driveBaseSubsystem::acceptWheelSpeeds,
-              driveBaseSubsystem);
-
-      driveBaseSubsystem.resetOdometry(trajectory.getInitialPose());
-
-      return ramseteCommand.andThen(() -> driveBaseSubsystem.acceptWheelSpeeds(0, 0));
-    }
-
-    return null;
->>>>>>> origin/main
   }
 
   // TODO: create get methods for other subsystems to pass into TabContainer, or find a more
