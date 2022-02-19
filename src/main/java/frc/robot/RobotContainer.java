@@ -10,7 +10,6 @@ import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.Constants;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -86,7 +85,7 @@ public class RobotContainer {
 
     // initialize the button bindings
     for (int i = 1; i < buttons.length; i++) {
-      buttons[i] = new JoystickButton(driverJoystick,i);
+      buttons[i] = new JoystickButton(driverJoystick, i);
       buttons2[i] = new JoystickButton(driverJoystick2, i);
     }
     configureButtonBindings();
@@ -135,15 +134,14 @@ public class RobotContainer {
               break;
             }
           case "ClimbSubsystem":
-          {
-            System.out.println("Climb enabled");
-            
-            climbSubsystem = new ClimbSubsystem(null);
-            climbUPCommand = new ClimbUPCommand(climbSubsystem);
-            climbDOWNCommand = new ClimbDOWNCommand(climbSubsystem);
-            break;
-          }
+            {
+              System.out.println("Climb enabled");
 
+              climbSubsystem = new ClimbSubsystem(null);
+              climbUPCommand = new ClimbUPCommand(climbSubsystem);
+              climbDOWNCommand = new ClimbDOWNCommand(climbSubsystem);
+              break;
+            }
         }
       }
     }
@@ -210,7 +208,7 @@ public class RobotContainer {
     if (limelightAlign != null) {
       buttons[Constants.startButton].whenPressed(limelightAlign);
     }
-    
+
     if (climbSubsystem != null) {
       if (Constants.testMode) {
         buttons[Constants.AButton].whileHeld(climbUPCommand);

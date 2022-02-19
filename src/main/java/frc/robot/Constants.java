@@ -38,8 +38,7 @@ public final class Constants {
       return this.enabled;
     }
     ;
-  } 
-  
+  }
 
   // DRIVEBASE Constants
 
