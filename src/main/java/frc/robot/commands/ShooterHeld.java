@@ -22,13 +22,13 @@ public class ShooterHeld extends CommandBase {
       ShooterSubsystem shooterSubsystem,
       LimelightSubsystem limelightSubsystem,
       CDSSubsystem cdsSubsystem,
-      boolean... llEnabled) {
+      boolean llEnabled) {
     addRequirements(shooterSubsystem);
     m_ShooterSubsystem = shooterSubsystem;
     m_LimelightSubsystem = limelightSubsystem;
     // m_CDSSubsystem = cdsSubsystem;
     SmartDashboard.putBoolean("wheelReady", false);
-    LLEnabled = llEnabled.length > 0;
+    LLEnabled = llEnabled;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
