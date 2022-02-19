@@ -4,21 +4,23 @@ import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.Filesystem;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+
 import frc.robot.Constants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,11 +51,11 @@ public class AutonModes {
 
   // command groups
   private Command taxiCommand;
-  private Command oneballCommand;
-  private Command twoballCommand;
-  private Command twoballParallel;
-  private Command threeballCommand;
-  private Command fourballCommand;
+  private Command oneBallCommand;
+  private Command twoBallCommand;
+  private Command twoBallParallel;
+  private Command threeBallCommand;
+  private Command fourBallCommand;
 
   private Command resetodometryCommand;
 
@@ -63,7 +65,7 @@ public class AutonModes {
       LimelightSubsystem l,
       CDSSubsystem c,
       IntakeSubsystem i) {
-          
+
     this.driveBaseSubsystem = d;
     this.shooterSubsystem = s;
     this.limelightSubsystem = l;
@@ -77,13 +79,12 @@ public class AutonModes {
     threeBallTrajectories = getTrajectories("ThreeBall");
     fourBallTrajectories = getTrajectories("FourBall");
 
+    // create ramsete commands using the trajectories
     taxiRamseteCommands = getRamseteCommands(taxiTrajectories);
     oneBallRamseteCommands = getRamseteCommands(oneBallTrajectories);
     twoBallRamseteCommands = getRamseteCommands(twoBallTrajectories);
     threeRamseteCommands = getRamseteCommands(threeBallTrajectories);
     fourRamseteCommands = getRamseteCommands(fourBallTrajectories);
-
-    // driveBaseSubsystem.resetOdometry(trajectory.getInitialPose());
 
   }
 
@@ -91,21 +92,29 @@ public class AutonModes {
     // resetodometryCommand = DriveBaseSubsystem.resetOdometry(trajectory.getInitialPose());
     // TODO: the wait time should not be a constant, should be configurable
     taxiCommand =
-        new SequentialCommandGroup(new WaitCommand(Constants.delaytaxi), taxiRamseteCommands[0]);
+        new SequentialCommandGroup(
+            new WaitCommand(Constants.delaytaxi),
+            taxiRamseteCommands[0].beforeStarting(
+                () -> driveBaseSubsystem.resetOdometry(taxiTrajectories[0].getInitialPose())));
 
-    oneballCommand =
+    oneBallCommand =
         new SequentialCommandGroup(
             new WaitCommand(Constants.delaytaxi),
             // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem),
             new WaitCommand(Constants.delaytaxi),
             oneBallRamseteCommands[0]);
 
-    twoballParallel =
+    twoBallParallel =
         new ParallelDeadlineGroup(
-            twoBallRamseteCommands[0], new IntakeForwardCommand(intakeSubsystem));
-    twoballCommand =
+            twoBallRamseteCommands[0].beforeStarting(
+                () -> driveBaseSubsystem.resetOdometry(twoBallTrajectories[0].getInitialPose())),
+            new IntakeForwardCommand(intakeSubsystem));
+    twoBallCommand =
         new SequentialCommandGroup(
-            new WaitCommand(Constants.delaytaxi), twoballParallel, twoBallRamseteCommands[1]
+            new WaitCommand(Constants.delaytaxi),
+            twoBallParallel,
+            twoBallRamseteCommands[1].beforeStarting(
+                () -> driveBaseSubsystem.resetOdometry(twoBallTrajectories[1].getInitialPose()))
             // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem)
             );
   }
@@ -125,7 +134,7 @@ public class AutonModes {
     }
 
     Trajectory[] trajectoryArray;
-    List<Trajectory> trajectoryList = new ArrayList<Trajectory>();
+    List<Trajectory> trajectoryList = new ArrayList<Trajectory>();  // use list to take in all trajectories, convert it into array later
 
     while (fileScanner.hasNext()) {
       String pathName = "paths/" + fileScanner.nextLine().split("\\.")[0] + ".wpilib.json";
@@ -149,10 +158,10 @@ public class AutonModes {
   }
 
   private RamseteCommand[] getRamseteCommands(Trajectory[] trajectories) {
-    RamseteCommand[] ramseteCommandArray = new RamseteCommand[trajectories.length];
+    RamseteCommand[] ramseteCommands = new RamseteCommand[trajectories.length];
 
-    for (int i = 0; i < ramseteCommandArray.length; i++) {
-      ramseteCommandArray[i] =
+    for (int i = 0; i < ramseteCommands.length; i++) {
+      ramseteCommands[i] =
           new RamseteCommand(
               trajectories[i],
               driveBaseSubsystem::getPose,
@@ -163,21 +172,22 @@ public class AutonModes {
               driveBaseSubsystem::acceptWheelSpeeds,
               driveBaseSubsystem);
     }
-    return ramseteCommandArray;
+
+    return ramseteCommands;
   }
 
   public Command getChosenCommand(String commandName) {
     switch (commandName) {
       case "taxi":
         return taxiCommand;
-      case "one ball":
-        return oneballCommand;
-      case "two ball":
-        return twoballCommand;
-      case "three ball":
-        return threeballCommand;
-      case "four ball":
-        return fourballCommand;
+      case "one Ball":
+        return oneBallCommand;
+      case "two Ball":
+        return twoBallCommand;
+      case "three Ball":
+        return threeBallCommand;
+      case "four Ball":
+        return fourBallCommand;
       default:
         return null;
     }
