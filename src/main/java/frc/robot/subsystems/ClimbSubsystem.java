@@ -20,7 +20,6 @@ public class ClimbSubsystem extends SubsystemBase {
   private MotorController m_climbMotorControllerOne;
   private MotorController m_climbMotorControllerTwo;
   private DigitalInput m_limitSwitch;
-  private double climbHight;
   private boolean toggleClimb;
 
   // TODO: maybe add servos
@@ -28,7 +27,6 @@ public class ClimbSubsystem extends SubsystemBase {
   public ClimbSubsystem(Joystick joystick) {
     m_climbJoystick = joystick;
     toggleClimb = false;
-    climbHight = 0;
 
     // One is left, two is right
     m_climbMotorControllerOne =
@@ -46,12 +44,12 @@ public class ClimbSubsystem extends SubsystemBase {
     toggleClimb = !toggleClimb;
   }
 
-  public void enableClimb(boolean on, boolean up) {
-    if (on && !m_limitSwitch.get()) {
+  public void enableClimb() {
+    if (toggleClimb && !m_limitSwitch.get()) {
       m_climbMotorControllerOne
           .getPID()
           .setReference(
-              climbHight + m_climbJoystick.getRawAxis(Constants.leftJoystickY),
+              m_climbJoystick.getRawAxis(Constants.leftJoystickY),
               CANSparkMax.ControlType.kPosition);
     } else {
       m_climbMotorControllerOne.setSpeed(0);

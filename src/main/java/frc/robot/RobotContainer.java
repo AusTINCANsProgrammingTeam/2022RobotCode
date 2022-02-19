@@ -208,9 +208,9 @@ public class RobotContainer {
 
     if (climbSubsystem != null) {
       if (Constants.testMode) {
-        buttons[Constants.startButton].whileHeld(climbCommand);
+        buttons[Constants.startButton].whenPressed(new InstantCommand(climbSubsystem::toggleClimbEnable, climbSubsystem));
       } else {
-        buttons2[Constants.startButton].whileHeld(climbCommand);
+        buttons2[Constants.startButton].whenPressed(new InstantCommand(climbSubsystem::toggleClimbEnable, climbSubsystem));
       }
     }
   }
