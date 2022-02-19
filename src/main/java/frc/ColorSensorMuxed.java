@@ -77,6 +77,7 @@ public class ColorSensorMuxed {
                 DriverStation.reportError("Failed to get proximity from sensor on I2C port " + p, false);
                 proximities[i] = 0;
             }
+            i++;
         }
         return proximities;
     }

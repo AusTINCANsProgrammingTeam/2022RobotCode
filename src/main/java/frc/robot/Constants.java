@@ -19,12 +19,12 @@ public final class Constants {
 
     public enum Subsystems {
         // Change booleans to disable a subsystem in RobotContainer
-        DriveBaseSubsystem(true),
+        DriveBaseSubsystem(false),
         CDSSubsystem      (true),
         IntakeSubsystem   (true),
         ShooterSubsystem  (true),
-        LimelightSubsystem(true),
-        ClimbSubsystem    (true);
+        LimelightSubsystem(false),
+        ClimbSubsystem    (false);
 
         private final Boolean enabled; 
         
@@ -104,7 +104,7 @@ public final class Constants {
     public static final int CDSWheelControllerOneID = 11; 
     public static final int CDSWheelControllerTwoID = 12;   
     public static final double CDSBeltSpeed = 0.25; 
-    public static final double CDSWheelControllerSpeed = 0.15;       
+    public static final double CDSWheelControllerSpeed = 0.25;       
     public static final Port colorSensorPort1 = Port.kOnboard; //Placeholder Value, to be changed
     public static final Port colorSensorPort2 = Port.kOnboard;
     public static final boolean competition = false; // false for testing, true for competition
