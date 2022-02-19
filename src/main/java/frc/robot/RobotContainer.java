@@ -46,7 +46,7 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private static final Joystick driverJoystick = new Joystick(Constants.portNumber0);
-  private static final Joystick driverJoystick2 = new Joystick(Constants.portNumber1);
+  private static final Joystick oporatorJoystick = new Joystick(Constants.portNumber1);
   private JoystickButton[] buttons = new JoystickButton[13];
   private JoystickButton[] buttons2 = new JoystickButton[13];
 
@@ -87,7 +87,7 @@ public class RobotContainer {
     // initialize the button bindings
     for (int i = 1; i < buttons.length; i++) {
       buttons[i] = new JoystickButton(driverJoystick,i);
-      buttons2[i] = new JoystickButton(driverJoystick2, i);
+      buttons2[i] = new JoystickButton(oporatorJoystick, i);
     }
     configureButtonBindings();
 
@@ -211,7 +211,7 @@ public class RobotContainer {
     }
     
     if (climbSubsystem != null) {
-      if (Constants.testMode) {
+      if (Constants.oneController) {
         buttons[Constants.AButton].whileHeld(climbUPCommand);
         buttons[Constants.XButton].whileHeld(climbDOWNCommand);
       } else {
