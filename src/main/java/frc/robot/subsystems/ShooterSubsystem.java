@@ -68,7 +68,7 @@ public class ShooterSubsystem extends SubsystemBase {
           .withPosition(1, 3)
           .getEntry();
   private NetworkTableEntry DShootingMode =
-      shooterTab.add("Shooting Mode", "TEST").withPosition(1, 5).getEntry();
+      shooterTab.add("Shooting Mode", 4).withPosition(1, 5).getEntry();
   private NetworkTableEntry DDistance =
       shooterTab.add("Distance to goal", 0.0).withPosition(2, 0).getEntry();
   private NetworkTableEntry DShooterRPM =
