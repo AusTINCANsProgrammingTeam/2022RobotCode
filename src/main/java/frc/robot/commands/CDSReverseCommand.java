@@ -6,18 +6,15 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CDSSubsystem;
-import frc.robot.subsystems.ShooterSubsystem; 
 
 public class CDSReverseCommand extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
   private final CDSSubsystem mCDSSubsystem;
-  private final ShooterSubsystem mShooterSubsystem;
-  
-  public CDSReverseCommand(CDSSubsystem CDSSubsystem, ShooterSubsystem shooterSubsystem) {
+
+  public CDSReverseCommand(CDSSubsystem CDSSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(CDSSubsystem);
-    addRequirements(shooterSubsystem);
-    mShooterSubsystem = shooterSubsystem;
+
     mCDSSubsystem = CDSSubsystem;
   }
 
@@ -25,7 +22,6 @@ public class CDSReverseCommand extends CommandBase {
   @Override
   public void initialize() {
     mCDSSubsystem.CDSBeltWheelControllerToggle(true);
-    mShooterSubsystem.runCargo(true, false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -36,7 +32,6 @@ public class CDSReverseCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     mCDSSubsystem.stopCDS();
-    mShooterSubsystem.runCargo(false, false);
   }
 
   // Returns true when the command should end.

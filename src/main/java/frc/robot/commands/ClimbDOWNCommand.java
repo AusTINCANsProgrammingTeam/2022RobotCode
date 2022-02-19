@@ -5,23 +5,23 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ClimbSubsystem;
 
-public class BeamBreakCommand extends CommandBase {
-  /** Creates a new BeamBreakCommand. */
-  public final IntakeSubsystem mIntakeSubsystem; 
-  IntakeSubsystem intakeSubsystem;
+public class ClimbDOWNCommand extends CommandBase {
 
-  public BeamBreakCommand(IntakeSubsystem intakeSubsystem) {
+  private final ClimbSubsystem m_subsystem;
+
+  public ClimbDOWNCommand(ClimbSubsystem s) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intakeSubsystem); 
-    mIntakeSubsystem = intakeSubsystem;
+    addRequirements(s);
+    m_subsystem = s;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //mIntakeSubsystem.expelBalls();
+    m_subsystem.enableClimb(true, false);
+    m_subsystem.periodic();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -31,7 +31,7 @@ public class BeamBreakCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    mIntakeSubsystem.stopIntake();
+    m_subsystem.enableClimb(false, false);
   }
 
   // Returns true when the command should end.
