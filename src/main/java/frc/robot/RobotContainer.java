@@ -34,6 +34,7 @@ import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
+import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShooterPrime;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
@@ -74,6 +75,7 @@ public class RobotContainer {
   private ShooterPrime shooterPrime;
   private CDSForwardCommand CDSForwardCommand;
   private CDSReverseCommand CDSReverseCommand;
+  private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
 
   // auton
@@ -146,7 +148,6 @@ public class RobotContainer {
             climbDOWNCommand = new ClimbDOWNCommand(climbSubsystem);
             break;
           }
-
         }
       }
     }
@@ -172,6 +173,9 @@ public class RobotContainer {
     if(limelightSubsystem != null && driveBaseSubsystem != null){
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
     }
+    if (CDSSubsystem != null && intakeSubsystem != null) {
+      outtakeCommand = new OuttakeCommand(intakeSubsystem, CDSSubsystem);
+    }
   }
 
   // Use this method to define your button->command mappings. Buttons can be
@@ -185,7 +189,7 @@ public class RobotContainer {
     // Intake
     if(intakeForwardCommand != null && intakeReverseCommand != null) {
       buttons[Constants.LBumper].whileHeld(intakeForwardCommand);
-      buttons[Constants.RBumper].whileHeld(intakeReverseCommand);
+      buttons[Constants.RBumper].whileHeld(intakeReverseCommand); 
     }
 
     // Shooter
@@ -198,13 +202,14 @@ public class RobotContainer {
     //CDS
     if (CDSSubsystem != null && shooterSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
-      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+      //CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
       CDSSubsystem.senseColor();
     }
     
-    if (CDSForwardCommand != null && CDSReverseCommand != null) {
+    if (CDSForwardCommand != null && outtakeCommand != null) {
       buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
-      buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
+      //buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
+      buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
     }
 
 	  // Limelight

@@ -13,6 +13,7 @@ import frc.robot.common.hardware.MotorController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DigitalInput;
+import frc.robot.subsystems.IntakeSubsystem;
 
 public class CDSSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
