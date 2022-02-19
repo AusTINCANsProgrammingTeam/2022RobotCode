@@ -150,8 +150,6 @@ public class RobotContainer {
     if (CDSSubsystem != null && shooterSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
       CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
-      // CDSSubsystem.getAllianceColor();
-      CDSSubsystem.senseColor();
     }
     if (intakeSubsystem != null) {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
@@ -189,6 +187,8 @@ public class RobotContainer {
     if (CDSForwardCommand != null && CDSReverseCommand != null) {
       buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
       buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
+        //CDSSubsystem.getAllianceColor();
+        CDSSubsystem.senseColor();
     }
     
     // Limelight

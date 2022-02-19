@@ -47,7 +47,7 @@ public class ShooterHeld extends CommandBase {
         i++;
         m_ShooterSubsystem.runCargo(true, true);
         m_ShooterSubsystem.setCargoBoolean(true);
-        if (i >= 50) {// 1000 miliseconds delay
+        if (i >= 50) {// 1000 miliseconds delay TODO: Use a CDS method for this when possible
           i = 0;
           m_ShooterSubsystem.runCargo(false, false);
           m_ShooterSubsystem.setCargoBoolean(false);
