@@ -249,8 +249,12 @@ public class ShooterSubsystem extends SubsystemBase {
     // hood correspondingly
     switch (aimMode) {
       case EJECT: // aimMode used to eject unwanted balls from the shooter
+      case LOW: // aimMode used to dump into the low goal from ~1ft
+      case TARMAC: // aimMode used to shoot into the high goal from ~2ft
+      case LAUNCH: // aimMode used to shoot into the high goal from the launchpad
         adjustHood(aimMode.getAngle());
         windFlywheel(aimMode.getRPM());
+        break;
         break;
       case LOW: // aimMode used to dump into the low goal from ~1ft
         adjustHood(aimMode.getAngle());
