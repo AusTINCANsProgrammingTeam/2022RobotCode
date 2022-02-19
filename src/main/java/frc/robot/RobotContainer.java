@@ -9,26 +9,11 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.subsystems.DriveBaseSubsystem;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
-
-import edu.wpi.first.math.controller.RamseteController;
 
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.CDSSubsystem;
@@ -40,11 +25,12 @@ import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.ShooterPrime;
-import frc.robot.commands.AutonCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
 import frc.robot.commands.ClimbDOWNCommand;
 import frc.robot.commands.ClimbUPCommand;
+
+import frc.robot.commands.AutonModes.TaxiAuton;
 
  // This class is where the bulk of the robot should be declared. Since Command-based is a
  // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -83,18 +69,11 @@ public class RobotContainer {
   private LimelightAlign limelightAlign;
 
   //auton
-  private AutonCommand mAuton;
-  private List<Trajectory> mTrajectories;  // multiple trajectories
-  private int trajectoryIndex = 0;
-  private Trajectory trajectory;
+  private Command chosenAutonMode;
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
     debugTab = Shuffleboard.getTab("debug");
-
-    mAuton = new AutonCommand(driveBaseSubsystem);
-
-    mTrajectories = new ArrayList<Trajectory>();
 
     initSubsystems();
     initCommands();
@@ -105,7 +84,7 @@ public class RobotContainer {
     }
     configureButtonBindings();
     
-    initializeTrajectories();
+    initAuton();   
   }
 
   private void initSubsystems() {
@@ -229,27 +208,16 @@ public class RobotContainer {
       buttons[Constants.XButton].whileHeld(climbDOWNCommand);
     }
   } 
+
+  private void initAuton() {
+    // TODO: add a sendable chooser
+    chosenAutonMode = new TaxiAuton(driveBaseSubsystem).getAutonCommand();
+  }
             
   // Use this to pass the autonomous command to the main {@link Robot} class.
   // @return the command to run in autonomous
   public Command getAutonomousCommand() {
-    if (driveBaseSubsystem != null && trajectory != null) {
-      //Ramsete Command for Pathweaver
-      RamseteCommand ramseteCommand =
-      new RamseteCommand(
-        trajectory,
-        driveBaseSubsystem::getPose,
-        new RamseteController(Constants.ramseteB, Constants.ramseteZeta), // ramsete follower to follow trajectory
-        Constants.driveKinematics,
-        driveBaseSubsystem::acceptWheelSpeeds,
-        driveBaseSubsystem);
-          
-      driveBaseSubsystem.resetOdometry(trajectory.getInitialPose());
-
-      return ramseteCommand.andThen(() -> driveBaseSubsystem.acceptWheelSpeeds(0,0));
-      //
-    }
-    return null;
+    return chosenAutonMode;
   }
   
 
