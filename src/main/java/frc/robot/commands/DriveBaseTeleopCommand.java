@@ -4,17 +4,16 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.DriveBaseSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.DriveBaseSubsystem;
 
 public class DriveBaseTeleopCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-
   private final DriveBaseSubsystem subsystem;
 
   public DriveBaseTeleopCommand(DriveBaseSubsystem s) {
     addRequirements(s);
-    subsystem = s; 
+    subsystem = s;
   }
 
   @Override
@@ -24,7 +23,7 @@ public class DriveBaseTeleopCommand extends CommandBase {
   public void execute() {
     subsystem.arcadeDrive();
   }
-  
+
   @Override
   public void end(boolean interrupted) {
     subsystem.stopMotorsFunction();
