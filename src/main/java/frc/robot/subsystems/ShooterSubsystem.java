@@ -255,19 +255,6 @@ public class ShooterSubsystem extends SubsystemBase {
         adjustHood(aimMode.getAngle());
         windFlywheel(aimMode.getRPM());
         break;
-        break;
-      case LOW: // aimMode used to dump into the low goal from ~1ft
-        adjustHood(aimMode.getAngle());
-        windFlywheel(aimMode.getRPM());
-        break;
-      case TARMAC: // aimMode used to shoot into the high goal from ~2ft
-        adjustHood(aimMode.getAngle());
-        windFlywheel(aimMode.getRPM());
-        break;
-      case LAUNCH: // aimMode used to shoot into the high goal from the launchpad
-        adjustHood(aimMode.getAngle());
-        windFlywheel(aimMode.getRPM());
-        break;
       case AUTO: // aimMode used to automatically shoot into the high goal
         windFlywheel(lookup(getDistance())[0]);
         //TODO: Also adjust hood here
