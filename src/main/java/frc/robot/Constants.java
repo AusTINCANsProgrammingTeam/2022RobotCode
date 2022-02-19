@@ -88,7 +88,7 @@ public final class Constants {
   // Encoder constants
 
   // Controller modes
-  public static final boolean testMode = true;
+  public static final boolean oneController = true;
 
   // TODO: Replace these with the correct ports
   public static final int leftEncoderDIOone = 0;

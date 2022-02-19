@@ -134,8 +134,9 @@ public class RobotContainer {
           case "ClimbSubsystem":
             {
               System.out.println("Climb enabled");
-
-              climbSubsystem = new ClimbSubsystem(driverJoystick2);
+              if (!Constants.oneController) {
+                climbSubsystem = new ClimbSubsystem(driverJoystick2);
+              }
               climbCommand = new ClimbCommand(climbSubsystem);
               break;
             }
@@ -164,6 +165,9 @@ public class RobotContainer {
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
     }
+    if  (climbSubsystem != null) {
+      climbSubsystem.setDefaultCommand(climbCommand);
+    }
   }
 
   // Use this method to define your button->command mappings. Buttons can be
@@ -176,8 +180,8 @@ public class RobotContainer {
 
     // Intake
     if (intakeForwardCommand != null && intakeReverseCommand != null) {
-      buttons[Constants.LBumper].whileHeld(intakeForwardCommand);
-      buttons[Constants.RBumper].whileHeld(intakeReverseCommand);
+      buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
+      buttons[Constants.RTriggerButton].whileHeld(intakeReverseCommand);
     }
 
     // Shooter
@@ -207,10 +211,7 @@ public class RobotContainer {
     }
 
     if (climbSubsystem != null) {
-      if (Constants.testMode) {
-        buttons[Constants.startButton].whenPressed(
-            new InstantCommand(climbSubsystem::toggleClimbEnable, climbSubsystem));
-      } else {
+      if (!Constants.oneController) {
         buttons2[Constants.startButton].whenPressed(
             new InstantCommand(climbSubsystem::toggleClimbEnable, climbSubsystem));
       }
