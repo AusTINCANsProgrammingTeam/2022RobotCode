@@ -67,9 +67,6 @@ public class ShooterSubsystem extends SubsystemBase {
           .add("PID Peak Output Slot ID", Constants.Shooter.kMaxISlotId)
           .withPosition(1, 3)
           .getEntry();
-
-  private NetworkTableEntry ShooterInverted =
-      shooterTab.add("Shooter Inverted", false).withPosition(1, 4).getEntry();
   private NetworkTableEntry DShootingMode =
       shooterTab.add("Shooting Mode", "TEST").withPosition(1, 5).getEntry();
   private NetworkTableEntry DDistance =
@@ -278,9 +275,6 @@ public class ShooterSubsystem extends SubsystemBase {
         updatePID();
       }
       // dashTunePid.setBoolean(false);
-    }
-    if (ShooterInverted.getBoolean(false) != flywheelEncoder.getInverted()) {
-      flywheelController.setInverted(ShooterInverted.getBoolean(false));
     }
     if (DShootingMode.getDouble(0) != aimMode.ordinal()) {
       setAimMode((int) DShootingMode.getDouble(0));
