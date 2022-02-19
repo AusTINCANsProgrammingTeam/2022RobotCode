@@ -44,8 +44,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private double MaxOutput;
 
   private ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter Tab");
-  //TODO: Fine for now, but we really need to fix this tab when we have shuffleboard decided,
-    // idk why we need half of these
+  //TODO: Fine for now, but we really need to fix this tab when we have shuffleboard decided
   private NetworkTableEntry dashTunePid =
       shooterTab
           .add("Tune PID", true)
