@@ -38,7 +38,8 @@ public final class Constants {
       return this.enabled;
     }
     ;
-  }
+  } 
+  
 
   // DRIVEBASE Constants
 
@@ -86,6 +87,10 @@ public final class Constants {
   // TODO: Replace 0.69 with actual track width in meters and run characterization on real robot
 
   // Encoder constants
+
+  // Controller modes
+  public static final boolean testMode = true;
+
   // TODO: Replace these with the correct ports
   public static final int leftEncoderDIOone = 0;
   public static final int leftEncoderDIOtwo = 1;
@@ -106,7 +111,6 @@ public final class Constants {
   public static final double CDSBeltSpeed = 0.25;
   public static final double CDSWheelControllerSpeed = 0.15;
   public static final Port colorSensorPort = Port.kOnboard; // Placeholder Value, to be changed
-  public static final boolean competition = false; // false for testing, true for competition
 
   // Controller Constants {
   public static final int portNumber0 = 0;

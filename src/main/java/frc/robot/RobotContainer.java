@@ -10,6 +10,7 @@ import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.Constants;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -45,7 +46,9 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private static final Joystick driverJoystick = new Joystick(Constants.portNumber0);
+  private static final Joystick driverJoystick2 = new Joystick(Constants.portNumber1);
   private JoystickButton[] buttons = new JoystickButton[13];
+  private JoystickButton[] buttons2 = new JoystickButton[13];
 
   // subsystems
 
@@ -83,7 +86,8 @@ public class RobotContainer {
 
     // initialize the button bindings
     for (int i = 1; i < buttons.length; i++) {
-      buttons[i] = new JoystickButton(driverJoystick, i);
+      buttons[i] = new JoystickButton(driverJoystick,i);
+      buttons2[i] = new JoystickButton(driverJoystick2, i);
     }
     configureButtonBindings();
 
@@ -205,10 +209,15 @@ public class RobotContainer {
     if (limelightAlign != null) {
       buttons[Constants.startButton].whenPressed(limelightAlign);
     }
-
+    
     if (climbSubsystem != null) {
-      buttons[Constants.AButton].whileHeld(climbUPCommand);
-      buttons[Constants.XButton].whileHeld(climbDOWNCommand);
+      if (Constants.testMode) {
+        buttons[Constants.AButton].whileHeld(climbUPCommand);
+        buttons[Constants.XButton].whileHeld(climbDOWNCommand);
+      } else {
+        buttons2[Constants.AButton].whileHeld(climbUPCommand);
+        buttons2[Constants.XButton].whileHeld(climbDOWNCommand);
+      }
     }
   }
 
