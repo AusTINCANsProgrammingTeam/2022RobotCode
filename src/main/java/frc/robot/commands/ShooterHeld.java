@@ -24,6 +24,7 @@ public class ShooterHeld extends CommandBase {
       CDSSubsystem cdsSubsystem,
       boolean llEnabled) {
     addRequirements(shooterSubsystem);
+    if(llEnabled){addRequirements(limelightSubsystem);}
     m_ShooterSubsystem = shooterSubsystem;
     m_LimelightSubsystem = limelightSubsystem;
     // m_CDSSubsystem = cdsSubsystem;
@@ -43,6 +44,8 @@ public class ShooterHeld extends CommandBase {
   public void execute() {
     m_ShooterSubsystem.prime();
     if (m_ShooterSubsystem.wheelReady()) {
+      //If below will bypass the LL check if the stopper is already running, or the LL is disabled. 
+        //Otherwise, alignment is checked.
       if (i > 0 || !LLEnabled || m_LimelightSubsystem.calculatePID() == 0.0) {
         i++;
         m_ShooterSubsystem.runCargo(true, true);

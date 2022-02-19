@@ -73,8 +73,8 @@ public class ShooterSubsystem extends SubsystemBase {
           .withPosition(1, 3)
           .getEntry();
 
-  private NetworkTableEntry ShooterReverted =
-      shooterTab.add("Shooter Reverted", false).withPosition(1, 4).getEntry();
+  private NetworkTableEntry ShooterInverted =
+      shooterTab.add("Shooter Inverted", false).withPosition(1, 4).getEntry();
   private NetworkTableEntry DShootingMode =
       shooterTab.add("Shooting Mode", "TEST").withPosition(1, 5).getEntry();
   private NetworkTableEntry DDistance =
@@ -298,8 +298,8 @@ public class ShooterSubsystem extends SubsystemBase {
       }
       // dashTunePid.setBoolean(false);
     }
-    if (ShooterReverted.getBoolean(false) != flywheelEncoder.getInverted()) {
-      flywheelController.setInverted(ShooterReverted.getBoolean(false));
+    if (ShooterInverted.getBoolean(false) != flywheelEncoder.getInverted()) {
+      flywheelController.setInverted(ShooterInverted.getBoolean(false));
     }
     if (DShootingMode.getDouble(0) != aimMode.ordinal()) {
       setAimMode((int)DShootingMode.getDouble(0));

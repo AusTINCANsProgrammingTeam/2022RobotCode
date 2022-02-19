@@ -24,6 +24,7 @@ public class ShooterPressed extends CommandBase {
       CDSSubsystem cdsSubsystem,
       boolean llEnabled) {
     addRequirements(shooterSubsystem);
+    if(llEnabled){addRequirements(limelightSubsystem);}
     m_ShooterSubsystem = shooterSubsystem;
     m_LimelightSubsystem = limelightSubsystem;
     // m_CDSSubsystem = cdsSubsystem;
@@ -42,6 +43,16 @@ public class ShooterPressed extends CommandBase {
   @Override
   public void execute() {
     m_ShooterSubsystem.prime();
+    if (m_ShooterSubsystem.wheelReady()) {
+      //If below will bypass the LL check if the stopper is already running, or the LL is disabled. 
+        //Otherwise, alignment is checked.
+      if (i > 0 || !LLEnabled || m_LimelightSubsystem.calculatePID() == 0.0) {
+        i++;
+        m_ShooterSubsystem.runCargo(true, true);
+        m_ShooterSubsystem.setCargoBoolean(true);
+      }
+      m_ShooterSubsystem.updateIdelay(i);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -58,20 +69,9 @@ public class ShooterPressed extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_ShooterSubsystem.wheelReady()) {
-      if (i > 0 || !LLEnabled || m_LimelightSubsystem.calculatePID() == 0.0) {
-        i++;
-        m_ShooterSubsystem.runCargo(true, true);
-        m_ShooterSubsystem.setCargoBoolean(true);
-        if (i >= 50) {// 1000 miliseconds delay TODO: Use a CDS method for this when possible
-          return true;
-        }
-
-      } else {
-        m_ShooterSubsystem.runCargo(false, false);
-      }
+    if (i >= 50) {// 1000 miliseconds delay TODO: Use a CDS method for this when possible
+      return true;
     }
-      m_ShooterSubsystem.updateIdelay(i);
       return false;
   }
 }
