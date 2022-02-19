@@ -7,11 +7,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClimbSubsystem;
 
-public class ClimbDOWNCommand extends CommandBase {
+public class ClimbCommand extends CommandBase {
 
   private final ClimbSubsystem m_subsystem;
 
-  public ClimbDOWNCommand(ClimbSubsystem s) {
+  public ClimbCommand(ClimbSubsystem s) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(s);
     m_subsystem = s;
@@ -24,7 +24,7 @@ public class ClimbDOWNCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.enableClimb(true, false);
+    m_subsystem.enableClimb(true, true);
   }
 
   // Called once the command ends or is interrupted.

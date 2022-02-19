@@ -18,8 +18,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
-import frc.robot.commands.ClimbDOWNCommand;
-import frc.robot.commands.ClimbUPCommand;
+import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
@@ -62,8 +61,7 @@ public class RobotContainer {
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
   private IntakeForwardCommand intakeForwardCommand;
   private IntakeReverseCommand intakeReverseCommand;
-  private ClimbUPCommand climbUPCommand;
-  private ClimbDOWNCommand climbDOWNCommand;
+  private ClimbCommand climbCommand;
 
   // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
   private ShooterPrime shooterPrime;
@@ -137,9 +135,8 @@ public class RobotContainer {
             {
               System.out.println("Climb enabled");
 
-              climbSubsystem = new ClimbSubsystem(null);
-              climbUPCommand = new ClimbUPCommand(climbSubsystem);
-              climbDOWNCommand = new ClimbDOWNCommand(climbSubsystem);
+              climbSubsystem = new ClimbSubsystem(driverJoystick2);
+              climbCommand = new ClimbCommand(climbSubsystem);
               break;
             }
         }
@@ -211,11 +208,9 @@ public class RobotContainer {
 
     if (climbSubsystem != null) {
       if (Constants.testMode) {
-        buttons[Constants.AButton].whileHeld(climbUPCommand);
-        buttons[Constants.XButton].whileHeld(climbDOWNCommand);
+        buttons[Constants.startButton].whileHeld(climbCommand);
       } else {
-        buttons2[Constants.AButton].whileHeld(climbUPCommand);
-        buttons2[Constants.XButton].whileHeld(climbDOWNCommand);
+        buttons2[Constants.startButton].whileHeld(climbCommand);
       }
     }
   }
