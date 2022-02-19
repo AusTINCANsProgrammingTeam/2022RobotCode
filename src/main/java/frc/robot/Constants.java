@@ -65,7 +65,7 @@ public final class Constants {
 
 
     // AUTONOMOUS Constants
-    public static final double delaytaxi = 1.0;
+    public static final double delaytaxi = 1.0; // 1 second wait time
     // Volts, constants for ramseteCommand
     public static final double ksVolts = 0.13323;                      // Ks, 
     public static final double kvVoltSecondsPerMeter = 2.8295;         // Kv, Velocity, feedforward

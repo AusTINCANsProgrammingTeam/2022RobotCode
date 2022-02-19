@@ -30,7 +30,7 @@ import frc.robot.commands.CDSReverseCommand;
 import frc.robot.commands.ClimbDOWNCommand;
 import frc.robot.commands.ClimbUPCommand;
 
-import frc.robot.commands.AutonModes.TaxiAuton;
+import frc.robot.commands.AutonModes;
 
  // This class is where the bulk of the robot should be declared. Since Command-based is a
  // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -69,6 +69,7 @@ public class RobotContainer {
   private LimelightAlign limelightAlign;
 
   //auton
+  private AutonModes autonModes;
   private Command chosenAutonMode;
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
@@ -185,7 +186,7 @@ public class RobotContainer {
       buttons[Constants.RJoystickButton].whenPressed(new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
     }
 
-    //CDS
+    // CDS
     if (CDSSubsystem != null && shooterSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
       CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
@@ -202,24 +203,24 @@ public class RobotContainer {
       buttons[Constants.startButton].whenPressed(limelightAlign);
     }
 
-    if (climbSubsystem != null)
-    {
+    // Climb
+    if (climbSubsystem != null) {
       buttons[Constants.AButton].whileHeld(climbUPCommand);
       buttons[Constants.XButton].whileHeld(climbDOWNCommand);
     }
-  } 
-
-  private void initAuton() {
-    // TODO: add a sendable chooser
-    chosenAutonMode = new TaxiAuton(driveBaseSubsystem).getAutonCommand();
   }
-            
-  // Use this to pass the autonomous command to the main {@link Robot} class.
-  // @return the command to run in autonomous
+
   public Command getAutonomousCommand() {
     return chosenAutonMode;
   }
-  
+
+  private void initAuton() {
+    autonModes = new AutonModes(driveBaseSubsystem, shooterSubsystem, limelightSubsystem, CDSSubsystem, intakeSubsystem);
+
+    // TODO: add a sendable chooser
+    String commandName = "taxi";
+    chosenAutonMode = autonModes.getChosenCommand(commandName);
+  }
 
   // TODO: create get methods for other subsystems to pass into TabContainer, or find a more efficient way
   public static DriveBaseSubsystem getDriveBase() {
