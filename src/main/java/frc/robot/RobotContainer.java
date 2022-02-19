@@ -155,7 +155,8 @@ public class RobotContainer {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
     }
-    if (shooterSubsystem != null && limelightSubsystem != null && CDSSubsystem != null) {
+    if (shooterSubsystem != null && CDSSubsystem != null) {
+       shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, CDSSubsystem,(limelightSubsystem != null));
       shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, CDSSubsystem,true);
     }
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
