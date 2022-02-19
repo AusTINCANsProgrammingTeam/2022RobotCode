@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
@@ -59,7 +62,7 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public boolean getLimitSwitchVal() {
-      return m_limitSwitch.get();
+    return m_limitSwitch.get();
   }
-  // TODO: might add other getter methods depending on how many limit switches 
+  // TODO: might add other getter methods depending on how many limit switches
 }

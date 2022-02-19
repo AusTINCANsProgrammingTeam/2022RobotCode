@@ -12,7 +12,6 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -32,3 +31,11 @@ jobs:
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
       run: ./gradlew build
+
+    # Runs a simulation to spot check crashes
+    - name: Run simulation to check for runtime errors
+      run: timeout 1m ./gradlew simulateJava 2>&1 | awk -v rc=0 '/The robot program quit unexpectedly/ { rc=1 } 1; END {exit rc}'
+      # 1. Run simulation with 1 minute timeout
+      # 2. Redirect stderr to stdout (just in case)
+      # 3. Use awk to check for robot crash message and set the return code based on this. (Alternative to grep that doesn't filter the simulation output)
+      # Awk One-liner stolen from https://stackoverflow.com/questions/27447705/grep-without-filtering 
