@@ -269,12 +269,8 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if (DShooterRPM.getDouble(0.0) != flywheelEncoder.getVelocity()) {
-      DShooterRPM.setDouble(flywheelEncoder.getVelocity());
-    }
-    if (DDistance.getDouble(0.0) != getDistance()) {
-      DDistance.setDouble(getDistance());
-    }
+    DShooterRPM.setDouble(flywheelEncoder.getVelocity());
+    DDistance.setDouble(getDistance());
     if (dashTunePid.getBoolean(false)) {
       if ((flywheelPID.getP() != PID_P.getDouble(0))
           || (flywheelPID.getI() != PID_I.getDouble(0))
