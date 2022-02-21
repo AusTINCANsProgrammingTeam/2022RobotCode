@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CDSSubsystem;
+import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -14,6 +15,7 @@ public class ShooterPressed extends CommandBase {
   private ShooterSubsystem m_ShooterSubsystem;
   private LimelightSubsystem m_LimelightSubsystem;
   private CDSSubsystem m_CDSSubsystem;
+  private DriveBaseSubsystem m_DriveBaseSubsystem;
   private int i;
   private boolean LLEnabled;
 
@@ -22,11 +24,14 @@ public class ShooterPressed extends CommandBase {
       ShooterSubsystem shooterSubsystem,
       LimelightSubsystem limelightSubsystem,
       CDSSubsystem cdsSubsystem,
+      DriveBaseSubsystem driveBaseSubsystem,
       boolean llEnabled) {
     addRequirements(shooterSubsystem);
+    addRequirements(driveBaseSubsystem);
     if (llEnabled) {
       addRequirements(limelightSubsystem);
     }
+    m_DriveBaseSubsystem = driveBaseSubsystem;
     m_ShooterSubsystem = shooterSubsystem;
     m_LimelightSubsystem = limelightSubsystem;
     // m_CDSSubsystem = cdsSubsystem;
@@ -44,6 +49,7 @@ public class ShooterPressed extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    m_DriveBaseSubsystem.arcadeDrive(0);
     m_ShooterSubsystem.prime();
     if (m_ShooterSubsystem.wheelReady()) {
       // If below will bypass the LL check if the stopper is already running, or the LL is disabled.

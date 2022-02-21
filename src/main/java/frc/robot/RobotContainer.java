@@ -155,10 +155,7 @@ public class RobotContainer {
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
     }
     if (shooterSubsystem != null && CDSSubsystem != null) {
-      shooterHeld =
-          new ShooterHeld(
-              shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
-      shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, CDSSubsystem, true);
+      shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, CDSSubsystem, driveBaseSubsystem, (limelightSubsystem != null));
     }
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
@@ -181,7 +178,7 @@ public class RobotContainer {
 
     // Shooter
     if (shooterSubsystem != null && shooterHeld != null) {
-      buttons[Constants.backButton].whenPressed(shooterHeld);
+      buttons[Constants.backButton].whileHeld(shooterHeld);
       buttons[Constants.LJoystickButton].whenPressed(
           new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
       buttons[Constants.RJoystickButton].whenPressed(
