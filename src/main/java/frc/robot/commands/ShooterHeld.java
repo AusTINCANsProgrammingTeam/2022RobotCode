@@ -43,7 +43,6 @@ public class ShooterHeld extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_DriveBaseSubsystem.toggleTurning();
     i = 0;
   }
 
@@ -75,7 +74,6 @@ public class ShooterHeld extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_DriveBaseSubsystem.toggleTurning();
     m_ShooterSubsystem.runCargo(false, false);
     m_ShooterSubsystem.windFlywheel(0);
     m_ShooterSubsystem.setCargoBoolean(false);
