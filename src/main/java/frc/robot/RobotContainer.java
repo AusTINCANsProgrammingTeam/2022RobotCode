@@ -130,11 +130,11 @@ public class RobotContainer {
             }
           case "ClimbSubsystem":
             {
-              System.out.println("Climb enabled");
               if (!Constants.oneController) {
                 climbSubsystem = new ClimbSubsystem(operatorJoystick);
+                climbCommand = new ClimbCommand(climbSubsystem);
+                System.out.println("Climb enabled");
               }
-              climbCommand = new ClimbCommand(climbSubsystem);
               break;
             }
         }
