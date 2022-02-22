@@ -132,7 +132,7 @@ public class RobotContainer {
             {
               System.out.println("Climb enabled");
               if (!Constants.oneController) {
-                climbSubsystem = new ClimbSubsystem(driverJoystick2);
+                climbSubsystem = new ClimbSubsystem(oporatorJoystick);
               }
               climbCommand = new ClimbCommand(climbSubsystem);
               break;
