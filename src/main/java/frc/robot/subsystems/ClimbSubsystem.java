@@ -51,9 +51,7 @@ public class ClimbSubsystem extends SubsystemBase {
       climbHeight = climbHeight + m_climbJoystick.getRawAxis(Constants.leftJoystickY);
       m_climbMotorControllerOne
           .getPID()
-          .setReference(
-              climbHeight,
-              CANSparkMax.ControlType.kPosition);
+          .setReference(climbHeight, CANSparkMax.ControlType.kPosition);
     } else {
       m_climbMotorControllerOne.setSpeed(0);
     }
