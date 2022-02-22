@@ -37,7 +37,6 @@ import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShooterPrime;
 import frc.robot.commands.CDSForwardCommand;
-import frc.robot.commands.CDSReverseCommand;
 import frc.robot.commands.ClimbDOWNCommand;
 import frc.robot.commands.ClimbUPCommand;
 
@@ -74,7 +73,6 @@ public class RobotContainer {
   // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
   private ShooterPrime shooterPrime;
   private CDSForwardCommand CDSForwardCommand;
-  private CDSReverseCommand CDSReverseCommand;
   private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
 
@@ -161,7 +159,6 @@ public class RobotContainer {
     }
     if(CDSSubsystem != null && shooterSubsystem != null){
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
-      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
     }
     if(intakeSubsystem != null){
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
