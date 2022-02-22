@@ -90,24 +90,34 @@ public class CDSSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("CDS Wheel Speed", 0.0);
   }
   
-  public int[] getSensorStatus() {
+  public boolean[] getSensorStatus() {
     int[] sensorStatuses = colorSensors.getProximities();
 
-    int frontStatus = sensorStatuses[0] > 300 ? 1: 0;
-    int middleStatus = sensorStatuses[1] > 450 ? 1: 0;
-    int backStatus = sensorStatuses[2] > 600 ? 1: 0;
-    int[] beamBreakArray = {backStatus, middleStatus, frontStatus};
+    boolean frontStatus = sensorStatuses[0] > 300;
+    boolean middleStatus = sensorStatuses[1] > 450;
+    boolean backStatus = sensorStatuses[2] > 600;
+    boolean[] beamBreakArray = {backStatus, middleStatus, frontStatus};
+
+    int ballCount = 0;
+    for (boolean status : beamBreakArray) {
+      if (status) {
+        ballCount++;
+      }
+    }
+
+    SmartDashboard.putNumber("Ball Count", ballCount);
+
     return beamBreakArray;
   }
 
   public int getNextOpenSensor() {
     // Setpoint 1 @ Shooter Stopper Wheel
     // Setpoint 2 @ Second beam break
-    int[] sensorStatus = getSensorStatus();
+    boolean[] sensorStatus = getSensorStatus();
     
     // Start at 1 to skip over the centering wheel status 
     for (int i=0; i < sensorStatus.length-1; i++) {
-      if (sensorStatus[i] == 0) {
+      if (sensorStatus[i]) {
         return i;
       } 
     }
@@ -119,19 +129,15 @@ public class CDSSubsystem extends SubsystemBase {
     String ballColor = senseColor();
     SmartDashboard.putString("Ball Color", ballColor);
     SmartDashboard.putBoolean("Ball Color Match", ballColor == allianceColor);
-
-    // Ball indexing
-    int[] sensorStatus = getSensorStatus();
-    int ballCount = sensorStatus[0] + sensorStatus[1] + sensorStatus[2];
-    SmartDashboard.putNumber("Ball Count", ballCount);
+    boolean[] sensorStatus = getSensorStatus();
 
     // Send ball to setpoint
     if (!runningCDS) {
-      SmartDashboard.putNumber("Front Sensor Status", sensorStatus[2]);
-      SmartDashboard.putNumber("Middle Sensor Status", sensorStatus[1]);
-      SmartDashboard.putNumber("Back Sensor Status", sensorStatus[0]);
+      SmartDashboard.putBoolean("Front sensor status", sensorStatus[2]);
+      SmartDashboard.putBoolean("Middle Sensor Status", sensorStatus[1]);
+      SmartDashboard.putBoolean("Back Sensor Status", sensorStatus[0]);
 
-      if (sensorStatus[2] == 1) {  //1 means sensor is activated
+      if (sensorStatus[2]) {  //1 means sensor is activated
         int nextOpenSensor = getNextOpenSensor();
         SmartDashboard.putNumber("Setpoint", nextOpenSensor);
         if (nextOpenSensor != -1) {
@@ -144,7 +150,7 @@ public class CDSSubsystem extends SubsystemBase {
       }
     } else {
       // Check if ball has reached setpoint, stop if it has
-      if (sensorStatus[setpointIndex] == 1) {
+      if (sensorStatus[setpointIndex]) {
         stopCDS();
         runningCDS = false;
         setpointIndex = -1;
