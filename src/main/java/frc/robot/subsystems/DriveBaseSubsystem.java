@@ -44,7 +44,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private final DifferentialDriveOdometry m_odometry;
   private EncoderSim m_leftEncoderSim;
   private EncoderSim m_rightEncoderSim;
-  private boolean turningDisabled;
 
   // Encoders for Sim
   private Encoder m_LEncoderForSim;
@@ -63,7 +62,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {
     m_driverJoystick = joystick;
-    turningDisabled = false;
     m_motorControllers = new MotorController[4];
     m_gyro = new AHRS(I2C.Port.kMXP);
     m_gyro.reset(); // resets the heading of the robot to 0
@@ -220,15 +218,10 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // Normal Arcade Drive
   public void arcadeDrive() {
-    if(!turningDisabled){
     m_differentialDrive.arcadeDrive(
         -1 * m_driverJoystick.getRawAxis(Constants.leftJoystickY),
         m_driverJoystick.getRawAxis(Constants.rightJoystickX));
     // joystick has y-axis flipped so up is negative why down is positive
-    }
-  }
-  public void toggleTurning() {
-    turningDisabled = !turningDisabled;
   }
 
   // Arcade Drive where you can only move forwards and backwards for testing
