@@ -112,10 +112,10 @@ public final class Constants {
   public static final double inchesInMeter = 39.3701;
 
   // Actual IDs on robot, used to activate the right motors
-  public static final int driveLeftFront = 1;
-  public static final int driveLeftRear = 2;
-  public static final int driveRightFront = 7;
-  public static final int driveRightRear = 8;
+  public static final int driveLeftFront = 6;
+  public static final int driveLeftRear = 7;
+  public static final int driveRightFront = 13;
+  public static final int driveRightRear = 14;
 
   // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
   public static final int driveLeftFrontIndex = 0;
