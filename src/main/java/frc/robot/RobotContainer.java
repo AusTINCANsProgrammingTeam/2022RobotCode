@@ -23,7 +23,7 @@ import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
-import frc.robot.commands.ShooterPrime;
+import frc.robot.commands.ShooterHeld;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveBaseSubsystem;
@@ -64,7 +64,7 @@ public class RobotContainer {
   private ClimbCommand climbCommand;
 
   // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
-  private ShooterPrime shooterPrime;
+  private ShooterHeld shooterHeld;
   private CDSForwardCommand CDSForwardCommand;
   private CDSReverseCommand CDSReverseCommand;
   private LimelightAlign limelightAlign;
@@ -108,9 +108,6 @@ public class RobotContainer {
             {
               System.out.println("CDS enabled");
               CDSSubsystem = new CDSSubsystem();
-              // CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
-              // CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
-              // CDSSubsystem.getAllianceColor();
               break;
             }
           case "IntakeSubsystem":
@@ -159,8 +156,11 @@ public class RobotContainer {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
     }
-    if (shooterSubsystem != null && limelightSubsystem != null && CDSSubsystem != null) {
-      shooterPrime = new ShooterPrime(shooterSubsystem, limelightSubsystem, CDSSubsystem);
+    if (shooterSubsystem != null && CDSSubsystem != null) {
+      shooterHeld =
+          new ShooterHeld(
+              shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
+      shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, CDSSubsystem, true);
     }
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
@@ -185,24 +185,19 @@ public class RobotContainer {
     }
 
     // Shooter
-    if (shooterSubsystem != null && shooterPrime != null) {
-      buttons[Constants.backButton].whenPressed(shooterPrime);
+    if (shooterSubsystem != null && shooterHeld != null) {
+      buttons[Constants.backButton].whenPressed(shooterHeld);
       buttons[Constants.LJoystickButton].whenPressed(
-          new InstantCommand(shooterSubsystem::cycleAimModeUp, shooterSubsystem));
+          new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
       buttons[Constants.RJoystickButton].whenPressed(
-          new InstantCommand(shooterSubsystem::cycleAimModeDown, shooterSubsystem));
-    }
-
-    // CDS
-    if (CDSSubsystem != null && shooterSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
-      CDSSubsystem.senseColor();
+          new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
     }
 
     if (CDSForwardCommand != null && CDSReverseCommand != null) {
       buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
       buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
+      // CDSSubsystem.getAllianceColor();
+      CDSSubsystem.senseColor();
     }
 
     // Limelight

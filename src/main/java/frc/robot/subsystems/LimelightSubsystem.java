@@ -18,12 +18,14 @@ public class LimelightSubsystem extends SubsystemBase {
   private boolean isFinished;
 
   public LimelightSubsystem() {
-    m_PidController = new PIDController(6e-3, 0, 0);
+    // NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(1);
+    m_PidController = new PIDController(0.1, 0, 0);
     m_PidController.setTolerance(2.0);
     isFinished = false;
   }
 
   public double getTX() {
+    // NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(3);
     // Gets TX, the horizontal angle of the target from the limelight
     return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
   }
@@ -35,8 +37,8 @@ public class LimelightSubsystem extends SubsystemBase {
         .atSetpoint()) { // If our robot is aligned within the tolerance, return 0.0 to end command
       isFinished = true;
       return 0.0;
-    } else { // Returns calculation, with a minimum power level of 0.05 going to motors
-      return Math.signum(calculation) * Math.max(Math.abs(calculation), 0.05);
+    } else { // Returns calculation, with a minimum power level of 0.07 going to motors
+      return Math.signum(calculation) * Math.max(Math.abs(calculation), 0.07);
     }
   }
 
@@ -45,6 +47,7 @@ public class LimelightSubsystem extends SubsystemBase {
   }
 
   public void reset() {
+    // NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(1);
     isFinished = false;
   }
 
