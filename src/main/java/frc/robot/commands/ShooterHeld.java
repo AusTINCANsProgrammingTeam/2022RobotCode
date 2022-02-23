@@ -49,7 +49,7 @@ public class ShooterHeld extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_DriveBaseSubsystem.arcadeDrive(0);
+    m_DriveBaseSubsystem.arcadeDrive(0); //Disables turning
     m_ShooterSubsystem.prime();
     if (m_ShooterSubsystem.wheelReady()) {
       // If below will bypass the LL check if the stopper is already running, or the LL is disabled.
