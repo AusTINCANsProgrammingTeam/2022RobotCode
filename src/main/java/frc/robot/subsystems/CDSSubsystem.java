@@ -59,7 +59,7 @@ public class CDSSubsystem extends SubsystemBase {
 
     CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
 
-    colorSensors = new ColorSensorMuxed(2, 1, 0);
+    colorSensors = new ColorSensorMuxed(0, 1, 2);
     
     //colorSensorOne = new ColorSensorV3(Constants.colorSensorPort1);
     //colorSensorTwo = new ColorSensorV3(Constants.colorSensorPort2);
@@ -122,9 +122,9 @@ public class CDSSubsystem extends SubsystemBase {
   public boolean[] getSensorStatus() {
     int[] sensorStatuses = colorSensors.getProximities();
 
-    boolean backStatus = sensorStatuses[0] > Constants.backSensorActivation;
+    boolean backStatus = sensorStatuses[2] > Constants.backSensorActivation;
     boolean middleStatus = sensorStatuses[1] > Constants.middleSensorActivation;
-    boolean frontStatus = sensorStatuses[2] > Constants.frontSensorActivation;
+    boolean frontStatus = sensorStatuses[0] > Constants.frontSensorActivation;
     boolean[] beamBreakArray = {backStatus, middleStatus, frontStatus};
 
     int ballCount = 0;
@@ -140,7 +140,7 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public int getNextOpenSensor(boolean[] sensorStatus) {    
-    // Start at 1 to skip over the centering wheel status 
+    // Starts at 0 and ends short of the centering wheel
     for (int i=0; i < sensorStatus.length-1; i++) {
       if (sensorStatus[i]) {
         return i;
