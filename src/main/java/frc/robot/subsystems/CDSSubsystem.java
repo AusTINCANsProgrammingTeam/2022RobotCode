@@ -152,9 +152,9 @@ public class CDSSubsystem extends SubsystemBase {
   public void periodic() {
     // Color sensing
     String ballColor = senseColor();
-    SmartDashboard.putString("Ball Color", ballColor);
+    //SmartDashboard.putString("Ball Color", ballColor);
     SmartDashboard.putBoolean("Ball Color Match", ballColor == allianceColor);
-    boolean[] sensorStatus = getSensorStatus();
+    //boolean[] sensorStatus = getSensorStatus();
  
   /*
     // Send ball to setpoint
