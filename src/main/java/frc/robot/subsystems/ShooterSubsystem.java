@@ -20,6 +20,7 @@ import frc.robot.common.hardware.MotorController;
 
 public class ShooterSubsystem extends SubsystemBase {
   private MotorController flywheelController;
+  private MotorController flywheel2Controller;
   private MotorController hoodController;
   private SparkMaxPIDController flywheelPID;
   private SparkMaxPIDController hoodPID;
@@ -94,10 +95,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public ShooterSubsystem() {
     aimMode = AimModes.TEST;
-    // Initializes the SparkMAX for the flywheel
+    // Initializes the SparkMAX for the flywheel motors
     flywheelController = new MotorController("Flywheel", Constants.Shooter.shooterID, 40, true);
+    flywheel2Controller = new MotorController("Flywheel 2", Constants.Shooter.shooter2ID);
     flywheelPID = flywheelController.getPID();
     flywheelEncoder = flywheelController.getEncoder();
+    flywheel2Controller.setInverted(true);
+    flywheel2Controller.setFollow(flywheelController);
     // Initializes the SparkMAX for the hood TODO: Set this up when possible
     /*hoodController = new MotorController("Hood", Constants.hoodID);
     hoodPID = hoodController.getPID();
@@ -148,7 +152,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void adjustHood(double a) {
     // Adjusts Hood using PID control to passed angle a
-    hoodPID.setReference(a, CANSparkMax.ControlType.kPosition);
+    //hoodPID.setReference(a, CANSparkMax.ControlType.kPosition); TODO: Set this up when possible
   }
 
   public double[] lookup(double Currentdistance) {
