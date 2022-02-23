@@ -139,10 +139,7 @@ public class CDSSubsystem extends SubsystemBase {
     return beamBreakArray;
   }
 
-  public int getNextOpenSensor(boolean[] sensorSta) {
-
-    boolean[] sensorStatus = getSensorStatus();
-    
+  public int getNextOpenSensor(boolean[] sensorStatus) {    
     // Start at 1 to skip over the centering wheel status 
     for (int i=0; i < sensorStatus.length-1; i++) {
       if (sensorStatus[i]) {
