@@ -96,7 +96,11 @@ public class AutonModes {
         new SequentialCommandGroup(
             new WaitCommand(Constants.delayshot),
             // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem),
-            new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true),
+            new ShooterPressed(
+                shooterSubsystem,
+                limelightSubsystem,
+                cdsSubsystem,
+                true), // also has a time delay of 2-3 seconds
             new WaitCommand(Constants.delaytaxi),
             oneBallRamseteCommands[0].beforeStarting(
                 () -> driveBaseSubsystem.resetOdometry(taxiTrajectories[0].getInitialPose())));
@@ -108,13 +112,12 @@ public class AutonModes {
             new IntakeForwardCommand(intakeSubsystem));
     twoBallCommand =
         new SequentialCommandGroup(
-            new WaitCommand(Constants.delaytaxi), 
-            twoBallParallel, 
-            twoBallRamseteCommands[1]
-            new WaitCommand(Constants.delayshot), 
+            new WaitCommand(Constants.delaytaxi),
+            twoBallParallel,
+            twoBallRamseteCommands[1],
+            new WaitCommand(Constants.delayshot),
             // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem)
-            new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true),
-            );
+            new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true));
   }
 
   private Trajectory[] getTrajectories(String routeString) {

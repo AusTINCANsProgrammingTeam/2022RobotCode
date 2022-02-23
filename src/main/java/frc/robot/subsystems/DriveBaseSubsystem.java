@@ -80,7 +80,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
             Constants.ksVolts,
             Constants.kvVoltSecondsPerMeter,
             Constants.kaVoltSecondsSquaredPerMeter);
-    
+
     // motor controllers
     m_motorControllers[Constants.driveLeftFrontIndex] =
         new MotorController(
@@ -119,7 +119,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     this.usingExternal = usingExternal; // gets key if using external or internal encoders
     initializeEncoders();
-
 
     if (Robot.isSimulation()) {
       m_gyroSim = new AnalogGyroSim(m_gyro1);
@@ -175,10 +174,14 @@ public class DriveBaseSubsystem extends SubsystemBase {
           new Encoder(
               Constants.rightEncoderDIOone,
               Constants.rightEncoderDIOtwo,
-              false,
+              true, // invert right external motor because right motors are inverted
               Encoder.EncodingType.k2X);
 
-      m_extRightEncoder.setReverseDirection(true);  // since right side motors are inverted, invert right encoder
+      m_extLeftEncoder.setDistancePerPulse(
+          Constants.pulsesPerRevolution * 2 * Math.PI * Constants.wheelRadius);
+      m_extRightEncoder.setDistancePerPulse(
+          Constants.pulsesPerRevolution * 2 * Math.PI * Constants.wheelRadius);
+
     } else {
       // internal encoders
       m_internalLeftEncoder = m_motorControllers[Constants.driveLeftFrontIndex].getEncoder();
@@ -204,9 +207,10 @@ public class DriveBaseSubsystem extends SubsystemBase {
     if (usingExternal) {
       m_odometry.update(
           m_gyro.getRotation2d(), m_extLeftEncoder.getDistance(), m_extRightEncoder.getDistance());
-    } else { // internal
-      double leftPosition =
-          m_internalLeftEncoder.getPosition(); // automatically applies conversion factor
+    } else {
+      // internal
+      // automatically applies conversion factor
+      double leftPosition = m_internalLeftEncoder.getPosition();
       double rightPosition = m_internalRightEncoder.getPosition();
 
       SmartDashboard.putNumber("Left position", leftPosition);
@@ -372,15 +376,14 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   public double[] getPositions() {
     double[] positions = new double[2];
-    if(usingExternal) {
+    if (usingExternal) {
       positions[0] = m_extLeftEncoder.getDistance();
-      positions[1] = m_extRightEncoder.getDistance();      
-    }
-    else {
+      positions[1] = m_extRightEncoder.getDistance();
+    } else {
       positions[0] = m_internalLeftEncoder.getPosition();
       positions[1] = m_internalRightEncoder.getPosition();
     }
-    
+
     return positions;
   }
 }
