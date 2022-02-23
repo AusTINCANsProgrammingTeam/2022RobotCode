@@ -152,7 +152,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void adjustHood(double a) {
     // Adjusts Hood using PID control to passed angle a
-    //hoodPID.setReference(a, CANSparkMax.ControlType.kPosition); TODO: Set this up when possible
+    // hoodPID.setReference(a, CANSparkMax.ControlType.kPosition); TODO: Set this up when possible
   }
 
   public double[] lookup(double Currentdistance) {
