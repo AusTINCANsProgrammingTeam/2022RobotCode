@@ -172,6 +172,10 @@ public final class Constants {
   public static final double CDSBeltSpeed = 0.25;
   public static final double CDSWheelControllerSpeed = 0.15;
   public static final Port colorSensorPort = Port.kOnboard; // Placeholder Value, to be changed
+  public static final int frontSensorActivation = 300;
+  public static final int middleSensorActivation = 450;
+  public static final int backSensorActivation = 600;
+
 
   // spotless:off
   // Controller Constants {
