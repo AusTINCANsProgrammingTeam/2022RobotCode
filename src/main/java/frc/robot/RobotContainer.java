@@ -165,7 +165,7 @@ public class RobotContainer {
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
     }
-    if  (climbSubsystem != null) {
+    if (climbSubsystem != null) {
       climbSubsystem.setDefaultCommand(climbCommand);
     }
   }
