@@ -76,6 +76,14 @@ public class CDSSubsystem extends SubsystemBase {
     }
   }
 
+  public double getBeltSpeed() {
+    return CDSBeltController.getSpeed();
+  }
+
+  public double getWheelSpeed() {
+    return CDSWheelControllerOne.getSpeed();
+  }
+
   public void stopCDS() {
     // stops all motors in the CDS
     CDSWheelControllerOne.getSparkMax().set(0.0);
@@ -110,9 +118,8 @@ public class CDSSubsystem extends SubsystemBase {
     return beamBreakArray;
   }
 
-  public int getNextOpenSensor() {
-    // Setpoint 1 @ Shooter Stopper Wheel
-    // Setpoint 2 @ Second beam break
+  public int getNextOpenSensor(boolean[] sensorSta) {
+
     boolean[] sensorStatus = getSensorStatus();
     
     // Start at 1 to skip over the centering wheel status 
@@ -130,7 +137,8 @@ public class CDSSubsystem extends SubsystemBase {
     SmartDashboard.putString("Ball Color", ballColor);
     SmartDashboard.putBoolean("Ball Color Match", ballColor == allianceColor);
     boolean[] sensorStatus = getSensorStatus();
-
+ 
+  /*
     // Send ball to setpoint
     if (!runningCDS) {
       SmartDashboard.putBoolean("Front sensor status", sensorStatus[2]);
@@ -138,7 +146,7 @@ public class CDSSubsystem extends SubsystemBase {
       SmartDashboard.putBoolean("Back Sensor Status", sensorStatus[0]);
 
       if (sensorStatus[2]) {  //1 means sensor is activated
-        int nextOpenSensor = getNextOpenSensor();
+        int nextOpenSensor = getNextOpenSensor(sensorStatus);
         SmartDashboard.putNumber("Setpoint", nextOpenSensor);
         if (nextOpenSensor != -1) {
           // There is an open setpoint avaliable, run CDS
@@ -155,7 +163,7 @@ public class CDSSubsystem extends SubsystemBase {
         runningCDS = false;
         setpointIndex = -1;
       } 
-    }
+    }*/
   }
 
   /*
