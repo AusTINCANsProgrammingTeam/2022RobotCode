@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
@@ -27,6 +26,7 @@ public class ClimbSubsystem extends SubsystemBase {
   private DigitalInput m_limitSwitch;
   private boolean toggleClimb;
   private double climbHeight;
+  private ShuffleboardTab ClimbBase;
 
   // TODO: maybe add servos
 
@@ -46,9 +46,9 @@ public class ClimbSubsystem extends SubsystemBase {
 
     m_limitSwitch = new DigitalInput(Constants.LimitSwitchChannel);
 
-    ShuffleboardTab dtTab = Shuffleboard.getTab("ClimbBase");
+    ShuffleboardTab ClimbBase = Shuffleboard.getTab("ClimbBase");
 
-    sbclimbHeight = dtTab.add("Climb Hight", 0).withSize(2,2).withPosition(0,0).getEntry();
+    sbclimbHeight = ClimbBase.add("Climb Hight", 0).withSize(2, 2).withPosition(0, 0).getEntry();
   }
 
   public void toggleClimbEnable() {
