@@ -90,14 +90,15 @@ wpi.java.configureExecutableTasks(jar)
 wpi.java.configureTestTasks(test)
 
 spotless {
-    java {
+    groovy {
         target fileTree('.') {
             include '**/*.java'
             exclude '**/build/**', '**/build-*/**'
         }
         toggleOffOn()
-        googleJavaFormat()
-        removeUnusedImports()
+        //googleJavaFormat()
+        greclipse().configFile('spotless.eclipseformat.xml')
+        //removeUnusedImports()
         trimTrailingWhitespace()
         endWithNewline()
     }
