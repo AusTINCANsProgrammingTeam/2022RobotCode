@@ -3,18 +3,23 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import com.revrobotics.ColorSensorV3;
+
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.ColorSensorV3;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.ColorSensorMuxed;
+import frc.robot.common.hardware.ColorSensorMuxed;
 
 public class CDSSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
@@ -29,6 +34,22 @@ public class CDSSubsystem extends SubsystemBase {
   private boolean runningCDS = false;
   private int setpointIndex;
   private ColorSensorMuxed colorSensors;
+
+  private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
+  private NetworkTableEntry CDSWheelControllerDirection =
+      CDSTab.add("CDS Wheel Direction", "Not Running")
+          .withPosition(1, 0)
+          .withWidget(BuiltInWidgets.kToggleSwitch)
+          .getEntry();
+  private NetworkTableEntry CDSBeltControllerDirection =
+      CDSTab.add("CDS Belt Direction", "Not Running")
+          .withPosition(2, 0)
+          .withWidget(BuiltInWidgets.kToggleSwitch)
+          .getEntry();
+  private NetworkTableEntry CDSWheelControllerSpeed =
+      CDSTab.add("CDS Wheel speed", 0).withPosition(3, 0).getEntry();
+  private NetworkTableEntry CDSBeltControllerSpeed =
+      CDSTab.add("CDS Belt speed", 0).withPosition(4, 0).getEntry();
 
   public CDSSubsystem() {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
@@ -182,10 +203,10 @@ public class CDSSubsystem extends SubsystemBase {
     double blueAmount = colors[0].blue;
     if (redAmount > blueAmount) {
       SmartDashboard.putString("Ball Color", "Red");
-      return "Red"; 
+      return "Red";
     } else {
       SmartDashboard.putString("Ball Color", "Blue");
       return "Blue";
-    } 
+    }
   }
 }

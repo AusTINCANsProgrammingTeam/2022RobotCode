@@ -10,15 +10,15 @@ import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class ShooterPressed extends CommandBase {
+public class ShooterHeld extends CommandBase {
   private ShooterSubsystem m_ShooterSubsystem;
   private LimelightSubsystem m_LimelightSubsystem;
   private CDSSubsystem m_CDSSubsystem;
   private int i;
   private boolean LLEnabled;
 
-  /** Creates a new ShooterPressed. */
-  public ShooterPressed(
+  /** Creates a new ShooterHeld. */
+  public ShooterHeld(
       ShooterSubsystem shooterSubsystem,
       LimelightSubsystem limelightSubsystem,
       CDSSubsystem cdsSubsystem,
@@ -52,6 +52,14 @@ public class ShooterPressed extends CommandBase {
         i++;
         m_ShooterSubsystem.runCargo(true, true);
         m_ShooterSubsystem.setCargoBoolean(true);
+        if (i >= 50) { // 1000 miliseconds delay TODO: Use a CDS method for this when possible
+          i = 0;
+          m_ShooterSubsystem.runCargo(false, false);
+          m_ShooterSubsystem.setCargoBoolean(false);
+        }
+
+      } else {
+        m_ShooterSubsystem.runCargo(false, false);
       }
       m_ShooterSubsystem.updateIdelay(i);
     }
@@ -71,23 +79,6 @@ public class ShooterPressed extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-
-    if (i >= 50) { // 1000 miliseconds delay TODO: Use a CDS method for this when possible
-      return true;
-    }
-
-    if(m_ShooterSubsystem.wheelReady()){
-      SmartDashboard.putBoolean("wheelReady", true);
-      //if(i > 0 || m_LimelightSubsystem.calculatePID() == 0.0){
-        m_ShooterSubsystem.runCargo(true,true);
-        m_CDSSubsystem.CDSWheelToggle(false);
-        m_CDSSubsystem.CDSBeltToggle(false);
-        i++;
-        if(i==100){ //Expected to add a 2000ms delay
-          return true;
-       //}
-        }
-    }
     return false;
   }
 }
