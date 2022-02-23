@@ -148,6 +148,7 @@ public final class Constants {
   public static final double ramseteZeta = 0.7; // Damping, larger values offer more damping
 
   public static final double delaytaxi = 1.0; // 1 second wait time
+  public static final double delayshot = 0.5; // 0.5 second wait time
 
   // TODO: Replace 0.69 with actual track width in meters and run characterization on real robot
 

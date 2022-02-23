@@ -101,7 +101,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
         new MotorController(
             "Differential Right Rear", Constants.driveRightRear, Constants.driveBaseCurrentLimit);
 
-    // invert left side motors
+    // invert right side motors
     m_motorControllers[Constants.driveRightFrontIndex].setInverted(true);
     m_motorControllers[Constants.driveRightRearIndex].setInverted(true);
 
@@ -118,37 +118,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
             m_motorControllers[Constants.driveRightFrontIndex].getSparkMax());
 
     this.usingExternal = usingExternal; // gets key if using external or internal encoders
+    initializeEncoders();
 
-    if (usingExternal) {
-      // external encoders
-      m_extLeftEncoder =
-          new Encoder(
-              Constants.leftEncoderDIOone,
-              Constants.leftEncoderDIOtwo,
-              false,
-              Encoder.EncodingType.k2X); // TODO: confirm correct configuration for encoder
-      m_extRightEncoder =
-          new Encoder(
-              Constants.rightEncoderDIOone,
-              Constants.rightEncoderDIOtwo,
-              false,
-              Encoder.EncodingType.k2X);
-
-      m_extRightEncoder.setReverseDirection(true);
-    } else {
-      // internal encoders
-      m_internalLeftEncoder = m_motorControllers[Constants.driveLeftFrontIndex].getEncoder();
-      m_internalRightEncoder = m_motorControllers[Constants.driveRightFrontIndex].getEncoder();
-
-      // calculate circumference then convert to meters
-      // wheel radius in inches, want to convert meters
-      // divide by gear ratio to get in terms of motor rotations when multiplied to number of motor
-      // rotations
-      m_internalLeftEncoder.setPositionConversionFactor(
-          2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter / Constants.gearRatio);
-      m_internalRightEncoder.setPositionConversionFactor(
-          2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter / Constants.gearRatio);
-    }
 
     if (Robot.isSimulation()) {
       m_gyroSim = new AnalogGyroSim(m_gyro1);
@@ -189,6 +160,40 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.driveLeftFrontIndex].getPID().setD(Constants.driveLeftPID[2]);
 
     // rear motor pid controllers should follow
+  }
+
+  private void initializeEncoders() {
+    if (usingExternal) {
+      // external encoders
+      m_extLeftEncoder =
+          new Encoder(
+              Constants.leftEncoderDIOone,
+              Constants.leftEncoderDIOtwo,
+              false,
+              Encoder.EncodingType.k2X); // TODO: confirm correct configuration for encoder
+      m_extRightEncoder =
+          new Encoder(
+              Constants.rightEncoderDIOone,
+              Constants.rightEncoderDIOtwo,
+              false,
+              Encoder.EncodingType.k2X);
+
+      m_extRightEncoder.setReverseDirection(true);  // since right side motors are inverted, invert right encoder
+    } else {
+      // internal encoders
+      m_internalLeftEncoder = m_motorControllers[Constants.driveLeftFrontIndex].getEncoder();
+      m_internalRightEncoder = m_motorControllers[Constants.driveRightFrontIndex].getEncoder();
+      // no need to invert internal encoders, automatic
+
+      // calculate circumference then convert to meters
+      // wheel radius in inches, want to convert meters
+      // divide by gear ratio to get in terms of motor rotations when multiplied to number of motor
+      // rotations
+      m_internalLeftEncoder.setPositionConversionFactor(
+          2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter / Constants.gearRatio);
+      m_internalRightEncoder.setPositionConversionFactor(
+          2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter / Constants.gearRatio);
+    }
   }
 
   @Override
@@ -367,8 +372,15 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   public double[] getPositions() {
     double[] positions = new double[2];
-    positions[0] = m_internalLeftEncoder.getPosition();
-    positions[1] = m_internalRightEncoder.getPosition();
+    if(usingExternal) {
+      positions[0] = m_extLeftEncoder.getDistance();
+      positions[1] = m_extRightEncoder.getDistance();      
+    }
+    else {
+      positions[0] = m_internalLeftEncoder.getPosition();
+      positions[1] = m_internalRightEncoder.getPosition();
+    }
+    
     return positions;
   }
 }
