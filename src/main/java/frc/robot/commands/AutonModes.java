@@ -4,20 +4,17 @@ import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.Filesystem;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-
 import frc.robot.Constants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -72,7 +69,7 @@ public class AutonModes {
     this.cdsSubsystem = c;
     this.intakeSubsystem = i;
 
-    // parameters are route names (according to pathweaver, look under Auton file)
+    // parameters are route names (names based on pathweaver, they are located under Auton file)
     taxiTrajectories = getTrajectories("Taxi");
     oneBallTrajectories = getTrajectories("OneBall");
     twoBallTrajectories = getTrajectories("TwoBall");
@@ -85,11 +82,9 @@ public class AutonModes {
     twoBallRamseteCommands = getRamseteCommands(twoBallTrajectories);
     threeRamseteCommands = getRamseteCommands(threeBallTrajectories);
     fourRamseteCommands = getRamseteCommands(fourBallTrajectories);
-
   }
 
   private void initializeCommandGroups() {
-    // resetodometryCommand = DriveBaseSubsystem.resetOdometry(trajectory.getInitialPose());
     // TODO: the wait time should not be a constant, should be configurable
     taxiCommand =
         new SequentialCommandGroup(
@@ -102,7 +97,8 @@ public class AutonModes {
             new WaitCommand(Constants.delaytaxi),
             // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem),
             new WaitCommand(Constants.delaytaxi),
-            oneBallRamseteCommands[0]);
+            oneBallRamseteCommands[0].beforeStarting(
+                () -> driveBaseSubsystem.resetOdometry(taxiTrajectories[0].getInitialPose())));
 
     twoBallParallel =
         new ParallelDeadlineGroup(
@@ -111,10 +107,7 @@ public class AutonModes {
             new IntakeForwardCommand(intakeSubsystem));
     twoBallCommand =
         new SequentialCommandGroup(
-            new WaitCommand(Constants.delaytaxi),
-            twoBallParallel,
-            twoBallRamseteCommands[1].beforeStarting(
-                () -> driveBaseSubsystem.resetOdometry(twoBallTrajectories[1].getInitialPose()))
+            new WaitCommand(Constants.delaytaxi), twoBallParallel, twoBallRamseteCommands[1]
             // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem)
             );
   }
@@ -134,7 +127,9 @@ public class AutonModes {
     }
 
     Trajectory[] trajectoryArray;
-    List<Trajectory> trajectoryList = new ArrayList<Trajectory>();  // use list to take in all trajectories, convert it into array later
+    List<Trajectory> trajectoryList =
+        new ArrayList<
+            Trajectory>(); // use list to take in all trajectories, convert it into array later
 
     while (fileScanner.hasNext()) {
       String pathName = "paths/" + fileScanner.nextLine().split("\\.")[0] + ".wpilib.json";
