@@ -71,22 +71,8 @@ public class ShooterPressed extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-
     if (i >= 50) { // 1000 miliseconds delay TODO: Use a CDS method for this when possible
       return true;
-    }
-
-    if(m_ShooterSubsystem.wheelReady()){
-      SmartDashboard.putBoolean("wheelReady", true);
-      //if(i > 0 || m_LimelightSubsystem.calculatePID() == 0.0){
-        m_ShooterSubsystem.runCargo(true,true);
-        m_CDSSubsystem.CDSWheelToggle(false);
-        m_CDSSubsystem.CDSBeltToggle(false);
-        i++;
-        if(i==100){ //Expected to add a 2000ms delay
-          return true;
-       //}
-        }
     }
     return false;
   }
