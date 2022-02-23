@@ -5,8 +5,12 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -16,6 +20,7 @@ import frc.robot.common.hardware.MotorController;
 public class ClimbSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
+  private NetworkTableEntry sbclimbHeight;
   private Joystick m_climbJoystick;
   private MotorController m_climbMotorControllerOne;
   private MotorController m_climbMotorControllerTwo;
@@ -40,6 +45,10 @@ public class ClimbSubsystem extends SubsystemBase {
     m_climbMotorControllerOne.getEncoder().setPosition(0);
 
     m_limitSwitch = new DigitalInput(Constants.LimitSwitchChannel);
+
+    ShuffleboardTab dtTab = Shuffleboard.getTab("ClimbBase");
+
+    sbclimbHeight = dtTab.add("Climb Hight", 0).withSize(2,2).withPosition(0,0).getEntry();
   }
 
   public void toggleClimbEnable() {
@@ -59,6 +68,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public void periodic() {
     SmartDashboard.putNumber("Climb Hight", m_climbMotorControllerOne.getEncoder().getPosition());
+    SmartDashboard.putNumber("Climb Hight Variable", climbHeight);
   }
 
   public boolean getLimitSwitchVal() {
