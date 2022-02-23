@@ -38,7 +38,7 @@ public class CDSSubsystem extends SubsystemBase {
 
     CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
 
-    colorSensors = new ColorSensorMuxed(0, 1, 2);
+    colorSensors = new ColorSensorMuxed(2, 1, 0);
     
     //colorSensorOne = new ColorSensorV3(Constants.colorSensorPort1);
     //colorSensorTwo = new ColorSensorV3(Constants.colorSensorPort2);
@@ -93,9 +93,9 @@ public class CDSSubsystem extends SubsystemBase {
   public boolean[] getSensorStatus() {
     int[] sensorStatuses = colorSensors.getProximities();
 
-    boolean frontStatus = sensorStatuses[0] > 300;
-    boolean middleStatus = sensorStatuses[1] > 450;
-    boolean backStatus = sensorStatuses[2] > 600;
+    boolean backStatus = sensorStatuses[0] > Constants.backSensorActivation;
+    boolean middleStatus = sensorStatuses[1] > Constants.middleSensorActivation;
+    boolean frontStatus = sensorStatuses[2] > Constants.frontSensorActivation;
     boolean[] beamBreakArray = {backStatus, middleStatus, frontStatus};
 
     int ballCount = 0;
@@ -168,6 +168,8 @@ public class CDSSubsystem extends SubsystemBase {
   public String senseColor() {
 
     Color[] colors = colorSensors.getColors();
+
+    // Only sensing colors for first sensor so that we can handle it when it's coming in and not dealing with any other complexities
     double redAmount = colors[0].red;
     double blueAmount = colors[0].blue;
     if (redAmount > blueAmount) {

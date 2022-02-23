@@ -109,6 +109,11 @@ public final class Constants {
     public static final Port colorSensorPort2 = Port.kOnboard;
     public static final boolean competition = false; // false for testing, true for competition
 
+    // How high color sensor output has to be for a ball's prescense to be sensed 
+    public static final int frontSensorActivation = 300;
+    public static final int middleSensorActivation = 450;
+    public static final int backSensorActivation = 600;
+
     //Controller Constants {
         public static final int portNumber0 = 0;
         public static final int portNumber1 = 1;
