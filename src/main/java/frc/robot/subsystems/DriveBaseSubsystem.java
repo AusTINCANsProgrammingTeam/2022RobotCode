@@ -169,13 +169,13 @@ public class DriveBaseSubsystem extends SubsystemBase {
               Constants.leftEncoderDIOone,
               Constants.leftEncoderDIOtwo,
               false,
-              Encoder.EncodingType.k2X); // TODO: confirm correct configuration for encoder
+              Encoder.EncodingType.k1X); // TODO: confirm correct configuration for encoder
       m_extRightEncoder =
           new Encoder(
               Constants.rightEncoderDIOone,
               Constants.rightEncoderDIOtwo,
               true, // invert right external motor because right motors are inverted
-              Encoder.EncodingType.k2X);
+              Encoder.EncodingType.k1X);
 
       m_extLeftEncoder.setDistancePerPulse(
           Constants.pulsesPerRevolution * 2 * Math.PI * Constants.wheelRadius);
