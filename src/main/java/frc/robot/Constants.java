@@ -107,7 +107,7 @@ public final class Constants {
   // Constants for wheel motors
   public static final double wheelRadius =
       3.0125; // radius of wheel, use for calculating angular values
-  public static final double openLoopRampRate = 0.2; // Rate at which the motors reach maximum speed
+  public static final double openLoopRampRate = 0.2; // Rate at which the motors reach maximum speed; TODO: tune for optimal performance
   public static final double gearRatio = 10.75; // 10.75 : 1 gear ratio <--- kitbot
   // 10.75 motor rotations : 1 wheel rotation
   public static final double inchesInMeter = 39.3701;
@@ -125,7 +125,7 @@ public final class Constants {
   public static final int driveLeftRearIndex = 1;
   public static final int driveRightFrontIndex = 2;
   public static final int driveRightRearIndex = 3;
-  public static final int driveBaseCurrentLimit = 20;   // standard is 20, TODO: tune it for best performance
+  public static final int driveBaseCurrentLimit = 40;   // standard is 40
 
   // drive base pid values
   public static final double[] driveRightPID = {0.00035, 0.0000008, 0};
