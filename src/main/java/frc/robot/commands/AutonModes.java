@@ -95,7 +95,7 @@ public class AutonModes {
     threeRamseteCommands = getRamseteCommands(threeBallTrajectories);
     fourRamseteCommands = getRamseteCommands(fourBallTrajectories);
 
-    initializeAllCommandGroups();
+    initializeAllOtherGroups(); // already initialized taxi command, now initialize others
   }
 
   private void initializeTaxiMode() {
@@ -106,10 +106,8 @@ public class AutonModes {
                 () -> driveBaseSubsystem.resetOdometry(taxiTrajectories[0].getInitialPose())));
   }
 
-  private void initializeAllCommandGroups() {
+  private void initializeAllOtherGroups() {
     // TODO: the wait time should not be a constant, should be configurable
-
-    initializeTaxiMode();
 
     oneBallCommand =
         new SequentialCommandGroup(
@@ -137,6 +135,9 @@ public class AutonModes {
             new WaitCommand(Constants.delayshot),
             // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem)
             new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true));
+
+    // threeBallCommand
+    // fourBallCommand
   }
 
   private Trajectory[] getTrajectories(String routeString) {
@@ -168,6 +169,7 @@ public class AutonModes {
         try {
           trajectory = TrajectoryUtil.fromPathweaverJson(path);
           trajectoryList.add(trajectory);
+          System.out.println("Success: " + pathName + " created.");
         } catch (IOException e) {
           System.out.println("Trajectory: " + pathName + " not created.");
         }

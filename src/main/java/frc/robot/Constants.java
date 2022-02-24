@@ -125,7 +125,7 @@ public final class Constants {
   public static final int driveLeftRearIndex = 1;
   public static final int driveRightFrontIndex = 2;
   public static final int driveRightRearIndex = 3;
-  public static final int driveBaseCurrentLimit = 40;
+  public static final int driveBaseCurrentLimit = 20;   // standard is 20, TODO: tune it for best performance
 
   // drive base pid values
   public static final double[] driveRightPID = {0.00035, 0.0000008, 0};
