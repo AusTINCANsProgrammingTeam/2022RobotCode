@@ -56,6 +56,20 @@ public class AutonModes {
 
   private Command resetodometryCommand;
 
+  // this constructor is the default, only needs driveBaseSubsystem, useful when only wanting to
+  // test taxi without worrying about other subsystems
+  public AutonModes(DriveBaseSubsystem d) {
+    this.driveBaseSubsystem = d;
+
+    // parameters are route names (names based on pathweaver, they are located under Auton file)
+    taxiTrajectories = getTrajectories("Taxi");
+
+    // create ramsete commands using the trajectories
+    taxiRamseteCommands = getRamseteCommands(taxiTrajectories);
+
+    initializeTaxiMode();
+  }
+
   public AutonModes(
       DriveBaseSubsystem d,
       ShooterSubsystem s,
@@ -63,34 +77,39 @@ public class AutonModes {
       CDSSubsystem c,
       IntakeSubsystem i) {
 
-    this.driveBaseSubsystem = d;
+    this(d);
     this.shooterSubsystem = s;
     this.limelightSubsystem = l;
     this.cdsSubsystem = c;
     this.intakeSubsystem = i;
 
     // parameters are route names (names based on pathweaver, they are located under Auton file)
-    taxiTrajectories = getTrajectories("Taxi");
     oneBallTrajectories = getTrajectories("OneBall");
     twoBallTrajectories = getTrajectories("TwoBall");
     threeBallTrajectories = getTrajectories("ThreeBall");
     fourBallTrajectories = getTrajectories("FourBall");
 
     // create ramsete commands using the trajectories
-    taxiRamseteCommands = getRamseteCommands(taxiTrajectories);
     oneBallRamseteCommands = getRamseteCommands(oneBallTrajectories);
     twoBallRamseteCommands = getRamseteCommands(twoBallTrajectories);
     threeRamseteCommands = getRamseteCommands(threeBallTrajectories);
     fourRamseteCommands = getRamseteCommands(fourBallTrajectories);
+
+    initializeAllCommandGroups();
   }
 
-  private void initializeCommandGroups() {
-    // TODO: the wait time should not be a constant, should be configurable
+  private void initializeTaxiMode() {
     taxiCommand =
         new SequentialCommandGroup(
             new WaitCommand(Constants.delaytaxi),
             taxiRamseteCommands[0].beforeStarting(
                 () -> driveBaseSubsystem.resetOdometry(taxiTrajectories[0].getInitialPose())));
+  }
+
+  private void initializeAllCommandGroups() {
+    // TODO: the wait time should not be a constant, should be configurable
+
+    initializeTaxiMode();
 
     oneBallCommand =
         new SequentialCommandGroup(
@@ -138,21 +157,23 @@ public class AutonModes {
         new ArrayList<
             Trajectory>(); // use list to take in all trajectories, convert it into array later
 
-    while (fileScanner.hasNext()) {
-      String pathName = "paths/" + fileScanner.nextLine().split("\\.")[0] + ".wpilib.json";
-      Path path =
-          Filesystem.getDeployDirectory()
-              .toPath()
-              .resolve(pathName); // goes to scr/main/deploy/paths
-      Trajectory trajectory;
-      try {
-        trajectory = TrajectoryUtil.fromPathweaverJson(path);
-        trajectoryList.add(trajectory);
-      } catch (IOException e) {
-        System.out.println("Trajectory: " + pathName + " not created.");
+    if (fileScanner != null) {
+      while (fileScanner.hasNext()) {
+        String pathName = "paths/" + fileScanner.nextLine().split("\\.")[0] + ".wpilib.json";
+        Path path =
+            Filesystem.getDeployDirectory()
+                .toPath()
+                .resolve(pathName); // goes to scr/main/deploy/paths
+        Trajectory trajectory;
+        try {
+          trajectory = TrajectoryUtil.fromPathweaverJson(path);
+          trajectoryList.add(trajectory);
+        } catch (IOException e) {
+          System.out.println("Trajectory: " + pathName + " not created.");
+        }
       }
+      fileScanner.close();
     }
-    fileScanner.close();
 
     Trajectory[] trajectoryArray;
     trajectoryArray = new Trajectory[trajectoryList.size()];

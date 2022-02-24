@@ -18,6 +18,7 @@ import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
+import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShooterHeld;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -26,11 +27,11 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
- // This class is where the bulk of the robot should be declared. Since Command-based is a
- // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- // perieodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- // subsystems, commands, and button mappings) should be declared here. 
- 
+// This class is where the bulk of the robot should be declared. Since Command-based is a
+// "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+// perieodic methods (other than the scheduler calls). Instead, the structure of the robot
+// (including
+// subsystems, commands, and button mappings) should be declared here.
 
 public class RobotContainer {
   public static ShuffleboardTab debugTab;
@@ -64,7 +65,7 @@ public class RobotContainer {
 
   // auton
   private AutonModes autonModes;
-  private Command chosenAutonMode;
+  private Command chosenAutonMode = null;
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
@@ -140,7 +141,7 @@ public class RobotContainer {
       driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
     }
-    if(CDSSubsystem != null && shooterSubsystem != null){
+    if (CDSSubsystem != null && shooterSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
     }
     if (intakeSubsystem != null) {
@@ -184,17 +185,17 @@ public class RobotContainer {
           new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
     }
 
-    //CDS
+    // CDS
     if (CDSSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
       CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
-      //CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
-      //CDSSubsystem.senseColor();
+      // CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+      // CDSSubsystem.senseColor();
     }
-    
+
     if (CDSForwardCommand != null && outtakeCommand != null) {
       buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
-      //buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
+      // buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
       buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
     }
 
@@ -217,17 +218,31 @@ public class RobotContainer {
   }
 
   private void initAuton() {
-    autonModes =
-        new AutonModes(
-            driveBaseSubsystem,
-            shooterSubsystem,
-            limelightSubsystem,
-            CDSSubsystem,
-            intakeSubsystem);
+    if (driveBaseSubsystem != null) {
+      if (shooterSubsystem != null
+          && limelightSubsystem != null
+          && CDSSubsystem != null
+          && intakeSubsystem != null) {
+        autonModes =
+            new AutonModes(
+                driveBaseSubsystem,
+                shooterSubsystem,
+                limelightSubsystem,
+                CDSSubsystem,
+                intakeSubsystem);
+      } else {
+        autonModes =
+            new AutonModes(
+                driveBaseSubsystem); // default constructor, if other subsystems are disabled only
+        // use drivebase for taxi
+      }
 
-    // TODO: add a sendable chooser
-    String commandName = "taxi";
-    chosenAutonMode = autonModes.getChosenCommand(commandName);
+      // TODO: add a sendable chooser
+      String commandName = "taxi";
+      chosenAutonMode = autonModes.getChosenCommand(commandName);
+    } else {
+      chosenAutonMode = null;
+    }
   }
 
   // TODO: create get methods for other subsystems to pass into TabContainer, or find a more
