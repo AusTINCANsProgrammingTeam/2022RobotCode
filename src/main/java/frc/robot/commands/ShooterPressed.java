@@ -50,7 +50,7 @@ public class ShooterPressed extends CommandBase {
       // Otherwise, alignment is checked.
       if (i > 0 || !LLEnabled || m_LimelightSubsystem.calculatePID() == 0.0) {
         i++;
-        m_ShooterSubsystem.runCargo(true, true);
+        m_ShooterSubsystem.runCargo(true, false);
         m_ShooterSubsystem.setCargoBoolean(true);
       }
       m_ShooterSubsystem.updateIdelay(i);
