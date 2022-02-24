@@ -179,7 +179,6 @@ public class RobotContainer {
   // it to a {@link
   // edu.wpi.first.wpilibj2.command.button.JoystickButton}.
   private void configureButtonBindings() {
-
     // Intake
     if (intakeForwardCommand != null && intakeReverseCommand != null) {
       buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
@@ -213,7 +212,6 @@ public class RobotContainer {
             new InstantCommand(climbSubsystem::toggleClimbEnable, climbSubsystem));
       }
     }
-
   }
 
   private void initializeTrajectories() {

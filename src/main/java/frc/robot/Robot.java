@@ -20,6 +20,7 @@ public class Robot extends TimedRobot {
   private RobotContainer robotContainer;
   private TabContainer tabContainer;
   private int AxisCount;
+  private int ButtonCount;
   private int Wait;
 
   // This function is run when the robot is first started up and should be used for any
@@ -53,12 +54,13 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     if (Wait == 100) {
       Wait = 0;
-      for (int i = 0; i < DriverStation.kJoystickPorts; i++) {
-        AxisCount = DriverStation.getStickAxisCount(i);
-        System.out.printf("getStickAxisCount %d Joystick %d\n ", AxisCount, i);
-      }
+        AxisCount = DriverStation.getStickAxisCount(Constants.portNumber0);
+        ButtonCount = DriverStation.getStickButtonCount(Constants.portNumber0);
+        AxisCount = DriverStation.getStickAxisCount(Constants.portNumber1);
+        ButtonCount = DriverStation.getStickButtonCount(Constants.portNumber1);
+        System.out.printf("AxisCount %d ButtonCount %d\n ", AxisCount, ButtonCount);
     } else {
-      Wait++;
+      Wait ++;
     }
   }
 
