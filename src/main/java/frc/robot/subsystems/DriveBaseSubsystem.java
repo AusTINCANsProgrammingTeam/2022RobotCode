@@ -49,13 +49,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private Encoder m_LEncoderForSim;
   private Encoder m_REncoderForSim;
 
-  // external encoders
-  private Encoder m_extRightEncoder;
-  private Encoder m_extLeftEncoder;
-
   // internal encoders
-  private RelativeEncoder m_internalLeftEncoder;
-  private RelativeEncoder m_internalRightEncoder;
+  private RelativeEncoder m_leftEncoder;
+  private RelativeEncoder m_rightEncoder;
   private SimpleMotorFeedforward m_sMotorFeedforward;
 
   private boolean usingExternal = false;
@@ -123,8 +119,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
     if (Robot.isSimulation()) {
       m_gyroSim = new AnalogGyroSim(m_gyro1);
       if (usingExternal == true) {
-        m_leftEncoderSim = new EncoderSim(m_extLeftEncoder);
-        m_rightEncoderSim = new EncoderSim(m_extRightEncoder);
+        // m_leftEncoderSim = new EncoderSim(m_leftEncoder);   // no "Encoder" object anymore
+        // m_rightEncoderSim = new EncoderSim(m_rightEncoder);
       } else {
         m_leftEncoderSim = new EncoderSim(m_LEncoderForSim);
         m_rightEncoderSim = new EncoderSim(m_REncoderForSim);
@@ -164,37 +160,28 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private void initializeEncoders() {
     if (usingExternal) {
       // external encoders
-      m_extLeftEncoder =
-          new Encoder(
-              Constants.leftEncoderDIOone,
-              Constants.leftEncoderDIOtwo,
-              false,
-              Encoder.EncodingType.k1X); // TODO: confirm correct configuration for encoder
-      m_extRightEncoder =
-          new Encoder(
-              Constants.rightEncoderDIOone,
-              Constants.rightEncoderDIOtwo,
-              true, // invert right external motor because right motors are inverted
-              Encoder.EncodingType.k1X);
-
-      m_extLeftEncoder.setDistancePerPulse(
-          Constants.pulsesPerRevolution * 2 * Math.PI * Constants.wheelRadius);
-      m_extRightEncoder.setDistancePerPulse(
-          Constants.pulsesPerRevolution * 2 * Math.PI * Constants.wheelRadius);
+      m_leftEncoder =
+          m_motorControllers[Constants.driveLeftFrontIndex]
+              .getSparkMax()
+              .getAlternateEncoder(Constants.encoderCountsPerRev);
+      m_rightEncoder =
+          m_motorControllers[Constants.driveRightFrontIndex]
+              .getSparkMax()
+              .getAlternateEncoder(Constants.encoderCountsPerRev);
 
     } else {
       // internal encoders
-      m_internalLeftEncoder = m_motorControllers[Constants.driveLeftFrontIndex].getEncoder();
-      m_internalRightEncoder = m_motorControllers[Constants.driveRightFrontIndex].getEncoder();
+      m_leftEncoder = m_motorControllers[Constants.driveLeftFrontIndex].getEncoder();
+      m_rightEncoder = m_motorControllers[Constants.driveRightFrontIndex].getEncoder();
       // no need to invert internal encoders, automatic
 
       // calculate circumference then convert to meters
       // wheel radius in inches, want to convert meters
       // divide by gear ratio to get in terms of motor rotations when multiplied to number of motor
       // rotations
-      m_internalLeftEncoder.setPositionConversionFactor(
+      m_leftEncoder.setPositionConversionFactor(
           2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter / Constants.gearRatio);
-      m_internalRightEncoder.setPositionConversionFactor(
+      m_rightEncoder.setPositionConversionFactor(
           2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter / Constants.gearRatio);
     }
   }
@@ -202,22 +189,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // update odometry
-
-    // checks which encoders are being used: external or internal
-    if (usingExternal) {
-      m_odometry.update(
-          m_gyro.getRotation2d(), m_extLeftEncoder.getDistance(), m_extRightEncoder.getDistance());
-    } else {
-      // internal
-      // automatically applies conversion factor
-      double leftPosition = m_internalLeftEncoder.getPosition();
-      double rightPosition = m_internalRightEncoder.getPosition();
-
-      SmartDashboard.putNumber("Left position", leftPosition);
-      SmartDashboard.putNumber("Right position", rightPosition);
-
-      m_odometry.update(m_gyro.getRotation2d(), leftPosition, rightPosition);
-    }
+    double leftPosition = m_leftEncoder.getPosition();
+    double rightPosition = m_rightEncoder.getPosition();
+    m_odometry.update(m_gyro.getRotation2d(), leftPosition, rightPosition);
 
     // Update the smart dashboard here
 
@@ -302,13 +276,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
   }
 
   public void resetEncoders() {
-    if (usingExternal) {
-      m_extLeftEncoder.reset();
-      m_extRightEncoder.reset();
-    } else {
-      m_internalLeftEncoder.setPosition(0);
-      m_internalRightEncoder.setPosition(0);
-    }
+    m_leftEncoder.setPosition(0);
+    m_rightEncoder.setPosition(0);
   }
 
   public void resetOdometry(Pose2d pose) {
@@ -376,13 +345,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   public double[] getPositions() {
     double[] positions = new double[2];
-    if (usingExternal) {
-      positions[0] = m_extLeftEncoder.getDistance();
-      positions[1] = m_extRightEncoder.getDistance();
-    } else {
-      positions[0] = m_internalLeftEncoder.getPosition();
-      positions[1] = m_internalRightEncoder.getPosition();
-    }
+    positions[0] = m_leftEncoder.getPosition(); // in meters
+    positions[1] = m_rightEncoder.getPosition();
 
     return positions;
   }

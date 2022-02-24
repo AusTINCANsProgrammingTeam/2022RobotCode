@@ -107,6 +107,8 @@ public final class Constants {
   // Constants for wheel motors
   public static final double wheelRadius =
       3.0125; // radius of wheel, use for calculating angular values
+  public static final double openLoopRampRate =
+      0.2; //Rate at which the motors reach maximum speed
   public static final double gearRatio = 10.75; // 10.75 : 1 gear ratio <--- kitbot
   // 10.75 motor rotations : 1 wheel rotation
   public static final double inchesInMeter = 39.3701;
@@ -160,13 +162,7 @@ public final class Constants {
   // Encoder Constants
   // TODO: Replace these with the correct ports
   public static final boolean usingExternal = true;
-
-  public static final int leftEncoderDIOone = 0;
-  public static final int leftEncoderDIOtwo = 1;
-  public static final int rightEncoderDIOone = 2;
-  public static final int rightEncoderDIOtwo = 3;
-
-  public static final int pulsesPerRevolution = 2048;
+  public static final int encoderCountsPerRev = 8192;
 
   // Intake Contstants
   public static final int intakeMotorOneID = 1;
@@ -216,13 +212,15 @@ public final class Constants {
   public static final int POVright = 90;
   public static final int POVleft = 270;
 
-  // DriveBase Subsystem
-  public static final int leftJoystickX =
-      0; // Unused but will easily be accidentally activated if used
+
+  // Joystick
+
+  // Unused but will easily be accidentally activated if used
+  public static final int leftJoystickX =0;
   public static final int leftJoystickY = 1; // arcade forward / tank left turning
   public static final int rightJoystickX = 2; // arcade turning
   public static final int rightJoystickY = 3; // tank right turning
-  // }
+
 
   // Shooter Constants
   public static final class Shooter {
@@ -252,6 +250,7 @@ public final class Constants {
     public static final double kMinOutput = 1;
   }
 
+  
   // Climb Constants
   public static final int ClimbMotorOne = 5;
   public static final int ClimbMotorTwo = 12;

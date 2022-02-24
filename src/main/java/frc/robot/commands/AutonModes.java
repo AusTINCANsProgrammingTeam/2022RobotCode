@@ -103,7 +103,7 @@ public class AutonModes {
                 true), // also has a time delay of 2-3 seconds
             new WaitCommand(Constants.delaytaxi),
             oneBallRamseteCommands[0].beforeStarting(
-                () -> driveBaseSubsystem.resetOdometry(taxiTrajectories[0].getInitialPose())));
+                () -> driveBaseSubsystem.resetOdometry(oneBallTrajectories[0].getInitialPose())));
 
     twoBallParallel =
         new ParallelDeadlineGroup(
@@ -114,7 +114,7 @@ public class AutonModes {
         new SequentialCommandGroup(
             new WaitCommand(Constants.delaytaxi),
             twoBallParallel,
-            twoBallRamseteCommands[1],
+            twoBallRamseteCommands[1], // goes to fender
             new WaitCommand(Constants.delayshot),
             // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem)
             new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true));
@@ -134,7 +134,6 @@ public class AutonModes {
       System.out.println("Scanner for file: " + "Autos/" + routeName + " unable to be created");
     }
 
-    Trajectory[] trajectoryArray;
     List<Trajectory> trajectoryList =
         new ArrayList<
             Trajectory>(); // use list to take in all trajectories, convert it into array later
@@ -155,6 +154,7 @@ public class AutonModes {
     }
     fileScanner.close();
 
+    Trajectory[] trajectoryArray;
     trajectoryArray = new Trajectory[trajectoryList.size()];
     trajectoryArray = trajectoryList.toArray(trajectoryArray);
     return trajectoryArray;
