@@ -149,9 +149,6 @@ public final class Constants {
 
   // Encoder constants
 
-  // Controller modes
-  public static final boolean oneController = true;
-
   // TODO: Replace these with the correct ports
   public static final int leftEncoderDIOone = 0;
   public static final int leftEncoderDIOtwo = 1;
@@ -175,44 +172,51 @@ public final class Constants {
 
   // spotless:off
   // Controller Constants {
-  public static final int portNumber0 = 0;
-  public static final int portNumber1 = 1;
 
-  // Buttons not in use
-  public static final int XButton = 1;
-  public static final int AButton = 2;
-  public static final int BButton = 3;
-  public static final int YButton = 4;
+    // Controller modes
+    public static final boolean TestController = false;
+    public static final boolean CompititionController = true;
 
-  // Intake Subsystem
-  public static final int LBumper = 5; // Intake forward
-  public static final int RBumper = 6; // Intake reverse
+    //Port Numbers
+    public static final int portNumber0 = 0;
+    public static final int portNumber1 = 1;
 
-  // CDS Subsystem
-  public static final int LTriggerButton = 7; // CDS forward
-  public static final int RTriggerButton = 8; // CDS reverse
+    // Buttons not in use
+    public static final int XButton = 1;
+    public static final int AButton = 2;
+    public static final int BButton = 3;
+    public static final int YButton = 4;
 
-  // Shooter Prime/LimeLight
-  public static final int backButton = 9; // Button starts ShooterPrime
-  public static final int startButton = 10; // Button to align LimeLight
+    // Intake Subsystem
+    public static final int LBumper = 5; // Intake forward
+    public static final int RBumper = 6; // Intake reverse
 
-  // Shooter Subsystem mode change
-  public static final int LJoystickButton = 11; // Button for Shooter mode
-  public static final int RJoystickButton = 12; // BUtton for Shooter mode
+    // CDS Subsystem
+    public static final int LTriggerButton = 7; // CDS forward
+    public static final int RTriggerButton = 8; // CDS reverse
 
-  // POV's not in use
-  public static final int POVup = 0;
-  public static final int POVdown = 180;
-  public static final int POVright = 90;
-  public static final int POVleft = 270;
+    // Shooter Prime/LimeLight
+    public static final int backButton = 9; // Button starts ShooterPrime
+    public static final int startButton = 10; // Button to align LimeLight
 
-  // DriveBase Subsystem
-  public static final int leftJoystickX =
-      0; // Unused but will easily be accidentally activated if used
-  public static final int leftJoystickY = 1; // arcade forward / tank left turning
-  public static final int rightJoystickX = 2; // arcade turning
-  public static final int rightJoystickY = 3; // tank right turning
+    // Shooter Subsystem mode change
+    public static final int LJoystickButton = 11; // Button for Shooter mode
+    public static final int RJoystickButton = 12; // BUtton for Shooter mode
+
+    // POV's not in use
+    public static final int POVup = 0;
+    public static final int POVdown = 180;
+    public static final int POVright = 90;
+    public static final int POVleft = 270;
+
+    // DriveBase Subsystem
+    public static final int leftJoystickX =
+        0; // Unused but will easily be accidentally activated if used
+    public static final int leftJoystickY = 1; // arcade forward / tank left turning
+    public static final int rightJoystickX = 2; // arcade turning
+    public static final int rightJoystickY = 3; // tank right turning
   // }
+  // spotless:on
 
   // Shooter Constants
   public static final class Shooter {

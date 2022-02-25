@@ -23,8 +23,6 @@ public class ClimbSubsystem extends SubsystemBase {
   private boolean toggleClimb;
   private double climbHeight;
 
-  // TODO: maybe add servos
-
   public ClimbSubsystem(Joystick joystick) {
     m_climbJoystick = joystick;
     toggleClimb = false;

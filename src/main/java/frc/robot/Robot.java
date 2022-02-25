@@ -54,13 +54,13 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     if (Wait == 100) {
       Wait = 0;
-        AxisCount = DriverStation.getStickAxisCount(Constants.portNumber0);
-        ButtonCount = DriverStation.getStickButtonCount(Constants.portNumber0);
-        AxisCount = DriverStation.getStickAxisCount(Constants.portNumber1);
-        ButtonCount = DriverStation.getStickButtonCount(Constants.portNumber1);
-        System.out.printf("AxisCount %d ButtonCount %d\n ", AxisCount, ButtonCount);
+      AxisCount = DriverStation.getStickAxisCount(Constants.portNumber0);
+      ButtonCount = DriverStation.getStickButtonCount(Constants.portNumber0);
+      AxisCount = DriverStation.getStickAxisCount(Constants.portNumber1);
+      ButtonCount = DriverStation.getStickButtonCount(Constants.portNumber1);
+      System.out.printf("AxisCount %d ButtonCount %d\n ", AxisCount, ButtonCount);
     } else {
-      Wait ++;
+      Wait++;
     }
   }
 

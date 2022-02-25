@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
 import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.ClimbEnable;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
@@ -62,6 +63,7 @@ public class RobotContainer {
   private IntakeForwardCommand intakeForwardCommand;
   private IntakeReverseCommand intakeReverseCommand;
   private ClimbCommand climbCommand;
+  private ClimbEnable climbEnable;
 
   // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
   private ShooterHeld shooterHeld;
@@ -132,9 +134,10 @@ public class RobotContainer {
             }
           case "ClimbSubsystem":
             {
-              if (!Constants.oneController) {
+              if (Constants.CompititionController) {
                 climbSubsystem = new ClimbSubsystem(operatorJoystick);
                 climbCommand = new ClimbCommand(climbSubsystem);
+                climbEnable = new ClimbEnable(climbSubsystem);
                 System.out.println("Climb enabled");
               }
               break;
@@ -179,37 +182,58 @@ public class RobotContainer {
   // it to a {@link
   // edu.wpi.first.wpilibj2.command.button.JoystickButton}.
   private void configureButtonBindings() {
-    // Intake
-    if (intakeForwardCommand != null && intakeReverseCommand != null) {
-      buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
-      buttons[Constants.RTriggerButton].whileHeld(intakeReverseCommand);
+
+    if (Constants.TestController) {
+      // Intake
+      if (intakeForwardCommand != null && intakeReverseCommand != null) {
+        buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
+        buttons[Constants.RTriggerButton].whileHeld(intakeReverseCommand);
+      }
+
+      // Shooter
+      if (shooterSubsystem != null && shooterHeld != null) {
+        buttons[Constants.backButton].whenPressed(shooterHeld);
+        buttons[Constants.LJoystickButton].whenPressed(
+            new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
+        buttons[Constants.RJoystickButton].whenPressed(
+            new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
+      }
+
+      if (CDSForwardCommand != null && CDSReverseCommand != null) {
+        buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
+        buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
+        // CDSSubsystem.getAllianceColor();
+        CDSSubsystem.senseColor();
+      }
+
+      // Limelight
+      if (limelightAlign != null) {
+        buttons[Constants.startButton].whenPressed(limelightAlign);
+      }
+
+      if (climbSubsystem != null) {}
     }
 
-    // Shooter
-    if (shooterSubsystem != null && shooterHeld != null) {
-      buttons[Constants.backButton].whenPressed(shooterHeld);
-      buttons[Constants.LJoystickButton].whenPressed(
-          new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
-      buttons[Constants.RJoystickButton].whenPressed(
-          new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
-    }
+    if (Constants.CompititionController) {
+      if (shooterSubsystem != null && shooterHeld != null) {
+        buttons[Constants.LBumper].whileHeld(shooterHeld);
+        buttons[Constants.LTriggerButton].whileHeld(
+            shooterHeld.beforeStarting(
+                () -> shooterSubsystem.setAimMode(Constants.AimModes.LOW.ordinal())));
+      }
 
-    if (CDSForwardCommand != null && CDSReverseCommand != null) {
-      buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
-      buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
-      // CDSSubsystem.getAllianceColor();
-      CDSSubsystem.senseColor();
-    }
+      if (intakeForwardCommand != null && intakeReverseCommand != null) {
+        buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
+        buttons[Constants.RBumper].whileHeld(intakeReverseCommand);
+      }
 
-    // Limelight
-    if (limelightAlign != null) {
-      buttons[Constants.startButton].whenPressed(limelightAlign);
-    }
+      if (climbSubsystem != null) {
+        buttons2[Constants.startButton].whenPressed(climbEnable);
+      }
 
-    if (climbSubsystem != null) {
-      if (!Constants.oneController) {
-        buttons2[Constants.startButton].whenPressed(
-            new InstantCommand(climbSubsystem::toggleClimbEnable, climbSubsystem));
+      if (CDSForwardCommand != null && CDSReverseCommand != null) {
+        buttons2[Constants.RBumper].whileHeld(CDSReverseCommand);
+        buttons2[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
       }
     }
   }
