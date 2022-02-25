@@ -24,6 +24,7 @@ import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
+import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShooterHeld;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -33,13 +34,12 @@ import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import java.io.IOException;
 import java.nio.file.Path;
-import frc.robot.commands.OuttakeCommand;
 
- // This class is where the bulk of the robot should be declared. Since Command-based is a
- // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- // perieodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- // subsystems, commands, and button mappings) should be declared here. 
- 
+// This class is where the bulk of the robot should be declared. Since Command-based is a
+// "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+// perieodic methods (other than the scheduler calls). Instead, the structure of the robot
+// (including
+// subsystems, commands, and button mappings) should be declared here.
 
 public class RobotContainer {
   public static ShuffleboardTab debugTab;
@@ -152,7 +152,7 @@ public class RobotContainer {
       driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
     }
-    if(CDSSubsystem != null && shooterSubsystem != null){
+    if (CDSSubsystem != null && shooterSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
     }
     if (intakeSubsystem != null) {
@@ -197,16 +197,16 @@ public class RobotContainer {
             new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
       }
 
-    //CDS
-    if (CDSSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-      CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
-    }
-    
-    if (CDSForwardCommand != null && outtakeCommand != null) {
-      buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
-      buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
-    }
+      // CDS
+      if (CDSSubsystem != null) {
+        CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+        CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
+      }
+
+      if (CDSForwardCommand != null && outtakeCommand != null) {
+        buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
+        buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
+      }
 
       // Limelight
       if (limelightAlign != null) {

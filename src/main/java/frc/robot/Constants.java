@@ -173,7 +173,6 @@ public final class Constants {
   public static final int middleSensorActivation = 450;
   public static final int backSensorActivation = 600;
 
-
   // spotless:off
   // Controller Constants {
 

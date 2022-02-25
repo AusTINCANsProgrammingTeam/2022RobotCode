@@ -4,13 +4,14 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class OuttakeCommand extends CommandBase {
   /** Creates a new OuttakeCommand. */
   private final CDSSubsystem CDSSubsystem;
+
   private final IntakeSubsystem intakeSubsystem;
 
   public OuttakeCommand(IntakeSubsystem mIntakeSubsystem, CDSSubsystem mCDSSubsystem) {
@@ -46,4 +47,3 @@ public class OuttakeCommand extends CommandBase {
     return false;
   }
 }
-
