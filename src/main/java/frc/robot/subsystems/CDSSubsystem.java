@@ -27,9 +27,6 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSBeltController;
   private MotorController CDSWheelControllerOne;
   private MotorController CDSWheelControllerTwo;
-  //private ColorSensorV3 colorSensorOne;
-  //private ColorSensorV3 colorSensorTwo;
-  //private DigitalInput backBeamBreak;
   private String allianceColor;
   private boolean runningCDS = false;
   private int setpointIndex;
