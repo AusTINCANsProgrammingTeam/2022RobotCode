@@ -76,8 +76,6 @@ public class RobotContainer {
   private int trajectoryIndex = 0;
   private Trajectory trajectory;
 
-  private int AxisCount;
-
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
     debugTab = Shuffleboard.getTab("debug");
