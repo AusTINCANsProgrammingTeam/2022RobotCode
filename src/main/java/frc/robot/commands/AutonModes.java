@@ -15,13 +15,8 @@ import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class AutonModes {
 
@@ -32,18 +27,22 @@ public class AutonModes {
   private CDSSubsystem cdsSubsystem;
   private IntakeSubsystem intakeSubsystem;
 
+  private boolean allSubsystemsEnabled;
+
   // Trajectories
   // private Trajectory[] taxiTrajectories;
-  private Trajectory[] taxiTrajectory = new Trajectory[1];
-  private Trajectory[] oneBallTrajectories;
-  private Trajectory[] twoBallTrajectories;
+  private Trajectory taxiTrajectory;
+  private Trajectory oneBallTrajectory;
+  private Trajectory twoBallTrajectory;
+
   private Trajectory[] threeBallTrajectories;
   private Trajectory[] fourBallTrajectories;
 
   // Ramsete Commands, commands for following paths from pathweaver
-  private RamseteCommand[] taxiRamseteCommand;
-  private RamseteCommand[] oneBallRamseteCommands;
-  private RamseteCommand[] twoBallRamseteCommands;
+  private RamseteCommand taxiRamseteCommand;
+  private RamseteCommand oneBallRamseteCommand;
+  private RamseteCommand twoBallRamseteCommand;
+
   private RamseteCommand[] threeRamseteCommands;
   private RamseteCommand[] fourRamseteCommands;
 
@@ -55,21 +54,21 @@ public class AutonModes {
   private Command threeBallCommand;
   private Command fourBallCommand;
 
-  private Command resetodometryCommand;
-
   // this constructor is the default, only needs driveBaseSubsystem, useful when only wanting to
   // test taxi without worrying about other subsystems
   public AutonModes(DriveBaseSubsystem d) {
     this.driveBaseSubsystem = d;
 
+    allSubsystemsEnabled = false;
+
     // parameters are route names (names based on pathweaver, they are located under Auton file)
-    // taxiTrajectories = getTrajectories("Taxi");
-    initializeTaxiTrajectory();
+    initializeTrajectories();
 
     // create ramsete commands using the trajectories
-    taxiRamseteCommand = getRamseteCommands(taxiTrajectory);
+    initializeRamseteCommands();
 
-    initializeTaxiMode();
+    // initialize the command groups
+    initializeCommandGroups();
   }
 
   public AutonModes(
@@ -79,154 +78,127 @@ public class AutonModes {
       CDSSubsystem c,
       IntakeSubsystem i) {
 
-    this(d);
+    this.driveBaseSubsystem = d;
     this.shooterSubsystem = s;
     this.limelightSubsystem = l;
     this.cdsSubsystem = c;
     this.intakeSubsystem = i;
 
+    allSubsystemsEnabled = true;
+
     // parameters are route names (names based on pathweaver, they are located under Auton file)
-    oneBallTrajectories = getTrajectories("OneBall");
-    twoBallTrajectories = getTrajectories("TwoBall");
-    threeBallTrajectories = getTrajectories("ThreeBall");
-    fourBallTrajectories = getTrajectories("FourBall");
+    initializeTrajectories();
 
     // create ramsete commands using the trajectories
-    oneBallRamseteCommands = getRamseteCommands(oneBallTrajectories);
-    twoBallRamseteCommands = getRamseteCommands(twoBallTrajectories);
-    threeRamseteCommands = getRamseteCommands(threeBallTrajectories);
-    fourRamseteCommands = getRamseteCommands(fourBallTrajectories);
+    initializeRamseteCommands();
 
-    initializeAllOtherGroups(); // already initialized taxi command, now initialize others
+    // initialize the command groups
+    initializeCommandGroups();
   }
 
-  public void initializeTaxiTrajectory() {
-    String pathName = "paths/TaxiOut.wpilib.json";
+  private Trajectory getTrajectory(String pathName) {
+    Trajectory t = null;
     Path path =
         Filesystem.getDeployDirectory().toPath().resolve(pathName); // goes to scr/main/deploy/paths
     try {
-      taxiTrajectory[0] = TrajectoryUtil.fromPathweaverJson(path);
+      t = TrajectoryUtil.fromPathweaverJson(path);
       System.out.println("Success: " + pathName + " created.");
     } catch (IOException e) {
       System.out.println("Trajectory: " + pathName + " not created.");
     }
+    return t;
   }
 
-  public void initializeOtherTrajectories() {}
+  private RamseteCommand getRamseteCommand(Trajectory trajectory) {
+    RamseteCommand ramseteCommand =
+        new RamseteCommand(
+            trajectory,
+            driveBaseSubsystem::getPose,
+            new RamseteController(
+                Constants.ramseteB, Constants.ramseteZeta), // ramsete follower to follow trajectory
+            Constants.driveKinematics,
+            driveBaseSubsystem::acceptWheelSpeeds,
+            driveBaseSubsystem);
 
-  private void initializeTaxiMode() {
+    return ramseteCommand;
+  }
+
+  private void initializeTrajectories() {
+    String pathName;
+
+    pathName = "paths/TaxiOut.wpilib.json";
+    taxiTrajectory = getTrajectory(pathName);
+
+    if (allSubsystemsEnabled) {
+
+      pathName = "paths/TaxiOutFromFender.wpilib.json";
+      oneBallTrajectory = getTrajectory(pathName);
+
+      pathName = "paths/TaxiOutToGrabBall.wpilib.json";
+      twoBallTrajectory = getTrajectory(pathName);
+
+      // threeBallTrajectory
+      // fourBallTrajectory
+    }
+  }
+
+  private void initializeRamseteCommands() {
+    taxiRamseteCommand = getRamseteCommand(taxiTrajectory);
+
+    if (allSubsystemsEnabled) {
+      oneBallRamseteCommand = getRamseteCommand(oneBallTrajectory);
+
+      twoBallRamseteCommand = getRamseteCommand(twoBallTrajectory);
+
+      // threeBallRamseteCommand
+      // fourBallRamseteCommand
+    }
+  }
+
+  private void initializeCommandGroups() {
+    // TODO: the wait time should not be a constant, should be configurable
+
     taxiCommand =
         new SequentialCommandGroup(
             new WaitCommand(Constants.delaytaxi),
             // taxiRamseteCommands[0]);
-            taxiRamseteCommand[0].beforeStarting(
-                () -> driveBaseSubsystem.resetOdometry(taxiTrajectory[0].getInitialPose())));
+            taxiRamseteCommand.beforeStarting(
+                () -> driveBaseSubsystem.resetOdometry(taxiTrajectory.getInitialPose())));
     System.out.println("taxiCommand created");
-    System.out.println(taxiCommand.toString());
-  }
 
-  private void initializeAllOtherGroups() {
-    // TODO: the wait time should not be a constant, should be configurable
+    if (allSubsystemsEnabled) {
+      oneBallCommand =
+          new SequentialCommandGroup(
+              new WaitCommand(Constants.delayshot),
+              // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem),
+              new ShooterPressed(
+                  shooterSubsystem,
+                  limelightSubsystem,
+                  cdsSubsystem,
+                  true), // also has a time delay of 2-3 seconds
+              new WaitCommand(Constants.delaytaxi),
+              oneBallRamseteCommand.beforeStarting(
+                  () -> driveBaseSubsystem.resetOdometry(oneBallTrajectory.getInitialPose())));
 
-    oneBallCommand =
-        new SequentialCommandGroup(
-            new WaitCommand(Constants.delayshot),
-            // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem),
-            new ShooterPressed(
-                shooterSubsystem,
-                limelightSubsystem,
-                cdsSubsystem,
-                true), // also has a time delay of 2-3 seconds
-            new WaitCommand(Constants.delaytaxi),
-            oneBallRamseteCommands[0].beforeStarting(
-                () -> driveBaseSubsystem.resetOdometry(oneBallTrajectories[0].getInitialPose())));
+      twoBallParallel =
+          new ParallelDeadlineGroup(
+              twoBallRamseteCommand.beforeStarting(
+                  () ->
+                      driveBaseSubsystem.resetOdometry(
+                          twoBallTrajectory.getInitialPose())), // go out to get ball
+              new IntakeForwardCommand(intakeSubsystem));
 
-    twoBallParallel =
-        new ParallelDeadlineGroup(
-            twoBallRamseteCommands[0].beforeStarting(
-                () -> driveBaseSubsystem.resetOdometry(twoBallTrajectories[0].getInitialPose())),
-            new IntakeForwardCommand(intakeSubsystem));
-    twoBallCommand =
-        new SequentialCommandGroup(
-            new WaitCommand(Constants.delaytaxi),
-            twoBallParallel,
-            twoBallRamseteCommands[1], // goes to fender
-            new WaitCommand(Constants.delayshot),
-            // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem)
-            new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true));
+      twoBallCommand =
+          new SequentialCommandGroup(
+              new WaitCommand(Constants.delaytaxi),
+              twoBallParallel,
+              new WaitCommand(Constants.delayshot),
+              // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem)
+              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true));
 
-    // threeBallCommand
-    // fourBallCommand
-  }
-
-  private Trajectory[] getTrajectories(String routeString) {
-    // method to intialize multiple trajectories in one auton route
-    File f =
-        Filesystem.getDeployDirectory()
-            .toPath()
-            .resolve("Auto/" + routeString)
-            .toFile(); // get file with all the names of the path for the auton routine
-    System.out.println("File exists: " + f.exists());
-    Scanner fileScanner = null;
-
-    try {
-      fileScanner = new Scanner(f);
-    } catch (FileNotFoundException e) {
-      System.out.println("Scanner for file: " + "Autos/" + routeString + " unable to be created");
+      // threeBallCommand
+      // fourBallCommand
     }
-
-    List<Trajectory> trajectoryList =
-        new ArrayList<
-            Trajectory>(); // use list to take in all trajectories, convert it into array later
-
-    if (fileScanner != null) {
-      while (fileScanner.hasNext()) {
-        String pathName = "paths/" + fileScanner.nextLine().split("\\.")[0] + ".wpilib.json";
-        Path path =
-            Filesystem.getDeployDirectory()
-                .toPath()
-                .resolve(pathName); // goes to scr/main/deploy/paths
-        Trajectory trajectory;
-        try {
-          trajectory = TrajectoryUtil.fromPathweaverJson(path);
-          trajectoryList.add(trajectory);
-          System.out.println("Success: " + pathName + " created.");
-        } catch (IOException e) {
-          System.out.println("Trajectory: " + pathName + " not created.");
-        }
-      }
-      fileScanner.close();
-
-      /*
-      String[] pathNames
-      */
-    }
-
-    Trajectory[] trajectoryArray = new Trajectory[trajectoryList.size()];
-    trajectoryArray = trajectoryList.toArray(trajectoryArray);
-    System.out.println("Number of paths: " + trajectoryArray.length);
-    return trajectoryArray;
-  }
-
-  private RamseteCommand[] getRamseteCommands(Trajectory[] trajectories) {
-    RamseteCommand[] ramseteCommands = new RamseteCommand[trajectories.length];
-
-    for (int i = 0; i < ramseteCommands.length; i++) {
-      ramseteCommands[i] =
-          new RamseteCommand(
-              trajectories[i],
-              driveBaseSubsystem::getPose,
-              new RamseteController(
-                  Constants.ramseteB,
-                  Constants.ramseteZeta), // ramsete follower to follow trajectory
-              Constants.driveKinematics,
-              driveBaseSubsystem::acceptWheelSpeeds,
-              driveBaseSubsystem);
-      System.out.println(ramseteCommands[i].toString());
-    }
-
-    System.out.println("RamseteCommand length: " + ramseteCommands.length);
-    return ramseteCommands;
   }
 
   public Command getChosenCommand(String commandName) {

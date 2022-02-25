@@ -21,11 +21,11 @@ public final class Constants {
     // Change booleans to disable a subsystem in RobotContainer
     // spotless:off
     DriveBaseSubsystem(true),
-    CDSSubsystem      (false),
-    IntakeSubsystem   (false),
-    ShooterSubsystem  (false),
-    LimelightSubsystem(false),
-    ClimbSubsystem    (false);
+    CDSSubsystem      (true),
+    IntakeSubsystem   (true),
+    ShooterSubsystem  (true),
+    LimelightSubsystem(true),
+    ClimbSubsystem    (true);
     // spotless:on
 
     private final Boolean enabled;
@@ -116,10 +116,10 @@ public final class Constants {
   // Actual IDs on robot, used to activate the right motors
 
   // TODO: kit bot values for now, change later
-  public static final int driveLeftFront = 1; // 13 on real robot
-  public static final int driveLeftRear = 2; // 14 on real robot
-  public static final int driveRightFront = 3; // 6 on real robot
-  public static final int driveRightRear = 4; // 7 on real robot
+  public static final int driveLeftFront = 13; // 13 on real robot
+  public static final int driveLeftRear = 14; // 14 on real robot
+  public static final int driveRightFront = 6; // 6 on real robot
+  public static final int driveRightRear = 7; // 7 on real robot
 
   // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
   public static final int driveLeftFrontIndex = 0;
