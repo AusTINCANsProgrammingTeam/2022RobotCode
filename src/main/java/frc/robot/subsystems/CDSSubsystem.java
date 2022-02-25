@@ -59,7 +59,7 @@ public class CDSSubsystem extends SubsystemBase {
 
     CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
 
-    colorSensors = new ColorSensorMuxed(0, 1, 2);
+    colorSensors = new ColorSensorMuxed(0, 1, 3);
     
     //colorSensorOne = new ColorSensorV3(Constants.colorSensorPort1);
     //colorSensorTwo = new ColorSensorV3(Constants.colorSensorPort2);
