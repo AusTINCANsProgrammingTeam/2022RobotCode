@@ -42,15 +42,15 @@ public final class Constants {
   public enum AimModes {
     AUTO,
     // TODO: Plug real values in for these aimModes
-    LOW(2000.0, 0.0) {
+    LOW(3200.0, 0.0) {
       @Override
       public AimModes previous() {
         return values()[values().length - 1];
       }
     },
-    EJECT(0.0, 0.0),
+    EJECT(2500.0, 0.0),
     LAUNCH(0.0, 0.0),
-    TARMAC(0.0, 0.0),
+    TARMAC(4200.0, 0.0),
     TEST {
       @Override
       public AimModes next() {
