@@ -219,8 +219,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // Normal Arcade Drive
   public void arcadeDrive() {
-    m_differentialDrive.arcadeDrive(
-        -1 * m_driverJoystick.getRawAxis(Constants.leftJoystickY),
+    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.leftJoystickY),
         -1 * m_driverJoystick.getRawAxis(Constants.rightJoystickX));
     // joystick has y-axis flipped so up is negative why down is positive
   }

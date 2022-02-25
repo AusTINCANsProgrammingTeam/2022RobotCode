@@ -196,7 +196,7 @@ public class RobotContainer {
     }
 
     if (CDSForwardCommand != null && CDSReverseCommand != null) {
-      buttons[Constants.RBumper].whileHeld(CDSForwardCommand);
+      buttons[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
   // buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
       // CDSSubsystem.getAllianceColor();
       CDSSubsystem.senseColor();

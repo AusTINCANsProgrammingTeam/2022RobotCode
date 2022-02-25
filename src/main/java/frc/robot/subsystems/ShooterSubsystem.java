@@ -69,7 +69,7 @@ public class ShooterSubsystem extends SubsystemBase {
           .withPosition(1, 3)
           .getEntry();
   private NetworkTableEntry DShootingMode =
-      shooterTab.add("Shooting Mode", 4).withPosition(1, 5).getEntry();
+      shooterTab.add("Shooting Mode", 5).withPosition(1, 5).getEntry();
   private NetworkTableEntry DDistance =
       shooterTab.add("Distance to goal", 0.0).withPosition(2, 0).getEntry();
   private NetworkTableEntry DShooterRPM =
@@ -196,7 +196,7 @@ public class ShooterSubsystem extends SubsystemBase {
       if (reversed) {
         stopperController.setSpeed(-0.2);
       } else {
-        stopperController.setSpeed(0.6);
+        stopperController.setSpeed(0.75);
       }
     } else {
       stopperController.setSpeed(0.0);
@@ -280,8 +280,8 @@ public class ShooterSubsystem extends SubsystemBase {
       }
       // dashTunePid.setBoolean(false);
     }
-    if (DShootingMode.getDouble(0) != aimMode.ordinal()) {
-      setAimMode((int) DShootingMode.getDouble(0));
-    }
+ /*   if (DShootingMode.getDouble(0) != aimMode.ordinal()) {
+      setAimMode((int) DShootingMode.getDouble(0)); */
+   // }
   }
 }
