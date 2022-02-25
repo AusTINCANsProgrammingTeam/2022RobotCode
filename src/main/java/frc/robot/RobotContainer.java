@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.CDSAutoAdvanceCommand;
 import frc.robot.commands.CDSForwardCommand;
-import frc.robot.commands.CDSReverseCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.ClimbEnable;
 import frc.robot.commands.DriveBaseTeleopCommand;
@@ -33,12 +33,13 @@ import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import java.io.IOException;
 import java.nio.file.Path;
+import frc.robot.commands.OuttakeCommand;
 
-// This class is where the bulk of the robot should be declared. Since Command-based is a
-// "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
-// perieodic methods (other than the scheduler calls). Instead, the structure of the robot
-// (including
-// subsystems, commands, and button mappings) should be declared here.
+ // This class is where the bulk of the robot should be declared. Since Command-based is a
+ // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ // perieodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ // subsystems, commands, and button mappings) should be declared here. 
+ 
 
 public class RobotContainer {
   public static ShuffleboardTab debugTab;
@@ -68,7 +69,7 @@ public class RobotContainer {
   // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
   private ShooterHeld shooterHeld;
   private CDSForwardCommand CDSForwardCommand;
-  private CDSReverseCommand CDSReverseCommand;
+  private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
 
   // auton
@@ -151,9 +152,8 @@ public class RobotContainer {
       driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
     }
-    if (CDSSubsystem != null && shooterSubsystem != null) {
+    if(CDSSubsystem != null && shooterSubsystem != null){
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
     }
     if (intakeSubsystem != null) {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
@@ -197,12 +197,16 @@ public class RobotContainer {
             new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
       }
 
-      if (CDSForwardCommand != null && CDSReverseCommand != null) {
-        buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
-        buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
-        // CDSSubsystem.getAllianceColor();
-        CDSSubsystem.senseColor();
-      }
+    //CDS
+    if (CDSSubsystem != null) {
+      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+      CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
+    }
+    
+    if (CDSForwardCommand != null && outtakeCommand != null) {
+      buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
+      buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
+    }
 
       // Limelight
       if (limelightAlign != null) {
@@ -228,8 +232,8 @@ public class RobotContainer {
         buttons2[Constants.startButton].whenPressed(climbEnable);
       }
 
-      if (CDSForwardCommand != null && CDSReverseCommand != null) {
-        buttons2[Constants.RBumper].whileHeld(CDSReverseCommand);
+      if (CDSForwardCommand != null && outtakeCommand != null) {
+        buttons2[Constants.RBumper].whileHeld(outtakeCommand);
         buttons2[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
       }
     }
