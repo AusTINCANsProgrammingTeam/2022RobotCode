@@ -125,7 +125,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
         m_leftEncoderSim = new EncoderSim(m_LEncoderForSim);
         m_rightEncoderSim = new EncoderSim(m_REncoderForSim);
       }
-      
+
       SmartDashboard.putData("Field", m_field);
 
       m_DifferentialDrivetrainSim =

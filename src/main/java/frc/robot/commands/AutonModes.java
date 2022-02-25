@@ -33,14 +33,15 @@ public class AutonModes {
   private IntakeSubsystem intakeSubsystem;
 
   // Trajectories
-  private Trajectory[] taxiTrajectories;
+  // private Trajectory[] taxiTrajectories;
+  private Trajectory[] taxiTrajectory = new Trajectory[1];
   private Trajectory[] oneBallTrajectories;
   private Trajectory[] twoBallTrajectories;
   private Trajectory[] threeBallTrajectories;
   private Trajectory[] fourBallTrajectories;
 
   // Ramsete Commands, commands for following paths from pathweaver
-  private RamseteCommand[] taxiRamseteCommands;
+  private RamseteCommand[] taxiRamseteCommand;
   private RamseteCommand[] oneBallRamseteCommands;
   private RamseteCommand[] twoBallRamseteCommands;
   private RamseteCommand[] threeRamseteCommands;
@@ -62,10 +63,11 @@ public class AutonModes {
     this.driveBaseSubsystem = d;
 
     // parameters are route names (names based on pathweaver, they are located under Auton file)
-    taxiTrajectories = getTrajectories("Taxi");
+    // taxiTrajectories = getTrajectories("Taxi");
+    initializeTaxiTrajectory();
 
     // create ramsete commands using the trajectories
-    taxiRamseteCommands = getRamseteCommands(taxiTrajectories);
+    taxiRamseteCommand = getRamseteCommands(taxiTrajectory);
 
     initializeTaxiMode();
   }
@@ -98,12 +100,29 @@ public class AutonModes {
     initializeAllOtherGroups(); // already initialized taxi command, now initialize others
   }
 
+  public void initializeTaxiTrajectory() {
+    String pathName = "paths/TaxiOut.wpilib.json";
+    Path path =
+        Filesystem.getDeployDirectory().toPath().resolve(pathName); // goes to scr/main/deploy/paths
+    try {
+      taxiTrajectory[0] = TrajectoryUtil.fromPathweaverJson(path);
+      System.out.println("Success: " + pathName + " created.");
+    } catch (IOException e) {
+      System.out.println("Trajectory: " + pathName + " not created.");
+    }
+  }
+
+  public void initializeOtherTrajectories() {}
+
   private void initializeTaxiMode() {
     taxiCommand =
         new SequentialCommandGroup(
             new WaitCommand(Constants.delaytaxi),
-            taxiRamseteCommands[0].beforeStarting(
-                () -> driveBaseSubsystem.resetOdometry(taxiTrajectories[0].getInitialPose())));
+            // taxiRamseteCommands[0]);
+            taxiRamseteCommand[0].beforeStarting(
+                () -> driveBaseSubsystem.resetOdometry(taxiTrajectory[0].getInitialPose())));
+    System.out.println("taxiCommand created");
+    System.out.println(taxiCommand.toString());
   }
 
   private void initializeAllOtherGroups() {
@@ -142,16 +161,18 @@ public class AutonModes {
 
   private Trajectory[] getTrajectories(String routeString) {
     // method to intialize multiple trajectories in one auton route
-    String routeName = routeString; // TODO: replace route for the correct one on pathweaver
     File f =
-        new File(
-            "Autos/" + routeName); // get file with all the names of the path for the auton routine
+        Filesystem.getDeployDirectory()
+            .toPath()
+            .resolve("Auto/" + routeString)
+            .toFile(); // get file with all the names of the path for the auton routine
+    System.out.println("File exists: " + f.exists());
     Scanner fileScanner = null;
 
     try {
       fileScanner = new Scanner(f);
     } catch (FileNotFoundException e) {
-      System.out.println("Scanner for file: " + "Autos/" + routeName + " unable to be created");
+      System.out.println("Scanner for file: " + "Autos/" + routeString + " unable to be created");
     }
 
     List<Trajectory> trajectoryList =
@@ -175,11 +196,15 @@ public class AutonModes {
         }
       }
       fileScanner.close();
+
+      /*
+      String[] pathNames
+      */
     }
 
-    Trajectory[] trajectoryArray;
-    trajectoryArray = new Trajectory[trajectoryList.size()];
+    Trajectory[] trajectoryArray = new Trajectory[trajectoryList.size()];
     trajectoryArray = trajectoryList.toArray(trajectoryArray);
+    System.out.println("Number of paths: " + trajectoryArray.length);
     return trajectoryArray;
   }
 
@@ -197,8 +222,10 @@ public class AutonModes {
               Constants.driveKinematics,
               driveBaseSubsystem::acceptWheelSpeeds,
               driveBaseSubsystem);
+      System.out.println(ramseteCommands[i].toString());
     }
 
+    System.out.println("RamseteCommand length: " + ramseteCommands.length);
     return ramseteCommands;
   }
 
