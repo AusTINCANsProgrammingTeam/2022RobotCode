@@ -174,8 +174,7 @@ public final class Constants {
   // Controller Constants {
 
     // Controller modes
-    public static final boolean TestController = false;
-    public static final boolean CompititionController = true;
+    public static final boolean TestController = true;
 
     //Port Numbers
     public static final int portNumber0 = 0;

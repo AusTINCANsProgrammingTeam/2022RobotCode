@@ -134,7 +134,7 @@ public class RobotContainer {
             }
           case "ClimbSubsystem":
             {
-              if (Constants.CompititionController) {
+              if (!Constants.TestController) {
                 climbSubsystem = new ClimbSubsystem(operatorJoystick);
                 climbCommand = new ClimbCommand(climbSubsystem);
                 climbEnable = new ClimbEnable(climbSubsystem);
@@ -212,9 +212,8 @@ public class RobotContainer {
       }
 
       if (climbSubsystem != null) {}
-    }
+    } else {
 
-    if (Constants.CompititionController) {
       if (shooterSubsystem != null && shooterHeld != null) {
         buttons[Constants.LBumper].whileHeld(shooterHeld);
         buttons[Constants.LTriggerButton].whileHeld(
