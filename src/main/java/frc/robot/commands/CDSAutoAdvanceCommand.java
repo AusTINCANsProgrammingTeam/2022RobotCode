@@ -4,13 +4,14 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.CDSSubsystem;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.CDSSubsystem;
 
 public class CDSAutoAdvanceCommand extends CommandBase {
   /** Creates a new OuttakeCommand. */
   private final CDSSubsystem CDSSubsystem;
+
   private boolean runningCDS = false;
   private int setpointIndex;
 
@@ -34,7 +35,7 @@ public class CDSAutoAdvanceCommand extends CommandBase {
       SmartDashboard.putBoolean("Back Sensor Status", sensorStatus[0]);
 
       // Send ball to setpoint
-      if (sensorStatus[2]) {  //1 means sensor is activated
+      if (sensorStatus[2]) { // 1 means sensor is activated
         int nextOpenSensor = CDSSubsystem.getNextOpenSensor(sensorStatus);
         SmartDashboard.putNumber("Setpoint", nextOpenSensor);
         if (nextOpenSensor != -1) {
@@ -50,8 +51,8 @@ public class CDSAutoAdvanceCommand extends CommandBase {
           CDSSubsystem.stopCDS();
           runningCDS = false;
           setpointIndex = -1;
-        } 
-      }      
+        }
+      }
     }
   }
 
@@ -65,4 +66,3 @@ public class CDSAutoAdvanceCommand extends CommandBase {
     return false;
   }
 }
-

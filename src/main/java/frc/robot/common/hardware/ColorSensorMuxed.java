@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Robot;
-
 import java.util.ArrayList;
 
 /* Wrapper for ColorSensorV3 that uses a TCA9548A I2C multiplexer to
@@ -42,12 +41,12 @@ public class ColorSensorMuxed {
     byte[] muxCtrlRegRead = new byte[1];
     // Write to TCA9548 control register and readback and verify
     // (I2C class returns false for I2C transaction successes.)
-    if (Robot.isReal()){
+    if (Robot.isReal()) {
       boolean ret = i2cMux.writeBulk(muxCtrlReg);
       ret |= i2cMux.readOnly(muxCtrlRegRead, muxCtrlRegRead.length);
       ret |= muxCtrlRegRead[0] != muxCtrlReg[0];
       return !ret;
-    } else{
+    } else {
       return true;
     }
   }
