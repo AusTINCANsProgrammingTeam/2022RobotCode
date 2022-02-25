@@ -41,4 +41,4 @@ jobs:
       # Awk One-liner stolen from https://stackoverflow.com/questions/27447705/grep-without-filtering 
 
     - name: Git Clean Check
-      run: git status --porcelain
+      run: git status --porcelain; exit $?
