@@ -69,6 +69,27 @@ public class CDSSubsystem extends SubsystemBase {
     SmartDashboard.putString("Alliance Color", allianceColor);
   }
 
+  public void CDSToggleAll(boolean reverse) {
+    if (reverse){
+      CDSWheelControllerOne.getSparkMax().set(-Constants.CDSWheelControllerSpeed);
+      SmartDashboard.putString("CDS Wheel Direction", "Reverse");
+      SmartDashboard.putNumber("CDS Wheel Speed", -Constants.CDSWheelControllerSpeed);
+
+      CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
+      CDSBeltController.setIdleMode(IdleMode.kBrake);
+      SmartDashboard.putString("CDS Belt Direction", "Reverse");
+      SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
+    } else {
+      CDSWheelControllerOne.getSparkMax().set(Constants.CDSWheelControllerSpeed);
+      SmartDashboard.putString("CDS Wheel Direction", "Forward");
+      SmartDashboard.putNumber("CDS Wheel Speed", Constants.CDSWheelControllerSpeed);
+
+      CDSBeltController.getSparkMax().set(Constants.CDSBeltSpeed);
+      SmartDashboard.putString("CDS Belt Direction", "Forward");
+      SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
+    }
+  }
+
   public void CDSWheelToggle(boolean reverse) {
     if (reverse) {
       CDSWheelControllerOne.getSparkMax().set(-Constants.CDSWheelControllerSpeed);
@@ -79,7 +100,6 @@ public class CDSSubsystem extends SubsystemBase {
       CDSWheelControllerOne.getSparkMax().set(Constants.CDSWheelControllerSpeed);
       SmartDashboard.putString("CDS Wheel Direction", "Forward");
       SmartDashboard.putNumber("CDS Wheel Speed", Constants.CDSWheelControllerSpeed);
-      
     }
   }
 

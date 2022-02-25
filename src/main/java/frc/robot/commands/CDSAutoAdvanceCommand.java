@@ -41,8 +41,9 @@ public class CDSAutoAdvanceCommand extends CommandBase {
           // There is an open setpoint avaliable, run CDS
           runningCDS = true;
           setpointIndex = nextOpenSensor;
-          CDSSubsystem.CDSWheelToggle(false); // Run wheel
-          CDSSubsystem.CDSBeltToggle(false); // Run belt
+          //CDSSubsystem.CDSWheelToggle(false); // Run wheel
+          //CDSSubsystem.CDSBeltToggle(false); // Run belt
+          CDSSubsystem.CDSToggleAll(false);
         }
       } else {
         // Check if ball has reached setpoint, stop if it has
