@@ -197,8 +197,6 @@ public class RobotContainer {
     if (CDSSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
       CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
-      //CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
-      //CDSSubsystem.senseColor();
     }
     
     if (CDSForwardCommand != null && outtakeCommand != null) {
