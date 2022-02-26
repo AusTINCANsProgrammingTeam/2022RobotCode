@@ -191,21 +191,13 @@ public class ShooterSubsystem extends SubsystemBase {
     IDelayTable.setDouble(i);
   }
 
-  public void runCargo(boolean a, boolean reversed) {
-    if (a) {
-      if (reversed) {
-        stopperController.setSpeed(-0.2);
-      } else {
-        stopperController.setSpeed(0.75);
-      }
-    } else {
-      stopperController.setSpeed(0.0);
-    }
+  public void runCargo(double speed) {
+    stopperController.setSpeed(speed);
   }
 
   public boolean wheelReady() {
     double flywheelSpeed = flywheelEncoder.getVelocity();
-    return (flywheelSpeed > targetRPM - 10 && flywheelSpeed < targetRPM + 10);
+    return (flywheelSpeed > targetRPM - 56 && flywheelSpeed < targetRPM + 56);
   }
 
   public void setAimMode(int m) {

@@ -182,7 +182,7 @@ public class RobotContainer {
 
     // Intake
     if (intakeForwardCommand != null && intakeReverseCommand != null) {
-      //buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
+      buttons[Constants.BButton].whileHeld(intakeForwardCommand);
       buttons[Constants.RTriggerButton].whileHeld(intakeReverseCommand);
     }
 
@@ -197,7 +197,7 @@ public class RobotContainer {
 
     if (CDSForwardCommand != null && CDSReverseCommand != null) {
       buttons[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
-  // buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
+   buttons[Constants.BButton].whileHeld(CDSReverseCommand);
       // CDSSubsystem.getAllianceColor();
       CDSSubsystem.senseColor();
     }

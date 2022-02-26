@@ -50,21 +50,21 @@ public class ShooterHeld extends CommandBase {
       // Otherwise, alignment is checked.
       if (i > 0 || !LLEnabled || m_LimelightSubsystem.calculatePID() == 0.0) {
         i++;
-        m_CDSSubsystem.CDSBeltWheelControllerToggle(true);
-        m_ShooterSubsystem.runCargo(true, false);
+        m_CDSSubsystem.CDSBeltWheelControllerToggle(false);
+        m_ShooterSubsystem.runCargo(0.75);
         m_ShooterSubsystem.setCargoBoolean(true);
         if (i >= 50) { // 1000 miliseconds delay TODO: Use a CDS method for this when possible
           i = 0;
           m_CDSSubsystem.stopCDS();
-          m_ShooterSubsystem.runCargo(false, false);
+          m_ShooterSubsystem.runCargo(0.0);
           m_ShooterSubsystem.setCargoBoolean(false);
         }
 
-      } else {
-        m_ShooterSubsystem.runCargo(false, false);
       }
     } else {
-      m_ShooterSubsystem.runCargo(false, false);
+      m_ShooterSubsystem.setCargoBoolean(false);
+      m_CDSSubsystem.stopCDS();
+      m_ShooterSubsystem.runCargo(-0.4);
       m_ShooterSubsystem.updateIdelay(i);
     }
   }
@@ -72,7 +72,7 @@ public class ShooterHeld extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_ShooterSubsystem.runCargo(false, false);
+    m_ShooterSubsystem.runCargo(0);
     m_ShooterSubsystem.windFlywheel(0);
     m_ShooterSubsystem.setCargoBoolean(false);
     m_ShooterSubsystem.updateIdelay(0);
