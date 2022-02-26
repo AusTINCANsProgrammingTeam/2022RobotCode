@@ -20,6 +20,7 @@ public class ClimbSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private NetworkTableEntry sbclimbHeight;
+  private NetworkTableEntry sbClimbEnabbled;
   private Joystick m_climbJoystick;
   private MotorController m_climbMotorControllerOne;
   private MotorController m_climbMotorControllerTwo;
@@ -46,13 +47,16 @@ public class ClimbSubsystem extends SubsystemBase {
 
     m_limitSwitch = new DigitalInput(Constants.LimitSwitchChannel);
 
-    ShuffleboardTab ClimbBase = Shuffleboard.getTab("ClimbBase");
+    ClimbBase = Shuffleboard.getTab("ClimbBase");
 
     sbclimbHeight = ClimbBase.add("Climb Hight", 0).withSize(2, 2).withPosition(0, 0).getEntry();
+    sbClimbEnabbled =
+        ClimbBase.add("Climb Eanbled", 0).withSize(2, 2).withPosition(2, 0).getEntry();
   }
 
   public void toggleClimbEnable() {
     toggleClimb = !toggleClimb;
+    sbClimbEnabbled.setBoolean(toggleClimb);
   }
 
   public void enableClimb() {
@@ -61,6 +65,7 @@ public class ClimbSubsystem extends SubsystemBase {
       m_climbMotorControllerOne
           .getPID()
           .setReference(climbHeight, CANSparkMax.ControlType.kPosition);
+      sbclimbHeight.setNumber(climbHeight);
     } else {
       m_climbMotorControllerOne.setSpeed(0);
     }
