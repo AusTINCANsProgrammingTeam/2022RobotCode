@@ -56,11 +56,10 @@ public class CDSSubsystem extends SubsystemBase {
 
     CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
 
+    CDSBeltController.setIdleMode(IdleMode.kBrake);
+    CDSWheelControllerOne.setIdleMode(IdleMode.kCoast);
+
     colorSensors = new ColorSensorMuxed(0, 1, 3);
-    
-    //colorSensorOne = new ColorSensorV3(Constants.colorSensorPort1);
-    //colorSensorTwo = new ColorSensorV3(Constants.colorSensorPort2);
-    //backBeamBreak = new DigitalInput(Constants.initialBallSensorChannel);
 
     String allianceColor = DriverStation.getAlliance().toString();
     SmartDashboard.putString("Alliance Color", allianceColor);
@@ -103,7 +102,6 @@ public class CDSSubsystem extends SubsystemBase {
   public void CDSBeltToggle(boolean reverse) {
     if(reverse){
       CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
-      CDSBeltController.setIdleMode(IdleMode.kBrake);
       SmartDashboard.putString("CDS Belt Direction", "Reverse");
       SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
 
