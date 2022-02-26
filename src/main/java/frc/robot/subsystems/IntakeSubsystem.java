@@ -20,7 +20,8 @@ public class IntakeSubsystem extends SubsystemBase {
   public IntakeSubsystem() {
     intakeMotorControllerOne =
         new MotorController("Intake Motor One", Constants.intakeMotorOneID, 40);
-  }
+    
+      }
 
   public void toggleIntake(boolean reverse) {
     if (reverse) {

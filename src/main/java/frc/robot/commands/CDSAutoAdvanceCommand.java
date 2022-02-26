@@ -27,14 +27,14 @@ public class CDSAutoAdvanceCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    boolean[] sensorStatus = CDSSubsystem.getSensorStatus();
+    SmartDashboard.putBoolean("Front sensor status", sensorStatus[2]);
+    SmartDashboard.putBoolean("Middle Sensor Status", sensorStatus[1]);
+    SmartDashboard.putBoolean("Back Sensor Status", sensorStatus[0]);
     if (!runningCDS) {
-      boolean[] sensorStatus = CDSSubsystem.getSensorStatus();
-      SmartDashboard.putBoolean("Front sensor status", sensorStatus[2]);
-      SmartDashboard.putBoolean("Middle Sensor Status", sensorStatus[1]);
-      SmartDashboard.putBoolean("Back Sensor Status", sensorStatus[0]);
 
       // Send ball to setpoint
-      if (sensorStatus[2]) {  //1 means sensor is activated
+      if (sensorStatus[2]) {  
         int nextOpenSensor = CDSSubsystem.getNextOpenSensor(sensorStatus);
         SmartDashboard.putNumber("Setpoint", nextOpenSensor);
         if (nextOpenSensor != -1) {
@@ -45,15 +45,15 @@ public class CDSAutoAdvanceCommand extends CommandBase {
           //CDSSubsystem.CDSBeltToggle(false); // Run belt
           CDSSubsystem.CDSToggleAll(false);
         }
-      } else {
-        // Check if ball has reached setpoint, stop if it has
-        if (sensorStatus[setpointIndex]) {
-          CDSSubsystem.stopCDS();
-          runningCDS = false;
-          setpointIndex = -1;
-        } 
-      }      
-    }
+      } 
+    } else {
+      // Check if ball has reached setpoint, stop if it has
+      if (sensorStatus[setpointIndex]) {
+        CDSSubsystem.stopCDS();
+        runningCDS = false;
+        setpointIndex = -1;
+      } 
+    }      
   }
 
   // Called once the command ends or is interrupted.

@@ -152,9 +152,10 @@ public class RobotContainer {
     if(CDSSubsystem != null && shooterSubsystem != null){
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
     }
-    if (intakeSubsystem != null) {
-      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
-      intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
+    if (intakeSubsystem != null && CDSSubsystem != null) {
+      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, CDSSubsystem);
+      intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, CDSSubsystem);
+      outtakeCommand = new OuttakeCommand(intakeSubsystem, CDSSubsystem);
     }
     if (shooterSubsystem != null && CDSSubsystem != null) {
       shooterHeld =
@@ -202,7 +203,7 @@ public class RobotContainer {
     if (CDSForwardCommand != null && outtakeCommand != null) {
       buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
       //buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
-      buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
+      buttons[Constants.AButton].whileHeld(outtakeCommand);
     }
 
     // Limelight

@@ -5,22 +5,27 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeReverseCommand extends CommandBase {
   /** Creates a new IntakeReverseCommand. */
   private IntakeSubsystem mIntakeSubsystem;
+  private CDSSubsystem mCdsSubsystem;
 
-  public IntakeReverseCommand(IntakeSubsystem intakeSubsystem) {
+  public IntakeReverseCommand(IntakeSubsystem intakeSubsystem, CDSSubsystem cdsSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intakeSubsystem);
+    addRequirements(cdsSubsystem);
     mIntakeSubsystem = intakeSubsystem;
+    mCdsSubsystem = cdsSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     mIntakeSubsystem.toggleIntake(true);
+    mCdsSubsystem.CDSWheelToggle(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -31,6 +36,7 @@ public class IntakeReverseCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     mIntakeSubsystem.stopIntake();
+    mCdsSubsystem.stopCDSWheel();
   }
 
   // Returns true when the command should end.

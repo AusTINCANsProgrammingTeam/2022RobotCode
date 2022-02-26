@@ -27,7 +27,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
-    tabContainer = new TabContainer(RobotContainer.getDriveBase());
+    //tabContainer = new TabContainer(RobotContainer.getDriveBase());
   }
 
   // This function is called every robot packet, no matter the mode. Use this for items like
@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    tabContainer.periodic();
+    //tabContainer.periodic();
 
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,

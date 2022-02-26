@@ -6,21 +6,26 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.CDSSubsystem;
 
 public class IntakeForwardCommand extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
   private final IntakeSubsystem mIntakeSubsystem;
+  private final CDSSubsystem mCdsSubsystem;
 
-  public IntakeForwardCommand(IntakeSubsystem intakeSubsystem) {
+  public IntakeForwardCommand(IntakeSubsystem intakeSubsystem, CDSSubsystem cdsSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intakeSubsystem);
+    addRequirements(cdsSubsystem);
     mIntakeSubsystem = intakeSubsystem;
+    mCdsSubsystem = cdsSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     mIntakeSubsystem.toggleIntake(false);
+    mCdsSubsystem.CDSWheelToggle(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -30,7 +35,8 @@ public class IntakeForwardCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    mIntakeSubsystem.stopIntake();
+    mIntakeSubsystem.stopIntake(); 
+    mCdsSubsystem.stopCDSWheel(); // remove if stuff doesn't work well
   }
 
   // Returns true when the command should end.

@@ -31,7 +31,7 @@ public class CDSSubsystem extends SubsystemBase {
   private boolean runningCDS = false;
   private int setpointIndex;
   private ColorSensorMuxed colorSensors;
-
+ 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry CDSWheelControllerDirection =
       CDSTab.add("CDS Wheel Direction", "Not Running")
@@ -54,10 +54,11 @@ public class CDSSubsystem extends SubsystemBase {
     CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerOneID, 40);
     CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerTwoID, 40);
 
+    CDSWheelControllerOne.setInverted(true);
     CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
 
     CDSBeltController.setIdleMode(IdleMode.kBrake);
-    CDSWheelControllerOne.setIdleMode(IdleMode.kCoast);
+    //CDSWheelControllerOne.setIdleMode(IdleMode.kCoast);
 
     colorSensors = new ColorSensorMuxed(0, 1, 3);
 
@@ -137,9 +138,13 @@ public class CDSSubsystem extends SubsystemBase {
   public boolean[] getSensorStatus() {
     int[] sensorStatuses = colorSensors.getProximities();
 
-    boolean backStatus = sensorStatuses[2] > Constants.backSensorActivation;
+    SmartDashboard.putNumber("Front Sensor Proximity", sensorStatuses[2]);
+    SmartDashboard.putNumber("Middle Sensor Proximity", sensorStatuses[1]);
+    SmartDashboard.putNumber("Back Sensor Proximity", sensorStatuses[0]);
+
+    boolean backStatus = sensorStatuses[0] > Constants.backSensorActivation;
     boolean middleStatus = sensorStatuses[1] > Constants.middleSensorActivation;
-    boolean frontStatus = sensorStatuses[0] > Constants.frontSensorActivation;
+    boolean frontStatus = sensorStatuses[2] > Constants.frontSensorActivation;
     boolean[] beamBreakArray = {backStatus, middleStatus, frontStatus};
 
     int ballCount = 0;
@@ -157,9 +162,9 @@ public class CDSSubsystem extends SubsystemBase {
   public int getNextOpenSensor(boolean[] sensorStatus) {    
     // Starts at 0 and ends short of the centering wheel
     for (int i=0; i < sensorStatus.length-1; i++) {
-      if (sensorStatus[i]) {
+      if (!sensorStatus[i]) {
         return i;
-      } 
+      }
     }
     return -1;
   }

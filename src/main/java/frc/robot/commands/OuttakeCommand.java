@@ -26,7 +26,7 @@ public class OuttakeCommand extends CommandBase {
   public void initialize() {
     CDSSubsystem.CDSBeltToggle(true);
     CDSSubsystem.CDSWheelToggle(true);
-    intakeSubsystem.toggleIntake(true);
+    intakeSubsystem.toggleIntake(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
