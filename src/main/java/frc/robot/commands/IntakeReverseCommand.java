@@ -24,7 +24,7 @@ public class IntakeReverseCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mIntakeSubsystem.toggleIntake(true);
+    mIntakeSubsystem.toggleIntake(false);
     mCdsSubsystem.CDSWheelToggle(false);
   }
 
