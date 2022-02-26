@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -19,9 +18,6 @@ public class Robot extends TimedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
   private TabContainer tabContainer;
-  private int AxisCount;
-  private int ButtonCount;
-  private int Wait;
 
   // This function is run when the robot is first started up and should be used for any
   // initialization code.
@@ -32,7 +28,6 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
     tabContainer = new TabContainer(RobotContainer.getDriveBase());
-    Wait = 0;
   }
 
   // This function is called every robot packet, no matter the mode. Use this for items like
@@ -52,16 +47,6 @@ public class Robot extends TimedRobot {
 
     // schedule driverbaseteleop command
     CommandScheduler.getInstance().run();
-    if (Wait == 100) {
-      Wait = 0;
-      AxisCount = DriverStation.getStickAxisCount(Constants.portNumber0);
-      ButtonCount = DriverStation.getStickButtonCount(Constants.portNumber0);
-      AxisCount = DriverStation.getStickAxisCount(Constants.portNumber1);
-      ButtonCount = DriverStation.getStickButtonCount(Constants.portNumber1);
-      System.out.printf("AxisCount %d ButtonCount %d\n ", AxisCount, ButtonCount);
-    } else {
-      Wait++;
-    }
   }
 
   // This function is called once each time the robot enters Disabled mode. */

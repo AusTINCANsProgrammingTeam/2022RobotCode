@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
@@ -43,6 +44,7 @@ import java.nio.file.Path;
 
 public class RobotContainer {
   public static ShuffleboardTab debugTab;
+  public static ShuffleboardTab controllerDetection;
 
   // The robot's subsystems and commands are defined here...
   private static final Joystick driverJoystick = new Joystick(Constants.portNumber0);
@@ -51,7 +53,6 @@ public class RobotContainer {
   private JoystickButton[] buttons2 = new JoystickButton[13];
 
   // subsystems
-
   private static ClimbSubsystem climbSubsystem;
   private static DriveBaseSubsystem driveBaseSubsystem;
   private static CDSSubsystem CDSSubsystem;
@@ -77,8 +78,25 @@ public class RobotContainer {
   private int trajectoryIndex = 0;
   private Trajectory trajectory;
 
+  // Controller Check Variables
+  private NetworkTableEntry sbAxisCount0;
+  private NetworkTableEntry sbAxisCount1;
+  private NetworkTableEntry sbButtonCount0;
+  private NetworkTableEntry sbButtonCount1;
+  private int AxisCount0;
+  private int ButtonCount0;
+  private int AxisCount1;
+  private int ButtonCount1;
+
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
+    controllerDetection = Shuffleboard.getTab("Controller Detector");
+
+    sbAxisCount0 = controllerDetection.add("Port0 AxisCount", 0).withSize(2, 2).getEntry();
+    sbButtonCount0 = controllerDetection.add("Port0 ButtonCount", 0).withSize(2, 2).getEntry();
+    sbAxisCount1 = controllerDetection.add("Port1 AxisCount", 0).withSize(2, 2).getEntry();
+    sbButtonCount1 = controllerDetection.add("Port1 ButtonCount", 0).withSize(2, 2).getEntry();
+
     debugTab = Shuffleboard.getTab("debug");
 
     initSubsystems();
@@ -173,6 +191,22 @@ public class RobotContainer {
     }
   }
 
+  private void controllerCheck() {
+    AxisCount0 = DriverStation.getStickAxisCount(Constants.portNumber0);
+    ButtonCount0 = DriverStation.getStickButtonCount(Constants.portNumber0);
+    sbAxisCount0.setDouble(AxisCount0);
+    sbButtonCount0.setDouble(ButtonCount0);
+
+    AxisCount1 = DriverStation.getStickAxisCount(Constants.portNumber1);
+    ButtonCount1 = DriverStation.getStickButtonCount(Constants.portNumber1);
+    sbAxisCount1.setDouble(AxisCount1);
+    sbButtonCount1.setDouble(ButtonCount1);
+
+    System.out.printf(
+        "AxisCount0 %d ButtonCount0 %d AxisCount1 %d ButtonCount1 %d\n ",
+        AxisCount0, ButtonCount0, AxisCount1, ButtonCount1);
+  }
+
   // Use this method to define your button->command mappings. Buttons can be
   // created by
   // instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -180,8 +214,8 @@ public class RobotContainer {
   // it to a {@link
   // edu.wpi.first.wpilibj2.command.button.JoystickButton}.
   private void configureButtonBindings() {
-
-    if (Constants.TestController) {
+    controllerCheck();
+    if (AxisCount1 == 0 && ButtonCount1 == 0) {
       // Intake
       if (intakeForwardCommand != null && intakeReverseCommand != null) {
         buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
@@ -214,6 +248,8 @@ public class RobotContainer {
       }
 
       if (climbSubsystem != null) {}
+
+      System.out.printf("Testing Mode");
     } else {
 
       if (shooterSubsystem != null && shooterHeld != null) {
@@ -236,6 +272,7 @@ public class RobotContainer {
         buttons2[Constants.RBumper].whileHeld(outtakeCommand);
         buttons2[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
       }
+      System.out.printf("Compitition Mode");
     }
   }
 
