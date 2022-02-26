@@ -213,7 +213,8 @@ public class RobotContainer {
     }
   }
 
-  public Command getAutonomousCommand() {
+  public Command getAutonomousCommand(String pathname) {
+    chosenAutonMode = autonModes.getChosenCommand(pathname);
     return chosenAutonMode;
   }
 
@@ -230,6 +231,7 @@ public class RobotContainer {
                 limelightSubsystem,
                 CDSSubsystem,
                 intakeSubsystem);
+          
       } else {
         autonModes =
             new AutonModes(
@@ -238,8 +240,8 @@ public class RobotContainer {
       }
 
       // TODO: add a sendable chooser
-      String commandName = "taxi";
-      chosenAutonMode = autonModes.getChosenCommand(commandName);
+      //String commandName = "taxi";
+      //chosenAutonMode = autonModes.getChosenCommand(commandName);
     } else {
       chosenAutonMode = null;
     }
