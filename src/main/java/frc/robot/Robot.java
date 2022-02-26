@@ -26,8 +26,12 @@ public class Robot extends TimedRobot {
   private SendableChooser<Command> chooser = new SendableChooser<>();
   private RobotContainer robotContainer;
   private TabContainer tabContainer;
+  //TODO: Replace these with the correct path names
   private String taxi = "taxi";
   private String oneball = "taxi";
+  private String twoball = "taxi";
+  private String threeball = "taxi";
+  private String fourball = "taxi";
 
   // This function is run when the robot is first started up and should be used
   // for any
@@ -42,9 +46,12 @@ public class Robot extends TimedRobot {
    
     robotContainer = new RobotContainer();
     chooser.setDefaultOption("Taxi", robotContainer.getAutonomousCommand(taxi));
-		chooser.addOption("One Ball", robotContainer.getAutonomousCommand(oneball));
+    chooser.addOption("One Ball", robotContainer.getAutonomousCommand(oneball));
+    chooser.addOption("Two Ball", robotContainer.getAutonomousCommand(twoball));
+    chooser.addOption("Three Ball", robotContainer.getAutonomousCommand(threeball));
+    chooser.addOption("Four Ball", robotContainer.getAutonomousCommand(fourball));
     tabContainer = new TabContainer(RobotContainer.getDriveBase());
-    SmartDashboard.putData("Auto mode", chooser);
+    SmartDashboard.putData("Auto Mode", chooser);
   }
 
   // This function is called every robot packet, no matter the mode. Use this for items like
@@ -72,7 +79,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    SmartDashboard.putString("Auto Command", chooser.getSelected().getName());
+    //This would put the command that the auto mode is using on the smart dashboard, for debugging
+    //SmartDashboard.putString("Auto Command", chooser.getSelected().getName());
   }
 
   // This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
