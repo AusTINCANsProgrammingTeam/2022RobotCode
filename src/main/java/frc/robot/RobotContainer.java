@@ -65,7 +65,6 @@ public class RobotContainer {
   private IntakeForwardCommand intakeForwardCommand;
   private IntakeReverseCommand intakeReverseCommand;
   private ClimbCommand climbCommand;
-  private ClimbEnable climbEnable;
 
   // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
   private ShooterHeld shooterHeld;
@@ -79,23 +78,23 @@ public class RobotContainer {
   private Trajectory trajectory;
 
   // Controller Check Variables
-  private NetworkTableEntry sbAxisCount0;
-  private NetworkTableEntry sbAxisCount1;
-  private NetworkTableEntry sbButtonCount0;
-  private NetworkTableEntry sbButtonCount1;
-  private int AxisCount0;
-  private int ButtonCount0;
-  private int AxisCount1;
-  private int ButtonCount1;
+  private NetworkTableEntry sbaxisCount0;
+  private NetworkTableEntry sbaxisCount1;
+  private NetworkTableEntry sbbuttonCount0;
+  private NetworkTableEntry sbbuttonCount1;
+  private int axisCount0;
+  private int buttonCount0;
+  private int axisCount1;
+  private int buttonCount1;
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
     controllerDetection = Shuffleboard.getTab("Controller Detector");
 
-    sbAxisCount0 = controllerDetection.add("Port0 AxisCount", 0).withSize(2, 2).getEntry();
-    sbButtonCount0 = controllerDetection.add("Port0 ButtonCount", 0).withSize(2, 2).getEntry();
-    sbAxisCount1 = controllerDetection.add("Port1 AxisCount", 0).withSize(2, 2).getEntry();
-    sbButtonCount1 = controllerDetection.add("Port1 ButtonCount", 0).withSize(2, 2).getEntry();
+    sbaxisCount0 = controllerDetection.add("Port0 AxisCount", 0).withSize(2, 2).getEntry();
+    sbbuttonCount0 = controllerDetection.add("Port0 ButtonCount", 0).withSize(2, 2).getEntry();
+    sbaxisCount1 = controllerDetection.add("Port1 AxisCount", 0).withSize(2, 2).getEntry();
+    sbbuttonCount1 = controllerDetection.add("Port1 ButtonCount", 0).withSize(2, 2).getEntry();
 
     debugTab = Shuffleboard.getTab("debug");
 
@@ -110,6 +109,22 @@ public class RobotContainer {
     configureButtonBindings();
 
     initializeTrajectories();
+  }
+
+  private void controllerCheck() {
+    axisCount0 = DriverStation.getStickAxisCount(Constants.portNumber0);
+    buttonCount0 = DriverStation.getStickButtonCount(Constants.portNumber0);
+    sbaxisCount0.setDouble(axisCount0);
+    sbbuttonCount0.setDouble(buttonCount0);
+
+    axisCount1 = DriverStation.getStickAxisCount(Constants.portNumber1);
+    buttonCount1 = DriverStation.getStickButtonCount(Constants.portNumber1);
+    sbaxisCount1.setDouble(axisCount1);
+    sbbuttonCount1.setDouble(buttonCount1);
+
+    System.out.printf(
+        "axisCount0 %d buttonCount0 %d axisCount1 %d buttonCount1 %d\n ",
+        axisCount0, buttonCount0, axisCount1, buttonCount1);
   }
 
   private void initSubsystems() {
@@ -151,10 +166,10 @@ public class RobotContainer {
             }
           case "ClimbSubsystem":
             {
-              if (!Constants.TestController) {
+              controllerCheck();
+              if (axisCount1 > 0 && buttonCount1 > 0) {
                 climbSubsystem = new ClimbSubsystem(operatorJoystick);
                 climbCommand = new ClimbCommand(climbSubsystem);
-                climbEnable = new ClimbEnable(climbSubsystem);
                 System.out.println("Climb enabled");
               }
               break;
@@ -191,22 +206,6 @@ public class RobotContainer {
     }
   }
 
-  private void controllerCheck() {
-    AxisCount0 = DriverStation.getStickAxisCount(Constants.portNumber0);
-    ButtonCount0 = DriverStation.getStickButtonCount(Constants.portNumber0);
-    sbAxisCount0.setDouble(AxisCount0);
-    sbButtonCount0.setDouble(ButtonCount0);
-
-    AxisCount1 = DriverStation.getStickAxisCount(Constants.portNumber1);
-    ButtonCount1 = DriverStation.getStickButtonCount(Constants.portNumber1);
-    sbAxisCount1.setDouble(AxisCount1);
-    sbButtonCount1.setDouble(ButtonCount1);
-
-    System.out.printf(
-        "AxisCount0 %d ButtonCount0 %d AxisCount1 %d ButtonCount1 %d\n ",
-        AxisCount0, ButtonCount0, AxisCount1, ButtonCount1);
-  }
-
   // Use this method to define your button->command mappings. Buttons can be
   // created by
   // instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -215,13 +214,15 @@ public class RobotContainer {
   // edu.wpi.first.wpilibj2.command.button.JoystickButton}.
   private void configureButtonBindings() {
     controllerCheck();
-    if (AxisCount1 == 0 && ButtonCount1 == 0) {
-      // Intake
-      if (intakeForwardCommand != null && intakeReverseCommand != null) {
-        buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
-        buttons[Constants.RTriggerButton].whileHeld(intakeReverseCommand);
-      }
 
+    // Intake
+    if (intakeForwardCommand != null && intakeReverseCommand != null) {
+      buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
+      buttons[Constants.RTriggerButton].whileHeld(intakeReverseCommand);
+    }
+
+    if (axisCount1 == 0 && buttonCount1 == 0) {
+      
       // Shooter
       if (shooterSubsystem != null && shooterHeld != null) {
         buttons[Constants.backButton].whenPressed(shooterHeld);
@@ -256,17 +257,12 @@ public class RobotContainer {
       if (shooterSubsystem != null && shooterHeld != null) {
         buttons[Constants.LBumper].whileHeld(shooterHeld);
         buttons[Constants.LTriggerButton].whileHeld(
-            shooterHeld.beforeStarting(
-                () -> shooterSubsystem.setAimMode(Constants.AimModes.LOW.ordinal())));
-      }
-
-      if (intakeForwardCommand != null && intakeReverseCommand != null) {
-        buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
-        buttons[Constants.RBumper].whileHeld(intakeReverseCommand);
+                () -> shooterSubsystem.setAimMode(Constants.AimModes.LOW.ordinal()));
       }
 
       if (climbSubsystem != null) {
-        buttons2[Constants.startButton].whenPressed(climbEnable);
+        buttons2[Constants.startButton].whenPressed(
+          new InstantCommand(climbSubsystem::toggleClimbEnable, climbSubsystem));
       }
 
       if (CDSForwardCommand != null && outtakeCommand != null) {

@@ -176,9 +176,6 @@ public final class Constants {
   // spotless:off
   // Controller Constants {
 
-    // Controller modes
-    public static final boolean TestController = true;
-
     //Port Numbers
     public static final int portNumber0 = 0;
     public static final int portNumber1 = 1;
