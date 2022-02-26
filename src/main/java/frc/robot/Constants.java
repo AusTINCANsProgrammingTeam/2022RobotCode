@@ -122,7 +122,7 @@ public final class Constants {
   public static final int driveLeftRearIndex = 1;
   public static final int driveRightFrontIndex = 2;
   public static final int driveRightRearIndex = 3;
-  public static final int driveBaseCurrentLimit = 40;
+  public static final int driveBaseCurrentLimit = 60;
 
   // drive base pid values
   public static final double[] driveRightPID = {0.00035, 0.0000008, 0};
@@ -222,9 +222,9 @@ public final class Constants {
     public static final double lowHeight =
         5.0 + 7.75 / 12.0; // Height of the low goal in ft from the carpet
     public static final double LLHeight =
-        3.0 + 7.0 / 12.0; // Height of the limelight in ft from the carpet
+        28.0 / 12.0; // Height of the limelight in ft from the carpet
     public static final double LLAngle =
-        40.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as
+        54.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as
     // exact as possible
 
     public static final double kP = 6e-4;

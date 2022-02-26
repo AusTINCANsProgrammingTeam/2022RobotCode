@@ -31,13 +31,15 @@ public class LimelightAlign extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putBoolean("Enabled", true);
     double adjustment = m_LimelightSubsystem.calculatePID();
-    m_drivebaseSubsystem.arcadeDrive(adjustment, 0.8);
+    m_drivebaseSubsystem.arcadeDrive(adjustment, 0.2);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    SmartDashboard.putBoolean("Enabled", false);
     m_LimelightSubsystem.reset();
   }
 

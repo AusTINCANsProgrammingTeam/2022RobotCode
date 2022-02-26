@@ -8,6 +8,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /** Add your docs here. */
@@ -33,6 +34,8 @@ public class LimelightSubsystem extends SubsystemBase {
   public double calculatePID() {
     double calculation = MathUtil.clamp(m_PidController.calculate(getTX(), 0.0), -1.0, 1.0);
     // Uses TX and our setpoint (which will always be 0.0) to return the next calculation
+    SmartDashboard.putNumber("Calc", calculation);
+    SmartDashboard.putNumber("tx", getTX());
     if (m_PidController
         .atSetpoint()) { // If our robot is aligned within the tolerance, return 0.0 to end command
       isFinished = true;
