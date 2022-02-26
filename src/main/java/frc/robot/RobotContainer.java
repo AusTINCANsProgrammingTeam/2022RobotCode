@@ -33,6 +33,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import java.io.IOException;
 import java.nio.file.Path;
 import frc.robot.commands.OuttakeCommand;
+import frc.robot.commands.CDSAutoEjectCommand;
 
  // This class is where the bulk of the robot should be declared. Since Command-based is a
  // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -64,11 +65,12 @@ public class RobotContainer {
   private IntakeReverseCommand intakeReverseCommand;
   private ClimbCommand climbCommand;
 
-  // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
   private ShooterHeld shooterHeld;
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
+  private CDSAutoEjectCommand CDSAutoEject;
   private LimelightAlign limelightAlign;
+  
 
   // auton
   private Trajectory[] mTrajectories; // multiple trajectories
@@ -204,6 +206,10 @@ public class RobotContainer {
       buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
       //buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
       buttons[Constants.AButton].whileHeld(outtakeCommand);
+    }
+    
+    if (CDSSubsystem != null && intakeSubsystem != null){
+      CDSSubsystem.setDefaultCommand(new CDSAutoEjectCommand(CDSSubsystem, intakeSubsystem));
     }
 
     // Limelight
