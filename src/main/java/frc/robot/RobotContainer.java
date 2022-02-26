@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
@@ -16,13 +17,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.CDSAutoAdvanceCommand;
 import frc.robot.commands.CDSForwardCommand;
-import frc.robot.commands.CDSReverseCommand;
 import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.ClimbEnable;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
+import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShooterHeld;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -41,6 +44,7 @@ import java.nio.file.Path;
 
 public class RobotContainer {
   public static ShuffleboardTab debugTab;
+  public static ShuffleboardTab controllerDetection;
 
   // The robot's subsystems and commands are defined here...
   private static final Joystick driverJoystick = new Joystick(Constants.portNumber0);
@@ -49,7 +53,6 @@ public class RobotContainer {
   private JoystickButton[] buttons2 = new JoystickButton[13];
 
   // subsystems
-
   private static ClimbSubsystem climbSubsystem;
   private static DriveBaseSubsystem driveBaseSubsystem;
   private static CDSSubsystem CDSSubsystem;
@@ -66,7 +69,7 @@ public class RobotContainer {
   // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
   private ShooterHeld shooterHeld;
   private CDSForwardCommand CDSForwardCommand;
-  private CDSReverseCommand CDSReverseCommand;
+  private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
 
   // auton
@@ -74,8 +77,25 @@ public class RobotContainer {
   private int trajectoryIndex = 0;
   private Trajectory trajectory;
 
+  // Controller Check Variables
+  private NetworkTableEntry sbaxisCount0;
+  private NetworkTableEntry sbaxisCount1;
+  private NetworkTableEntry sbbuttonCount0;
+  private NetworkTableEntry sbbuttonCount1;
+  private int axisCount0;
+  private int buttonCount0;
+  private int axisCount1;
+  private int buttonCount1;
+
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
+    controllerDetection = Shuffleboard.getTab("Controller Detector");
+
+    sbaxisCount0 = controllerDetection.add("Port0 AxisCount", 0).withSize(2, 2).getEntry();
+    sbbuttonCount0 = controllerDetection.add("Port0 ButtonCount", 0).withSize(2, 2).getEntry();
+    sbaxisCount1 = controllerDetection.add("Port1 AxisCount", 0).withSize(2, 2).getEntry();
+    sbbuttonCount1 = controllerDetection.add("Port1 ButtonCount", 0).withSize(2, 2).getEntry();
+
     debugTab = Shuffleboard.getTab("debug");
 
     initSubsystems();
@@ -89,6 +109,22 @@ public class RobotContainer {
     configureButtonBindings();
 
     initializeTrajectories();
+  }
+
+  private void controllerCheck() {
+    axisCount0 = DriverStation.getStickAxisCount(Constants.portNumber0);
+    buttonCount0 = DriverStation.getStickButtonCount(Constants.portNumber0);
+    sbaxisCount0.setDouble(axisCount0);
+    sbbuttonCount0.setDouble(buttonCount0);
+
+    axisCount1 = DriverStation.getStickAxisCount(Constants.portNumber1);
+    buttonCount1 = DriverStation.getStickButtonCount(Constants.portNumber1);
+    sbaxisCount1.setDouble(axisCount1);
+    sbbuttonCount1.setDouble(buttonCount1);
+
+    System.out.printf(
+        "axisCount0 %d buttonCount0 %d axisCount1 %d buttonCount1 %d\n ",
+        axisCount0, buttonCount0, axisCount1, buttonCount1);
   }
 
   private void initSubsystems() {
@@ -130,7 +166,8 @@ public class RobotContainer {
             }
           case "ClimbSubsystem":
             {
-              if (!Constants.oneController) {
+              controllerCheck();
+              if (axisCount1 > 0 && buttonCount1 > 0) {
                 climbSubsystem = new ClimbSubsystem(operatorJoystick);
                 climbCommand = new ClimbCommand(climbSubsystem);
                 System.out.println("Climb enabled");
@@ -150,7 +187,6 @@ public class RobotContainer {
     }
     if (CDSSubsystem != null && shooterSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
     }
     if (intakeSubsystem != null) {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
@@ -177,6 +213,7 @@ public class RobotContainer {
   // it to a {@link
   // edu.wpi.first.wpilibj2.command.button.JoystickButton}.
   private void configureButtonBindings() {
+    controllerCheck();
 
     // Intake
     if (intakeForwardCommand != null && intakeReverseCommand != null) {
@@ -184,32 +221,55 @@ public class RobotContainer {
       buttons[Constants.RTriggerButton].whileHeld(intakeReverseCommand);
     }
 
-    // Shooter
-    if (shooterSubsystem != null && shooterHeld != null) {
-      buttons[Constants.backButton].whenPressed(shooterHeld);
-      buttons[Constants.LJoystickButton].whenPressed(
-          new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
-      buttons[Constants.RJoystickButton].whenPressed(
-          new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
-    }
-
-    if (CDSForwardCommand != null && CDSReverseCommand != null) {
-      buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
-      buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
-      // CDSSubsystem.getAllianceColor();
-      CDSSubsystem.senseColor();
-    }
-
-    // Limelight
-    if (limelightAlign != null) {
-      buttons[Constants.startButton].whenPressed(limelightAlign);
-    }
-
-    if (climbSubsystem != null) {
-      if (!Constants.oneController) {
-        buttons2[Constants.startButton].whenPressed(
-            new InstantCommand(climbSubsystem::toggleClimbEnable, climbSubsystem));
+    if (axisCount1 == 0 && buttonCount1 == 0) {
+      
+      // Shooter
+      if (shooterSubsystem != null && shooterHeld != null) {
+        buttons[Constants.backButton].whenPressed(shooterHeld);
+        buttons[Constants.LJoystickButton].whenPressed(
+            new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
+        buttons[Constants.RJoystickButton].whenPressed(
+            new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
       }
+
+      // CDS
+      if (CDSSubsystem != null) {
+        CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+        CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
+      }
+
+      if (CDSForwardCommand != null && outtakeCommand != null) {
+        buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
+        buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
+      }
+
+      // Limelight
+      if (limelightAlign != null) {
+        buttons[Constants.startButton].whenPressed(limelightAlign);
+      }
+
+      //ClimbSubysystem has no binding because there are not enuf axises
+      if (climbSubsystem != null) {}
+
+      System.out.printf("Testing Mode");
+    } else {
+
+      if (shooterSubsystem != null && shooterHeld != null) {
+        buttons[Constants.LBumper].whileHeld(shooterHeld);
+        buttons[Constants.LTriggerButton].whileHeld(
+                () -> shooterSubsystem.setAimMode(Constants.AimModes.LOW.ordinal()));
+      }
+
+      if (climbSubsystem != null) {
+        buttons2[Constants.startButton].whenPressed(
+          new InstantCommand(climbSubsystem::toggleClimbEnable, climbSubsystem));
+      }
+
+      if (CDSForwardCommand != null && outtakeCommand != null) {
+        buttons2[Constants.RBumper].whileHeld(outtakeCommand);
+        buttons2[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
+      }
+      System.out.printf("Compitition Mode");
     }
   }
 

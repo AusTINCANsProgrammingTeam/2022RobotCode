@@ -35,8 +35,6 @@ public class ClimbSubsystem extends SubsystemBase {
   private NetworkTableEntry climberspeed = climberTab.add("Climber Current Speed", 0).withPosition(2, 0).getEntry();
   private NetworkTableEntry climberheight = climberTab.add("Climber targetted height", 0).withPosition(3, 0).getEntry();
 
-  // TODO: maybe add servos
-
   public ClimbSubsystem(Joystick joystick) {
     m_climbJoystick = joystick;
     toggleClimb = false;
