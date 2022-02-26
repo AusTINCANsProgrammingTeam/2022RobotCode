@@ -247,6 +247,7 @@ public class RobotContainer {
         buttons[Constants.startButton].whenPressed(limelightAlign);
       }
 
+      //ClimbSubysystem has no binding because there are not enuf axises
       if (climbSubsystem != null) {}
 
       System.out.printf("Testing Mode");
