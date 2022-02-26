@@ -153,7 +153,6 @@ public class CDSSubsystem extends SubsystemBase {
         ballCount++;
       }
     }
-
     SmartDashboard.putNumber("Ball Count", ballCount);
 
     return beamBreakArray;
@@ -169,55 +168,12 @@ public class CDSSubsystem extends SubsystemBase {
     return -1;
   }
 
-  public void periodic() {
-    // Color sensing
-    String ballColor = senseColor();
-    //SmartDashboard.putString("Ball Color", ballColor);
-    SmartDashboard.putBoolean("Ball Color Match", ballColor == allianceColor);
-    //boolean[] sensorStatus = getSensorStatus();
- 
-  /*
-    // Send ball to setpoint
-    if (!runningCDS) {
-      SmartDashboard.putBoolean("Front sensor status", sensorStatus[2]);
-      SmartDashboard.putBoolean("Middle Sensor Status", sensorStatus[1]);
-      SmartDashboard.putBoolean("Back Sensor Status", sensorStatus[0]);
-
-      if (sensorStatus[2]) {  //1 means sensor is activated
-        int nextOpenSensor = getNextOpenSensor(sensorStatus);
-        SmartDashboard.putNumber("Setpoint", nextOpenSensor);
-        if (nextOpenSensor != -1) {
-          // There is an open setpoint avaliable, run CDS
-          runningCDS = true;
-          setpointIndex = nextOpenSensor;
-          CDSWheelToggle(false); // Run wheel
-          CDSBeltToggle(false); // Run belt
-        }
-      }
-    } else {
-      // Check if ball has reached setpoint, stop if it has
-      if (sensorStatus[setpointIndex]) {
-        stopCDS();
-        runningCDS = false;
-        setpointIndex = -1;
-      } 
-    }*/
-  }
-
-  /*
-  public String getAllianceColor() {
-    Alliance alliance = DriverStation.getAlliance();
-    SmartDashboard.putString("Alliance Color", alliance.toString());
-    return alliance.toString();
-  }*/
-
   public String senseColor() {
-
     Color[] colors = colorSensors.getColors();
 
     // Only sensing colors for first sensor so that we can handle it when it's coming in and not dealing with any other complexities
-    double redAmount = colors[0].red;
-    double blueAmount = colors[0].blue;
+    double redAmount = colors[2].red;
+    double blueAmount = colors[2].blue;
     if (redAmount > blueAmount) {
       SmartDashboard.putString("Ball Color", "Red");
       return "Red";
@@ -225,5 +181,14 @@ public class CDSSubsystem extends SubsystemBase {
       SmartDashboard.putString("Ball Color", "Blue");
       return "Blue";
     }
+  }
+
+  public String getAllianceColor() {
+    return allianceColor;
+  }
+
+  public void periodic() {
+    String ballColor = senseColor();
+    SmartDashboard.putBoolean("Ball Color Match", ballColor == allianceColor);
   }
 }
