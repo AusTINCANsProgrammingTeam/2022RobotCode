@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.CDSAutoAdvanceCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbCommand;
-import frc.robot.commands.ClimbEnable;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
@@ -222,7 +221,7 @@ public class RobotContainer {
     }
 
     if (axisCount1 == 0 && buttonCount1 == 0) {
-      
+
       // Shooter
       if (shooterSubsystem != null && shooterHeld != null) {
         buttons[Constants.backButton].whenPressed(shooterHeld);
@@ -248,7 +247,7 @@ public class RobotContainer {
         buttons[Constants.startButton].whenPressed(limelightAlign);
       }
 
-      //ClimbSubysystem has no binding because there are not enuf axises
+      // ClimbSubysystem has no binding because there are not enuf axises
       if (climbSubsystem != null) {}
 
       System.out.printf("Testing Mode");
@@ -257,12 +256,12 @@ public class RobotContainer {
       if (shooterSubsystem != null && shooterHeld != null) {
         buttons[Constants.LBumper].whileHeld(shooterHeld);
         buttons[Constants.LTriggerButton].whileHeld(
-                () -> shooterSubsystem.setAimMode(Constants.AimModes.LOW.ordinal()));
+            () -> shooterSubsystem.setAimMode(Constants.AimModes.LOW.ordinal()));
       }
 
       if (climbSubsystem != null) {
         buttons2[Constants.startButton].whenPressed(
-          new InstantCommand(climbSubsystem::toggleClimbEnable, climbSubsystem));
+            new InstantCommand(climbSubsystem::toggleClimbEnable, climbSubsystem));
       }
 
       if (CDSForwardCommand != null && outtakeCommand != null) {
