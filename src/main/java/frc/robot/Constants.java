@@ -20,11 +20,11 @@ public final class Constants {
   public enum Subsystems {
     // Change booleans to disable a subsystem in RobotContainer
     // spotless:off
-    DriveBaseSubsystem(true),
-    CDSSubsystem      (true),
-    IntakeSubsystem   (true),
-    ShooterSubsystem  (true),
-    LimelightSubsystem(true),
+    DriveBaseSubsystem(false),
+    CDSSubsystem      (false),
+    IntakeSubsystem   (false),
+    ShooterSubsystem  (false),
+    LimelightSubsystem(false),
     ClimbSubsystem    (true);
     // spotless:on
 
@@ -242,7 +242,7 @@ public final class Constants {
   }
 
   // Climb Constants
-  public static final int ClimbMotorOne = 9;
-  public static final int ClimbMotorTwo = 10;
+  public static final int ClimbMotorOne = 12;
+  public static final int ClimbMotorTwo = 5;
   public static final int LimitSwitchChannel = 12; // Check what number this needs to be
 }
