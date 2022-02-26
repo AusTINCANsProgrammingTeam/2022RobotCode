@@ -194,13 +194,13 @@ public class RobotContainer {
 
     // Limelight
     if (limelightAlign != null) {
-      buttons[Constants.startButton].whenPressed(limelightAlign);
+      buttons[Constants.AButton].whenPressed(limelightAlign);
     }
 
-    if (climbSubsystem != null) {
+    /*if (climbSubsystem != null) {
       buttons[Constants.AButton].whileHeld(climbUPCommand);
       buttons[Constants.XButton].whileHeld(climbDOWNCommand);
-    }
+    }*/
   }
 
   private void initializeTrajectories() {

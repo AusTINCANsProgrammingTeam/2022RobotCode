@@ -226,8 +226,14 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // Arcade Drive where you can only move forwards and backwards for testing
   public void arcadeDrive(double rotation) {
-    m_differentialDrive.arcadeDrive(
+     m_differentialDrive.arcadeDrive(
         -1 * m_driverJoystick.getRawAxis(Constants.leftJoystickY), rotation);
+  }
+
+  public void arcadeDrive(double rotation, double assist){
+    m_differentialDrive.arcadeDrive(
+      (-1 + assist) * m_driverJoystick.getRawAxis(Constants.leftJoystickY), 
+      assist * rotation);
   }
 
   // TODO: Make a command to switch modes (extra)

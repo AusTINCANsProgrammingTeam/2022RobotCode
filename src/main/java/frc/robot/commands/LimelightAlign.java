@@ -32,7 +32,7 @@ public class LimelightAlign extends CommandBase {
   @Override
   public void execute() {
     double adjustment = m_LimelightSubsystem.calculatePID();
-    m_drivebaseSubsystem.arcadeDrive(adjustment);
+    m_drivebaseSubsystem.arcadeDrive(adjustment, 0.8);
   }
 
   // Called once the command ends or is interrupted.
