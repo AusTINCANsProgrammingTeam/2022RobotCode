@@ -169,8 +169,8 @@ public final class Constants {
   public static final int CDSBeltID = 3;
   public static final int CDSWheelControllerOneID = 9;
   public static final int CDSWheelControllerTwoID = 2;
-  public static final double CDSBeltSpeed = 0.25;
-  public static final double CDSWheelControllerSpeed = 0.30;
+  public static final double CDSBeltSpeed = 0.50;
+  public static final double CDSWheelControllerSpeed = 0.60;
   public static final Port colorSensorPort = Port.kOnboard; // Placeholder Value, to be changed
 
   // spotless:off
