@@ -40,7 +40,7 @@ public final class Constants {
   }
 
   public enum AimModes {
-    AUTO,
+    AUTO, 
     // TODO: Plug real values in for these aimModes
     LOW(3200.0, 0.0) {
       @Override
@@ -231,15 +231,16 @@ public final class Constants {
         54.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as
     // exact as possible
 
-    public static final double kP = 3e-4;
-    public static final double kI = 6e-7;
-    public static final double kD = 0.0;
+    public static final double kP = 2.5e-4;
+    public static final double kI = 19e-6;
+    public static final double kD = 0.005;
     public static final double kF = 0.0;
     public static final double kIZone = 0.9;
     public static final double kMaxOutput = 0;
     public static final double kMaxI = 0.9;
     public static final double kMaxISlotId = 0;
     public static final double kMinOutput = 1;
+    public static final double kA = 0.075;
   }
 
   // Climb Constants

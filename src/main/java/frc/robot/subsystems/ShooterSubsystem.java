@@ -9,6 +9,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -38,6 +39,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private int IMaxAccumIDconstant;
   private int I_Zone;
   private double MaxOutput;
+  private double smoothRPM;
 
   private ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter Tab");
   // TODO: Fine for now, but we really need to fix this tab when we have shuffleboard decided
@@ -74,15 +76,17 @@ public class ShooterSubsystem extends SubsystemBase {
       shooterTab.add("Distance to goal", 0.0).withPosition(2, 0).getEntry();
   private NetworkTableEntry DShooterRPM =
       shooterTab.add("Shooter RPM", 0.0).withPosition(2, 1).getEntry();
-  private NetworkTableEntry BCargoRunning =
-      shooterTab.add("Is the CDS Running", false).withPosition(2, 2).getEntry();
+  private NetworkTableEntry DCargoRunning =
+      shooterTab.add("Is the CDS Running", 0.0).withPosition(2, 2).getEntry();
   private NetworkTableEntry DShooterRPMInput =
-      shooterTab.add("Shooter RPM Input", 2000).withPosition(2, 3).getEntry();
+      shooterTab.add("Shooter RPM Input", 3550).withPosition(2, 3).getEntry();
   private NetworkTableEntry IDelayTable =
       shooterTab
           .add("Current I delay", 0)
           .withPosition(2, 4)
           .getEntry(); // Delay before the CDS deliver the ball for the PID to stablize the speed
+  private NetworkTableEntry DSmoothRPM =
+    shooterTab.add("Smooth RPM", 0.0).getEntry();
   private double MaxOutputConstant;
   private double MinOutputConstant;
   private ShooterConfig[] DistanceArray;
@@ -94,7 +98,8 @@ public class ShooterSubsystem extends SubsystemBase {
   // Constants.Shooter.d).withPosition(5, 2).getEntry();
 
   public ShooterSubsystem() {
-    aimMode = AimModes.TARMAC;
+    smoothRPM = 0;
+    aimMode = AimModes.TEST;
     // Initializes the SparkMAX for the flywheel motors
     flywheelController = new MotorController("Flywheel", Constants.Shooter.shooterID, 40, true);
     flywheel2Controller = new MotorController("Flywheel 2", Constants.Shooter.shooter2ID);
@@ -183,8 +188,13 @@ public class ShooterSubsystem extends SubsystemBase {
     }
   }
 
-  public void setCargoBoolean(boolean a) {
-    BCargoRunning.setBoolean(a);
+  public void setCargoBoolean(int a) {
+    if(a == 1){
+      DCargoRunning.setDouble(targetRPM * 0.5);
+    }
+    else{
+      DCargoRunning.setDouble(0);
+    }
   }
 
   public void updateIdelay(double i) {
@@ -197,7 +207,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public boolean wheelReady() {
     double flywheelSpeed = flywheelEncoder.getVelocity();
-    return (flywheelSpeed > targetRPM - 56 && flywheelSpeed < targetRPM + 56);
+    return (smoothRPM > targetRPM - 56 && smoothRPM < targetRPM + 56);
   }
 
   public void setAimMode(int m) {
@@ -261,8 +271,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    smoothRPM = Constants.Shooter.kA * flywheelEncoder.getVelocity() + smoothRPM * (1 - Constants.Shooter.kA);
     // This method will be called once per scheduler run
     DShooterRPM.setDouble(flywheelEncoder.getVelocity());
+    DSmoothRPM.setDouble(smoothRPM);
     DDistance.setDouble(getDistance());
     if (dashTunePid.getBoolean(false)) {
       if ((flywheelPID.getP() != PID_P.getDouble(0))
