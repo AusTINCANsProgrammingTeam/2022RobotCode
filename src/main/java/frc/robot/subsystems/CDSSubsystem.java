@@ -31,6 +31,8 @@ public class CDSSubsystem extends SubsystemBase {
   private boolean runningCDS = false;
   private int setpointIndex;
   private ColorSensorMuxed colorSensors;
+
+  private boolean isReady = true; // Variable for whether CDS is ready for shooter action
  
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry CDSWheelControllerDirection =
@@ -187,8 +189,13 @@ public class CDSSubsystem extends SubsystemBase {
     return allianceColor;
   }
 
-  public void periodic() {
-    String ballColor = senseColor();
-    SmartDashboard.putBoolean("Ball Color Match", ballColor == allianceColor);
+  public boolean getReady() {
+    return isReady;
   }
+
+  public void setReady(boolean status) {
+    isReady = status;
+  }
+
+  public void periodic() {}
 }

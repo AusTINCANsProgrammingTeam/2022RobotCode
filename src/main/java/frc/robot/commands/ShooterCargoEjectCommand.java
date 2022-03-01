@@ -4,29 +4,32 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.CDSSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.CDSSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 
-public class OuttakeCommand extends CommandBase {
-  /** Creates a new OuttakeCommand. */
-  private final CDSSubsystem CDSSubsystem;
-  private final IntakeSubsystem intakeSubsystem;
+public class ShooterCargoEjectCommand extends CommandBase {
+  /** Creates a new ShooterCargoEjectCommand. */
+  private ShooterSubsystem shooterSubsystem;
+  private CDSSubsystem CDSSubsystem;
+  private LimelightSubsystem limelightSubsystem;
+  private Boolean llEnabled;
+  private int i;
 
-  public OuttakeCommand(IntakeSubsystem mIntakeSubsystem, CDSSubsystem mCDSSubsystem) {
+  public ShooterCargoEjectCommand(ShooterSubsystem mShooterSubsystem, CDSSubsystem mCDSSubsystem, LimelightSubsystem mLimelightSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(mIntakeSubsystem);
+    addRequirements(mShooterSubsystem);
     addRequirements(mCDSSubsystem);
-    intakeSubsystem = mIntakeSubsystem;
-    CDSSubsystem = mCDSSubsystem;
+    if (llEnabled){
+      addRequirements(mLimelightSubsystem);
+    }
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    CDSSubsystem.CDSBeltToggle(true);
-    CDSSubsystem.CDSWheelToggle(true);
-    intakeSubsystem.toggleIntake(true);
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,10 +38,7 @@ public class OuttakeCommand extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    CDSSubsystem.stopCDS();
-    intakeSubsystem.stopIntake();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
@@ -46,4 +46,3 @@ public class OuttakeCommand extends CommandBase {
     return false;
   }
 }
-
