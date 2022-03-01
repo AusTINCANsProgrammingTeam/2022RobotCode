@@ -29,7 +29,7 @@ public class ShooterHeld extends CommandBase {
     }
     m_ShooterSubsystem = shooterSubsystem;
     m_LimelightSubsystem = limelightSubsystem;
-    // m_CDSSubsystem = cdsSubsystem;
+    m_CDSSubsystem = cdsSubsystem;
     SmartDashboard.putBoolean("wheelReady", false);
     LLEnabled = llEnabled;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -50,17 +50,21 @@ public class ShooterHeld extends CommandBase {
       // Otherwise, alignment is checked.
       if (i > 0 || !LLEnabled || m_LimelightSubsystem.calculatePID() == 0.0) {
         i++;
-        m_ShooterSubsystem.runCargo(true, true);
-        m_ShooterSubsystem.setCargoBoolean(true);
+        m_CDSSubsystem.CDSBeltWheelControllerToggle(false);
+        m_ShooterSubsystem.runCargo(0.65);
+        m_ShooterSubsystem.setCargoBoolean(1);
         if (i >= 50) { // 1000 miliseconds delay TODO: Use a CDS method for this when possible
           i = 0;
-          m_ShooterSubsystem.runCargo(false, false);
-          m_ShooterSubsystem.setCargoBoolean(false);
+          m_CDSSubsystem.stopCDS();
+          m_ShooterSubsystem.runCargo(0.0);
+          m_ShooterSubsystem.setCargoBoolean(0);
         }
 
-      } else {
-        m_ShooterSubsystem.runCargo(false, false);
       }
+    } else {
+      m_ShooterSubsystem.setCargoBoolean(0);
+      m_CDSSubsystem.stopCDS();
+      m_ShooterSubsystem.runCargo(-0.4);
       m_ShooterSubsystem.updateIdelay(i);
     }
   }
@@ -68,10 +72,11 @@ public class ShooterHeld extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_ShooterSubsystem.runCargo(false, false);
+    m_ShooterSubsystem.runCargo(0);
     m_ShooterSubsystem.windFlywheel(0);
-    m_ShooterSubsystem.setCargoBoolean(false);
+    m_ShooterSubsystem.setCargoBoolean(0);
     m_ShooterSubsystem.updateIdelay(0);
+    m_CDSSubsystem.stopCDS();
 
     // SmartDashboard.putBoolean("wheelReady", false);
   }

@@ -60,8 +60,6 @@ public class IntakeSubsystem extends SubsystemBase {
   }*/
 
   public void periodic() {
-    /*boolean[] statusArray = getBeamBreakStatus();
-    SmartDashboard.putBooleanArray("Beam Break", statusArray);*/
   }
 
   /*

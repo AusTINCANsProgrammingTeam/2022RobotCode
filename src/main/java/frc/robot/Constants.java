@@ -40,18 +40,18 @@ public final class Constants {
   }
 
   public enum AimModes {
-    AUTO,
+    AUTO, 
     // TODO: Plug real values in for these aimModes
-    LOW(0.0, 0.0) {
+    LOW(3200.0, 0.0) {
       @Override
       public AimModes previous() {
         return values()[values().length - 1];
       }
     },
-    EJECT(0.0, 0.0),
+    EJECT(2500.0, 0.0),
     LAUNCH(0.0, 0.0),
-    TARMAC(0.0, 0.0),
-    TEST() {
+    TARMAC(4200.0, 0.0),
+    TEST {
       @Override
       public AimModes next() {
         return values()[0];
@@ -122,7 +122,7 @@ public final class Constants {
   public static final int driveLeftRearIndex = 1;
   public static final int driveRightFrontIndex = 2;
   public static final int driveRightRearIndex = 3;
-  public static final int driveBaseCurrentLimit = 40;
+  public static final int driveBaseCurrentLimit = 60;
 
   // drive base pid values
   public static final double[] driveRightPID = {0.00035, 0.0000008, 0};
@@ -169,8 +169,8 @@ public final class Constants {
   public static final int CDSBeltID = 3;
   public static final int CDSWheelControllerOneID = 9;
   public static final int CDSWheelControllerTwoID = 2;
-  public static final double CDSBeltSpeed = 0.25;
-  public static final double CDSWheelControllerSpeed = 0.15;
+  public static final double CDSBeltSpeed = 0.50;
+  public static final double CDSWheelControllerSpeed = 0.60;
   public static final Port colorSensorPort = Port.kOnboard; // Placeholder Value, to be changed
   public static final int frontSensorActivation = 300;
   public static final int middleSensorActivation = 450;
@@ -179,48 +179,49 @@ public final class Constants {
 
   // spotless:off
   // Controller Constants {
-    public static final int portNumber0 = 0;
-    public static final int portNumber1 = 1;
+  public static final int portNumber0 = 0;
+  public static final int portNumber1 = 1;
 
-    // Buttons not in use
-    public static final int XButton = 1;
-    public static final int AButton = 2;
-    public static final int BButton = 3;
-    public static final int YButton = 4;
+  // Buttons not in use
+  public static final int XButton = 1;
+  public static final int AButton = 2;
+  public static final int BButton = 3;
+  public static final int YButton = 4;
 
-    // Intake Subsystem
-    public static final int LBumper = 5; // Intake forward
-    public static final int RBumper = 6; // Intake reverse
+  // Intake Subsystem
+  public static final int LBumper = 5; // Intake forward
+  public static final int RBumper = 6; // Intake reverse
 
-    // CDS Subsystem
-    public static final int LTriggerButton = 7; // CDS forward
-    public static final int RTriggerButton = 8; // CDS reverse
+  // CDS Subsystem
+  public static final int LTriggerButton = 7; // CDS forward
+  public static final int RTriggerButton = 8; // CDS reverse
 
-    // Shooter Prime/LimeLight
-    public static final int backButton = 9; // Button starts ShooterPrime
-    public static final int startButton = 10; // Button to align LimeLight
+  // Shooter Prime/LimeLight
+  public static final int backButton = 9; // Button starts ShooterPrime
+  public static final int startButton = 10; // Button to align LimeLight
 
-    // Shooter Subsystem mode change
-    public static final int LJoystickButton = 11; // Button for Shooter mode
-    public static final int RJoystickButton = 12; // BUtton for Shooter mode
+  // Shooter Subsystem mode change
+  public static final int LJoystickButton = 11; // Button for Shooter mode
+  public static final int RJoystickButton = 12; // BUtton for Shooter mode
 
-    // POV's not in use
-    public static final int POVup = 0;
-    public static final int POVdown = 180;
-    public static final int POVright = 90;
-    public static final int POVleft = 270;
+  // POV's not in use
+  public static final int POVup = 0;
+  public static final int POVdown = 180;
+  public static final int POVright = 90;
+  public static final int POVleft = 270;
 
-    // DriveBase Subsystem
-    public static final int leftJoystickX = 0; // Unused but will easily be accidentally activated if used
-    public static final int leftJoystickY = 1; // arcade forward / tank left turning
-    public static final int rightJoystickX = 2; // arcade turning
-    public static final int rightJoystickY = 3; // tank right turning
+  // DriveBase Subsystem
+  public static final int leftJoystickX =
+      0; // Unused but will easily be accidentally activated if used
+  public static final int leftJoystickY = 1; // arcade forward / tank left turning
+  public static final int rightJoystickX = 2; // arcade turning
+  public static final int rightJoystickY = 3; // tank right turning
   // }
 
   // Shooter Constants
   public static final class Shooter {
     public static final int shooterID = 10; // ID of the shooter
-    public static final int shooter2ID = 11;
+    public static final int shooter2ID = 11; // ID of the second shooter motor
     // public static final int hoodID = 0; // ID of the hood;
     public static final int shooterCargoID = 4;
 
@@ -229,20 +230,21 @@ public final class Constants {
     public static final double lowHeight =
         5.0 + 7.75 / 12.0; // Height of the low goal in ft from the carpet
     public static final double LLHeight =
-        3.0 + 7.0 / 12.0; // Height of the limelight in ft from the carpet
+        28.0 / 12.0; // Height of the limelight in ft from the carpet
     public static final double LLAngle =
-        40.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as
+        54.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as
     // exact as possible
 
-    public static final double kP = 6e-4;
-    public static final double kI = 6e-7;
-    public static final double kD = 0.0;
+    public static final double kP = 2.5e-4;
+    public static final double kI = 19e-6;
+    public static final double kD = 0.005;
     public static final double kF = 0.0;
     public static final double kIZone = 0.9;
     public static final double kMaxOutput = 0;
     public static final double kMaxI = 0.9;
     public static final double kMaxISlotId = 0;
     public static final double kMinOutput = 1;
+    public static final double kA = 0.075;
   }
 
   // Climb Constants

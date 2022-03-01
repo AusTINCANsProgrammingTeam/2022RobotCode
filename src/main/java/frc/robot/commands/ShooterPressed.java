@@ -50,8 +50,8 @@ public class ShooterPressed extends CommandBase {
       // Otherwise, alignment is checked.
       if (i > 0 || !LLEnabled || m_LimelightSubsystem.calculatePID() == 0.0) {
         i++;
-        m_ShooterSubsystem.runCargo(true, true);
-        m_ShooterSubsystem.setCargoBoolean(true);
+        m_ShooterSubsystem.runCargo(0.75);
+        m_ShooterSubsystem.setCargoBoolean(1);
       }
       m_ShooterSubsystem.updateIdelay(i);
     }
@@ -60,9 +60,9 @@ public class ShooterPressed extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_ShooterSubsystem.runCargo(false, false);
+    m_ShooterSubsystem.runCargo(0.0);
     m_ShooterSubsystem.windFlywheel(0);
-    m_ShooterSubsystem.setCargoBoolean(false);
+    m_ShooterSubsystem.setCargoBoolean(0);
     m_ShooterSubsystem.updateIdelay(0);
 
     // SmartDashboard.putBoolean("wheelReady", false);
