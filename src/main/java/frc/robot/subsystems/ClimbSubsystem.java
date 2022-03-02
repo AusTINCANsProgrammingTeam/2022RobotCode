@@ -74,7 +74,8 @@ public class ClimbSubsystem extends SubsystemBase {
     sbclimbHeightOne =
         climberTab.add("Climb Hight 1", 0).withSize(2, 2).withPosition(8, 0).getEntry();
     sbclimbHeightTwo =
-        climberTab.add("Climber Current Speed 2", 0).withSize(2, 2).withPosition(0, 2).getEntry();
+        climberTab.add("Climb Hight 2", 0).withSize(2, 2).withPosition(8, 0).getEntry();
+    
     sbclimberheightTwo =
         climberTab
             .add("Climber targetted height 2", 0)
@@ -88,7 +89,11 @@ public class ClimbSubsystem extends SubsystemBase {
         climberTab.add("Climber Imput One", 0).withSize(2, 2).withPosition(2, 2).getEntry();
     sbclimbHeightImputTwo =
         climberTab.add("Climber Imput Two", 0).withSize(2, 2).withPosition(4, 2).getEntry();
-  }
+    sbclimberpositionTwo =
+        climberTab.add("Climber position 2", 0).withSize(2, 2).withPosition(2, 4).getEntry();
+    
+
+      }
 
   public void climbEnabbledEnable() {
     climbEnabbled = !climbEnabbled;
@@ -119,14 +124,14 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void periodic() {
-    climberTab = Shuffleboard.getTab("ClimbBase");
+    if(climberTab != null) {
 
     SmartDashboard.putNumber(
         "Climb Hight One", m_climbMotorControllerOne.getEncoder().getPosition());
-    if ((double) sbclimbHeightOne.getNumber(0) != climbHeightOne) {
-      climbHeightOne = (double) sbclimbHeightOne.getNumber(0);
+    if ( sbclimbHeightOne.getDouble(0) != climbHeightOne) {
+      climbHeightOne = sbclimbHeightOne.getDouble(0);
     } else {
-      sbclimberheightTwo.setDouble(climbHeightTwo);
+      sbclimberheightOne.setDouble(climbHeightOne);
     }
     sbclimberspeedOne.setDouble(m_climbMotorControllerOne.getEncoder().getVelocity());
     sbclimberpositionOne.setDouble(m_climbMotorControllerOne.getEncoder().getPosition());
@@ -135,8 +140,8 @@ public class ClimbSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber(
         "Climb Hight Two", m_climbMotorControllerTwo.getEncoder().getPosition());
-    if ((double) sbclimbHeightTwo.getNumber(0) != climbHeightTwo) {
-      climbHeightTwo = (double) sbclimbHeightTwo.getNumber(0);
+    if ( sbclimbHeightTwo.getDouble(0) != climbHeightTwo) {
+      climbHeightTwo = sbclimbHeightTwo.getDouble(0);
     } else {
       sbclimberheightTwo.setDouble(climbHeightTwo);
     }
@@ -144,6 +149,7 @@ public class ClimbSubsystem extends SubsystemBase {
     sbclimberpositionTwo.setDouble(m_climbMotorControllerTwo.getEncoder().getPosition());
     m_climbMotorControllerTwo.updateSmartDashboard();
     SmartDashboard.putNumber("Climb IAccum Two", m_climbMotorControllerTwo.getPID().getIAccum());
+  }
   }
 
   public boolean getLimitSwitchVal() {
