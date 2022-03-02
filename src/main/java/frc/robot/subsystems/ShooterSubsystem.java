@@ -264,9 +264,7 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     currentRPM = flywheelEncoder.getVelocity();
-    smoothRPM =
-        Constants.Shooter.kA * currentRPM
-            + smoothRPM * (1 - Constants.Shooter.kA);
+    smoothRPM = Constants.Shooter.kA * currentRPM + smoothRPM * (1 - Constants.Shooter.kA);
     // This method will be called once per scheduler run
     DShooterRPM.setDouble(currentRPM);
     DSmoothRPM.setDouble(smoothRPM);
