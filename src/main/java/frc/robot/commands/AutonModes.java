@@ -197,22 +197,16 @@ public class AutonModes {
   public Command getChosenCommand(String commandName) {
     switch (commandName) {
       case "taxi":
-        System.out.println("Taxi command chosen.");
         return taxiCommand;
       case "one ball":
-        System.out.println("One ball command chosen.");
         return oneBallCommand;
       case "two ball":
-        System.out.println("Two ball command chosen.");
         return twoBallCommand;
       case "three ball":
-        System.out.println("Three ball command chosen.");
         return threeBallCommand;
       case "four ball":
-        System.out.println("Four ball command chosen.");
         return fourBallCommand;
       default:
-        System.out.println("No command chosen.");
         return null;
     }
   }
