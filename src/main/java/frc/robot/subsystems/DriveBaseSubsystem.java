@@ -107,6 +107,12 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.driveRightRearIndex].setFollow(
         m_motorControllers[Constants.driveRightFrontIndex]);
 
+    // open loop ramp rate
+    // m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax().setOpenLoopRampRate(.1);
+    // m_motorControllers[Constants.driveRightFrontIndex].getSparkMax().setOpenLoopRampRate(.1);
+    // m_motorControllers[Constants.driveLeftRearIndex].getSparkMax().setOpenLoopRampRate(.1);
+    // m_motorControllers[Constants.driveRightRearIndex].getSparkMax().setOpenLoopRampRate(.1);
+
     // differential drive
     m_differentialDrive =
         new DifferentialDrive(
@@ -204,8 +210,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
   // Normal Arcade Drive
   public void arcadeDrive() {
     m_differentialDrive.arcadeDrive(
-        -1 * m_driverJoystick.getRawAxis(Constants.leftJoystickY),
-        m_driverJoystick.getRawAxis(Constants.rightJoystickX));
+        m_driverJoystick.getRawAxis(Constants.leftJoystickY),
+        -0.85 * m_driverJoystick.getRawAxis(Constants.rightJoystickX),
+        true);
     // joystick has y-axis flipped so up is negative why down is positive
   }
 

@@ -59,10 +59,7 @@ public class IntakeSubsystem extends SubsystemBase {
     return beamBreakArray;
   }*/
 
-  public void periodic() {
-    /*boolean[] statusArray = getBeamBreakStatus();
-    SmartDashboard.putBooleanArray("Beam Break", statusArray);*/
-  }
+  public void periodic() {}
 
   /*
   public int getBallCount() {

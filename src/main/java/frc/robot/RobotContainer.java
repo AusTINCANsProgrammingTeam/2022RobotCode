@@ -144,6 +144,13 @@ public class RobotContainer {
     if (CDSSubsystem != null && shooterSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
     }
+    // CDS
+    if (CDSSubsystem != null) {
+      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+      CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
+      // CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+      // CDSSubsystem.senseColor();
+    }
     if (intakeSubsystem != null) {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
@@ -152,7 +159,7 @@ public class RobotContainer {
       shooterHeld =
           new ShooterHeld(
               shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
-      shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, CDSSubsystem, true);
+      shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, CDSSubsystem, false);
     }
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
@@ -172,25 +179,17 @@ public class RobotContainer {
 
     // Intake
     if (intakeForwardCommand != null && intakeReverseCommand != null) {
-      buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
+      buttons[Constants.BButton].whileHeld(intakeForwardCommand);
       buttons[Constants.RTriggerButton].whileHeld(intakeReverseCommand);
     }
 
     // Shooter
     if (shooterSubsystem != null && shooterHeld != null) {
-      buttons[Constants.backButton].whenPressed(shooterHeld);
-      buttons[Constants.LJoystickButton].whenPressed(
-          new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
-      buttons[Constants.RJoystickButton].whenPressed(
-          new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
-    }
-
-    // CDS
-    if (CDSSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-      CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
-      // CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
-      // CDSSubsystem.senseColor();
+      buttons[Constants.LTriggerButton].whileHeld(shooterHeld);
+      // buttons[Constants.LJoystickButton].whenPressed(
+      //   new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
+      // buttons[Constants.RJoystickButton].whenPressed(
+      // new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
     }
 
     if (CDSForwardCommand != null && outtakeCommand != null) {
