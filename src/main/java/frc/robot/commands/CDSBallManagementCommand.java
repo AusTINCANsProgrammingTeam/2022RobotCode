@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 
 
 public class CDSBallManagementCommand extends CommandBase {
@@ -40,33 +41,34 @@ public class CDSBallManagementCommand extends CommandBase {
   public void execute() {
     // Run eject before auto advance
     int ballCount = (int) SmartDashboard.getNumber("Ball Count", 0);
-    
+    boolean[] sensorStatus = CDSSubsystem.getSensorStatus();
+
+    SmartDashboard.putBoolean("Front sensor status", sensorStatus[2]);
+    SmartDashboard.putBoolean("Middle Sensor Status", sensorStatus[1]);
+    SmartDashboard.putBoolean("Back Sensor Status", sensorStatus[0]);
+
+
     if (!ejectRunning) {
-      if (ballCount > 2) {
+      if (ballCount > 2 || sensorStatus[2] && CDSSubsystem.getAllianceColor() != CDSSubsystem.senseColor() && !Constants.testMode) {
         CDSSubsystem.CDSWheelToggle(true);
         intakeSubsystem.toggleIntake(true);
         ejectRunning = true;
-      }
+      } 
     } else {
-      if (cycleCount >= msDelay) {
-        CDSSubsystem.stopCDS();
-        intakeSubsystem.stopIntake();
-        ejectRunning = false;
-        cycleCount = 0;
-      } else {
-        cycleCount+=60;
-      }
+        if (cycleCount >= msDelay) {
+          CDSSubsystem.stopCDS();
+          intakeSubsystem.stopIntake();
+          ejectRunning = false;
+          cycleCount = 0;
+        } else {
+          cycleCount+=60;
+        }
     }
 
     // Only run auto advance if auto eject is not running
     if (!ejectRunning) {
-      boolean[] sensorStatus = CDSSubsystem.getSensorStatus();
 
-      SmartDashboard.putBoolean("Front sensor status", sensorStatus[2]);
-      SmartDashboard.putBoolean("Middle Sensor Status", sensorStatus[1]);
-      SmartDashboard.putBoolean("Back Sensor Status", sensorStatus[0]);
       if (!runningCDS) {
-
         // Send ball to setpoint
         if (sensorStatus[2]) {  
           int nextOpenSensor = CDSSubsystem.getNextOpenSensor(sensorStatus);
