@@ -24,7 +24,7 @@ public class ClimbEnable extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.toggleClimbEnable();
+    m_subsystem.climbEnabbledEnable();
   }
 
   // Called once the command ends or is interrupted.
