@@ -124,8 +124,6 @@ public class AutonModes {
   }
 
   private void initializeTrajectories() {
-    String pathName;
-
     taxiTrajectory = getTrajectory("paths/TaxiOut.wpilib.json");
 
     if (allSubsystemsEnabled) {
@@ -133,8 +131,8 @@ public class AutonModes {
 
       twoBallTrajectory = getTrajectory("paths/TaxiOutToGrabBall.wpilib.json");
 
-      // threeBallTrajectory
-      // fourBallTrajectory
+      // threeBallTrajectories
+      // fourBallTrajectories
     }
   }
 
@@ -160,7 +158,6 @@ public class AutonModes {
             // taxiRamseteCommands[0]);
             taxiRamseteCommand.beforeStarting(
                 () -> driveBaseSubsystem.resetOdometry(taxiTrajectory.getInitialPose())));
-    System.out.println("taxiCommand created");
 
     if (allSubsystemsEnabled) {
       oneBallCommand =
@@ -192,24 +189,30 @@ public class AutonModes {
               // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem)
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true));
 
-      // threeBallCommand
-      // fourBallCommand
+      threeBallCommand = null;
+      fourBallCommand = null;
     }
   }
 
   public Command getChosenCommand(String commandName) {
     switch (commandName) {
       case "taxi":
+        System.out.println("Taxi command chosen.");
         return taxiCommand;
-      case "one Ball":
+      case "one ball":
+        System.out.println("One ball command chosen.");
         return oneBallCommand;
-      case "two Ball":
+      case "two ball":
+        System.out.println("Two ball command chosen.");
         return twoBallCommand;
-      case "three Ball":
+      case "three ball":
+        System.out.println("Three ball command chosen.");
         return threeBallCommand;
-      case "four Ball":
+      case "four ball":
+        System.out.println("Four ball command chosen.");
         return fourBallCommand;
       default:
+        System.out.println("No command chosen.");
         return null;
     }
   }

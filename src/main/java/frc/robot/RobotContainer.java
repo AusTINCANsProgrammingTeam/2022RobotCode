@@ -214,8 +214,11 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand(String pathname) {
-    chosenAutonMode = autonModes.getChosenCommand(pathname);
-    return chosenAutonMode;
+    if (autonModes != null) {
+      chosenAutonMode = autonModes.getChosenCommand(pathname);
+      return chosenAutonMode;
+    }
+    return null;
   }
 
   private void initAuton() {
@@ -231,28 +234,24 @@ public class RobotContainer {
                 limelightSubsystem,
                 CDSSubsystem,
                 intakeSubsystem);
-          
+
       } else {
         autonModes =
             new AutonModes(
                 driveBaseSubsystem); // default constructor, if other subsystems are disabled only
         // use drivebase for taxi
       }
-
-      // TODO: add a sendable chooser
-      //String commandName = "taxi";
-      //chosenAutonMode = autonModes.getChosenCommand(commandName);
     } else {
-      chosenAutonMode = null;
+      autonModes = null;
     }
   }
 
   // TODO: create get methods for other subsystems to pass into TabContainer, or find a more
   // efficient way
   public static DriveBaseSubsystem getDriveBase() {
-    if (driveBaseSubsystem == null) {
-      return null;
+    if (driveBaseSubsystem != null) {
+      return driveBaseSubsystem;
     }
-    return driveBaseSubsystem;
+    return null;
   }
 }

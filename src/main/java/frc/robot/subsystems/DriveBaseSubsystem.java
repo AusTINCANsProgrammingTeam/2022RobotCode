@@ -189,7 +189,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // update odometry
+    // update odometryreset
     double leftPosition = m_leftEncoder.getPosition();
     double rightPosition = m_rightEncoder.getPosition();
     m_odometry.update(m_gyro.getRotation2d(), leftPosition, rightPosition);

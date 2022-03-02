@@ -5,16 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.AutonModes;
-import frc.robot.commands.ClimbCommand;
-import frc.robot.commands.CDSForwardCommand;
-import frc.robot.subsystems.DriveBaseSubsystem;
-import frc.robot.subsystems.Tabs.TabContainer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.RobotContainer;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Tabs.TabContainer;
 
 // The VM is configured to automatically run this class, and to call the functions corresponding to
 // each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -26,12 +21,6 @@ public class Robot extends TimedRobot {
   private SendableChooser<Command> chooser = new SendableChooser<>();
   private RobotContainer robotContainer;
   private TabContainer tabContainer;
-  //TODO: Replace these with the correct path names
-  private String taxi = "taxi";
-  private String oneball = "taxi";
-  private String twoball = "taxi";
-  private String threeball = "taxi";
-  private String fourball = "taxi";
 
   // This function is run when the robot is first started up and should be used
   // for any
@@ -41,17 +30,21 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    //TODO: Put commands here
-    
-   
+    // TODO: Put commands here
+
     robotContainer = new RobotContainer();
-    chooser.setDefaultOption("Taxi", robotContainer.getAutonomousCommand(taxi));
-    chooser.addOption("One Ball", robotContainer.getAutonomousCommand(oneball));
-    chooser.addOption("Two Ball", robotContainer.getAutonomousCommand(twoball));
-    chooser.addOption("Three Ball", robotContainer.getAutonomousCommand(threeball));
-    chooser.addOption("Four Ball", robotContainer.getAutonomousCommand(fourball));
-    tabContainer = new TabContainer(RobotContainer.getDriveBase());
+
+    // TODO: change to correct paths
+    chooser.setDefaultOption("Taxi", robotContainer.getAutonomousCommand("taxi"));
+    chooser.addOption("One Ball", robotContainer.getAutonomousCommand("one ball"));
+    chooser.addOption("Two Ball", robotContainer.getAutonomousCommand("two ball"));
+    chooser.addOption("Three Ball", robotContainer.getAutonomousCommand("three ball"));
+    chooser.addOption("Four Ball", robotContainer.getAutonomousCommand("four ball"));
     SmartDashboard.putData("Auto Mode", chooser);
+
+    if (RobotContainer.getDriveBase() != null) {
+      tabContainer = new TabContainer(RobotContainer.getDriveBase());
+    }
   }
 
   // This function is called every robot packet, no matter the mode. Use this for items like
@@ -79,8 +72,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    //This would put the command that the auto mode is using on the smart dashboard, for debugging
-    //SmartDashboard.putString("Auto Command", chooser.getSelected().getName());
+    // This would put the command that the auto mode is using on the smart dashboard, for debugging
+    // SmartDashboard.putString("Auto Command", chooser.getSelected().getName());
   }
 
   // This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
