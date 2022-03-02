@@ -49,7 +49,7 @@ public class CDSBallManagementCommand extends CommandBase {
 
 
     if (!ejectRunning) {
-      if (ballCount > 2 || sensorStatus[2] && CDSSubsystem.getAllianceColor() != CDSSubsystem.senseColor() && !Constants.testMode) {
+      if ((ballCount > 2) || (sensorStatus[2] && CDSSubsystem.getAllianceColor() != CDSSubsystem.senseColor() && !Constants.testMode)) {
         CDSSubsystem.CDSWheelToggle(true);
         intakeSubsystem.toggleIntake(true);
         ejectRunning = true;
