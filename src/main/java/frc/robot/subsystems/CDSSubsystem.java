@@ -5,7 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.ColorSensorV3;
+  import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -28,8 +28,6 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSWheelControllerOne;
   private MotorController CDSWheelControllerTwo;
   private String allianceColor;
-  private boolean runningCDS = false;
-  private int setpointIndex;
   private ColorSensorMuxed colorSensors;
 
   private boolean isReady = true; // Variable for whether CDS is ready for shooter action
