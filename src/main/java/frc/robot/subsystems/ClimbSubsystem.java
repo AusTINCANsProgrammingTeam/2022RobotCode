@@ -5,8 +5,6 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
@@ -39,6 +37,8 @@ public class ClimbSubsystem extends SubsystemBase {
   private NetworkTableEntry sbclimberpositionTwo;
   private NetworkTableEntry sbclimberspeedTwo;
   private NetworkTableEntry sbclimberheightTwo;
+  private NetworkTableEntry sbclimbHeightImputOne;
+  private NetworkTableEntry sbclimbHeightImputTwo;
 
   public ClimbSubsystem(Joystick joystick) {
     m_climbJoystick = joystick;
@@ -47,9 +47,11 @@ public class ClimbSubsystem extends SubsystemBase {
     climbHeightTwo = 0;
 
     // One is left, two is right
-    m_climbMotorControllerOne = new MotorController("Climb Motor One", Constants.ClimbMotorOne, 40, true);
+    m_climbMotorControllerOne =
+        new MotorController("Climb Motor One", Constants.ClimbMotorOne, 40, true);
     m_climbMotorControllerOne.getEncoder().setPosition(0);
-    m_climbMotorControllerTwo = new MotorController("Climb Motor Two", Constants.ClimbMotorTwo, 40, true);
+    m_climbMotorControllerTwo =
+        new MotorController("Climb Motor Two", Constants.ClimbMotorTwo, 40, true);
     m_climbMotorControllerTwo.getEncoder().setPosition(0);
     m_climbMotorControllerTwo.setInverted(true);
 
@@ -57,14 +59,35 @@ public class ClimbSubsystem extends SubsystemBase {
 
     climberTab = Shuffleboard.getTab("ClimbBase");
 
-    sbClimbEnabbled = climberTab.add("Climb Eanbled", false).withSize(2, 2).withPosition(0, 0).getEntry();
-    sbclimberpositionOne = climberTab.add("Climber position", 0).withSize(2, 2).withPosition(2, 0).getEntry();
-    sbclimberspeedOne = climberTab.add("Climber Current Speed 1", 0).withSize(2, 2).withPosition(4, 0).getEntry();
-    sbclimberheightOne = climberTab.add("Climber targetted height 1", 0).withSize(2, 2).withPosition(6, 0).getEntry();
-    sbclimbHeightOne = climberTab.add("Climb Hight 1", 0).withSize(2, 2).withPosition(8,0).getEntry();
-    sbclimbHeightTwo = climberTab.add("Climber Current Speed 2", 0).withSize(2, 2).withPosition(0, 2).getEntry();
-    sbclimberheightTwo = climberTab.add("Climber targetted height 2", 0).withSize(2, 2).withPosition(8,0).getEntry();
-    sbclimberspeedTwo = climberTab.add("Climber Current Speed 2", 0).withSize(2, 2).withPosition(8,0).getEntry();
+    sbClimbEnabbled =
+        climberTab.add("Climb Eanbled", false).withSize(2, 2).withPosition(0, 0).getEntry();
+    sbclimberpositionOne =
+        climberTab.add("Climber position", 0).withSize(2, 2).withPosition(2, 0).getEntry();
+    sbclimberspeedOne =
+        climberTab.add("Climber Current Speed 1", 0).withSize(2, 2).withPosition(4, 0).getEntry();
+    sbclimberheightOne =
+        climberTab
+            .add("Climber targetted height 1", 0)
+            .withSize(2, 2)
+            .withPosition(6, 0)
+            .getEntry();
+    sbclimbHeightOne =
+        climberTab.add("Climb Hight 1", 0).withSize(2, 2).withPosition(8, 0).getEntry();
+    sbclimbHeightTwo =
+        climberTab.add("Climber Current Speed 2", 0).withSize(2, 2).withPosition(0, 2).getEntry();
+    sbclimberheightTwo =
+        climberTab
+            .add("Climber targetted height 2", 0)
+            .withSize(2, 2)
+            .withPosition(8, 0)
+            .getEntry();
+    sbclimberspeedTwo =
+        climberTab.add("Climber Current Speed 2", 0).withSize(2, 2).withPosition(0, 2).getEntry();
+
+    sbclimbHeightImputOne =
+        climberTab.add("Climber Imput One", 0).withSize(2, 2).withPosition(2, 2).getEntry();
+    sbclimbHeightImputTwo =
+        climberTab.add("Climber Imput Two", 0).withSize(2, 2).withPosition(4, 2).getEntry();
   }
 
   public void climbEnabbledEnable() {
@@ -86,7 +109,9 @@ public class ClimbSubsystem extends SubsystemBase {
           .setReference(climbHeightOne, CANSparkMax.ControlType.kPosition);
       sbclimbHeightOne.setNumber(climbHeightOne);
 
-      m_climbMotorControllerTwo.getPID().setReference(climbHeightTwo, CANSparkMax.ControlType.kPosition);
+      m_climbMotorControllerTwo
+          .getPID()
+          .setReference(climbHeightTwo, CANSparkMax.ControlType.kPosition);
       sbclimbHeightTwo.setNumber(climbHeightTwo);
     } else {
       // m_climbMotorControllerOne.getPID().setReference(0, CANSparkMax.ControlType.kVoltage);
@@ -96,15 +121,25 @@ public class ClimbSubsystem extends SubsystemBase {
   public void periodic() {
     climberTab = Shuffleboard.getTab("ClimbBase");
 
-    SmartDashboard.putNumber("Climb Hight One", m_climbMotorControllerOne.getEncoder().getPosition());
-    sbclimberheightOne.setDouble(climbHeightOne);
+    SmartDashboard.putNumber(
+        "Climb Hight One", m_climbMotorControllerOne.getEncoder().getPosition());
+    if ((double) sbclimbHeightOne.getNumber(0) != climbHeightOne) {
+      climbHeightOne = (double) sbclimbHeightOne.getNumber(0);
+    } else {
+      sbclimberheightTwo.setDouble(climbHeightTwo);
+    }
     sbclimberspeedOne.setDouble(m_climbMotorControllerOne.getEncoder().getVelocity());
     sbclimberpositionOne.setDouble(m_climbMotorControllerOne.getEncoder().getPosition());
     m_climbMotorControllerOne.updateSmartDashboard();
     SmartDashboard.putNumber("Climb IAccum One", m_climbMotorControllerOne.getPID().getIAccum());
 
-    SmartDashboard.putNumber("Climb Hight Two", m_climbMotorControllerTwo.getEncoder().getPosition());
-    sbclimberheightTwo.setDouble(climbHeightTwo);
+    SmartDashboard.putNumber(
+        "Climb Hight Two", m_climbMotorControllerTwo.getEncoder().getPosition());
+    if ((double) sbclimbHeightTwo.getNumber(0) != climbHeightTwo) {
+      climbHeightTwo = (double) sbclimbHeightTwo.getNumber(0);
+    } else {
+      sbclimberheightTwo.setDouble(climbHeightTwo);
+    }
     sbclimberspeedTwo.setDouble(m_climbMotorControllerTwo.getEncoder().getVelocity());
     sbclimberpositionTwo.setDouble(m_climbMotorControllerTwo.getEncoder().getPosition());
     m_climbMotorControllerTwo.updateSmartDashboard();
