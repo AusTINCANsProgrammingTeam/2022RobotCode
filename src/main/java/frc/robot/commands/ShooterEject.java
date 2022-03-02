@@ -16,9 +16,7 @@ public class ShooterEject extends CommandBase {
   private AimModes tempMode;
 
   /** Creates a new ShooterPressed. */
-  public ShooterEject(
-      ShooterSubsystem shooterSubsystem,
-      CDSSubsystem cdsSubsystem) {
+  public ShooterEject(ShooterSubsystem shooterSubsystem, CDSSubsystem cdsSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooterSubsystem);
     addRequirements(cdsSubsystem);
@@ -39,14 +37,14 @@ public class ShooterEject extends CommandBase {
   public void execute() {
     m_ShooterSubsystem.prime();
     if (m_ShooterSubsystem.wheelReady()) {
-        i++;
-        m_CDSSubsystem.CDSBeltToggle(false);
-        m_ShooterSubsystem.runCargo(0.65);
-        m_ShooterSubsystem.setCargoBoolean(true);
+      i++;
+      m_CDSSubsystem.CDSBeltToggle(false);
+      m_ShooterSubsystem.runCargo(0.65);
+      m_ShooterSubsystem.setCargoBoolean(true);
     } else {
-        m_CDSSubsystem.stopCDS();
-        m_ShooterSubsystem.runCargo(-0.4);
-        m_ShooterSubsystem.setCargoBoolean(false);
+      m_CDSSubsystem.stopCDS();
+      m_ShooterSubsystem.runCargo(-0.4);
+      m_ShooterSubsystem.setCargoBoolean(false);
     }
   }
 

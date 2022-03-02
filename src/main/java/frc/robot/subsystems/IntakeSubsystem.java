@@ -59,8 +59,7 @@ public class IntakeSubsystem extends SubsystemBase {
     return beamBreakArray;
   }*/
 
-  public void periodic() {
-  }
+  public void periodic() {}
 
   /*
   public int getBallCount() {

@@ -40,7 +40,7 @@ public final class Constants {
   }
 
   public enum AimModes {
-    AUTO, 
+    AUTO,
     // TODO: Plug real values in for these aimModes
     LOW(3200.0, 0.0) {
       @Override
@@ -107,15 +107,19 @@ public final class Constants {
   // Constants for wheel motors
   public static final double wheelRadius =
       3.0125; // radius of wheel, use for calculating angular values
+  public static final double openLoopRampRate =
+      0.2; // Rate at which the motors reach maximum speed; TODO: tune for optimal performance
   public static final double gearRatio = 10.75; // 10.75 : 1 gear ratio <--- kitbot
   // 10.75 motor rotations : 1 wheel rotation
   public static final double inchesInMeter = 39.3701;
 
   // Actual IDs on robot, used to activate the right motors
-  public static final int driveLeftFront = 6;
-  public static final int driveLeftRear = 7;
-  public static final int driveRightFront = 13;
-  public static final int driveRightRear = 14;
+
+  // TODO: kit bot values for now, change later
+  public static final int driveLeftFront = 13; // 13 on real robot
+  public static final int driveLeftRear = 14; // 14 on real robot
+  public static final int driveRightFront = 6; // 6 on real robot
+  public static final int driveRightRear = 7; // 7 on real robot
 
   // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
   public static final int driveLeftFrontIndex = 0;
@@ -129,13 +133,17 @@ public final class Constants {
   public static final double[] driveLeftPID = {0.000005, 0.0000008, 0};
 
   // AUTONOMOUS Constants
-
+  public static final String taxiout = "TaxiOut.wpilib.json";
+  public static final String taxioutfender = "TaxiOutFromFender.wpilib.json";
+  public static final String taxioutball = "TaxiOutGrabBall.wpilib.json";
   // Volts, constants for ramseteCommand
-  public static final double ksVolts = 0.13323; // Ks,
+  public static final double ksVolts = 0.13323; // Ks
   public static final double kvVoltSecondsPerMeter = 2.8295; // Kv, Velocity
   public static final double kaVoltSecondsSquaredPerMeter = 0.31462; // Ka, Accelleration
 
   public static final double kpDriveVel = 2.1938; // Kp, Velocity
+  public static final double arbFeedForward =
+      8.6045E-07; // voltage applied to the motor after the result of the specified control mode
   public static final double trackWidth = 0.69;
   public static final DifferentialDriveKinematics driveKinematics =
       new DifferentialDriveKinematics(trackWidth);
@@ -145,6 +153,9 @@ public final class Constants {
   public static final double ramseteB = 2; // Convergence, larger values are more aggressive
   public static final double ramseteZeta = 0.7; // Damping, larger values offer more damping
 
+  public static final double delaytaxi = 1.0; // 1 second wait time
+  public static final double delayshot = 0.5; // 0.5 second wait time
+
   // TODO: Replace 0.69 with actual track width in meters and run characterization on real robot
 
   // Encoder constants
@@ -152,11 +163,10 @@ public final class Constants {
   // Controller modes
   public static final boolean oneController = true;
 
-  // TODO: Replace these with the correct ports
-  public static final int leftEncoderDIOone = 0;
-  public static final int leftEncoderDIOtwo = 1;
-  public static final int rightEncoderDIOone = 2;
-  public static final int rightEncoderDIOtwo = 3;
+  // Encoder Constants
+  // TODO: Change to true when using external encoders
+  public static final boolean usingExternal = false;
+  public static final int encoderCountsPerRev = 8192;
 
   // Intake Contstants
   public static final int intakeMotorOneID = 1;
@@ -175,7 +185,6 @@ public final class Constants {
   public static final int frontSensorActivation = 300;
   public static final int middleSensorActivation = 450;
   public static final int backSensorActivation = 600;
-
 
   // spotless:off
   // Controller Constants {
@@ -210,13 +219,13 @@ public final class Constants {
   public static final int POVright = 90;
   public static final int POVleft = 270;
 
-  // DriveBase Subsystem
-  public static final int leftJoystickX =
-      0; // Unused but will easily be accidentally activated if used
+  // Joystick
+
+  // Unused but will easily be accidentally activated if used
+  public static final int leftJoystickX = 0;
   public static final int leftJoystickY = 1; // arcade forward / tank left turning
   public static final int rightJoystickX = 2; // arcade turning
   public static final int rightJoystickY = 3; // tank right turning
-  // }
 
   // Shooter Constants
   public static final class Shooter {

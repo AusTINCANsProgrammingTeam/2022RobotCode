@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
@@ -50,7 +51,7 @@ public class ShooterPressed extends CommandBase {
         m_CDSSubsystem.CDSBeltToggle(false);
         m_ShooterSubsystem.runCargo(0.65);
         m_ShooterSubsystem.setCargoBoolean(true);
-      } 
+      }
     } else {
       m_CDSSubsystem.stopCDS();
       m_ShooterSubsystem.runCargo(-0.4);

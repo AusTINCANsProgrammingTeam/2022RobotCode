@@ -79,8 +79,7 @@ public class ShooterSubsystem extends SubsystemBase {
       shooterTab.add("Is the CDS Running", 0.0).withPosition(2, 2).getEntry();
   private NetworkTableEntry DShooterRPMInput =
       shooterTab.add("Shooter RPM Input", 3550).withPosition(2, 3).getEntry();
-  private NetworkTableEntry DSmoothRPM =
-    shooterTab.add("Smooth RPM", 0.0).getEntry();
+  private NetworkTableEntry DSmoothRPM = shooterTab.add("Smooth RPM", 0.0).getEntry();
   private double MaxOutputConstant;
   private double MinOutputConstant;
   private ShooterConfig[] DistanceArray;
@@ -183,10 +182,9 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setCargoBoolean(boolean a) {
-    if(a){
+    if (a) {
       DCargoRunning.setDouble(targetRPM * 0.5);
-    }
-    else{
+    } else {
       DCargoRunning.setDouble(0);
     }
   }
@@ -204,7 +202,7 @@ public class ShooterSubsystem extends SubsystemBase {
     SShootingMode.setString(aimMode.toString());
   }
 
-  public AimModes getAimMode(){
+  public AimModes getAimMode() {
     return aimMode;
   }
 
@@ -264,7 +262,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    smoothRPM = Constants.Shooter.kA * flywheelEncoder.getVelocity() + smoothRPM * (1 - Constants.Shooter.kA);
+    smoothRPM =
+        Constants.Shooter.kA * flywheelEncoder.getVelocity()
+            + smoothRPM * (1 - Constants.Shooter.kA);
     // This method will be called once per scheduler run
     DShooterRPM.setDouble(flywheelEncoder.getVelocity());
     DSmoothRPM.setDouble(smoothRPM);
@@ -277,8 +277,8 @@ public class ShooterSubsystem extends SubsystemBase {
       }
       // dashTunePid.setBoolean(false);
     }
- /*   if (DShootingMode.getDouble(0) != aimMode.ordinal()) {
-      setAimMode((int) DShootingMode.getDouble(0)); */
-   // }
+    /*   if (DShootingMode.getDouble(0) != aimMode.ordinal()) {
+    setAimMode((int) DShootingMode.getDouble(0)); */
+    // }
   }
 }
