@@ -3,8 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
@@ -29,8 +27,7 @@ public class ShooterPressed extends CommandBase {
     }
     m_ShooterSubsystem = shooterSubsystem;
     m_LimelightSubsystem = limelightSubsystem;
-    // m_CDSSubsystem = cdsSubsystem;
-    SmartDashboard.putBoolean("wheelReady", false);
+    m_CDSSubsystem = cdsSubsystem;
     LLEnabled = llEnabled;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -50,10 +47,14 @@ public class ShooterPressed extends CommandBase {
       // Otherwise, alignment is checked.
       if (i > 0 || !LLEnabled || m_LimelightSubsystem.calculatePID() == 0.0) {
         i++;
-        m_ShooterSubsystem.runCargo(0.75);
-        m_ShooterSubsystem.setCargoBoolean(1);
-      }
-      m_ShooterSubsystem.updateIdelay(i);
+        m_CDSSubsystem.CDSBeltToggle(false);
+        m_ShooterSubsystem.runCargo(0.65);
+        m_ShooterSubsystem.setCargoBoolean(true);
+      } 
+    } else {
+      m_CDSSubsystem.stopCDS();
+      m_ShooterSubsystem.runCargo(-0.4);
+      m_ShooterSubsystem.setCargoBoolean(false);
     }
   }
 
@@ -62,10 +63,7 @@ public class ShooterPressed extends CommandBase {
   public void end(boolean interrupted) {
     m_ShooterSubsystem.runCargo(0.0);
     m_ShooterSubsystem.windFlywheel(0);
-    m_ShooterSubsystem.setCargoBoolean(0);
-    m_ShooterSubsystem.updateIdelay(0);
-
-    // SmartDashboard.putBoolean("wheelReady", false);
+    m_ShooterSubsystem.setCargoBoolean(false);
   }
 
   // Returns true when the command should end.

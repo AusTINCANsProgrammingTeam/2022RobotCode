@@ -9,7 +9,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -70,8 +69,8 @@ public class ShooterSubsystem extends SubsystemBase {
           .add("PID Peak Output Slot ID", Constants.Shooter.kMaxISlotId)
           .withPosition(1, 3)
           .getEntry();
-  private NetworkTableEntry DShootingMode =
-      shooterTab.add("Shooting Mode", 5).withPosition(1, 5).getEntry();
+  private NetworkTableEntry SShootingMode =
+      shooterTab.add("Shooting Mode", aimMode.toString()).withPosition(1, 5).getEntry();
   private NetworkTableEntry DDistance =
       shooterTab.add("Distance to goal", 0.0).withPosition(2, 0).getEntry();
   private NetworkTableEntry DShooterRPM =
@@ -80,11 +79,6 @@ public class ShooterSubsystem extends SubsystemBase {
       shooterTab.add("Is the CDS Running", 0.0).withPosition(2, 2).getEntry();
   private NetworkTableEntry DShooterRPMInput =
       shooterTab.add("Shooter RPM Input", 3550).withPosition(2, 3).getEntry();
-  private NetworkTableEntry IDelayTable =
-      shooterTab
-          .add("Current I delay", 0)
-          .withPosition(2, 4)
-          .getEntry(); // Delay before the CDS deliver the ball for the PID to stablize the speed
   private NetworkTableEntry DSmoothRPM =
     shooterTab.add("Smooth RPM", 0.0).getEntry();
   private double MaxOutputConstant;
@@ -188,8 +182,8 @@ public class ShooterSubsystem extends SubsystemBase {
     }
   }
 
-  public void setCargoBoolean(int a) {
-    if(a == 1){
+  public void setCargoBoolean(boolean a) {
+    if(a){
       DCargoRunning.setDouble(targetRPM * 0.5);
     }
     else{
@@ -197,32 +191,31 @@ public class ShooterSubsystem extends SubsystemBase {
     }
   }
 
-  public void updateIdelay(double i) {
-    IDelayTable.setDouble(i);
-  }
-
   public void runCargo(double speed) {
     stopperController.setSpeed(speed);
   }
 
   public boolean wheelReady() {
-    double flywheelSpeed = flywheelEncoder.getVelocity();
     return (smoothRPM > targetRPM - 56 && smoothRPM < targetRPM + 56);
   }
 
-  public void setAimMode(int m) {
-    aimMode = AimModes.values()[m];
-    DShootingMode.setDouble(aimMode.ordinal());
+  public void setAimMode(AimModes a) {
+    aimMode = a;
+    SShootingMode.setString(aimMode.toString());
+  }
+
+  public AimModes getAimMode(){
+    return aimMode;
   }
 
   public void cycleAimModeNext() {
     aimMode.next();
-    DShootingMode.setDouble(aimMode.ordinal());
+    SShootingMode.setString(aimMode.toString());
   }
 
   public void cycleAimModePrevious() {
     aimMode.previous();
-    DShootingMode.setDouble(aimMode.ordinal());
+    SShootingMode.setString(aimMode.toString());
   }
 
   public double getTY() {

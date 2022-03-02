@@ -194,9 +194,9 @@ public class RobotContainer {
          // new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
     }
 
-    if (CDSForwardCommand != null && CDSReverseCommand != null) {
+    if (CDSForwardCommand != null && outtakeCommand != null) {
       buttons[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
-   buttons[Constants.BButton].whileHeld(CDSReverseCommand);
+   buttons[Constants.BButton].whileHeld(outtakeCommand);
       // CDSSubsystem.getAllianceColor();
       CDSSubsystem.senseColor();
     }
