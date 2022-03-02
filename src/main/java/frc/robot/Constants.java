@@ -170,7 +170,7 @@ public final class Constants {
   public static final int CDSWheelControllerOneID = 2;
   public static final int CDSWheelControllerTwoID = 9;
   public static final double CDSBeltSpeed = 0.40;
-  public static final double CDSWheelControllerSpeed = 0.25;
+  public static final double CDSWheelControllerSpeed = 0.10;
   public static final Port colorSensorPort = Port.kOnboard; // Placeholder Value, to be changed
   public static final int frontSensorActivation = 200;
   public static final int middleSensorActivation = 450;

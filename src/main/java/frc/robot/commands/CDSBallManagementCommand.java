@@ -43,16 +43,18 @@ public class CDSBallManagementCommand extends CommandBase {
     
     if (!ejectRunning) {
       if (ballCount > 2) {
+        CDSSubsystem.CDSWheelToggle(true);
         intakeSubsystem.toggleIntake(true);
         ejectRunning = true;
       }
     } else {
-      if (cycleCount * 20 >= msDelay) {
+      if (cycleCount >= msDelay) {
+        CDSSubsystem.stopCDS();
         intakeSubsystem.stopIntake();
         ejectRunning = false;
         cycleCount = 0;
       } else {
-        cycleCount++;
+        cycleCount+=60;
       }
     }
 
