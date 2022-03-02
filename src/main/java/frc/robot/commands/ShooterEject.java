@@ -37,13 +37,15 @@ public class ShooterEject extends CommandBase {
   public void execute() {
     m_ShooterSubsystem.prime();
     if (m_ShooterSubsystem.wheelReady()) {
+      if (i == 0) {
+        m_CDSSubsystem.CDSBeltToggle(false);
+        m_ShooterSubsystem.runCargo(Constants.Shooter.cargoForward);
+        m_ShooterSubsystem.setCargoBoolean(true);
+      }
       i++;
-      m_CDSSubsystem.CDSBeltToggle(false);
-      m_ShooterSubsystem.runCargo(0.65);
-      m_ShooterSubsystem.setCargoBoolean(true);
     } else {
       m_CDSSubsystem.stopCDS();
-      m_ShooterSubsystem.runCargo(-0.4);
+      m_ShooterSubsystem.runCargo(Constants.Shooter.cargoReverse);
       m_ShooterSubsystem.setCargoBoolean(false);
     }
   }
@@ -52,7 +54,7 @@ public class ShooterEject extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_ShooterSubsystem.setAimMode(tempMode);
-    m_ShooterSubsystem.runCargo(0.0);
+    m_ShooterSubsystem.runCargo(0);
     m_ShooterSubsystem.windFlywheel(0);
     m_ShooterSubsystem.setCargoBoolean(false);
   }

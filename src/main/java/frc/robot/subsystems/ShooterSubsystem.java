@@ -30,6 +30,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private AimModes aimMode;
 
   private double targetRPM;
+  private double currentRPM;
   private double Pconstant;
   private double Iconstant;
   private double Dconstant;
@@ -262,11 +263,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    currentRPM = flywheelEncoder.getVelocity();
     smoothRPM =
-        Constants.Shooter.kA * flywheelEncoder.getVelocity()
+        Constants.Shooter.kA * currentRPM
             + smoothRPM * (1 - Constants.Shooter.kA);
     // This method will be called once per scheduler run
-    DShooterRPM.setDouble(flywheelEncoder.getVelocity());
+    DShooterRPM.setDouble(currentRPM);
     DSmoothRPM.setDouble(smoothRPM);
     DDistance.setDouble(getDistance());
     if (dashTunePid.getBoolean(false)) {

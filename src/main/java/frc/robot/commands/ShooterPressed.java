@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -47,14 +48,16 @@ public class ShooterPressed extends CommandBase {
       // If below will bypass the LL check if the stopper is already running, or the LL is disabled.
       // Otherwise, alignment is checked.
       if (i > 0 || !LLEnabled || m_LimelightSubsystem.calculatePID() == 0.0) {
+        if (i == 0) {
+          m_CDSSubsystem.CDSBeltToggle(false);
+          m_ShooterSubsystem.runCargo(Constants.Shooter.cargoForward);
+          m_ShooterSubsystem.setCargoBoolean(true);
+        }
         i++;
-        m_CDSSubsystem.CDSBeltToggle(false);
-        m_ShooterSubsystem.runCargo(0.65);
-        m_ShooterSubsystem.setCargoBoolean(true);
       }
     } else {
       m_CDSSubsystem.stopCDS();
-      m_ShooterSubsystem.runCargo(-0.4);
+      m_ShooterSubsystem.runCargo(Constants.Shooter.cargoReverse);
       m_ShooterSubsystem.setCargoBoolean(false);
     }
   }
@@ -62,7 +65,7 @@ public class ShooterPressed extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_ShooterSubsystem.runCargo(0.0);
+    m_ShooterSubsystem.runCargo(0);
     m_ShooterSubsystem.windFlywheel(0);
     m_ShooterSubsystem.setCargoBoolean(false);
   }
