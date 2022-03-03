@@ -156,8 +156,10 @@ public class AutonModes {
         new SequentialCommandGroup(
             new WaitCommand(Constants.delaytaxi),
             // taxiRamseteCommands[0]);
-            taxiRamseteCommand.beforeStarting(
-                () -> driveBaseSubsystem.resetOdometry(taxiTrajectory.getInitialPose())));
+            taxiRamseteCommand
+                .beforeStarting(
+                    () -> driveBaseSubsystem.resetOdometry(taxiTrajectory.getInitialPose()))
+                .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
 
     if (allSubsystemsEnabled) {
       oneBallCommand =
@@ -170,8 +172,10 @@ public class AutonModes {
                   cdsSubsystem,
                   true), // also has a time delay of 2-3 seconds
               new WaitCommand(Constants.delaytaxi),
-              oneBallRamseteCommand.beforeStarting(
-                  () -> driveBaseSubsystem.resetOdometry(oneBallTrajectory.getInitialPose())));
+              oneBallRamseteCommand
+                  .beforeStarting(
+                      () -> driveBaseSubsystem.resetOdometry(oneBallTrajectory.getInitialPose()))
+                  .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
 
       twoBallParallel =
           new ParallelDeadlineGroup(
@@ -179,7 +183,8 @@ public class AutonModes {
                   () ->
                       driveBaseSubsystem.resetOdometry(
                           twoBallTrajectory.getInitialPose())), // go out to get ball
-              new IntakeForwardCommand(intakeSubsystem));
+              new IntakeForwardCommand(intakeSubsystem)
+                  .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
 
       twoBallCommand =
           new SequentialCommandGroup(
@@ -187,7 +192,8 @@ public class AutonModes {
               twoBallParallel,
               new WaitCommand(Constants.delayshot),
               // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem)
-              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true));
+              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true)
+                  .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
 
       threeBallCommand = null;
       fourBallCommand = null;
