@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Robot;
-
 import java.util.ArrayList;
 
 /* Wrapper for ColorSensorV3 that uses a TCA9548A I2C multiplexer to
@@ -22,13 +21,13 @@ public class ColorSensorMuxed {
   private ArrayList<Integer> i2cPorts;
 
   public ColorSensorMuxed(int... ports) {
-    i2cMux = new I2C(Port.kOnboard, tca9548Addr);
+    i2cMux = new I2C(Port.kMXP, tca9548Addr);
     i2cPorts = new ArrayList<Integer>();
     for (int p : ports) {
       if (setI2cPort(p)) {
         i2cPorts.add(p);
         // Initialize each device, only need to keep last object
-        sensors = new ColorSensorV3(Port.kOnboard);
+        sensors = new ColorSensorV3(Port.kMXP);
       } else {
         DriverStation.reportError("Could not initialize color sensor on I2C port " + p, false);
       }

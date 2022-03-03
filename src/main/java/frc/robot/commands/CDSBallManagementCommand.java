@@ -19,7 +19,7 @@ public class CDSBallManagementCommand extends CommandBase {
   private boolean runningCDS = false;
   private boolean ejectRunning = false;
   private int setpointIndex;
-
+  
   private int cycleCount = 0;
   private int msDelay = 2000;
 
@@ -61,11 +61,11 @@ public class CDSBallManagementCommand extends CommandBase {
           ejectRunning = false;
           cycleCount = 0;
         } else {
-          cycleCount+=60;
+          cycleCount += 60;
         }
     }
 
-    // Only run auto advance if auto eject is not running
+    // Only run auto advance if auto ject is not running
     if (!ejectRunning) {
       if (!runningCDS) {
         // Send ball to setpoint
