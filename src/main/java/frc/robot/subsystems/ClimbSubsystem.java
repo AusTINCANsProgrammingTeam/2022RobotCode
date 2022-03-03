@@ -53,8 +53,8 @@ public class ClimbSubsystem extends SubsystemBase {
     m_climbMotorControllerTwo =
         new MotorController("Climb Motor Two", Constants.ClimbMotorTwo, 60, true);
     m_climbMotorControllerTwo.setInverted(true);
-    //m_climbMotorControllerTwo.getPID().setOutputRange(-.4, .4);
-    //m_climbMotorControllerOne.getPID().setOutputRange(-.4, .4);
+    // m_climbMotorControllerTwo.getPID().setOutputRange(-.4, .4);
+    // m_climbMotorControllerOne.getPID().setOutputRange(-.4, .4);
     m_climbMotorControllerOne.getEncoder().setPosition(0);
     m_climbMotorControllerTwo.getEncoder().setPosition(0);
 
@@ -117,24 +117,23 @@ public class ClimbSubsystem extends SubsystemBase {
     /** && !m_limitSwitch.get() */
     ) {
       joystickAxis = -m_climbJoystick.getRawAxis(Constants.leftJoystickY);
-      if (joystickAxis > 0.1 || joystickAxis < -0.1) { 
-        if (joystickAxis >0){
-          if (climbHeightOne <= 20.0 ) { 
+      if (joystickAxis > 0.1 || joystickAxis < -0.1) {
+        if (joystickAxis > 0) {
+          if (climbHeightOne <= 20.0) {
             climbHeightOne = climbHeightOne + (joystickAxis / 10);
           }
-          if (climbHeightTwo <= 20.0 ) {
+          if (climbHeightTwo <= 20.0) {
             climbHeightTwo = climbHeightTwo + (joystickAxis / 10);
           }
         }
-      if (joystickAxis <0){
-        if ( climbHeightOne  >= 0) { 
-          climbHeightOne = climbHeightOne + (joystickAxis / 10);
+        if (joystickAxis < 0) {
+          if (climbHeightOne >= 0) {
+            climbHeightOne = climbHeightOne + (joystickAxis / 10);
+          }
+          if (climbHeightTwo >= 0) {
+            climbHeightTwo = climbHeightTwo + (joystickAxis / 10);
+          }
         }
-        if ( climbHeightTwo >= 0) {
-          climbHeightTwo = climbHeightTwo + (joystickAxis / 10);
-        }
-      }
-        
       }
       m_climbMotorControllerOne
           .getPID()
