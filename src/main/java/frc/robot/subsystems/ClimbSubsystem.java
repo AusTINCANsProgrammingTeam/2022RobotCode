@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
@@ -49,11 +50,16 @@ public class ClimbSubsystem extends SubsystemBase {
     // One is left, two is right
     m_climbMotorControllerOne =
         new MotorController("Climb Motor One", Constants.ClimbMotorOne, 40, true);
-    m_climbMotorControllerOne.getEncoder().setPosition(0);
     m_climbMotorControllerTwo =
         new MotorController("Climb Motor Two", Constants.ClimbMotorTwo, 40, true);
-    m_climbMotorControllerTwo.getEncoder().setPosition(0);
     m_climbMotorControllerTwo.setInverted(true);
+    m_climbMotorControllerTwo.getPID().setOutputRange(-.4, .4);
+    m_climbMotorControllerOne.getPID().setOutputRange(-.4, .4);
+    m_climbMotorControllerOne.getEncoder().setPosition(0);
+    m_climbMotorControllerTwo.getEncoder().setPosition(0);
+
+    m_climbMotorControllerOne.setIdleMode(IdleMode.kBrake);
+    m_climbMotorControllerTwo.setIdleMode(IdleMode.kBrake);
 
     // m_limitSwitch = new DigitalInput(Constants.LimitSwitchChannel);
 
@@ -75,7 +81,7 @@ public class ClimbSubsystem extends SubsystemBase {
         climberTab.add("Climb Hight 1", 0).withSize(2, 2).withPosition(8, 0).getEntry();
     sbclimbHeightTwo =
         climberTab.add("Climb Hight 2", 0).withSize(2, 2).withPosition(8, 0).getEntry();
-    
+
     sbclimberheightTwo =
         climberTab
             .add("Climber targetted height 2", 0)
@@ -91,9 +97,15 @@ public class ClimbSubsystem extends SubsystemBase {
         climberTab.add("Climber Imput Two", 0).withSize(2, 2).withPosition(4, 2).getEntry();
     sbclimberpositionTwo =
         climberTab.add("Climber position 2", 0).withSize(2, 2).withPosition(2, 4).getEntry();
-    
 
-      }
+    m_climbMotorControllerOne.getPID().setP(Constants.climbRightPID[0]);
+    m_climbMotorControllerOne.getPID().setI(Constants.climbRightPID[1]);
+    m_climbMotorControllerOne.getPID().setD(Constants.climbRightPID[2]);
+
+    m_climbMotorControllerTwo.getPID().setP(Constants.climbLeftPID[0]);
+    m_climbMotorControllerTwo.getPID().setI(Constants.climbLeftPID[1]);
+    m_climbMotorControllerTwo.getPID().setD(Constants.climbLeftPID[2]);
+  }
 
   public void climbEnabbledEnable() {
     climbEnabbled = !climbEnabbled;
@@ -105,9 +117,14 @@ public class ClimbSubsystem extends SubsystemBase {
     /** && !m_limitSwitch.get() */
     ) {
       joystickAxis = m_climbJoystick.getRawAxis(Constants.leftJoystickY);
-      if ((joystickAxis > 0.1 || joystickAxis < -0.1) /*&& climbHeight >= 0*/) {
-        climbHeightOne = climbHeightOne + (joystickAxis / 10);
-        climbHeightTwo = climbHeightTwo + (joystickAxis / 10);
+      if (joystickAxis > 0.1 || joystickAxis < -0.1) { 
+        if (climbHeightOne < 15 && climbHeightOne > 0) { 
+          climbHeightOne = climbHeightOne + (joystickAxis / 10);
+        }
+        if (climbHeightTwo < 15 && climbHeightTwo > 0) {
+          climbHeightTwo = climbHeightTwo + (joystickAxis / 10);
+        }
+        
       }
       m_climbMotorControllerOne
           .getPID()
@@ -124,11 +141,14 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void periodic() {
-    if(climberTab != null) {
 
     SmartDashboard.putNumber(
+        "Climb motor 1 Applied Output", m_climbMotorControllerOne.getSparkMax().getAppliedOutput());
+    SmartDashboard.putNumber(
+        "Climb motor 2 Applied Output", m_climbMotorControllerTwo.getSparkMax().getAppliedOutput());
+    SmartDashboard.putNumber(
         "Climb Hight One", m_climbMotorControllerOne.getEncoder().getPosition());
-    if ( sbclimbHeightOne.getDouble(0) != climbHeightOne) {
+    if (sbclimbHeightOne.getDouble(0) != climbHeightOne) {
       climbHeightOne = sbclimbHeightOne.getDouble(0);
     } else {
       sbclimberheightOne.setDouble(climbHeightOne);
@@ -140,7 +160,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber(
         "Climb Hight Two", m_climbMotorControllerTwo.getEncoder().getPosition());
-    if ( sbclimbHeightTwo.getDouble(0) != climbHeightTwo) {
+    if (sbclimbHeightTwo.getDouble(0) != climbHeightTwo) {
       climbHeightTwo = sbclimbHeightTwo.getDouble(0);
     } else {
       sbclimberheightTwo.setDouble(climbHeightTwo);
@@ -149,7 +169,6 @@ public class ClimbSubsystem extends SubsystemBase {
     sbclimberpositionTwo.setDouble(m_climbMotorControllerTwo.getEncoder().getPosition());
     m_climbMotorControllerTwo.updateSmartDashboard();
     SmartDashboard.putNumber("Climb IAccum Two", m_climbMotorControllerTwo.getPID().getIAccum());
-  }
   }
 
   public boolean getLimitSwitchVal() {
