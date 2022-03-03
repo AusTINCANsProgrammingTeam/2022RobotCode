@@ -1,0 +1,451 @@
+{
+  "tabPane": [
+    {
+      "title": "Operator View",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 32.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 1,
+        "tiles": {
+          "0,0": {
+            "size": [
+              11,
+              9
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_title": "Limelight Subsystem",
+              "Layout/Label position": "HIDDEN",
+              "_children": [
+                {
+                  "_type": "Camera Stream",
+                  "_title": "",
+                  "Crosshair/Show crosshair": true,
+                  "Crosshair/Crosshair color": "#FFFFFFFF",
+                  "Controls/Show controls": true,
+                  "Controls/Rotation": "NONE",
+                  "compression": -1.0,
+                  "fps": -1,
+                  "imageWidth": -1,
+                  "imageHeight": -1
+                }
+              ]
+            }
+          },
+          "20,6": {
+            "size": [
+              6,
+              3
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Active View",
+              "Layout/Number of columns": 3,
+              "Layout/Number of rows": 1,
+              "Layout/Label position": "TOP",
+              "_children": {
+                "0,0": {
+                  "_type": "Toggle Switch",
+                  "_title": "LimeLight"
+                },
+                "1,0": {
+                  "_type": "Toggle Switch",
+                  "_title": "Raw LL"
+                },
+                "2,0": {
+                  "_type": "Toggle Switch",
+                  "_title": "Drive Cam"
+                }
+              }
+            }
+          },
+          "27,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Grid Layout",
+              "Layout/Number of columns": 3,
+              "Layout/Number of rows": 3,
+              "Layout/Label position": "BOTTOM",
+              "_children": {}
+            }
+          },
+          "28,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Grid Layout",
+              "Layout/Number of columns": 3,
+              "Layout/Number of rows": 3,
+              "Layout/Label position": "BOTTOM",
+              "_children": {}
+            }
+          },
+          "20,0": {
+            "size": [
+              6,
+              6
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_title": "CDS Subsystem",
+              "Layout/Label position": "HIDDEN",
+              "_children": [
+                {
+                  "_type": "Grid Layout",
+                  "_title": "CDS Positions",
+                  "Layout/Number of columns": 3,
+                  "Layout/Number of rows": 1,
+                  "Layout/Label position": "HIDDEN",
+                  "_children": {
+                    "0,0": {
+                      "_type": "Boolean Box",
+                      "_title": "BeamBreak 1",
+                      "Colors/Color when true": "#7CFC00FF",
+                      "Colors/Color when false": "#8B0000FF"
+                    },
+                    "2,0": {
+                      "_type": "Boolean Box",
+                      "_title": "BeamBreak 2",
+                      "Colors/Color when true": "#7CFC00FF",
+                      "Colors/Color when false": "#8B0000FF"
+                    },
+                    "1,0": {
+                      "_type": "Boolean Box",
+                      "_title": "BeamBreak 3",
+                      "Colors/Color when true": "#7CFC00FF",
+                      "Colors/Color when false": "#8B0000FF"
+                    }
+                  }
+                },
+                {
+                  "_type": "Grid Layout",
+                  "_title": "Speeds",
+                  "Layout/Number of columns": 3,
+                  "Layout/Number of rows": 1,
+                  "Layout/Label position": "BOTTOM",
+                  "_children": {
+                    "0,0": {
+                      "_type": "Number Bar",
+                      "_title": "Intake Speed",
+                      "Range/Min": -0.15,
+                      "Range/Max": 0.15,
+                      "Range/Center": 0.0,
+                      "Visuals/Num tick marks": 3,
+                      "Visuals/Show text": false
+                    },
+                    "2,0": {
+                      "_type": "Number Bar",
+                      "_title": "CDS Speed",
+                      "Range/Min": -0.15,
+                      "Range/Max": 0.15,
+                      "Range/Center": 0.0,
+                      "Visuals/Num tick marks": 3,
+                      "Visuals/Show text": false
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "29,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Grid Layout",
+              "Layout/Number of columns": 3,
+              "Layout/Number of rows": 3,
+              "Layout/Label position": "BOTTOM",
+              "_children": {}
+            }
+          },
+          "14,0": {
+            "size": [
+              6,
+              9
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_title": "Shooter Subsytem",
+              "Layout/Label position": "HIDDEN",
+              "_children": [
+                {
+                  "_type": "Grid Layout",
+                  "_title": "Targets",
+                  "Layout/Number of columns": 3,
+                  "Layout/Number of rows": 1,
+                  "Layout/Label position": "BOTTOM",
+                  "_children": {
+                    "0,0": {
+                      "_type": "ComboBox Chooser",
+                      "_title": "Mode"
+                    },
+                    "1,0": {
+                      "_type": "Text View",
+                      "_title": "T-RPM"
+                    },
+                    "2,0": {
+                      "_type": "Text View",
+                      "_title": "T-Angle"
+                    }
+                  }
+                },
+                {
+                  "_type": "Grid Layout",
+                  "_title": "Readings",
+                  "Layout/Number of columns": 2,
+                  "Layout/Number of rows": 1,
+                  "Layout/Label position": "BOTTOM",
+                  "_children": {
+                    "0,0": {
+                      "_type": "Simple Dial",
+                      "_title": "RPM",
+                      "Range/Min": 0.0,
+                      "Range/Max": 5600.0,
+                      "Visuals/Show value": true
+                    },
+                    "1,0": {
+                      "_type": "Simple Dial",
+                      "_title": "Angle",
+                      "Range/Min": 0.0,
+                      "Range/Max": 100.0,
+                      "Visuals/Show value": true
+                    }
+                  }
+                },
+                {
+                  "_type": "Grid Layout",
+                  "_title": "Indicators",
+                  "Layout/Number of columns": 3,
+                  "Layout/Number of rows": 1,
+                  "Layout/Label position": "BOTTOM",
+                  "_children": {
+                    "0,0": {
+                      "_type": "Boolean Box",
+                      "_title": "Flywheel",
+                      "Colors/Color when true": "#7CFC00FF",
+                      "Colors/Color when false": "#8B0000FF"
+                    },
+                    "2,0": {
+                      "_type": "Boolean Box",
+                      "_title": "Cargo",
+                      "Colors/Color when true": "#7CFC00FF",
+                      "Colors/Color when false": "#8B0000FF"
+                    },
+                    "1,0": {
+                      "_type": "Boolean Box",
+                      "_title": "Hood",
+                      "Colors/Color when true": "#7CFC00FF",
+                      "Colors/Color when false": "#8B0000FF"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "11,0": {
+            "size": [
+              3,
+              9
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Limelight Tools",
+              "Layout/Number of columns": 1,
+              "Layout/Number of rows": 3,
+              "Layout/Label position": "HIDDEN",
+              "_children": {
+                "0,0": {
+                  "_type": "Grid Layout",
+                  "_title": "Tx/Ty",
+                  "Layout/Number of columns": 1,
+                  "Layout/Number of rows": 2,
+                  "Layout/Label position": "LEFT",
+                  "_children": {
+                    "0,1": {
+                      "_type": "Text View",
+                      "_title": "tx"
+                    },
+                    "0,0": {
+                      "_type": "Text View",
+                      "_title": "ty"
+                    }
+                  }
+                },
+                "0,1": {
+                  "_type": "Ultrasonic",
+                  "_title": "Distance",
+                  "Unit/Unit": "FOOT"
+                },
+                "0,2": {
+                  "_type": "Grid Layout",
+                  "_title": "Grid Layout",
+                  "Layout/Number of columns": 1,
+                  "Layout/Number of rows": 2,
+                  "Layout/Label position": "TOP",
+                  "_children": {
+                    "0,0": {
+                      "_type": "Toggle Switch",
+                      "_title": "LL Corrrection"
+                    },
+                    "0,1": {
+                      "_type": "Boolean Box",
+                      "_title": "Assist Active",
+                      "Colors/Color when true": "#7CFC00FF",
+                      "Colors/Color when false": "#8B0000FF"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Driver View",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 32.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "17,0": {
+            "size": [
+              9,
+              5
+            ],
+            "content": {
+              "_type": "Gyro",
+              "_title": "Gyro",
+              "Visuals/Major tick spacing": 45.0,
+              "Visuals/Starting angle": 180.0,
+              "Visuals/Show tick mark ring": true,
+              "Visuals/Counter clockwise": false
+            }
+          },
+          "0,0": {
+            "size": [
+              11,
+              11
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_title": "Camera Stream",
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": false,
+              "Controls/Rotation": "NONE",
+              "compression": -1.0,
+              "fps": -1,
+              "imageWidth": -1,
+              "imageHeight": -1
+            }
+          },
+          "11,0": {
+            "size": [
+              3,
+              11
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Camera Info",
+              "Layout/Number of columns": 1,
+              "Layout/Number of rows": 3,
+              "Layout/Label position": "BOTTOM",
+              "_children": {
+                "0,0": {
+                  "_type": "Text View",
+                  "_title": "Current Camera"
+                },
+                "0,2": {
+                  "_type": "Boolean Box",
+                  "_title": "Assist Active",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                "0,1": {
+                  "_type": "Ultrasonic",
+                  "_title": "Distance",
+                  "Unit/Unit": "FOOT"
+                }
+              }
+            }
+          },
+          "14,0": {
+            "size": [
+              3,
+              11
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Shooter Info",
+              "Layout/Number of columns": 1,
+              "Layout/Number of rows": 4,
+              "Layout/Label position": "BOTTOM",
+              "_children": {
+                "0,0": {
+                  "_type": "Text View",
+                  "_title": "AimMode"
+                },
+                "0,2": {
+                  "_type": "Boolean Box",
+                  "_title": "Hood Adjusted",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                "0,3": {
+                  "_type": "Boolean Box",
+                  "_title": "Cargo Running",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                "0,1": {
+                  "_type": "Boolean Box",
+                  "_title": "Flywheel Wound",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                }
+              }
+            }
+          },
+          "17,5": {
+            "size": [
+              9,
+              6
+            ],
+            "content": {
+              "_type": "Differential Drivebase",
+              "_title": "Differential Drivebase",
+              "Wheels/Number of wheels": 4,
+              "Wheels/Wheel diameter": 80.0,
+              "Visuals/Show velocity vectors": true
+            }
+          }
+        }
+      }
+    }
+  ],
+  "windowGeometry": {
+    "x": 0.0,
+    "y": 0.0,
+    "width": 1280.0,
+    "height": 680.0
+  }
+}
