@@ -67,7 +67,6 @@ public class CDSBallManagementCommand extends CommandBase {
 
     // Only run auto advance if auto eject is not running
     if (!ejectRunning) {
-
       if (!runningCDS) {
         // Send ball to setpoint
         if (sensorStatus[2]) {  

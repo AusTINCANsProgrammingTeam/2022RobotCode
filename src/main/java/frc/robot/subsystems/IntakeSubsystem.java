@@ -41,4 +41,4 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void periodic() {}
 
-} // Do delete, not for main method
+} // Don't delete, for main method
