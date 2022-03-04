@@ -41,7 +41,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto Mode", chooser);
 
     if (RobotContainer.getDriveBase() != null) {
-      tabContainer = new TabContainer(RobotContainer.getDriveBase());
     }
   }
 
