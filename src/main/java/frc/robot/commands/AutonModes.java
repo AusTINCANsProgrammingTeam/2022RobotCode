@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
@@ -15,6 +16,8 @@ import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.Tabs.TabDriveBase;
+
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -54,6 +57,7 @@ public class AutonModes {
   private Command threeBallCommand;
   private Command fourBallCommand;
 
+  private double waiter;
   // this constructor is the default, only needs driveBaseSubsystem, useful when only wanting to
   // test taxi without worrying about other subsystems
   public AutonModes(DriveBaseSubsystem d) {
@@ -154,7 +158,8 @@ public class AutonModes {
 
     taxiCommand =
         new SequentialCommandGroup(
-            new WaitCommand(Constants.delaytaxi),
+            
+            new WaitCommand(waiter),
             // taxiRamseteCommands[0]);
             taxiRamseteCommand
                 .beforeStarting(

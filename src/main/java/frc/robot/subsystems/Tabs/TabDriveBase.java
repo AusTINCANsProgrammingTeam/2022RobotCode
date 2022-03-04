@@ -1,5 +1,7 @@
 package frc.robot.subsystems.Tabs;
 
+import java.util.Map;
+
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.shuffleboard.*;
@@ -8,12 +10,15 @@ import frc.robot.subsystems.DriveBaseSubsystem;
 
 public class TabDriveBase {
 
+  public double waittime;
+
   // each box on the shuffleboard, sb stands for shuffleboard
   private NetworkTableEntry sbLeftWheelSpeed;
   private NetworkTableEntry sbRightWheelSpeed;
   private NetworkTableEntry sbGyroAngle;
   private NetworkTableEntry sbLeftPosition;
   private NetworkTableEntry sbRightPosition;
+  private NetworkTableEntry wait;
 
   // TODO: other indicators for motor controllers: if inverted, what motors they're following, +
   // other factors important to driver and debugging
@@ -39,8 +44,15 @@ public class TabDriveBase {
 
     sbLeftPosition = dtTab.add("Left Position", 0).withSize(2, 2).withPosition(0, 3).getEntry();
     sbRightPosition = dtTab.add("Right Position", 0).withSize(2, 2).withPosition(6, 3).getEntry();
-  }
 
+    //This is the tab for controlling auton
+    wait = Shuffleboard.getTab("Drive")
+      .add("Max Speed", 1)
+      .withWidget(BuiltInWidgets.kNumberSlider)
+      .withProperties(Map.of("min", 1, "max", 10)) // specify widget properties here
+      .getEntry();
+  
+  }
   public void periodic() {
     // Constantly update the board
     if (mDriveBaseSubsystem != null) {
@@ -48,13 +60,14 @@ public class TabDriveBase {
       double rightSpeed = mDriveBaseSubsystem.getRightSpeed();
       double gyroAngle = mGyro.getAngle();
       double positions[] = mDriveBaseSubsystem.getPositions();
-
+     
       sbLeftWheelSpeed.setDouble(leftSpeed);
       sbRightWheelSpeed.setDouble(rightSpeed);
       sbGyroAngle.setDouble(gyroAngle);
       sbLeftPosition.setDouble(positions[0]); // in meters
       sbRightPosition.setDouble(positions[1]);
-
+      
+      waittime = wait.getDouble(1);
       // TODO: compare encoder value to value from biconsumer, should be equal
       SmartDashboard.putNumber("left speed (rpm) [encoder]", leftSpeed);
       SmartDashboard.putNumber("right speed (rpm) [encoder]", rightSpeed);

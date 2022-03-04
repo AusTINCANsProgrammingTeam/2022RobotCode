@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.Map;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -13,6 +15,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Encoder;
@@ -20,6 +23,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
@@ -29,6 +35,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.common.hardware.MotorController;
+import frc.robot.subsystems.Tabs.TabContainer;
+import frc.robot.subsystems.Tabs.TabDriveBase;
 
 public class DriveBaseSubsystem extends SubsystemBase {
 
@@ -44,7 +52,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private final DifferentialDriveOdometry m_odometry;
   private EncoderSim m_leftEncoderSim;
   private EncoderSim m_rightEncoderSim;
-
+  
   // Encoders for Sim
   private Encoder m_LEncoderForSim;
   private Encoder m_REncoderForSim;
@@ -63,7 +71,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_gyro = new AHRS(Port.kMXP);
     m_gyro.reset(); // resets the heading of the robot to 0
     m_gyro1 = new AnalogGyro(1);
-
+    
     if (Robot.isSimulation()) {
       if (!usingExternal) {
         m_LEncoderForSim = new Encoder(1, 2);
