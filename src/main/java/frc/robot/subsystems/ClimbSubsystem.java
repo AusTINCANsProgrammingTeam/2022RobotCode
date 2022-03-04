@@ -125,7 +125,7 @@ public class ClimbSubsystem extends SubsystemBase {
       if (joystickAxis > 0.1 || joystickAxis < -0.1) {
         if (joystickAxis > 0) {
           if (climbHeightOne <= 20.0) {
-            m_climbMotorControllerTwo.getSparkMax().set(sbClimberSpeedInput.getDouble(0));
+            m_climbMotorControllerOne.getSparkMax().set(sbClimberSpeedInput.getDouble(0));
             ;
           }
           if (climbHeightTwo <= 20.0) {
@@ -135,7 +135,7 @@ public class ClimbSubsystem extends SubsystemBase {
         }
         if (joystickAxis < 0) {
           if (climbHeightOne >= 0) {
-            m_climbMotorControllerTwo.getSparkMax().set(-sbClimberSpeedInput.getDouble(0));
+            m_climbMotorControllerOne.getSparkMax().set(-sbClimberSpeedInput.getDouble(0));
             ;
           }
           if (climbHeightTwo >= 0) {
