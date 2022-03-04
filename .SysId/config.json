@@ -5,7 +5,7 @@
   "gearing denominator": 1.0,
   "gearing numerator": 10.75,
   "gyro": "NavX",
-  "gyro ctor": "I2C",
+  "gyro ctor": "SerialPort (USB)",
   "is drivetrain": true,
   "motor controllers": [
     "SPARK MAX (Brushless)",
@@ -18,12 +18,12 @@
     1
   ],
   "primary motor ports": [
-    1,
-    2
+    13,
+    6
   ],
   "primary motors inverted": [
     false,
-    false
+    true
   ],
   "secondary encoder inverted": true,
   "secondary encoder ports": [
@@ -31,11 +31,11 @@
     3
   ],
   "secondary motor ports": [
-    3,
-    4
+    14,
+    7
   ],
   "secondary motors inverted": [
-    true,
+    false,
     true
   ],
   "velocity measurement period": 100

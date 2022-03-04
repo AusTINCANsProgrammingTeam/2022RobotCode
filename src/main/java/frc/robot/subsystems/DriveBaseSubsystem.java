@@ -16,9 +16,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
@@ -60,7 +60,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_driverJoystick = joystick;
 
     m_motorControllers = new MotorController[4];
-    m_gyro = new AHRS(I2C.Port.kMXP);
+    m_gyro = new AHRS(Port.kMXP);
     m_gyro.reset(); // resets the heading of the robot to 0
     m_gyro1 = new AnalogGyro(1);
 

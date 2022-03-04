@@ -116,10 +116,10 @@ public final class Constants {
   // Actual IDs on robot, used to activate the right motors
 
   // TODO: kit bot values for now, change later
-  public static final int driveLeftFront = 1; // 13 on real robot
-  public static final int driveLeftRear = 2; // 14 on real robot
-  public static final int driveRightFront = 3; // 6 on real robot
-  public static final int driveRightRear = 4; // 7 on real robot
+  public static final int driveLeftFront = 13; // 13 on real robot
+  public static final int driveLeftRear = 14; // 14 on real robot
+  public static final int driveRightFront = 6; // 6 on real robot
+  public static final int driveRightRear = 7; // 7 on real robot
 
   // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
   public static final int driveLeftFrontIndex = 0;
@@ -133,18 +133,21 @@ public final class Constants {
   public static final double[] driveLeftPID = {0.000005, 0.0000008, 0};
 
   // AUTONOMOUS Constants
-  public static final String taxiout = "TaxiOut.wpilib.json";
-  public static final String taxioutfender = "TaxiOutFromFender.wpilib.json";
-  public static final String taxioutball = "TaxiOutGrabBall.wpilib.json";
-  // Volts, constants for ramseteCommand
-  public static final double ksVolts = 0.13323; // Ks
-  public static final double kvVoltSecondsPerMeter = 2.8295; // Kv, Velocity
-  public static final double kaVoltSecondsSquaredPerMeter = 0.31462; // Ka, Accelleration
 
-  public static final double kpDriveVel = 2.1938; // Kp, Velocity
+  // Path json files
+  public static final String taxiPath = "paths/TaxiOut.wpilib.json";
+  public static final String oneBallPath = "paths/TaxiOutFromFender.wpilib.json";
+  public static final String twoBallPath = "paths/TaxiOutToGrabBall.wpilib.json";
+
+  // Volts, constants for ramseteCommand
+  public static final double ksVolts = 0.28665; // Ks
+  public static final double kvVoltSecondsPerMeter = 1.4563; // Kv, Velocity
+  public static final double kaVoltSecondsSquaredPerMeter = 0.21703; // Ka, Accelleration
+
+  public static final double kpDriveVel = 2.7243; // -> real robot. Kitbot - 2.1938
   public static final double arbFeedForward =
       8.6045E-07; // voltage applied to the motor after the result of the specified control mode
-  public static final double trackWidth = 0.559;  // track width of kitbot
+  public static final double trackWidth = 0.559; // track width of kitbot
   public static final DifferentialDriveKinematics driveKinematics =
       new DifferentialDriveKinematics(trackWidth);
   public static final double unitsPerRotation = 0.4787787204;

@@ -124,12 +124,12 @@ public class AutonModes {
   }
 
   private void initializeTrajectories() {
-    taxiTrajectory = getTrajectory("paths/TaxiOut.wpilib.json");
+    taxiTrajectory = getTrajectory(Constants.taxiPath);
 
     if (allSubsystemsEnabled) {
-      oneBallTrajectory = getTrajectory("paths/TaxiOutFromFender.wpilib.json");
+      oneBallTrajectory = getTrajectory(Constants.oneBallPath);
 
-      twoBallTrajectory = getTrajectory("paths/TaxiOutToGrabBall.wpilib.json");
+      twoBallTrajectory = getTrajectory(Constants.twoBallPath);
 
       // threeBallTrajectories
       // fourBallTrajectories
