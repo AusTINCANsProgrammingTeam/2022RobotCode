@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.Shooter;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
 import frc.robot.commands.ClimbCommand;
@@ -25,7 +24,6 @@ import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.ShooterHeld;
-import frc.robot.commands.ShooterPressed;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveBaseSubsystem;
@@ -189,15 +187,15 @@ public class RobotContainer {
     // Shooter
     if (shooterSubsystem != null && shooterHeld != null) {
       buttons[Constants.LTriggerButton].whileHeld(shooterHeld);
-     // buttons[Constants.LJoystickButton].whenPressed(
-       //   new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
-     // buttons[Constants.RJoystickButton].whenPressed(
-         // new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
+      // buttons[Constants.LJoystickButton].whenPressed(
+      //   new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
+      // buttons[Constants.RJoystickButton].whenPressed(
+      // new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
     }
 
     if (CDSForwardCommand != null && CDSReverseCommand != null) {
       buttons[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
-   buttons[Constants.BButton].whileHeld(CDSReverseCommand);
+      buttons[Constants.BButton].whileHeld(CDSReverseCommand);
       // CDSSubsystem.getAllianceColor();
       CDSSubsystem.senseColor();
     }

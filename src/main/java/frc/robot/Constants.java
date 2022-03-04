@@ -40,7 +40,7 @@ public final class Constants {
   }
 
   public enum AimModes {
-    AUTO, 
+    AUTO,
     // TODO: Plug real values in for these aimModes
     LOW(3200.0, 0.0) {
       @Override
