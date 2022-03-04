@@ -40,6 +40,7 @@ public class ClimbSubsystem extends SubsystemBase {
   private NetworkTableEntry sbclimberheightTwo;
   private NetworkTableEntry sbclimbHeightImputOne;
   private NetworkTableEntry sbclimbHeightImputTwo;
+  private NetworkTableEntry sbClimberSpeedInput;
 
   public ClimbSubsystem(Joystick joystick) {
     m_climbJoystick = joystick;
@@ -64,6 +65,9 @@ public class ClimbSubsystem extends SubsystemBase {
     // m_limitSwitch = new DigitalInput(Constants.LimitSwitchChannel);
 
     climberTab = Shuffleboard.getTab("ClimbBase");
+
+    sbClimberSpeedInput =
+        climberTab.add("Climber Speed input", 0).withSize(2, 2).withPosition(5, 0).getEntry();
 
     sbClimbEnabbled =
         climberTab.add("Climb Eanbled", false).withSize(2, 2).withPosition(0, 0).getEntry();
@@ -112,10 +116,45 @@ public class ClimbSubsystem extends SubsystemBase {
     sbClimbEnabbled.setBoolean(climbEnabbled);
   }
 
+  public void RunManual() {
+    if (climbEnabbled
+    /** && !m_limitSwitch.get() */
+    ) {
+
+      joystickAxis = -m_climbJoystick.getRawAxis(Constants.leftJoystickY);
+      if (joystickAxis > 0.1 || joystickAxis < -0.1) {
+        if (joystickAxis > 0) {
+          if (climbHeightOne <= 20.0) {
+            m_climbMotorControllerTwo.getSparkMax().set(sbClimberSpeedInput.getDouble(0));
+            ;
+          }
+          if (climbHeightTwo <= 20.0) {
+            m_climbMotorControllerTwo.getSparkMax().set(sbClimberSpeedInput.getDouble(0));
+            ;
+          }
+        }
+        if (joystickAxis < 0) {
+          if (climbHeightOne >= 0) {
+            m_climbMotorControllerTwo.getSparkMax().set(-sbClimberSpeedInput.getDouble(0));
+            ;
+          }
+          if (climbHeightTwo >= 0) {
+            m_climbMotorControllerTwo.getSparkMax().set(-sbClimberSpeedInput.getDouble(0));
+            ;
+          }
+        }
+      } else {
+        m_climbMotorControllerOne.getSparkMax().set(0);
+        m_climbMotorControllerTwo.getSparkMax().set(0);
+      }
+    }
+  }
+
   public void enableClimb() {
     if (climbEnabbled
     /** && !m_limitSwitch.get() */
     ) {
+
       joystickAxis = -m_climbJoystick.getRawAxis(Constants.leftJoystickY);
       if (joystickAxis > 0.1 || joystickAxis < -0.1) {
         if (joystickAxis > 0) {
