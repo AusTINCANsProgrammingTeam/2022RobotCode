@@ -162,3 +162,5 @@ bin/
 *-window.json
 simgui-ds.json
 simgui.json
+
+src/main/deploy/Autos*

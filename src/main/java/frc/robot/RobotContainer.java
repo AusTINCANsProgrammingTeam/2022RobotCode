@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSAutoAdvanceCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbCommand;
@@ -72,9 +72,8 @@ public class RobotContainer {
   private LimelightAlign limelightAlign;
 
   // auton
-  private Trajectory[] mTrajectories; // multiple trajectories
-  private int trajectoryIndex = 0;
-  private Trajectory trajectory;
+  private AutonModes autonModes;
+  private Command chosenAutonMode = null;
 
   // Controller Check Variables
   private NetworkTableEntry sbaxisCount0;
@@ -103,11 +102,11 @@ public class RobotContainer {
     // initialize the button bindings
     for (int i = 1; i < buttons.length; i++) {
       buttons[i] = new JoystickButton(driverJoystick, i);
-      buttons2[i] = new JoystickButton(operatorJoystick, i);
+      // buttons2[i] = new JoystickButton(operatorJoystick, i);
     }
     configureButtonBindings();
 
-    initializeTrajectories();
+    initAuton();
   }
 
   private void controllerCheck() {
@@ -139,7 +138,7 @@ public class RobotContainer {
           case "DriveBaseSubsystem":
             {
               System.out.println("Drivebase enabled");
-              driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, false);
+              driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, Constants.usingExternal);
               break;
             }
           case "CDSSubsystem":
@@ -189,6 +188,13 @@ public class RobotContainer {
     if (CDSSubsystem != null && shooterSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
     }
+    // CDS
+    if (CDSSubsystem != null) {
+      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+      CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
+      // CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+      // CDSSubsystem.senseColor();
+    }
     if (intakeSubsystem != null) {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
@@ -197,7 +203,7 @@ public class RobotContainer {
       shooterHeld =
           new ShooterHeld(
               shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
-      shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, CDSSubsystem, true);
+      shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, CDSSubsystem, false);
     }
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
@@ -292,51 +298,45 @@ public class RobotContainer {
     }
   }
 
-  private void initializeTrajectories() {
-    // auton with just a one straight path
-    String trajectoryJSON = "paths/Straight.wpilib.json";
-    try {
-      Path trajectoryPath =
-          Filesystem.getDeployDirectory()
-              .toPath()
-              .resolve(trajectoryJSON); // goes to scr/main/deploy/paths
-      trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-
-    } catch (IOException ex) {
-      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+  public Command getAutonomousCommand(String pathname) {
+    if (autonModes != null) {
+      chosenAutonMode = autonModes.getChosenCommand(pathname);
+      return chosenAutonMode;
     }
+    return null;
   }
 
-  // Use this to pass the autonomous command to the main {@link Robot} class.
-  // @return the command to run in autonomous
-  public Command getAutonomousCommand() {
-    if (driveBaseSubsystem != null && trajectory != null) {
-      // Ramsete Command for Pathweaver
-      RamseteCommand ramseteCommand =
-          new RamseteCommand(
-              trajectory,
-              driveBaseSubsystem::getPose,
-              new RamseteController(
-                  Constants.ramseteB,
-                  Constants.ramseteZeta), // ramsete follower to follow trajectory
-              Constants.driveKinematics,
-              driveBaseSubsystem::acceptWheelSpeeds,
-              driveBaseSubsystem);
+  private void initAuton() {
+    if (driveBaseSubsystem != null) {
+      if (shooterSubsystem != null
+          && limelightSubsystem != null
+          && CDSSubsystem != null
+          && intakeSubsystem != null) {
+        autonModes =
+            new AutonModes(
+                driveBaseSubsystem,
+                shooterSubsystem,
+                limelightSubsystem,
+                CDSSubsystem,
+                intakeSubsystem);
 
-      driveBaseSubsystem.resetOdometry(trajectory.getInitialPose());
-
-      return ramseteCommand.andThen(() -> driveBaseSubsystem.acceptWheelSpeeds(0, 0));
+      } else {
+        autonModes =
+            new AutonModes(
+                driveBaseSubsystem); // default constructor, if other subsystems are disabled only
+        // use drivebase for taxi
+      }
+    } else {
+      autonModes = null;
     }
-
-    return null;
   }
 
   // TODO: create get methods for other subsystems to pass into TabContainer, or find a more
   // efficient way
   public static DriveBaseSubsystem getDriveBase() {
-    if (driveBaseSubsystem == null) {
-      return null;
+    if (driveBaseSubsystem != null) {
+      return driveBaseSubsystem;
     }
-    return driveBaseSubsystem;
+    return null;
   }
 }
