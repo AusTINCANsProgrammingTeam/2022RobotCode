@@ -127,10 +127,13 @@ public class RobotContainer {
   }
 
   private void initSubsystems() {
+
     // subsystems
     for (Constants.Subsystems sub : Constants.Subsystems.values()) {
       if (sub.isEnabled()) {
 
+        controllerCheck();
+        
         // System.out.println((String) k + " " + subSysEnables.get((String) k));
         switch (sub.toString()) {
           case "DriveBaseSubsystem":
@@ -165,7 +168,6 @@ public class RobotContainer {
             }
           case "ClimbSubsystem":
             {
-              controllerCheck();
               if (axisCount1 > 0 && buttonCount1 > 0) {
                 climbSubsystem = new ClimbSubsystem(operatorJoystick);
                 climbCommand = new ClimbCommand(climbSubsystem);
@@ -214,12 +216,6 @@ public class RobotContainer {
   private void configureButtonBindings() {
     controllerCheck();
 
-    // Intake
-    if (intakeForwardCommand != null && intakeReverseCommand != null) {
-      buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
-      buttons[Constants.RTriggerButton].whileHeld(intakeReverseCommand);
-    }
-
     if (axisCount1 == 0 && buttonCount1 == 0) {
 
       // Shooter
@@ -250,13 +246,30 @@ public class RobotContainer {
       // ClimbSubysystem has no binding because there are not enuf axises
       if (climbSubsystem != null) {}
 
-      System.out.printf("Testing Mode");
+      // Intake
+      if (intakeForwardCommand != null && intakeReverseCommand != null) {
+        //takes ball in
+        buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
+
+        //spits ball out
+        buttons[Constants.LBumper].whileHeld(intakeReverseCommand);
+      }
+
+      System.out.printf("Using Testing One-controller button mappings");
     } else {
 
       if (shooterSubsystem != null && shooterHeld != null) {
-        buttons[Constants.LBumper].whileHeld(shooterHeld);
+        // Auto Aim Shot
+        buttons[Constants.LBumper].whileHeld(
+            shooterHeld.beforeStarting(
+                () -> shooterSubsystem.setAimMode(Constants.AimModes.AUTO.ordinal()),
+                shooterSubsystem));
+
+        // Fender Shot
         buttons[Constants.LTriggerButton].whileHeld(
-            () -> shooterSubsystem.setAimMode(Constants.AimModes.LOW.ordinal()));
+            shooterHeld.beforeStarting(
+                () -> shooterSubsystem.setAimMode(Constants.AimModes.LOW.ordinal()),
+                shooterSubsystem));
       }
 
       if (climbSubsystem != null) {
@@ -268,7 +281,14 @@ public class RobotContainer {
         buttons2[Constants.RBumper].whileHeld(outtakeCommand);
         buttons2[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
       }
-      System.out.printf("Compitition Mode");
+
+      // Intake
+      if (intakeForwardCommand != null && intakeReverseCommand != null) {
+        buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
+        buttons[Constants.RBumper].whileHeld(intakeReverseCommand);
+      }
+
+      System.out.printf("Using Competition Two-controller button mappings");
     }
   }
 
