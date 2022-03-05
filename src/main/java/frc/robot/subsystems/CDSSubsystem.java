@@ -28,6 +28,7 @@ public class CDSSubsystem extends SubsystemBase {
 
   private boolean isReady = true; // Variable for whether CDS is ready for shooter action
   private int ballCount = 0;
+  private static int sensorReadDelay = 0; // Delay in reading sensors in number of 20ms loops
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry CDSWheelControllerDirection =
@@ -133,7 +134,6 @@ public class CDSSubsystem extends SubsystemBase {
 
   public boolean[] getSensorStatus() {
     int[] sensorStatuses = colorSensors.getProximities();
-
     SmartDashboard.putNumber("Front Sensor Proximity", sensorStatuses[2]);
     SmartDashboard.putNumber("Middle Sensor Proximity", sensorStatuses[1]);
     SmartDashboard.putNumber("Back Sensor Proximity", sensorStatuses[0]);
