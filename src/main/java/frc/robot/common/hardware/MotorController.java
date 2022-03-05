@@ -50,14 +50,6 @@ public class MotorController extends CANSparkMax {
     }
   }
 
-  public RelativeEncoder getEncoder() {
-    // Check first that mEncoder has been instantiated
-    if (mEncoder == null) {
-      throw new NullPointerException("Encoder for " + this.mName + " has not been instantiated.");
-    }
-    return mEncoder;
-  }
-
   public SparkMaxPIDController getPIDCtrl() {
     // Check first that mPIDController has been instantiated
     if (mPIDController == null) {
