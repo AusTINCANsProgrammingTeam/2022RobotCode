@@ -235,11 +235,11 @@ public class RobotContainer {
       buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
     }
 
-      // CDS
-      if (CDSSubsystem != null) {
-        CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-        CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
-      }
+    // CDS
+    if (CDSSubsystem != null) {
+      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+      CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
+    }
 
     // Climb
     if (climbSubsystem != null) {
