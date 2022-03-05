@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.wpilibj.I2C.Port;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -177,14 +176,15 @@ public final class Constants {
 
   // CDS Constants
   public static final int CDSBeltID = 3;
-  public static final int CDSWheelControllerOneID = 9;
-  public static final int CDSWheelControllerTwoID = 2;
-  public static final double CDSBeltSpeed = 0.50;
-  public static final double CDSWheelControllerSpeed = 0.60;
-  public static final Port colorSensorPort = Port.kOnboard; // Placeholder Value, to be changed
-  public static final int frontSensorActivation = 300;
+  public static final int CDSWheelControllerOneID = 2;
+  public static final int CDSWheelControllerTwoID = 9;
+  public static final double CDSBeltSpeed = 0.40;
+  public static final double CDSWheelControllerSpeed = 0.25;
+  public static final int frontSensorActivation = 200;
   public static final int middleSensorActivation = 450;
   public static final int backSensorActivation = 600;
+
+  public static final boolean testMode = true; // if false CDS will eject balls of wrong color
 
   // spotless:off
   // Controller Constants {

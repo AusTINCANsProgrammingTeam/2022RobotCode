@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutonModes;
-import frc.robot.commands.CDSAutoAdvanceCommand;
+import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveBaseTeleopCommand;
@@ -57,7 +57,6 @@ public class RobotContainer {
   private IntakeReverseCommand intakeReverseCommand;
   private ClimbCommand climbCommand;
 
-  // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
   private ShooterHeld shooterHeld;
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
@@ -147,13 +146,16 @@ public class RobotContainer {
     // CDS
     if (CDSSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-      CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
+      // CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
       // CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
       // CDSSubsystem.senseColor();
     }
-    if (intakeSubsystem != null) {
-      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
-      intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
+
+    if (intakeSubsystem != null && CDSSubsystem != null) {
+      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, CDSSubsystem);
+      intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, CDSSubsystem);
+      outtakeCommand = new OuttakeCommand(intakeSubsystem, CDSSubsystem);
+      CDSSubsystem.setDefaultCommand(new CDSBallManagementCommand(CDSSubsystem, intakeSubsystem));
     }
     if (shooterSubsystem != null && CDSSubsystem != null) {
       shooterHeld =
@@ -192,10 +194,15 @@ public class RobotContainer {
       // new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
     }
 
+    // CDS
+    if (CDSSubsystem != null) {
+      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+    }
+
     if (CDSForwardCommand != null && outtakeCommand != null) {
       buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
       // buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
-      buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
+      buttons[Constants.AButton].whileHeld(outtakeCommand);
     }
 
     // Limelight
