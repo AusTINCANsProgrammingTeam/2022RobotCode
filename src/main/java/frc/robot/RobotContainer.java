@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -35,6 +37,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class RobotContainer {
   public static ShuffleboardTab debugTab;
+  public static ShuffleboardTab controllerDetection;
 
   // The robot's subsystems and commands are defined here...
   private static final Joystick driverJoystick = new Joystick(Constants.portNumber0);
@@ -43,7 +46,6 @@ public class RobotContainer {
   private JoystickButton[] buttons2 = new JoystickButton[13];
 
   // subsystems
-
   private static ClimbSubsystem climbSubsystem;
   private static DriveBaseSubsystem driveBaseSubsystem;
   private static CDSSubsystem CDSSubsystem;
@@ -57,7 +59,7 @@ public class RobotContainer {
   private IntakeReverseCommand intakeReverseCommand;
   private ClimbCommand climbCommand;
 
-  private ShooterHeld shooterHeld;
+  private ShooterHeld shooterHeldLow, shooterHeldAuto;
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
@@ -65,8 +67,26 @@ public class RobotContainer {
   // auton
   private AutonModes autonModes;
   private Command chosenAutonMode = null;
+
+  // Controller Check Variables
+  private NetworkTableEntry sbaxisCount0;
+  private NetworkTableEntry sbaxisCount1;
+  private NetworkTableEntry sbbuttonCount0;
+  private NetworkTableEntry sbbuttonCount1;
+  private int axisCount0;
+  private int buttonCount0;
+  private int axisCount1;
+  private int buttonCount1;
+
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
+    controllerDetection = Shuffleboard.getTab("Controller Detector");
+
+    sbaxisCount0 = controllerDetection.add("Port0 AxisCount", 0).withSize(2, 2).getEntry();
+    sbbuttonCount0 = controllerDetection.add("Port0 ButtonCount", 0).withSize(2, 2).getEntry();
+    sbaxisCount1 = controllerDetection.add("Port1 AxisCount", 0).withSize(2, 2).getEntry();
+    sbbuttonCount1 = controllerDetection.add("Port1 ButtonCount", 0).withSize(2, 2).getEntry();
+
     debugTab = Shuffleboard.getTab("debug");
 
     initSubsystems();
@@ -75,17 +95,36 @@ public class RobotContainer {
     // initialize the button bindings
     for (int i = 1; i < buttons.length; i++) {
       buttons[i] = new JoystickButton(driverJoystick, i);
-      // buttons2[i] = new JoystickButton(operatorJoystick, i);
+      buttons2[i] = new JoystickButton(operatorJoystick, i);
     }
     configureButtonBindings();
 
     initAuton();
   }
 
+  private void controllerCheck() {
+    axisCount0 = DriverStation.getStickAxisCount(Constants.portNumber0);
+    buttonCount0 = DriverStation.getStickButtonCount(Constants.portNumber0);
+    sbaxisCount0.setDouble(axisCount0);
+    sbbuttonCount0.setDouble(buttonCount0);
+
+    axisCount1 = DriverStation.getStickAxisCount(Constants.portNumber1);
+    buttonCount1 = DriverStation.getStickButtonCount(Constants.portNumber1);
+    sbaxisCount1.setDouble(axisCount1);
+    sbbuttonCount1.setDouble(buttonCount1);
+
+    System.out.printf(
+        "axisCount0 %d buttonCount0 %d axisCount1 %d buttonCount1 %d\n ",
+        axisCount0, buttonCount0, axisCount1, buttonCount1);
+  }
+
   private void initSubsystems() {
+
     // subsystems
     for (Constants.Subsystems sub : Constants.Subsystems.values()) {
       if (sub.isEnabled()) {
+
+        controllerCheck();
 
         // System.out.println((String) k + " " + subSysEnables.get((String) k));
         switch (sub.toString()) {
@@ -121,7 +160,7 @@ public class RobotContainer {
             }
           case "ClimbSubsystem":
             {
-              if (!Constants.oneController) {
+              if (axisCount1 > 0 && buttonCount1 > 0) {
                 climbSubsystem = new ClimbSubsystem(operatorJoystick);
                 climbCommand = new ClimbCommand(climbSubsystem);
                 System.out.println("Climb enabled");
@@ -157,10 +196,12 @@ public class RobotContainer {
       CDSSubsystem.setDefaultCommand(new CDSBallManagementCommand(CDSSubsystem, intakeSubsystem));
     }
     if (shooterSubsystem != null && CDSSubsystem != null) {
-      shooterHeld =
+      shooterHeldAuto =
           new ShooterHeld(
               shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
-      shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, CDSSubsystem, false);
+      shooterHeldLow =
+          new ShooterHeld(
+              shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
     }
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
@@ -177,44 +218,66 @@ public class RobotContainer {
   // it to a {@link
   // edu.wpi.first.wpilibj2.command.button.JoystickButton}.
   private void configureButtonBindings() {
+    controllerCheck();
 
-    // Intake
-    if (intakeForwardCommand != null && intakeReverseCommand != null) {
-      buttons[Constants.BButton].whileHeld(intakeForwardCommand);
-      buttons[Constants.RTriggerButton].whileHeld(intakeReverseCommand);
+    // Intake / CDS
+    if (intakeForwardCommand != null && outtakeCommand != null) {
+      // takes ball in
+      buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
+      // spits ball out
+      buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
     }
 
-    // Shooter
-    if (shooterSubsystem != null && shooterHeld != null) {
-      buttons[Constants.LTriggerButton].whileHeld(shooterHeld);
-      // buttons[Constants.LJoystickButton].whenPressed(
-      //   new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
-      // buttons[Constants.RJoystickButton].whenPressed(
-      // new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
+    if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
+      // Auto Aim Shot
+      buttons[Constants.LBumper].whileHeld(
+          shooterHeldAuto.beforeStarting(
+              () -> {
+                shooterSubsystem.setAimMode(Constants.AimModes.AUTO);
+              },
+              shooterSubsystem));
+      // Fender Shot
+      buttons[Constants.LTriggerButton].whileHeld(
+          shooterHeldLow.beforeStarting(
+              () -> {
+                shooterSubsystem.setAimMode(Constants.AimModes.LOW);
+              },
+              shooterSubsystem));
     }
 
-    // CDS
-    if (CDSSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-    }
+    if (axisCount1 == 0 && buttonCount1 == 0) {
 
-    if (CDSForwardCommand != null && outtakeCommand != null) {
-      buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
-      // buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
-      buttons[Constants.AButton].whileHeld(outtakeCommand);
-    }
-
-    // Limelight
-    if (limelightAlign != null) {
-      buttons[Constants.startButton].whenPressed(limelightAlign);
-    }
-
-    // Climb
-    if (climbSubsystem != null) {
-      if (!Constants.oneController) {
-        buttons2[Constants.startButton].whenPressed(
-            new InstantCommand(climbSubsystem::toggleClimbEnable, climbSubsystem));
+      // Shooter
+      if (shooterSubsystem != null && shooterHeldAuto != null) {
+        buttons[Constants.backButton].whenPressed(shooterHeldAuto);
+        buttons[Constants.LJoystickButton].whenPressed(
+            new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
+        buttons[Constants.RJoystickButton].whenPressed(
+            new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
       }
+
+      // Limelight
+      if (limelightAlign != null) {
+        buttons[Constants.startButton].whenPressed(limelightAlign);
+      }
+
+      // ClimbSubysystem has no binding because there are not enuf axises
+      if (climbSubsystem != null) {}
+
+      System.out.printf("Using Testing One-controller button mappings");
+    } else {
+
+      if (climbSubsystem != null) {
+        buttons2[Constants.startButton].whenPressed(
+            new InstantCommand(climbSubsystem::climbEnabbledEnable, climbSubsystem));
+      }
+
+      if (outtakeCommand != null && CDSForwardCommand != null) {
+        buttons2[Constants.RBumper].whileHeld(CDSForwardCommand);
+        buttons2[Constants.RTriggerButton].whileHeld(outtakeCommand);
+      }
+
+      System.out.printf("Using Competition Two-controller button mappings");
     }
   }
 
@@ -251,7 +314,8 @@ public class RobotContainer {
     }
   }
 
-  // TODO: create get methods for other subsystems to pass into TabContainer, or find a more
+  // TODO: create get methods for other subsystems to pass into TabContainer, or
+  // find a more
   // efficient way
   public static DriveBaseSubsystem getDriveBase() {
     if (driveBaseSubsystem != null) {

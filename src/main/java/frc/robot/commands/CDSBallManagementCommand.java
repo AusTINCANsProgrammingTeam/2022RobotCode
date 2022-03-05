@@ -18,7 +18,7 @@ public class CDSBallManagementCommand extends CommandBase {
 
   private boolean runningCDS = false;
   private boolean ejectRunning = false;
-  private int setpointIndex;
+  private int sensorIndex;
 
   private int msCurrent = 0;
   private int msDelay = 750;
@@ -72,25 +72,28 @@ public class CDSBallManagementCommand extends CommandBase {
 
     // Only run auto advance if auto ject is not running
     if (!ejectRunning) {
+      SmartDashboard.putBoolean("CDS Running", runningCDS);
       if (!runningCDS) {
         // Send ball to setpoint
+        SmartDashboard.putBooleanArray("Sensor Statuses", sensorStatus);
         if (sensorStatus[2]) {
           int nextOpenSensor = CDSSubsystem.getNextOpenSensor(sensorStatus);
-          SmartDashboard.putNumber("Setpoint", nextOpenSensor);
+          SmartDashboard.putNumber("Open Sensor Index", nextOpenSensor);
           if (nextOpenSensor != -1) {
             // There is an open setpoint avaliable, run CDS
             runningCDS = true;
-            setpointIndex = nextOpenSensor;
+            sensorIndex = nextOpenSensor;
             CDSSubsystem.CDSToggleAll(false);
             CDSSubsystem.setReady(false);
           }
         }
       } else {
         // Check if ball has reached setpoint, stop if it has
-        if (sensorStatus[setpointIndex]) {
+        SmartDashboard.putNumber("Open Sensor Index", sensorIndex);
+        if (sensorStatus[sensorIndex]) {
           CDSSubsystem.stopCDS();
           runningCDS = false;
-          setpointIndex = -1;
+          sensorIndex = -1;
           CDSSubsystem.setReady(true);
         }
       }
