@@ -19,12 +19,12 @@ public final class Constants {
   public enum Subsystems {
     // Change booleans to disable a subsystem in RobotContainer
     // spotless:off
-    DriveBaseSubsystem(false),
-    CDSSubsystem      (false),
-    IntakeSubsystem   (false),
-    ShooterSubsystem  (false),
-    LimelightSubsystem(false),
-    ClimbSubsystem    (true);
+    DriveBaseSubsystem(true),
+    CDSSubsystem      (true),
+    IntakeSubsystem   (true),
+    ShooterSubsystem  (true),
+    LimelightSubsystem(true),
+    ClimbSubsystem    (false); //Out of order (temperaraly)
     // spotless:on
 
     private final Boolean enabled;
