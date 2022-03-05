@@ -3,6 +3,8 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Constants.AimModes;
@@ -41,6 +43,7 @@ public class ShooterEject extends CommandBase {
         m_CDSSubsystem.CDSBeltToggle(false);
         m_ShooterSubsystem.runCargo(Constants.Shooter.cargoForward);
         m_ShooterSubsystem.setCargoBoolean(true);
+        Shuffleboard.addEventMarker("Fired Cargo", EventImportance.kHigh);
       }
       i++;
     } else {
@@ -62,7 +65,7 @@ public class ShooterEject extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (i >= 50) { // 1000 miliseconds delay TODO: CDS method is critical for this!!!
+    if (i >= 50) { // 1000 milliseconds delay TODO: CDS method is critical for this!!!
       return true;
     }
     return false;

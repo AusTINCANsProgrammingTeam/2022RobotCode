@@ -10,6 +10,7 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -176,6 +177,7 @@ public class ShooterSubsystem extends SubsystemBase {
     if (rpm == 0) {
       flywheelPID.setReference(0, CANSparkMax.ControlType.kVoltage);
       flywheelPID.setIAccum(0);
+      Shuffleboard.addEventMarker("flyWheel Starts", EventImportance.kHigh);
     } else {
       targetRPM = rpm;
       flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);

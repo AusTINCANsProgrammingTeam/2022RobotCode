@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CDSSubsystem;
@@ -44,6 +46,7 @@ public class CDSAutoAdvanceCommand extends CommandBase {
           setpointIndex = nextOpenSensor;
           CDSSubsystem.CDSWheelToggle(false); // Run wheel
           CDSSubsystem.CDSBeltToggle(false); // Run belt
+          Shuffleboard.addEventMarker("Next Open Sensor", EventImportance.kHigh);
         }
       } else {
         // Check if ball has reached setpoint, stop if it has
@@ -51,6 +54,8 @@ public class CDSAutoAdvanceCommand extends CommandBase {
           CDSSubsystem.stopCDS();
           runningCDS = false;
           setpointIndex = -1;
+        } else {
+          Shuffleboard.addEventMarker("Auto Advance Broke", EventImportance.kCritical);
         }
       }
     }

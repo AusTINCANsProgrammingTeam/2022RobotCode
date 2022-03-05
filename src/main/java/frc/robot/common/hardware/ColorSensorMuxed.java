@@ -8,6 +8,8 @@ import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Robot;
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ public class ColorSensorMuxed {
         i2cPorts.add(p);
         // Initialize each device, only need to keep last object
         sensors = new ColorSensorV3(Port.kOnboard);
+        Shuffleboard.addEventMarker("Sensors Activated", EventImportance.kCritical);
       } else {
         DriverStation.reportError("Could not initialize color sensor on I2C port " + p, false);
       }

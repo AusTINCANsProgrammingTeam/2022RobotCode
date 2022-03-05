@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 // import edu.wpi.first.wpilibj2.*;
+import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -12,6 +14,7 @@ import frc.robot.common.hardware.MotorController;
 
 /** Add your docs here. */
 public class IntakeSubsystem extends SubsystemBase {
+
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
@@ -27,6 +30,8 @@ public class IntakeSubsystem extends SubsystemBase {
       intakeMotorControllerOne.getSparkMax().set(-Constants.intakeMotorSpeed);
       SmartDashboard.putString("Intake Motor Direction", "Reverse");
       SmartDashboard.putNumber("Intake Motor Speed", -Constants.intakeMotorSpeed);
+      Shuffleboard.addEventMarker("Auto Eject Ran", EventImportance.kHigh);
+      Shuffleboard.addEventMarker("Reverse Intake Activated", EventImportance.kLow);
     } else {
       intakeMotorControllerOne.getSparkMax().set(Constants.intakeMotorSpeed);
       SmartDashboard.putString("Intake Motor Direction", "Forward");
