@@ -32,7 +32,7 @@ public class ShooterEject extends CommandBase {
     tempMode = m_ShooterSubsystem.getAimMode();
     i = 0;
     m_ShooterSubsystem.setAimMode(Constants.AimModes.EJECT);
-    Shuffleboard.addEventMarker("Fired Cargo", EventImportance.kHigh);  
+    Shuffleboard.addEventMarker("Fired Cargo", EventImportance.kHigh);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

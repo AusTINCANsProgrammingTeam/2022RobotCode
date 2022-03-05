@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -135,6 +136,7 @@ public class CDSSubsystem extends SubsystemBase {
     }
 
     SmartDashboard.putNumber("Ball Count", ballCount);
+    Shuffleboard.addEventMarker("" + ballCount, EventImportance.kNormal);
 
     return beamBreakArray;
   }

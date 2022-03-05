@@ -174,8 +174,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public void windFlywheel(double rpm) {
 
     // Winds Flywheel using PID control to passed rpm
-    Shuffleboard.addEventMarker("FlyWheel Starts", EventImportance.kHigh);
-    SmartDashboard.putNumber("RPM", rpm);
+    Shuffleboard.addEventMarker("FlyWheel Starts" + rpm, EventImportance.kHigh);
     if (rpm == 0) {
       flywheelPID.setReference(0, CANSparkMax.ControlType.kVoltage);
       flywheelPID.setIAccum(0);
