@@ -221,10 +221,7 @@ public class RobotContainer {
     controllerCheck();
 
     // Intake / CDS
-    if (intakeForwardCommand != null
-        && intakeReverseCommand != null
-        && CDSForwardCommand != null
-        && outtakeCommand != null) {
+    if (intakeForwardCommand != null && outtakeCommand != null) {
       // takes ball in
       buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
       // spits ball out
