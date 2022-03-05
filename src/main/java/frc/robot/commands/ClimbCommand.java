@@ -24,7 +24,11 @@ public class ClimbCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.RunManual();
+    if (m_subsystem.getclimbingmode()) {
+      m_subsystem.runManual();
+    } else {
+      m_subsystem.enableClimb();
+    }
   }
 
   // Called once the command ends or is interrupted.
