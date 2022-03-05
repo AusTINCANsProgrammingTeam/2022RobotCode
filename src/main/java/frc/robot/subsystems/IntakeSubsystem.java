@@ -18,8 +18,7 @@ public class IntakeSubsystem extends SubsystemBase {
   private MotorController intakeMotorControllerOne;
 
   public IntakeSubsystem() {
-    intakeMotorControllerOne =
-        new MotorController("Intake Motor One", Constants.intakeMotorOneID, 40);
+    intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID);
     intakeMotorControllerOne.setInverted(true);
   }
 

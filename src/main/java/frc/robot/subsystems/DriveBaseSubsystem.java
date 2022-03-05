@@ -79,16 +79,13 @@ public class DriveBaseSubsystem extends SubsystemBase {
     // motor controllers
     m_motorControllers[Constants.driveLeftFrontIndex] =
         new MotorController(
-            "Differential Left Front",
-            Constants.driveLeftFront, Constants.driveLeftPID);
+            "Differential Left Front", Constants.driveLeftFront, Constants.driveLeftPID);
     m_motorControllers[Constants.driveLeftRearIndex] =
         new MotorController(
             "Differential Left Rear", Constants.driveLeftRear, Constants.driveLeftPID);
     m_motorControllers[Constants.driveRightFrontIndex] =
         new MotorController(
-            "Differential Right Front",
-            Constants.driveRightFront,
-            Constants.driveRightPID);
+            "Differential Right Front", Constants.driveRightFront, Constants.driveRightPID);
     m_motorControllers[Constants.driveRightRearIndex] =
         new MotorController(
             "Differential Right Rear", Constants.driveRightRear, Constants.driveRightPID);
@@ -144,9 +141,15 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
 
     // set PID values
-    m_motorControllers[Constants.driveRightFrontIndex].getPIDCtrl().setP(Constants.driveRightPID[0]);
-    m_motorControllers[Constants.driveRightFrontIndex].getPIDCtrl().setI(Constants.driveRightPID[1]);
-    m_motorControllers[Constants.driveRightFrontIndex].getPIDCtrl().setD(Constants.driveRightPID[2]);
+    m_motorControllers[Constants.driveRightFrontIndex]
+        .getPIDCtrl()
+        .setP(Constants.driveRightPID[0]);
+    m_motorControllers[Constants.driveRightFrontIndex]
+        .getPIDCtrl()
+        .setI(Constants.driveRightPID[1]);
+    m_motorControllers[Constants.driveRightFrontIndex]
+        .getPIDCtrl()
+        .setD(Constants.driveRightPID[2]);
 
     m_motorControllers[Constants.driveLeftFrontIndex].getPIDCtrl().setP(Constants.driveLeftPID[0]);
     m_motorControllers[Constants.driveLeftFrontIndex].getPIDCtrl().setI(Constants.driveLeftPID[1]);

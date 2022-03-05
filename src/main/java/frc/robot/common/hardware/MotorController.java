@@ -18,8 +18,6 @@ public class MotorController extends CANSparkMax {
   private double mI;
   private double mD;
 
-  private double mFF; // feedforward value
-
   // default constructor
   public MotorController(String name, int deviceID) {
     super(deviceID, MotorType.kBrushless);
@@ -28,8 +26,8 @@ public class MotorController extends CANSparkMax {
 
     // Create default values for Spark Max motor controller
     setSmartCurrentLimit(Constants.defaultCurrentLimit); // default current limit is 40A
-    setIdleMode(CANSparkMax.IdleMode.kCoast);            // default mode is Coast
-    setOpenLoopRampRate(Constants.openLoopRampRate);     // default open loop rate
+    setIdleMode(CANSparkMax.IdleMode.kCoast); // default mode is Coast
+    setOpenLoopRampRate(Constants.openLoopRampRate); // default open loop rate
 
     mPIDController = getPIDController();
     mEncoder = getEncoder();
@@ -38,11 +36,6 @@ public class MotorController extends CANSparkMax {
   public MotorController(String name, int deviceID, double[] PID) {
     this(name, deviceID); // intializes CANSparkMax, Encoder, and PIDController
     setPID(PID);
-  
-    setSmartCurrentLimit(40); // default current limit is 40A
-    setIdleMode(CANSparkMax.IdleMode.kCoast); // default mode is Coast
-    mPIDController = getPIDController();
-    mEncoder = getEncoder();
   }
 
   public void setPID(double[] PID) {
@@ -50,14 +43,6 @@ public class MotorController extends CANSparkMax {
     mI = PID[1];
     mD = PID[2];
     activatePID(PID);
-  }
-
-  public RelativeEncoder getEncoder() {
-    // Check first that mEncoder has been instantiated
-    if (mEncoder == null) {
-      throw new NullPointerException("Encoder for " + this.mName + " has not been instantiated.");
-    }
-    return mEncoder;
   }
 
   public SparkMaxPIDController getPIDCtrl() {
@@ -98,32 +83,31 @@ public class MotorController extends CANSparkMax {
     mPIDController.setI(mI);
     mPIDController.setD(mD);
 
-    SmartDashboard.putNumberArray(mName, PID);
+    updateSmartDashboard();
   }
 
   // Updates the Smart Dashboard and checks the PID values to determine if update is needed
   public void updateSmartDashboard() {
-    // The simulation crashes whenever .getEncoder() is called
     if (mPIDController != null) {
-      // if (SmartDashboard.getNumber(mName + " P Value", mP) != mP) {
-      //   mP = SmartDashboard.getNumber(mName + " P Value", mP);
-      //   mPIDController.setP(mP);
-      // }
-      // if (SmartDashboard.getNumber(mName + " I Value", mI) != mI) {
-      //   mI = SmartDashboard.getNumber(mName + " I Value", mI);
-      //   mPIDController.setI(mI);
-      // }
-      // if (SmartDashboard.getNumber(mName + " D Value", mD) != mD) {
-      //   mD = SmartDashboard.getNumber(mName + " D Value", mD);
-      //   mPIDController.setD(mD);
-      // }
-      // if (SmartDashboard.getNumber(mName + " FF Value", mFF) != mFF) {
-      //   mFF = SmartDashboard.getNumber(mName + " FF Value", mFF);
-      //   mPIDController.setFF(mFF);
-      // }
+      // TODO: having a sole shuffleboard tab for PID tuning might be beneficical, there's a built
+      // in widget especially for PID
+      double currentP = SmartDashboard.getNumber(mName + " P value", mP);
+      if (currentP != mP) {
+        mP = currentP;
+        mPIDController.setP(mP);
+      }
 
+      double currentI = SmartDashboard.getNumber(mName + " I value", mI);
+      if (currentI != mI) {
+        mI = currentI;
+        mPIDController.setI(mI);
+      }
 
-
+      double currentD = SmartDashboard.getNumber(mName + " D value", mD);
+      if (currentD != mD) {
+        mD = currentD;
+        mPIDController.setD(mD);
+      }
     }
   }
 }
