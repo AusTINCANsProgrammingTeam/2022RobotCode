@@ -40,7 +40,7 @@ public final class Constants {
   }
 
   public enum AimModes {
-    AUTO, 
+    AUTO,
     // TODO: Plug real values in for these aimModes
     LOW(3200.0, 0.0) {
       @Override
@@ -160,7 +160,7 @@ public final class Constants {
 
   // Intake Contstants
   public static final int intakeMotorOneID = 1;
-  public static final double intakeMotorSpeed = 0.70;
+  public static final double intakeMotorSpeed = 1;
   public static final int initialBallSensorChannel = 0;
   public static final int middleBallSensorChannel = 1;
   public static final int finalBallSensorChannel = 2;

@@ -9,7 +9,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -85,8 +84,7 @@ public class ShooterSubsystem extends SubsystemBase {
           .add("Current I delay", 0)
           .withPosition(2, 4)
           .getEntry(); // Delay before the CDS deliver the ball for the PID to stablize the speed
-  private NetworkTableEntry DSmoothRPM =
-    shooterTab.add("Smooth RPM", 0.0).getEntry();
+  private NetworkTableEntry DSmoothRPM = shooterTab.add("Smooth RPM", 0.0).getEntry();
   private double MaxOutputConstant;
   private double MinOutputConstant;
   private ShooterConfig[] DistanceArray;
@@ -105,8 +103,7 @@ public class ShooterSubsystem extends SubsystemBase {
     flywheel2Controller = new MotorController("Flywheel 2", Constants.Shooter.shooter2ID);
     flywheelPID = flywheelController.getPID();
     flywheelEncoder = flywheelController.getEncoder();
-    flywheelController.setInverted(true);
-    flywheel2Controller.setFollow(flywheelController);
+    flywheel2Controller.getSparkMax().follow(flywheelController.getSparkMax(), true);
     // Initializes the SparkMAX for the hood TODO: Set this up when possible
     /*hoodController = new  MotorController("Hood", Constants.hoodID);
     hoodPID = hoodController.getPID();
@@ -189,10 +186,9 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setCargoBoolean(int a) {
-    if(a == 1){
+    if (a == 1) {
       DCargoRunning.setDouble(targetRPM * 0.5);
-    }
-    else{
+    } else {
       DCargoRunning.setDouble(0);
     }
   }
@@ -271,7 +267,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    smoothRPM = Constants.Shooter.kA * flywheelEncoder.getVelocity() + smoothRPM * (1 - Constants.Shooter.kA);
+    smoothRPM =
+        Constants.Shooter.kA * flywheelEncoder.getVelocity()
+            + smoothRPM * (1 - Constants.Shooter.kA);
     // This method will be called once per scheduler run
     DShooterRPM.setDouble(flywheelEncoder.getVelocity());
     DSmoothRPM.setDouble(smoothRPM);
@@ -284,8 +282,8 @@ public class ShooterSubsystem extends SubsystemBase {
       }
       // dashTunePid.setBoolean(false);
     }
- /*   if (DShootingMode.getDouble(0) != aimMode.ordinal()) {
-      setAimMode((int) DShootingMode.getDouble(0)); */
-   // }
+    /*   if (DShootingMode.getDouble(0) != aimMode.ordinal()) {
+    setAimMode((int) DShootingMode.getDouble(0)); */
+    // }
   }
 }

@@ -59,7 +59,6 @@ public class ShooterHeld extends CommandBase {
           m_ShooterSubsystem.runCargo(0.0);
           m_ShooterSubsystem.setCargoBoolean(0);
         }
-
       }
     } else {
       m_ShooterSubsystem.setCargoBoolean(0);
