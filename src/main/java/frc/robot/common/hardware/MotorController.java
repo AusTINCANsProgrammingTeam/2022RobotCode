@@ -7,10 +7,9 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
-public class MotorController {
+public class MotorController extends CANSparkMax {
 
   private String mName;
-  private CANSparkMax mSparkMax;
   private RelativeEncoder mEncoder;
   private SparkMaxPIDController mPIDController;
 
@@ -23,26 +22,27 @@ public class MotorController {
 
   // default constructor
   public MotorController(String name, int deviceID) {
+    super(deviceID, MotorType.kBrushless);
     mName = name;
-    mSparkMax = new CANSparkMax(deviceID, MotorType.kBrushless);
-    mSparkMax.restoreFactoryDefaults();
+    restoreFactoryDefaults();
 
     // Create default values for Spark Max motor controller
-    mSparkMax.setSmartCurrentLimit(Constants.defaultCurrentLimit); // default current limit is 40A
-    mSparkMax.setIdleMode(CANSparkMax.IdleMode.kCoast);            // default mode is Coast
-    mSparkMax.setOpenLoopRampRate(Constants.openLoopRampRate);     // default open loop rate
+    setSmartCurrentLimit(Constants.defaultCurrentLimit); // default current limit is 40A
+    setIdleMode(CANSparkMax.IdleMode.kCoast);            // default mode is Coast
+    setOpenLoopRampRate(Constants.openLoopRampRate);     // default open loop rate
 
-    mPIDController = mSparkMax.getPIDController();
-    mEncoder = mSparkMax.getEncoder();
+    mPIDController = getPIDController();
+    mEncoder = getEncoder();
   }
 
   public MotorController(String name, int deviceID, double[] PID) {
     this(name, deviceID); // intializes CANSparkMax, Encoder, and PIDController
     setPID(PID);
-  }
-
-  public MotorController(String name, int deviceID, double smartCurrentLimit, double[] PID) {
-    this(name, deviceID, PID)
+  
+    setSmartCurrentLimit(40); // default current limit is 40A
+    setIdleMode(CANSparkMax.IdleMode.kCoast); // default mode is Coast
+    mPIDController = getPIDController();
+    mEncoder = getEncoder();
   }
 
   public void setPID(double[] PID) {
@@ -50,15 +50,6 @@ public class MotorController {
     mI = PID[1];
     mD = PID[2];
     activatePID(PID);
-  }
-
-  public CANSparkMax getSparkMax() {
-    // Check first that mSparkMax has been instantiated
-    if (mSparkMax == null) {
-      throw new NullPointerException(
-          "Spark MAX motor for " + this.mName + " has not been instantiated.");
-    }
-    return mSparkMax;
   }
 
   public RelativeEncoder getEncoder() {
@@ -69,7 +60,7 @@ public class MotorController {
     return mEncoder;
   }
 
-  public SparkMaxPIDController getPIDController() {
+  public SparkMaxPIDController getPIDCtrl() {
     // Check first that mPIDController has been instantiated
     if (mPIDController == null) {
       throw new NullPointerException(
@@ -78,23 +69,9 @@ public class MotorController {
     return mPIDController;
   }
 
-  public void setOpenLoopRampRate(double rate) {
-    mSparkMax.setOpenLoopRampRate(rate);
-  }
-
   // sets speed of motor
   public void setSpeed(double speed) {
-    mSparkMax.set(speed);
-  }
-
-  // set follow
-  public void setFollow(MotorController m) {
-    mSparkMax.follow(m.getSparkMax());
-  }
-
-  // set inverted
-  public void setInverted(boolean b) {
-    mSparkMax.setInverted(b);
+    set(speed);
   }
 
   public String getName() {
@@ -110,12 +87,7 @@ public class MotorController {
     return mEncoder.getVelocity();
   }
 
-  // get boolean for whether if it's inverted
-  public boolean isInverted() {
-    return mSparkMax.getInverted();
-  }
-
-  private void activatePID(double[] PID) {
+  public void activatePID(double[] PID) {
     // Check first that mPIDController has been instantiated
     if (mPIDController == null) {
       throw new NullPointerException(
@@ -153,10 +125,5 @@ public class MotorController {
 
 
     }
-  }
-
-  // Mode can be coast or brake
-  public void setIdleMode(CANSparkMax.IdleMode mode) {
-    mSparkMax.setIdleMode(mode);
   }
 }
