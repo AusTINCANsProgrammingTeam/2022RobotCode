@@ -20,8 +20,8 @@ public class CDSBallManagementCommand extends CommandBase {
   private boolean ejectRunning = false;
   private int setpointIndex;
   
-  private int cycleCount = 0;
-  private int msDelay = 2000;
+  private int msCurrent = 0;
+  private int msDelay = 750;
 
   public CDSBallManagementCommand(CDSSubsystem mCDSSubsystem, IntakeSubsystem mIntakeSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -58,13 +58,13 @@ public class CDSBallManagementCommand extends CommandBase {
         ejectRunning = true;
       } 
     } else {
-        if (cycleCount >= msDelay) {
+        if (msCurrent >= msDelay) {
           CDSSubsystem.stopCDS();
           intakeSubsystem.stopIntake();
           ejectRunning = false;
-          cycleCount = 0;
+          msCurrent = 0;
         } else {
-          cycleCount += 60;
+          msCurrent += 20;
         }
     }
 
