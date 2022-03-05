@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 
 /** Add your docs here. */
 public class ClimbSubsystem extends SubsystemBase {
@@ -68,7 +69,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     climberTab = Shuffleboard.getTab("ClimbBase");
     sbClimbingMode =
-        climberTab.add("Manual Mode Enable", false).withSize(2, 2).withPosition(5, 1).getEntry();
+        climberTab.add("Manual Mode Enable", false).withSize(2, 2).withPosition(5, 1).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
 
     sbClimberSpeedInput =
         climberTab.add("Climber Speed input", 0).withSize(2, 2).withPosition(5, 0).getEntry();
