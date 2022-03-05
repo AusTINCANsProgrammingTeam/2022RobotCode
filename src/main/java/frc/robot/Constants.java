@@ -24,7 +24,7 @@ public final class Constants {
     IntakeSubsystem   (true),
     ShooterSubsystem  (true),
     LimelightSubsystem(true),
-    ClimbSubsystem    (true);
+    ClimbSubsystem    (false); //Out of order (temperaraly)
     // spotless:on
 
     private final Boolean enabled;
@@ -260,5 +260,7 @@ public final class Constants {
   // Climb Constants
   public static final int ClimbMotorOne = 5;
   public static final int ClimbMotorTwo = 12;
-  public static final int LimitSwitchChannel = 12; // Check what number this needs to be
+  public static final double[] climbRightPID = {0.25, 0.005, 1.0};
+  public static final double[] climbLeftPID = {0.25, 0.005, 1.0};
+  // public static final int LimitSwitchChannel = 12; // Check what number this needs to be
 }
