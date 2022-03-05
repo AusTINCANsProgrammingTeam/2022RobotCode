@@ -123,6 +123,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     initializeEncoders();
 
     if (Robot.isSimulation()) {
+      m_gyro1 = new AnalogGyro(1);
       m_gyroSim = new AnalogGyroSim(m_gyro1);
       if (usingExternal == true) {
         // m_leftEncoderSim = new EncoderSim(m_leftEncoder);   // no "Encoder" object anymore

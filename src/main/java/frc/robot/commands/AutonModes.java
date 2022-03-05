@@ -179,14 +179,16 @@ public class AutonModes {
                       () -> driveBaseSubsystem.resetOdometry(oneBallTrajectory.getInitialPose()))
                   .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
 
-      twoBallParallel =
-          new ParallelDeadlineGroup(
-              twoBallRamseteCommand.beforeStarting(
-                  () ->
-                      driveBaseSubsystem.resetOdometry(
-                          twoBallTrajectory.getInitialPose())), // go out to get ball
-              new IntakeForwardCommand(intakeSubsystem)
-                  .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
+      // twoBallParallel =
+      //     new ParallelDeadlineGroup(
+      //         twoBallRamseteCommand.beforeStarting(
+      //             () ->
+      //                 driveBaseSubsystem.resetOdometry(
+      //                     twoBallTrajectory.getInitialPose())), // go out to get ball
+      //         new IntakeForwardCommand(intakeSubsystem)
+      //             .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
+
+      twoBallParallel = null;
 
       twoBallCommand =
           new SequentialCommandGroup(

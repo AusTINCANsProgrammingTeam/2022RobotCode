@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.CDSSubsystem;
@@ -21,17 +22,18 @@ public class ShooterHeld extends CommandBase {
   public ShooterHeld(
       ShooterSubsystem shooterSubsystem,
       LimelightSubsystem limelightSubsystem,
-      CDSSubsystem cdsSubsystem,
+      CDSSubsystem CDSSubsystem,
       boolean llEnabled) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(cdsSubsystem);
+    addRequirements(CDSSubsystem);
     addRequirements(shooterSubsystem);
     if (llEnabled) {
       addRequirements(limelightSubsystem);
     }
     m_ShooterSubsystem = shooterSubsystem;
     m_LimelightSubsystem = limelightSubsystem;
-    m_CDSSubsystem = cdsSubsystem;
+    // m_CDSSubsystem = CDSSubsystem;
+    SmartDashboard.putBoolean("wheelReady", false);
     LLEnabled = llEnabled;
   }
 
