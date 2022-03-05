@@ -31,7 +31,8 @@ public class CDSSubsystem extends SubsystemBase {
   private ColorSensorMuxed colorSensors;
 
   private boolean isReady = true; // Variable for whether CDS is ready for shooter action
- 
+  private int ballCount = 0;
+
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry CDSWheelControllerDirection =
       CDSTab.add("CDS Wheel Direction", "Not Running")
@@ -58,7 +59,7 @@ public class CDSSubsystem extends SubsystemBase {
     CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
 
     CDSBeltController.setIdleMode(IdleMode.kBrake);
-    //CDSWheelControllerOne.setIdleMode(IdleMode.kCoast);
+    CDSWheelControllerOne.setIdleMode(IdleMode.kCoast);
 
     colorSensors = new ColorSensorMuxed(0, 1, 3);
 
@@ -73,7 +74,6 @@ public class CDSSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("CDS Wheel Speed", -Constants.CDSWheelControllerSpeed);
 
       CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
-      CDSBeltController.setIdleMode(IdleMode.kBrake);
       SmartDashboard.putString("CDS Belt Direction", "Reverse");
       SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
     } else {
@@ -147,7 +147,7 @@ public class CDSSubsystem extends SubsystemBase {
     boolean frontStatus = sensorStatuses[2] > Constants.frontSensorActivation;
     boolean[] beamBreakArray = {backStatus, middleStatus, frontStatus};
 
-    int ballCount = 0;
+    ballCount = 0;
     for (boolean status : beamBreakArray) {
       if (status) {
         ballCount++;
@@ -185,6 +185,10 @@ public class CDSSubsystem extends SubsystemBase {
 
   public String getAllianceColor() {
     return allianceColor;
+  }
+
+  public int getBallCount() {
+    return ballCount;
   }
 
   public boolean getReady() {

@@ -40,7 +40,7 @@ public class CDSBallManagementCommand extends CommandBase {
   @Override
   public void execute() {
     // Run eject before auto advance
-    int ballCount = (int) SmartDashboard.getNumber("Ball Count", 0);
+    int lastBallCount = CDSSubsystem.getBallCount();
     boolean[] sensorStatus = CDSSubsystem.getSensorStatus();
 
     SmartDashboard.putBoolean("Front sensor status", sensorStatus[2]);
@@ -49,8 +49,10 @@ public class CDSBallManagementCommand extends CommandBase {
 
 
     if (!ejectRunning) {
-      if ((ballCount > 2) || (sensorStatus[2] &&
-       CDSSubsystem.getAllianceColor() != CDSSubsystem.senseColor() && Constants.testMode)) {
+      // Checks if conditions for ejection are met:
+      // A ball count of over 2 OR ball color is wrong and test mode is off (meaning ball color shouldn't be disregarded)
+      if ((lastBallCount > 2) || (sensorStatus[2] &&
+       CDSSubsystem.getAllianceColor() != CDSSubsystem.senseColor() && !Constants.testMode)) {
         CDSSubsystem.CDSWheelToggle(true);
         intakeSubsystem.toggleIntake(true);
         ejectRunning = true;
