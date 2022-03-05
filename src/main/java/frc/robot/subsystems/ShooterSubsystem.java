@@ -20,6 +20,7 @@ import frc.robot.common.hardware.MotorController;
 
 public class ShooterSubsystem extends SubsystemBase {
   private MotorController flywheelController;
+  private MotorController flywheel2Controller;
   private MotorController hoodController;
   private SparkMaxPIDController flywheelPID;
   private SparkMaxPIDController hoodPID;
@@ -29,6 +30,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private AimModes aimMode;
 
   private double targetRPM;
+  private double currentRPM;
   private double Pconstant;
   private double Iconstant;
   private double Dconstant;
@@ -37,6 +39,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private int IMaxAccumIDconstant;
   private int I_Zone;
   private double MaxOutput;
+  private double smoothRPM;
 
   private ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter Tab");
   // TODO: Fine for now, but we really need to fix this tab when we have shuffleboard decided
@@ -67,21 +70,17 @@ public class ShooterSubsystem extends SubsystemBase {
           .add("PID Peak Output Slot ID", Constants.Shooter.kMaxISlotId)
           .withPosition(1, 3)
           .getEntry();
-  private NetworkTableEntry DShootingMode =
-      shooterTab.add("Shooting Mode", 4).withPosition(1, 5).getEntry();
+  private NetworkTableEntry SShootingMode =
+      shooterTab.add("Shooting Mode", "TEST").withPosition(1, 5).getEntry();
   private NetworkTableEntry DDistance =
       shooterTab.add("Distance to goal", 0.0).withPosition(2, 0).getEntry();
   private NetworkTableEntry DShooterRPM =
       shooterTab.add("Shooter RPM", 0.0).withPosition(2, 1).getEntry();
-  private NetworkTableEntry BCargoRunning =
-      shooterTab.add("Is the CDS Running", false).withPosition(2, 2).getEntry();
+  private NetworkTableEntry DCargoRunning =
+      shooterTab.add("Is the CDS Running", 0.0).withPosition(2, 2).getEntry();
   private NetworkTableEntry DShooterRPMInput =
-      shooterTab.add("Shooter RPM Input", 2000).withPosition(2, 3).getEntry();
-  private NetworkTableEntry IDelayTable =
-      shooterTab
-          .add("Current I delay", 0)
-          .withPosition(2, 4)
-          .getEntry(); // Delay before the CDS deliver the ball for the PID to stablize the speed
+      shooterTab.add("Shooter RPM Input", 3550).withPosition(2, 3).getEntry();
+  private NetworkTableEntry DSmoothRPM = shooterTab.add("Smooth RPM", 0.0).getEntry();
   private double MaxOutputConstant;
   private double MinOutputConstant;
   private ShooterConfig[] DistanceArray;
@@ -93,13 +92,17 @@ public class ShooterSubsystem extends SubsystemBase {
   // Constants.Shooter.d).withPosition(5, 2).getEntry();
 
   public ShooterSubsystem() {
+    smoothRPM = 0;
     aimMode = AimModes.TEST;
-    // Initializes the SparkMAX for the flywheel
+    // Initializes the SparkMAX for the flywheel motors
     flywheelController = new MotorController("Flywheel", Constants.Shooter.shooterID, 40, true);
+    flywheel2Controller = new MotorController("Flywheel 2", Constants.Shooter.shooter2ID);
     flywheelPID = flywheelController.getPID();
     flywheelEncoder = flywheelController.getEncoder();
+    flywheelController.setInverted(true);
+    flywheel2Controller.setFollow(flywheelController);
     // Initializes the SparkMAX for the hood TODO: Set this up when possible
-    /*hoodController = new MotorController("Hood", Constants.hoodID);
+    /*hoodController = new  MotorController("Hood", Constants.hoodID);
     hoodPID = hoodController.getPID();
     hoodEncoder = hoodController.getEncoder();*/
     // Initializes the SparkMAX for the cargo stopper
@@ -148,7 +151,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void adjustHood(double a) {
     // Adjusts Hood using PID control to passed angle a
-    // hoodPID.setReference(a, CANSparkMax.ControlType.kPosition);
+    // hoodPID.setReference(a, CANSparkMax.ControlType.kPosition); TODO: Set this up when possible
   }
 
   public double[] lookup(double Currentdistance) {
@@ -180,43 +183,38 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setCargoBoolean(boolean a) {
-    BCargoRunning.setBoolean(a);
-  }
-
-  public void updateIdelay(double i) {
-    IDelayTable.setDouble(i);
-  }
-
-  public void runCargo(boolean a, boolean reversed) {
     if (a) {
-      if (reversed) {
-        stopperController.setSpeed(-0.2);
-      } else {
-        stopperController.setSpeed(0.2);
-      }
+      DCargoRunning.setDouble(targetRPM * 0.5);
     } else {
-      stopperController.setSpeed(0.0);
+      DCargoRunning.setDouble(0);
     }
   }
 
-  public boolean wheelReady() {
-    double flywheelSpeed = flywheelEncoder.getVelocity();
-    return (flywheelSpeed > targetRPM - 10 && flywheelSpeed < targetRPM + 10);
+  public void runCargo(double speed) {
+    stopperController.setSpeed(speed);
   }
 
-  public void setAimMode(int m) {
-    aimMode = AimModes.values()[m];
-    DShootingMode.setDouble(aimMode.ordinal());
+  public boolean wheelReady() {
+    return (smoothRPM > targetRPM - 56 && smoothRPM < targetRPM + 56);
+  }
+
+  public void setAimMode(AimModes a) {
+    aimMode = a;
+    SShootingMode.setString(aimMode.toString());
+  }
+
+  public AimModes getAimMode() {
+    return aimMode;
   }
 
   public void cycleAimModeNext() {
     aimMode.next();
-    DShootingMode.setDouble(aimMode.ordinal());
+    SShootingMode.setString(aimMode.toString());
   }
 
   public void cycleAimModePrevious() {
     aimMode.previous();
-    DShootingMode.setDouble(aimMode.ordinal());
+    SShootingMode.setString(aimMode.toString());
   }
 
   public double getTY() {
@@ -265,8 +263,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    currentRPM = flywheelEncoder.getVelocity();
+    smoothRPM = Constants.Shooter.kA * currentRPM + smoothRPM * (1 - Constants.Shooter.kA);
     // This method will be called once per scheduler run
-    DShooterRPM.setDouble(flywheelEncoder.getVelocity());
+    DShooterRPM.setDouble(currentRPM);
+    DSmoothRPM.setDouble(smoothRPM);
     DDistance.setDouble(getDistance());
     if (dashTunePid.getBoolean(false)) {
       if ((flywheelPID.getP() != PID_P.getDouble(0))
@@ -276,8 +277,8 @@ public class ShooterSubsystem extends SubsystemBase {
       }
       // dashTunePid.setBoolean(false);
     }
-    if (DShootingMode.getDouble(0) != aimMode.ordinal()) {
-      setAimMode((int) DShootingMode.getDouble(0));
-    }
+    /*   if (DShootingMode.getDouble(0) != aimMode.ordinal()) {
+    setAimMode((int) DShootingMode.getDouble(0)); */
+    // }
   }
 }
