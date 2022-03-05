@@ -41,12 +41,12 @@ public class ColorSensorMuxed {
     byte[] muxCtrlRegRead = new byte[1];
     // Write to TCA9548 control register and readback and verify
     // (I2C class returns false for I2C transaction successes.)
-    if (Robot.isReal()){
+    if (Robot.isReal()) {
       boolean ret = i2cMux.writeBulk(muxCtrlReg);
       ret |= i2cMux.readOnly(muxCtrlRegRead, muxCtrlRegRead.length);
       ret |= muxCtrlRegRead[0] != muxCtrlReg[0];
       return !ret;
-    } else{
+    } else {
       return true;
     }
   }

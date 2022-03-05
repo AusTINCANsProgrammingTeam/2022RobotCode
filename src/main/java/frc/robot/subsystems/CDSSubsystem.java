@@ -5,9 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -16,10 +14,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.common.hardware.MotorController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.common.hardware.ColorSensorMuxed;
+import frc.robot.common.hardware.MotorController;
 
 public class CDSSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
@@ -52,8 +48,10 @@ public class CDSSubsystem extends SubsystemBase {
   public CDSSubsystem() {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
     CDSBeltController.setInverted(true);
-    CDSWheelControllerOne = new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerOneID, 40);
-    CDSWheelControllerTwo = new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerTwoID, 40);
+    CDSWheelControllerOne =
+        new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerOneID, 40);
+    CDSWheelControllerTwo =
+        new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerTwoID, 40);
 
     CDSWheelControllerOne.setInverted(true);
     CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
@@ -90,9 +88,12 @@ public class CDSSubsystem extends SubsystemBase {
   public void CDSWheelToggle(boolean reverse) {
     if (reverse) {
       CDSWheelControllerOne.getSparkMax().set(-Constants.CDSWheelControllerSpeed);
-      SmartDashboard.putString("CDS Wheel Direction", "Reverse");
-      SmartDashboard.putNumber("CDS Wheel Speed", -Constants.CDSWheelControllerSpeed);
-  
+      CDSWheelControllerDirection.setString("Reverse");
+
+      CDSBeltController.getSparkMax().set(Constants.CDSBeltSpeed);
+      CDSBeltController.setIdleMode(IdleMode.kBrake);
+      CDSBeltControllerDirection.setString("Reverse");
+
     } else {
       CDSWheelControllerOne.getSparkMax().set(Constants.CDSWheelControllerSpeed);
       SmartDashboard.putString("CDS Wheel Direction", "Forward");
@@ -101,7 +102,7 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public void CDSBeltToggle(boolean reverse) {
-    if(reverse){
+    if (reverse) {
       CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
       SmartDashboard.putString("CDS Belt Direction", "Reverse");
       SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
@@ -134,7 +135,7 @@ public class CDSSubsystem extends SubsystemBase {
     CDSWheelControllerOne.getSparkMax().set(0.0);
     SmartDashboard.putNumber("CDS Wheel Speed", 0.0);
   }
-  
+
   public boolean[] getSensorStatus() {
     int[] sensorStatuses = colorSensors.getProximities();
 
@@ -158,7 +159,7 @@ public class CDSSubsystem extends SubsystemBase {
     return beamBreakArray;
   }
 
-  public int getNextOpenSensor(boolean[] sensorStatus) {    
+  public int getNextOpenSensor(boolean[] sensorStatus) {
     // Starts at 0 and ends short of the centering wheel
     for (int i=0; i < sensorStatus.length-1; i++) {
       if (!sensorStatus[i]) {

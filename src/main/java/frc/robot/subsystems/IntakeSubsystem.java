@@ -40,5 +40,30 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void periodic() {}
+<<<<<<< HEAD
+=======
+
+  /*
+  public int getBallCount() {
+    boolean[] beamBreakStatuses = this.getBeamBreakStatus();
+    // TODO: Possibly add more beambreaks once done with testing.
+    if (!beamBreakStatuses[0]) {
+      if (this.getDirection()){
+        ballCount--;
+      } else {
+        ballCount++;
+      }
+    }
+    return ballCount;
+  }
+
+  public void expelBalls() {
+    if (ballCount > 2) {
+      this.toggleIntake(true);
+    }
+    this.stopIntake();
+  }
+  */
+>>>>>>> f6e9991a76834f697f009689555c1d35045c2c31
 
 } // Don't delete, for main method
