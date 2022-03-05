@@ -4,12 +4,8 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -32,8 +28,6 @@ import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import java.io.IOException;
-import java.nio.file.Path;
 
 // This class is where the bulk of the robot should be declared. Since Command-based is a
 // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -132,7 +126,7 @@ public class RobotContainer {
       if (sub.isEnabled()) {
 
         controllerCheck();
-        
+
         // System.out.println((String) k + " " + subSysEnables.get((String) k));
         switch (sub.toString()) {
           case "DriveBaseSubsystem":
@@ -254,10 +248,9 @@ public class RobotContainer {
 
       // Intake
       if (intakeForwardCommand != null && intakeReverseCommand != null) {
-        //takes ball in
+          // takes ball in
         buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
-
-        //spits ball out
+          // spits ball out
         buttons[Constants.LBumper].whileHeld(intakeReverseCommand);
       }
 
@@ -268,14 +261,12 @@ public class RobotContainer {
         // Auto Aim Shot
         buttons[Constants.LBumper].whileHeld(
             shooterHeld.beforeStarting(
-                () -> shooterSubsystem.setAimMode(Constants.AimModes.AUTO.ordinal()),
-                shooterSubsystem));
+                () -> shooterSubsystem.setAimMode(Constants.AimModes.AUTO), shooterSubsystem));
 
         // Fender Shot
         buttons[Constants.LTriggerButton].whileHeld(
             shooterHeld.beforeStarting(
-                () -> shooterSubsystem.setAimMode(Constants.AimModes.LOW.ordinal()),
-                shooterSubsystem));
+                () -> shooterSubsystem.setAimMode(Constants.AimModes.LOW), shooterSubsystem));
       }
 
       if (climbSubsystem != null) {
