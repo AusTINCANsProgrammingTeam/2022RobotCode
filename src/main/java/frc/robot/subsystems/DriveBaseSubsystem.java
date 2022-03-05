@@ -154,9 +154,15 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
 
     // set PID values
-    m_motorControllers[Constants.driveRightFrontIndex].getPIDCtrl().setP(Constants.driveRightPID[0]);
-    m_motorControllers[Constants.driveRightFrontIndex].getPIDCtrl().setI(Constants.driveRightPID[1]);
-    m_motorControllers[Constants.driveRightFrontIndex].getPIDCtrl().setD(Constants.driveRightPID[2]);
+    m_motorControllers[Constants.driveRightFrontIndex]
+        .getPIDCtrl()
+        .setP(Constants.driveRightPID[0]);
+    m_motorControllers[Constants.driveRightFrontIndex]
+        .getPIDCtrl()
+        .setI(Constants.driveRightPID[1]);
+    m_motorControllers[Constants.driveRightFrontIndex]
+        .getPIDCtrl()
+        .setD(Constants.driveRightPID[2]);
 
     m_motorControllers[Constants.driveLeftFrontIndex].getPIDCtrl().setP(Constants.driveLeftPID[0]);
     m_motorControllers[Constants.driveLeftFrontIndex].getPIDCtrl().setI(Constants.driveLeftPID[1]);

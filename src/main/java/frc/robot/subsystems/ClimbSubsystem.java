@@ -200,7 +200,8 @@ public class ClimbSubsystem extends SubsystemBase {
     sbclimberspeedOne.setDouble(m_climbMotorControllerOne.getEncoder().getVelocity());
     sbclimberpositionOne.setDouble(m_climbMotorControllerOne.getEncoder().getPosition());
     m_climbMotorControllerOne.updateSmartDashboard();
-    SmartDashboard.putNumber("Climb IAccum One", m_climbMotorControllerOne.getPIDCtrl().getIAccum());
+    SmartDashboard.putNumber(
+        "Climb IAccum One", m_climbMotorControllerOne.getPIDCtrl().getIAccum());
 
     SmartDashboard.putNumber(
         "Climb Hight Two", m_climbMotorControllerTwo.getEncoder().getPosition());
@@ -212,7 +213,8 @@ public class ClimbSubsystem extends SubsystemBase {
     sbclimberspeedTwo.setDouble(m_climbMotorControllerTwo.getEncoder().getVelocity());
     sbclimberpositionTwo.setDouble(m_climbMotorControllerTwo.getEncoder().getPosition());
     m_climbMotorControllerTwo.updateSmartDashboard();
-    SmartDashboard.putNumber("Climb IAccum Two", m_climbMotorControllerTwo.getPIDCtrl().getIAccum());
+    SmartDashboard.putNumber(
+        "Climb IAccum Two", m_climbMotorControllerTwo.getPIDCtrl().getIAccum());
   }
 
   public boolean getLimitSwitchVal() {
