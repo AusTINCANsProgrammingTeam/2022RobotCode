@@ -36,7 +36,7 @@ public class CDSAutoAdvanceCommand extends CommandBase {
       // Send ball to setpoint
       if (sensorStatus[2]) {  
         int nextOpenSensor = CDSSubsystem.getNextOpenSensor(sensorStatus);
-        SmartDashboard.putNumber("Setpoint", nextOpenSensor);
+        SmartDashboard.putNumber("Next Open Sensor", nextOpenSensor);
         if (nextOpenSensor != -1) {
           // There is an open setpoint avaliable, run CDS
           runningCDS = true;
