@@ -8,11 +8,12 @@ import frc.robot.subsystems.DriveBaseSubsystem;
 
 /** Add your docs here. */
 public class TabContainer {
-
   private TabDriveBase mTabDriveBase;
 
   public TabContainer(DriveBaseSubsystem d) {
-    mTabDriveBase = new TabDriveBase(d);
+    if (d != null) {
+      mTabDriveBase = new TabDriveBase(d);
+    }
   }
 
   public void periodic() {

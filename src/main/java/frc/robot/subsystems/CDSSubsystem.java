@@ -23,13 +23,11 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSBeltController;
   private MotorController CDSWheelControllerOne;
   private MotorController CDSWheelControllerTwo;
-  // private ColorSensorV3 colorSensorOne;
-  // private ColorSensorV3 colorSensorTwo;
-  // private DigitalInput backBeamBreak;
   private String allianceColor;
-  private boolean runningCDS = false;
-  private int setpointIndex;
   private ColorSensorMuxed colorSensors;
+
+  private boolean isReady = true; // Variable for whether CDS is ready for shooter action
+  private int ballCount = 0;
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry CDSWheelControllerDirection =
@@ -55,16 +53,36 @@ public class CDSSubsystem extends SubsystemBase {
     CDSWheelControllerTwo =
         new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerTwoID, 40);
 
+    CDSWheelControllerOne.setInverted(true);
     CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
 
-    colorSensors = new ColorSensorMuxed(0, 1, 2);
+    CDSBeltController.setIdleMode(IdleMode.kBrake);
+    CDSWheelControllerOne.setIdleMode(IdleMode.kCoast);
 
-    // colorSensorOne = new ColorSensorV3(Constants.colorSensorPort1);
-    // colorSensorTwo = new ColorSensorV3(Constants.colorSensorPort2);
-    // backBeamBreak = new DigitalInput(Constants.initialBallSensorChannel);
+    colorSensors = new ColorSensorMuxed(0, 1, 3);
 
     String allianceColor = DriverStation.getAlliance().toString();
     SmartDashboard.putString("Alliance Color", allianceColor);
+  }
+
+  public void CDSToggleAll(boolean reverse) {
+    if (reverse) {
+      CDSWheelControllerOne.getSparkMax().set(-Constants.CDSWheelControllerSpeed);
+      SmartDashboard.putString("CDS Wheel Direction", "Reverse");
+      SmartDashboard.putNumber("CDS Wheel Speed", -Constants.CDSWheelControllerSpeed);
+
+      CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
+      SmartDashboard.putString("CDS Belt Direction", "Reverse");
+      SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
+    } else {
+      CDSWheelControllerOne.getSparkMax().set(Constants.CDSWheelControllerSpeed);
+      SmartDashboard.putString("CDS Wheel Direction", "Forward");
+      SmartDashboard.putNumber("CDS Wheel Speed", Constants.CDSWheelControllerSpeed);
+
+      CDSBeltController.getSparkMax().set(Constants.CDSBeltSpeed);
+      SmartDashboard.putString("CDS Belt Direction", "Forward");
+      SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
+    }
   }
 
   public void CDSWheelToggle(boolean reverse) {
@@ -86,7 +104,6 @@ public class CDSSubsystem extends SubsystemBase {
   public void CDSBeltToggle(boolean reverse) {
     if (reverse) {
       CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
-      CDSBeltController.setIdleMode(IdleMode.kBrake);
       SmartDashboard.putString("CDS Belt Direction", "Reverse");
       SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
 
@@ -122,18 +139,21 @@ public class CDSSubsystem extends SubsystemBase {
   public boolean[] getSensorStatus() {
     int[] sensorStatuses = colorSensors.getProximities();
 
-    boolean backStatus = sensorStatuses[2] > Constants.backSensorActivation;
+    SmartDashboard.putNumber("Front Sensor Proximity", sensorStatuses[2]);
+    SmartDashboard.putNumber("Middle Sensor Proximity", sensorStatuses[1]);
+    SmartDashboard.putNumber("Back Sensor Proximity", sensorStatuses[0]);
+
+    boolean backStatus = sensorStatuses[0] > Constants.backSensorActivation;
     boolean middleStatus = sensorStatuses[1] > Constants.middleSensorActivation;
-    boolean frontStatus = sensorStatuses[0] > Constants.frontSensorActivation;
+    boolean frontStatus = sensorStatuses[2] > Constants.frontSensorActivation;
     boolean[] beamBreakArray = {backStatus, middleStatus, frontStatus};
 
-    int ballCount = 0;
+    ballCount = 0;
     for (boolean status : beamBreakArray) {
       if (status) {
         ballCount++;
       }
     }
-
     SmartDashboard.putNumber("Ball Count", ballCount);
 
     return beamBreakArray;
@@ -142,63 +162,20 @@ public class CDSSubsystem extends SubsystemBase {
   public int getNextOpenSensor(boolean[] sensorStatus) {
     // Starts at 0 and ends short of the centering wheel
     for (int i = 0; i < sensorStatus.length - 1; i++) {
-      if (sensorStatus[i]) {
+      if (!sensorStatus[i]) {
         return i;
       }
     }
     return -1;
   }
 
-  public void periodic() {
-    // Color sensing
-    String ballColor = senseColor();
-    // SmartDashboard.putString("Ball Color", ballColor);
-    SmartDashboard.putBoolean("Ball Color Match", ballColor == allianceColor);
-    // boolean[] sensorStatus = getSensorStatus();
-
-    /*
-    // Send ball to setpoint
-    if (!runningCDS) {
-      SmartDashboard.putBoolean("Front sensor status", sensorStatus[2]);
-      SmartDashboard.putBoolean("Middle Sensor Status", sensorStatus[1]);
-      SmartDashboard.putBoolean("Back Sensor Status", sensorStatus[0]);
-
-      if (sensorStatus[2]) {  //1 means sensor is activated
-        int nextOpenSensor = getNextOpenSensor(sensorStatus);
-        SmartDashboard.putNumber("Setpoint", nextOpenSensor);
-        if (nextOpenSensor != -1) {
-          // There is an open setpoint avaliable, run CDS
-          runningCDS = true;
-          setpointIndex = nextOpenSensor;
-          CDSWheelToggle(false); // Run wheel
-          CDSBeltToggle(false); // Run belt
-        }
-      }
-    } else {
-      // Check if ball has reached setpoint, stop if it has
-      if (sensorStatus[setpointIndex]) {
-        stopCDS();
-        runningCDS = false;
-        setpointIndex = -1;
-      }
-    }*/
-  }
-
-  /*
-  public String getAllianceColor() {
-    Alliance alliance = DriverStation.getAlliance();
-    SmartDashboard.putString("Alliance Color", alliance.toString());
-    return alliance.toString();
-  }*/
-
   public String senseColor() {
-
     Color[] colors = colorSensors.getColors();
 
     // Only sensing colors for first sensor so that we can handle it when it's coming in and not
     // dealing with any other complexities
-    double redAmount = colors[0].red;
-    double blueAmount = colors[0].blue;
+    double redAmount = colors[2].red;
+    double blueAmount = colors[2].blue;
     if (redAmount > blueAmount) {
       SmartDashboard.putString("Ball Color", "Red");
       return "Red";
@@ -207,4 +184,22 @@ public class CDSSubsystem extends SubsystemBase {
       return "Blue";
     }
   }
+
+  public String getAllianceColor() {
+    return allianceColor;
+  }
+
+  public int getBallCount() {
+    return ballCount;
+  }
+
+  public boolean getReady() {
+    return isReady;
+  }
+
+  public void setReady(boolean status) {
+    isReady = status;
+  }
+
+  public void periodic() {}
 }
