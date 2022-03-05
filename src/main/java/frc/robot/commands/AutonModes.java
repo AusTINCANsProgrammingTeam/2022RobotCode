@@ -153,7 +153,7 @@ public class AutonModes {
   }
 
   private void initializeCommandGroups() {
-    
+
     taxiCommand =
         new SequentialCommandGroup(
             new WaitCommand(initialWaitTime),
@@ -179,16 +179,15 @@ public class AutonModes {
                       () -> driveBaseSubsystem.resetOdometry(oneBallTrajectory.getInitialPose()))
                   .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
 
-      // twoBallParallel =
-      //     new ParallelDeadlineGroup(
-      //         twoBallRamseteCommand.beforeStarting(
-      //             () ->
-      //                 driveBaseSubsystem.resetOdometry(
-      //                     twoBallTrajectory.getInitialPose())), // go out to get ball
-      //         new IntakeForwardCommand(intakeSubsystem)
-      //             .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
-
-      twoBallParallel = null;
+      twoBallParallel =
+          new ParallelDeadlineGroup(
+              twoBallRamseteCommand.beforeStarting(
+                  () ->
+                      driveBaseSubsystem.resetOdometry(
+                          twoBallTrajectory.getInitialPose())) // go out to get ball
+              // new IntakeForwardCommand(intakeSubsystem)
+              //     .andThen(() -> driveBaseSubsystem.stopDriveMotors())
+              );
 
       twoBallCommand =
           new SequentialCommandGroup(

@@ -4,10 +4,11 @@
 
 package frc.robot.subsystems.Tabs;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.DriveBaseSubsystem;
 
 /** Add your docs here. */
-public class TabContainer {
+public class TabContainer extends SubsystemBase {
   private TabDriveBase mTabDriveBase;
 
   public TabContainer(DriveBaseSubsystem d) {

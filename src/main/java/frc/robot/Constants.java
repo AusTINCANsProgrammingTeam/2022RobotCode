@@ -20,11 +20,11 @@ public final class Constants {
     // Change booleans to disable a subsystem in RobotContainer
     // spotless:off
     DriveBaseSubsystem(true),
-    CDSSubsystem      (true),
-    IntakeSubsystem   (true),
-    ShooterSubsystem  (true),
-    LimelightSubsystem(true),
-    ClimbSubsystem    (true);
+    CDSSubsystem      (false),
+    IntakeSubsystem   (false),
+    ShooterSubsystem  (false),
+    LimelightSubsystem(false),
+    ClimbSubsystem    (false);
     // spotless:on
 
     private final Boolean enabled;
@@ -104,20 +104,19 @@ public final class Constants {
   // DRIVEBASE Constants
 
   // Constants for wheel motors
-  public static final double wheelRadius =
-      3.0125; // radius of wheel, use for calculating angular values
+  public static final double wheelRadius = 2; // radius of wheel, use for calculating angular values
   public static final double openLoopRampRate =
       0.2; // Rate at which the motors reach maximum speed; TODO: tune for optimal performance
-  public static final double gearRatio = 10.75; // 10.75 : 1 gear ratio <--- kitbot
+  public static final double gearRatio = 6.2; // 10.75 : 1 gear ratio <--- kitbot
   // 10.75 motor rotations : 1 wheel rotation
   public static final double inchesInMeter = 39.3701;
 
   // Actual IDs on robot, used to activate the right motors
 
   public static final int driveLeftFront = 13; // 13 on real robot, 1 on kitbot
-  public static final int driveLeftRear = 14;  // 14 on real robot, 2 on kitbot
+  public static final int driveLeftRear = 14; // 14 on real robot, 2 on kitbot
   public static final int driveRightFront = 6; // 6 on real robot,  3 on kitbot
-  public static final int driveRightRear = 7;  // 7 on real robot,  4 on kitbot
+  public static final int driveRightRear = 7; // 7 on real robot,  4 on kitbot
 
   // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
   public static final int driveLeftFrontIndex = 0;
@@ -128,7 +127,9 @@ public final class Constants {
   public static final int driveBaseCurrentLimit = 60;
 
   // drive base pid values
-  public static final double[] driveRightPID = {0.00035, 0.0000008, 0}; // TODO: need to tune for real robot
+  public static final double[] driveRightPID = {
+    0.00035, 0.0000008, 0
+  }; // TODO: need to tune for real robot
   public static final double[] driveLeftPID = {0.000005, 0.0000008, 0};
 
   // AUTONOMOUS Constants
@@ -143,9 +144,8 @@ public final class Constants {
   public static final double kvVoltSecondsPerMeter = 1.4563; // Kv, Velocity
   public static final double kaVoltSecondsSquaredPerMeter = 0.21703; // Ka, Accelleration
 
-  public static final double kpDriveVel = 2.7243; // -> real robot. Kitbot - 2.1938
   public static final double arbFeedForward =
-      5.3711E-07; // voltage applied to the motor after the result of the specified control mode
+      0.00046254; // voltage applied to the motor after the result of the specified control mode
   public static final double trackWidth = 0.559; // track width of kitbot
   public static final DifferentialDriveKinematics driveKinematics =
       new DifferentialDriveKinematics(trackWidth);

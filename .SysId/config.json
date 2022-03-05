@@ -3,7 +3,7 @@
   "encoder type": "Encoder Port",
   "encoding": false,
   "gearing denominator": 1.0,
-  "gearing numerator": 10.75,
+  "gearing numerator": 6.2,
   "gyro": "NavX",
   "gyro ctor": "SerialPort (USB)",
   "is drivetrain": true,

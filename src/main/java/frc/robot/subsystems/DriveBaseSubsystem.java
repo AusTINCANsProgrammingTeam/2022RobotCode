@@ -62,7 +62,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers = new MotorController[4];
     m_gyro = new AHRS(Port.kMXP);
     m_gyro.reset(); // resets the heading of the robot to 0
-    m_gyro1 = new AnalogGyro(1);
 
     if (Robot.isSimulation()) {
       if (!usingExternal) {
@@ -106,12 +105,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
         m_motorControllers[Constants.driveLeftFrontIndex]);
     m_motorControllers[Constants.driveRightRearIndex].setFollow(
         m_motorControllers[Constants.driveRightFrontIndex]);
-
-    // open loop ramp rate
-    // m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax().setOpenLoopRampRate(.1);
-    // m_motorControllers[Constants.driveRightFrontIndex].getSparkMax().setOpenLoopRampRate(.1);
-    // m_motorControllers[Constants.driveLeftRearIndex].getSparkMax().setOpenLoopRampRate(.1);
-    // m_motorControllers[Constants.driveRightRearIndex].getSparkMax().setOpenLoopRampRate(.1);
 
     // differential drive
     m_differentialDrive =
@@ -206,6 +199,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
     // updates pid values of leaders only not the followers
     m_motorControllers[Constants.driveLeftFrontIndex].updateSmartDashboard();
     m_motorControllers[Constants.driveRightFrontIndex].updateSmartDashboard();
+
+    // acceptWheelSpeeds(2, 0);
+
   }
 
   // Normal Arcade Drive
