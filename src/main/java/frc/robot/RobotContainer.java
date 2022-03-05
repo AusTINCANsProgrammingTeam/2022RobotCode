@@ -96,7 +96,7 @@ public class RobotContainer {
     // initialize the button bindings
     for (int i = 1; i < buttons.length; i++) {
       buttons[i] = new JoystickButton(driverJoystick, i);
-      // buttons2[i] = new JoystickButton(operatorJoystick, i);
+      buttons2[i] = new JoystickButton(operatorJoystick, i);
     }
     configureButtonBindings();
 
@@ -227,9 +227,10 @@ public class RobotContainer {
     if (shooterSubsystem != null && shooterHeld != null) {
       buttons[Constants.LTriggerButton].whileHeld(shooterHeld);
       // buttons[Constants.LJoystickButton].whenPressed(
-      //   new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
+      // new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
       // buttons[Constants.RJoystickButton].whenPressed(
-      // new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
+      // new InstantCommand(shooterSubsystem::cycleAimModePrevious,
+      // shooterSubsystem));
     }
 
     // CDS
@@ -297,7 +298,8 @@ public class RobotContainer {
     }
   }
 
-  // TODO: create get methods for other subsystems to pass into TabContainer, or find a more
+  // TODO: create get methods for other subsystems to pass into TabContainer, or
+  // find a more
   // efficient way
   public static DriveBaseSubsystem getDriveBase() {
     if (driveBaseSubsystem != null) {
