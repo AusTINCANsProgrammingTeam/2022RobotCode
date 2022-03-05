@@ -4,22 +4,22 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
-
 
 public class CDSBallManagementCommand extends CommandBase {
   /** Creates a new CDSBallManagementCommand. */
   private final CDSSubsystem CDSSubsystem;
+
   private final IntakeSubsystem intakeSubsystem;
 
   private boolean runningCDS = false;
   private boolean ejectRunning = false;
   private int setpointIndex;
-  
+
   private int msCurrent = 0;
   private int msDelay = 750;
 
@@ -47,32 +47,34 @@ public class CDSBallManagementCommand extends CommandBase {
     SmartDashboard.putBoolean("Middle Sensor Status", sensorStatus[1]);
     SmartDashboard.putBoolean("Back Sensor Status", sensorStatus[0]);
 
-
     if (!ejectRunning) {
       // Checks if conditions for ejection are met:
-      // A ball count of over 2 OR ball color is wrong and test mode is off (meaning ball color shouldn't be disregarded)
-      if ((lastBallCount > 2) || (sensorStatus[2] &&
-       CDSSubsystem.getAllianceColor() != CDSSubsystem.senseColor() && !Constants.testMode)) {
+      // A ball count of over 2 OR ball color is wrong and test mode is off (meaning ball color
+      // shouldn't be disregarded)
+      if ((lastBallCount > 2)
+          || (sensorStatus[2]
+              && CDSSubsystem.getAllianceColor() != CDSSubsystem.senseColor()
+              && !Constants.testMode)) {
         CDSSubsystem.CDSWheelToggle(true);
         intakeSubsystem.toggleIntake(true);
         ejectRunning = true;
-      } 
+      }
     } else {
-        if (msCurrent >= msDelay) {
-          CDSSubsystem.stopCDS();
-          intakeSubsystem.stopIntake();
-          ejectRunning = false;
-          msCurrent = 0;
-        } else {
-          msCurrent += 20;
-        }
+      if (msCurrent >= msDelay) {
+        CDSSubsystem.stopCDS();
+        intakeSubsystem.stopIntake();
+        ejectRunning = false;
+        msCurrent = 0;
+      } else {
+        msCurrent += 20;
+      }
     }
 
     // Only run auto advance if auto ject is not running
     if (!ejectRunning) {
       if (!runningCDS) {
         // Send ball to setpoint
-        if (sensorStatus[2]) {  
+        if (sensorStatus[2]) {
           int nextOpenSensor = CDSSubsystem.getNextOpenSensor(sensorStatus);
           SmartDashboard.putNumber("Setpoint", nextOpenSensor);
           if (nextOpenSensor != -1) {
@@ -82,7 +84,7 @@ public class CDSBallManagementCommand extends CommandBase {
             CDSSubsystem.CDSToggleAll(false);
             CDSSubsystem.setReady(false);
           }
-        } 
+        }
       } else {
         // Check if ball has reached setpoint, stop if it has
         if (sensorStatus[setpointIndex]) {
@@ -90,9 +92,9 @@ public class CDSBallManagementCommand extends CommandBase {
           runningCDS = false;
           setpointIndex = -1;
           CDSSubsystem.setReady(true);
-        } 
-      }    
-    }   
+        }
+      }
+    }
   }
 
   // Called once the command ends or is interrupted.

@@ -80,5 +80,4 @@ public class ColorSensorMuxed {
     }
     return proximities;
   }
-
 }

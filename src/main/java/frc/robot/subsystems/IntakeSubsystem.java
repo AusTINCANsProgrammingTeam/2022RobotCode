@@ -18,9 +18,10 @@ public class IntakeSubsystem extends SubsystemBase {
   private MotorController intakeMotorControllerOne;
 
   public IntakeSubsystem() {
-    intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID, 40);
+    intakeMotorControllerOne =
+        new MotorController("Intake Motor One", Constants.intakeMotorOneID, 40);
     intakeMotorControllerOne.setInverted(true);
-    }
+  }
 
   public void toggleIntake(boolean reverse) {
     if (reverse) {
@@ -40,5 +41,4 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void periodic() {}
-
 }

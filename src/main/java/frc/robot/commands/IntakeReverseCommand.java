@@ -11,6 +11,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class IntakeReverseCommand extends CommandBase {
   /** Creates a new IntakeReverseCommand. */
   private IntakeSubsystem mIntakeSubsystem;
+
   private CDSSubsystem mCdsSubsystem;
 
   public IntakeReverseCommand(IntakeSubsystem intakeSubsystem, CDSSubsystem cdsSubsystem) {

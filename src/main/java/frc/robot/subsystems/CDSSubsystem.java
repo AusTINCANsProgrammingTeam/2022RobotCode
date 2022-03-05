@@ -66,7 +66,7 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public void CDSToggleAll(boolean reverse) {
-    if (reverse){
+    if (reverse) {
       CDSWheelControllerOne.getSparkMax().set(-Constants.CDSWheelControllerSpeed);
       SmartDashboard.putString("CDS Wheel Direction", "Reverse");
       SmartDashboard.putNumber("CDS Wheel Speed", -Constants.CDSWheelControllerSpeed);
@@ -161,7 +161,7 @@ public class CDSSubsystem extends SubsystemBase {
 
   public int getNextOpenSensor(boolean[] sensorStatus) {
     // Starts at 0 and ends short of the centering wheel
-    for (int i=0; i < sensorStatus.length-1; i++) {
+    for (int i = 0; i < sensorStatus.length - 1; i++) {
       if (!sensorStatus[i]) {
         return i;
       }
@@ -172,7 +172,8 @@ public class CDSSubsystem extends SubsystemBase {
   public String senseColor() {
     Color[] colors = colorSensors.getColors();
 
-    // Only sensing colors for first sensor so that we can handle it when it's coming in and not dealing with any other complexities
+    // Only sensing colors for first sensor so that we can handle it when it's coming in and not
+    // dealing with any other complexities
     double redAmount = colors[2].red;
     double blueAmount = colors[2].blue;
     if (redAmount > blueAmount) {

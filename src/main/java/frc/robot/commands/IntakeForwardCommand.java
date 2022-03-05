@@ -5,12 +5,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.CDSSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeForwardCommand extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
   private final IntakeSubsystem mIntakeSubsystem;
+
   private final CDSSubsystem mCdsSubsystem;
 
   public IntakeForwardCommand(IntakeSubsystem intakeSubsystem, CDSSubsystem cdsSubsystem) {
@@ -35,7 +36,7 @@ public class IntakeForwardCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    mIntakeSubsystem.stopIntake(); 
+    mIntakeSubsystem.stopIntake();
     mCdsSubsystem.stopCDSWheel(); // remove if stuff doesn't work well
   }
 

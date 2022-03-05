@@ -35,7 +35,7 @@ public class CDSAutoAdvanceCommand extends CommandBase {
     if (!runningCDS) {
 
       // Send ball to setpoint
-      if (sensorStatus[2]) {  
+      if (sensorStatus[2]) {
         int nextOpenSensor = CDSSubsystem.getNextOpenSensor(sensorStatus);
         SmartDashboard.putNumber("Next Open Sensor", nextOpenSensor);
         if (nextOpenSensor != -1) {
@@ -44,15 +44,15 @@ public class CDSAutoAdvanceCommand extends CommandBase {
           setpointIndex = nextOpenSensor;
           CDSSubsystem.CDSToggleAll(false);
         }
-      } 
+      }
     } else {
       // Check if ball has reached setpoint, stop if it has
       if (sensorStatus[setpointIndex]) {
         CDSSubsystem.stopCDS();
         runningCDS = false;
         setpointIndex = -1;
-      } 
-    }      
+      }
+    }
   }
 
   // Called once the command ends or is interrupted.

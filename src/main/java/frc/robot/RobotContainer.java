@@ -61,7 +61,6 @@ public class RobotContainer {
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
-  
 
   // auton
   private AutonModes autonModes;
@@ -147,7 +146,7 @@ public class RobotContainer {
     // CDS
     if (CDSSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-      //CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
+      // CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
       // CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
       // CDSSubsystem.senseColor();
     }
@@ -195,14 +194,14 @@ public class RobotContainer {
       // new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
     }
 
-    //CDS
+    // CDS
     if (CDSSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
     }
-    
+
     if (CDSForwardCommand != null && outtakeCommand != null) {
       buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
-      //buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
+      // buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
       buttons[Constants.AButton].whileHeld(outtakeCommand);
     }
 

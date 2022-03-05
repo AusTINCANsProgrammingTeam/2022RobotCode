@@ -61,8 +61,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     m_motorControllers = new MotorController[4];
     m_gyro = new AHRS(I2C.Port.kMXP);
-   // m_gyro.reset(); // resets the heading of the robot to 0
-   // m_gyro1 = new AnalogGyro(1);
+    // m_gyro.reset(); // resets the heading of the robot to 0
+    // m_gyro1 = new AnalogGyro(1);
 
     if (Robot.isSimulation()) {
       if (!usingExternal) {
