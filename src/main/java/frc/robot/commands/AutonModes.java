@@ -3,7 +3,6 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
@@ -16,8 +15,6 @@ import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.Tabs.TabDriveBase;
-
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -56,6 +53,9 @@ public class AutonModes {
   private Command twoBallParallel;
   private Command threeBallCommand;
   private Command fourBallCommand;
+
+  // amount of time before starting auton
+  public static double initialWaitTime = 1;
 
   private double waiter;
   // this constructor is the default, only needs driveBaseSubsystem, useful when only wanting to
@@ -158,8 +158,7 @@ public class AutonModes {
 
     taxiCommand =
         new SequentialCommandGroup(
-            
-            new WaitCommand(waiter),
+            new WaitCommand(initialWaitTime),
             // taxiRamseteCommands[0]);
             taxiRamseteCommand
                 .beforeStarting(
@@ -169,7 +168,7 @@ public class AutonModes {
     if (allSubsystemsEnabled) {
       oneBallCommand =
           new SequentialCommandGroup(
-              new WaitCommand(Constants.delayshot),
+              new WaitCommand(initialWaitTime),
               // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem),
               new ShooterPressed(
                   shooterSubsystem,
@@ -193,7 +192,7 @@ public class AutonModes {
 
       twoBallCommand =
           new SequentialCommandGroup(
-              new WaitCommand(Constants.delaytaxi),
+              new WaitCommand(initialWaitTime),
               twoBallParallel,
               new WaitCommand(Constants.delayshot),
               // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem)
@@ -220,5 +219,9 @@ public class AutonModes {
       default:
         return null;
     }
+  }
+
+  public static void setWaitTime(double waitTime) {
+    initialWaitTime = waitTime; // get value from shuffleboard
   }
 }
