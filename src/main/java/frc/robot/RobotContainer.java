@@ -193,7 +193,7 @@ public class RobotContainer {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, CDSSubsystem);
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, CDSSubsystem);
       outtakeCommand = new OuttakeCommand(intakeSubsystem, CDSSubsystem);
-      CDSSubsystem.setDefaultCommand(new CDSBallManagementCommand(CDSSubsystem, intakeSubsystem));
+      //CDSSubsystem.setDefaultCommand(new CDSBallManagementCommand(CDSSubsystem, intakeSubsystem));
     }
     if (shooterSubsystem != null && CDSSubsystem != null) {
       shooterHeldAuto =
