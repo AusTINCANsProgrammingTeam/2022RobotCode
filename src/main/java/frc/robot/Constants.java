@@ -101,6 +101,9 @@ public final class Constants {
     }
   }
 
+  // motor controller constants
+  public static final int defaultCurrentLimit = 40;
+
   // DRIVEBASE Constants
 
   // Constants for wheel motors

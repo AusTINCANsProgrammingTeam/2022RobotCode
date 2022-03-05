@@ -50,7 +50,7 @@ public class ClimbSubsystem extends SubsystemBase {
     if (toggleClimb && !m_limitSwitch.get()) {
       climbHeight = climbHeight + m_climbJoystick.getRawAxis(Constants.leftJoystickY);
       m_climbMotorControllerOne
-          .getPID()
+          .getPIDController()
           .setReference(climbHeight, CANSparkMax.ControlType.kPosition);
     } else {
       m_climbMotorControllerOne.setSpeed(0);

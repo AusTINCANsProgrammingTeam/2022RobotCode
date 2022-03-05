@@ -28,29 +28,28 @@ public class MotorController {
     mSparkMax.restoreFactoryDefaults();
 
     // Create default values for Spark Max motor controller
-    mSparkMax.setSmartCurrentLimit(40); // default current limit is 40A
-    mSparkMax.setIdleMode(CANSparkMax.IdleMode.kCoast); // default mode is Coast
+    mSparkMax.setSmartCurrentLimit(Constants.defaultCurrentLimit); // default current limit is 40A
+    mSparkMax.setIdleMode(CANSparkMax.IdleMode.kCoast);            // default mode is Coast
+    mSparkMax.setOpenLoopRampRate(Constants.openLoopRampRate);     // default open loop rate
+
     mPIDController = mSparkMax.getPIDController();
     mEncoder = mSparkMax.getEncoder();
   }
 
-  public MotorController(String name, int deviceID, int smartCurrentLimit, boolean... enablePid) {
-    this(name, deviceID); // intializes CANSparkMax and Encoder
-    mSparkMax.setSmartCurrentLimit(smartCurrentLimit); // set smartCurrentLimit
-    mSparkMax.setIdleMode(CANSparkMax.IdleMode.kCoast); // default mode is Coast
+  public MotorController(String name, int deviceID, double[] PID) {
+    this(name, deviceID); // intializes CANSparkMax, Encoder, and PIDController
+    setPID(PID);
+  }
 
-    // If enablePid has any number of booleans greater than 0 we are enabling pid
-    if (enablePid.length > 0) {
-      mP = SmartDashboard.getNumber(mName + " P Value", 0.000025);
-      mI = SmartDashboard.getNumber(mName + " I Value", 0.0);
-      mD = SmartDashboard.getNumber(mName + " D Value", 0.0);
+  public MotorController(String name, int deviceID, double smartCurrentLimit, double[] PID) {
+    this(name, deviceID, PID)
+  }
 
-      mFF = SmartDashboard.getNumber(mName + " FF Value", 0.0);
-
-      mPIDController = mSparkMax.getPIDController();
-      setPID();
-    }
-    mSparkMax.setOpenLoopRampRate(Constants.openLoopRampRate);
+  public void setPID(double[] PID) {
+    mP = PID[0];
+    mI = PID[1];
+    mD = PID[2];
+    activatePID(PID);
   }
 
   public CANSparkMax getSparkMax() {
@@ -70,13 +69,17 @@ public class MotorController {
     return mEncoder;
   }
 
-  public SparkMaxPIDController getPID() {
+  public SparkMaxPIDController getPIDController() {
     // Check first that mPIDController has been instantiated
     if (mPIDController == null) {
       throw new NullPointerException(
           "PID Controller for " + this.mName + " has not been instantiated.");
     }
     return mPIDController;
+  }
+
+  public void setOpenLoopRampRate(double rate) {
+    mSparkMax.setOpenLoopRampRate(rate);
   }
 
   // sets speed of motor
@@ -112,7 +115,7 @@ public class MotorController {
     return mSparkMax.getInverted();
   }
 
-  public void setPID() {
+  private void activatePID(double[] PID) {
     // Check first that mPIDController has been instantiated
     if (mPIDController == null) {
       throw new NullPointerException(
@@ -123,33 +126,32 @@ public class MotorController {
     mPIDController.setI(mI);
     mPIDController.setD(mD);
 
-    SmartDashboard.putNumber(mName + " P Value", mP);
-    SmartDashboard.putNumber(mName + " I Value", mI);
-    SmartDashboard.putNumber(mName + " D Value", mD);
-
-    SmartDashboard.putNumber(mName + " FF Value", mFF);
+    SmartDashboard.putNumberArray(mName, PID);
   }
 
   // Updates the Smart Dashboard and checks the PID values to determine if update is needed
   public void updateSmartDashboard() {
     // The simulation crashes whenever .getEncoder() is called
     if (mPIDController != null) {
-      if (SmartDashboard.getNumber(mName + " P Value", mP) != mP) {
-        mP = SmartDashboard.getNumber(mName + " P Value", mP);
-        mPIDController.setP(mP);
-      }
-      if (SmartDashboard.getNumber(mName + " I Value", mI) != mI) {
-        mI = SmartDashboard.getNumber(mName + " I Value", mI);
-        mPIDController.setI(mI);
-      }
-      if (SmartDashboard.getNumber(mName + " D Value", mD) != mD) {
-        mD = SmartDashboard.getNumber(mName + " D Value", mD);
-        mPIDController.setD(mD);
-      }
-      if (SmartDashboard.getNumber(mName + " FF Value", mFF) != mFF) {
-        mFF = SmartDashboard.getNumber(mName + " FF Value", mFF);
-        mPIDController.setFF(mFF);
-      }
+      // if (SmartDashboard.getNumber(mName + " P Value", mP) != mP) {
+      //   mP = SmartDashboard.getNumber(mName + " P Value", mP);
+      //   mPIDController.setP(mP);
+      // }
+      // if (SmartDashboard.getNumber(mName + " I Value", mI) != mI) {
+      //   mI = SmartDashboard.getNumber(mName + " I Value", mI);
+      //   mPIDController.setI(mI);
+      // }
+      // if (SmartDashboard.getNumber(mName + " D Value", mD) != mD) {
+      //   mD = SmartDashboard.getNumber(mName + " D Value", mD);
+      //   mPIDController.setD(mD);
+      // }
+      // if (SmartDashboard.getNumber(mName + " FF Value", mFF) != mFF) {
+      //   mFF = SmartDashboard.getNumber(mName + " FF Value", mFF);
+      //   mPIDController.setFF(mFF);
+      // }
+
+
+
     }
   }
 

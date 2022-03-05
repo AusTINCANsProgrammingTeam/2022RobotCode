@@ -80,9 +80,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.driveLeftFrontIndex] =
         new MotorController(
             "Differential Left Front",
-            Constants.driveLeftFront,
-            Constants.driveBaseCurrentLimit,
-            true);
+            Constants.driveLeftFront, Constants.driveLeftPID);
     m_motorControllers[Constants.driveLeftRearIndex] =
         new MotorController(
             "Differential Left Rear", Constants.driveLeftRear, Constants.driveBaseCurrentLimit);
@@ -147,13 +145,13 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
 
     // set PID values
-    m_motorControllers[Constants.driveRightFrontIndex].getPID().setP(Constants.driveRightPID[0]);
-    m_motorControllers[Constants.driveRightFrontIndex].getPID().setI(Constants.driveRightPID[1]);
-    m_motorControllers[Constants.driveRightFrontIndex].getPID().setD(Constants.driveRightPID[2]);
+    m_motorControllers[Constants.driveRightFrontIndex].getPIDController().setP(Constants.driveRightPID[0]);
+    m_motorControllers[Constants.driveRightFrontIndex].getPIDController().setI(Constants.driveRightPID[1]);
+    m_motorControllers[Constants.driveRightFrontIndex].getPIDController().setD(Constants.driveRightPID[2]);
 
-    m_motorControllers[Constants.driveLeftFrontIndex].getPID().setP(Constants.driveLeftPID[0]);
-    m_motorControllers[Constants.driveLeftFrontIndex].getPID().setI(Constants.driveLeftPID[1]);
-    m_motorControllers[Constants.driveLeftFrontIndex].getPID().setD(Constants.driveLeftPID[2]);
+    m_motorControllers[Constants.driveLeftFrontIndex].getPIDController().setP(Constants.driveLeftPID[0]);
+    m_motorControllers[Constants.driveLeftFrontIndex].getPIDController().setI(Constants.driveLeftPID[1]);
+    m_motorControllers[Constants.driveLeftFrontIndex].getPIDController().setD(Constants.driveLeftPID[2]);
 
     // rear motor pid controllers should follow
   }
@@ -327,15 +325,15 @@ public class DriveBaseSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("right speed (rpm [biconsumer])", rightSpeed);
 
     m_motorControllers[Constants.driveLeftFrontIndex]
-        .getPID()
+        .getPIDController()
         .setReference(leftSpeed, CANSparkMax.ControlType.kVelocity, 0, Constants.arbFeedForward);
     m_motorControllers[Constants.driveRightFrontIndex]
-        .getPID()
+        .getPIDController()
         .setReference(rightSpeed, CANSparkMax.ControlType.kVelocity, 0, Constants.arbFeedForward);
 
-    // m_motorControllers[Constants.driveLeftFrontIndex].getPID().setReference(leftSpeed,
+    // m_motorControllers[Constants.driveLeftFrontIndex].getPIDController().setReference(leftSpeed,
     // CANSparkMax.ControlType.kVelocity);
-    // m_motorControllers[Constants.driveRightFrontIndex].getPID().setReference(rightSpeed,
+    // m_motorControllers[Constants.driveRightFrontIndex].getPIDController().setReference(rightSpeed,
     // CANSparkMax.ControlType.kVelocity);
 
     m_differentialDrive.feed();
