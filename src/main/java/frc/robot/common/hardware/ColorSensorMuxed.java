@@ -30,7 +30,7 @@ public class ColorSensorMuxed {
         i2cPorts.add(p);
         // Initialize each device, only need to keep last object
         sensors = new ColorSensorV3(Port.kOnboard);
-        Shuffleboard.addEventMarker("Sensors Activated", EventImportance.kCritical);
+        Shuffleboard.addEventMarker("Sensors Initialized", EventImportance.kCritical);
       } else {
         DriverStation.reportError("Could not initialize color sensor on I2C port " + p, false);
       }
@@ -60,6 +60,7 @@ public class ColorSensorMuxed {
     for (int p : i2cPorts) {
       if (setI2cPort(p)) {
         colors[i] = sensors.getColor();
+        Shuffleboard.addEventMarker("Sensors Activated", EventImportance.kCritical);
       } else {
         DriverStation.reportError("Failed to get color from sensor on I2C port " + p, false);
         colors[i] = new Color(0, 0, 0);

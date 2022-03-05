@@ -30,8 +30,7 @@ public class IntakeSubsystem extends SubsystemBase {
       intakeMotorControllerOne.getSparkMax().set(-Constants.intakeMotorSpeed);
       SmartDashboard.putString("Intake Motor Direction", "Reverse");
       SmartDashboard.putNumber("Intake Motor Speed", -Constants.intakeMotorSpeed);
-      Shuffleboard.addEventMarker("Auto Eject Ran", EventImportance.kHigh);
-      Shuffleboard.addEventMarker("Reverse Intake Activated", EventImportance.kLow);
+      Shuffleboard.addEventMarker("Auto Eject Ran / Reverse Intake Activated", EventImportance.kHigh);
     } else {
       intakeMotorControllerOne.getSparkMax().set(Constants.intakeMotorSpeed);
       SmartDashboard.putString("Intake Motor Direction", "Forward");

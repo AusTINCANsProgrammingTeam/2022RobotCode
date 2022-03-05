@@ -18,12 +18,12 @@ public class ShooterEject extends CommandBase {
   private AimModes tempMode;
 
   /** Creates a new ShooterPressed. */
-  public ShooterEject(ShooterSubsystem shooterSubsystem, CDSSubsystem cdsSubsystem) {
+  public ShooterEject(ShooterSubsystem shooterSubsystem, CDSSubsystem CDSSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooterSubsystem);
-    addRequirements(cdsSubsystem);
+    addRequirements(CDSSubsystem);
     m_ShooterSubsystem = shooterSubsystem;
-    m_CDSSubsystem = cdsSubsystem;
+    m_CDSSubsystem = CDSSubsystem;
   }
 
   // Called when the command is initially scheduled.
@@ -32,6 +32,7 @@ public class ShooterEject extends CommandBase {
     tempMode = m_ShooterSubsystem.getAimMode();
     i = 0;
     m_ShooterSubsystem.setAimMode(Constants.AimModes.EJECT);
+    Shuffleboard.addEventMarker("Fired Cargo", EventImportance.kHigh);  
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -43,7 +44,6 @@ public class ShooterEject extends CommandBase {
         m_CDSSubsystem.CDSBeltToggle(false);
         m_ShooterSubsystem.runCargo(Constants.Shooter.cargoForward);
         m_ShooterSubsystem.setCargoBoolean(true);
-        Shuffleboard.addEventMarker("Fired Cargo", EventImportance.kHigh);
       }
       i++;
     } else {
