@@ -60,7 +60,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_driverJoystick = joystick;
 
     m_motorControllers = new MotorController[4];
-   // m_gyro = new AHRS(I2C.Port.kMXP);
+    m_gyro = new AHRS(I2C.Port.kMXP);
    // m_gyro.reset(); // resets the heading of the robot to 0
    // m_gyro1 = new AnalogGyro(1);
 
@@ -123,6 +123,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     initializeEncoders();
 
     if (Robot.isSimulation()) {
+      m_gyro1 = new AnalogGyro(1);
       m_gyroSim = new AnalogGyroSim(m_gyro1);
       if (usingExternal == true) {
         // m_leftEncoderSim = new EncoderSim(m_leftEncoder);   // no "Encoder" object anymore
