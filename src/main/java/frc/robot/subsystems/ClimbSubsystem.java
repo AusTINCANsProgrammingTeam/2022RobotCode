@@ -38,8 +38,6 @@ public class ClimbSubsystem extends SubsystemBase {
   private NetworkTableEntry sbclimberpositionTwo;
   private NetworkTableEntry sbclimberspeedTwo;
   private NetworkTableEntry sbclimberheightTwo;
-  private NetworkTableEntry sbclimbHeightImputOne;
-  private NetworkTableEntry sbclimbHeightImputTwo;
   private NetworkTableEntry sbClimberSpeedInput;
 
   public ClimbSubsystem(Joystick joystick) {
@@ -95,10 +93,6 @@ public class ClimbSubsystem extends SubsystemBase {
     sbclimberspeedTwo =
         climberTab.add("Climber Current Speed 2", 0).withSize(2, 2).withPosition(0, 2).getEntry();
 
-    sbclimbHeightImputOne =
-        climberTab.add("Climber Imput One", 0).withSize(2, 2).withPosition(2, 2).getEntry();
-    sbclimbHeightImputTwo =
-        climberTab.add("Climber Imput Two", 0).withSize(2, 2).withPosition(4, 2).getEntry();
     sbclimberpositionTwo =
         climberTab.add("Climber position 2", 0).withSize(2, 2).withPosition(2, 4).getEntry();
 
