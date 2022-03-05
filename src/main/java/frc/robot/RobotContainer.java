@@ -248,9 +248,9 @@ public class RobotContainer {
 
       // Intake
       if (intakeForwardCommand != null && intakeReverseCommand != null) {
-          // takes ball in
+        // takes ball in
         buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
-          // spits ball out
+        // spits ball out
         buttons[Constants.LBumper].whileHeld(intakeReverseCommand);
       }
 
