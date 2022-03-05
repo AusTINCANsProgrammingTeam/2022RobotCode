@@ -41,6 +41,7 @@ public class ClimbSubsystem extends SubsystemBase {
   private NetworkTableEntry sbclimbHeightImputOne;
   private NetworkTableEntry sbclimbHeightImputTwo;
   private NetworkTableEntry sbClimberSpeedInput;
+  private NetworkTableEntry sbClimbingMode;
 
   public ClimbSubsystem(Joystick joystick) {
     m_climbJoystick = joystick;
@@ -49,6 +50,7 @@ public class ClimbSubsystem extends SubsystemBase {
     climbHeightTwo = 0;
 
     // One is left, two is right
+
     m_climbMotorControllerOne =
         new MotorController("Climb Motor One", Constants.ClimbMotorOne, 60, true);
     m_climbMotorControllerTwo =
@@ -65,6 +67,8 @@ public class ClimbSubsystem extends SubsystemBase {
     // m_limitSwitch = new DigitalInput(Constants.LimitSwitchChannel);
 
     climberTab = Shuffleboard.getTab("ClimbBase");
+    sbClimbingMode =
+        climberTab.add("Manual Mode Enable", false).withSize(2, 2).withPosition(5, 1).getEntry();
 
     sbClimberSpeedInput =
         climberTab.add("Climber Speed input", 0).withSize(2, 2).withPosition(5, 0).getEntry();
@@ -114,6 +118,10 @@ public class ClimbSubsystem extends SubsystemBase {
   public void climbEnabbledEnable() {
     climbEnabbled = !climbEnabbled;
     sbClimbEnabbled.setBoolean(climbEnabbled);
+  }
+
+  public boolean getclimbingmode() {
+    return sbClimbingMode.getBoolean(false);
   }
 
   public void RunManual() {
