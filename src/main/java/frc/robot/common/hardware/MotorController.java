@@ -83,7 +83,7 @@ public class MotorController extends CANSparkMax {
     mPIDController.setI(mI);
     mPIDController.setD(mD);
 
-    updateSmartDashboard();
+    updateSmartDashboard(); // post onto smart dashboard
   }
 
   // Updates the Smart Dashboard and checks the PID values to determine if update is needed
@@ -91,6 +91,9 @@ public class MotorController extends CANSparkMax {
     if (mPIDController != null) {
       // TODO: having a sole shuffleboard tab for PID tuning might be beneficical, there's a built
       // in widget especially for PID
+
+      // check if values were updated in smart dashboard
+      // nothing in it at the start, assign it to value passed in earlier
       double currentP = SmartDashboard.getNumber(mName + " P value", mP);
       if (currentP != mP) {
         mP = currentP;
