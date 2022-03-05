@@ -58,7 +58,7 @@ public class MotorController extends CANSparkMax {
     return mEncoder;
   }
 
-  public SparkMaxPIDController getPID() {
+  public SparkMaxPIDController getPIDCtrl() {
     // Check first that mPIDController has been instantiated
     if (mPIDController == null) {
       throw new NullPointerException(
