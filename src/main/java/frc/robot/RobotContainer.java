@@ -233,7 +233,7 @@ public class RobotContainer {
       buttons[Constants.LBumper].whileHeld(
           shooterHeldAuto.beforeStarting(
               () -> {
-                shooterSubsystem.setAimMode(Constants.AimModes.AUTO);
+                shooterSubsystem.setAimMode(Constants.AimModes.TEST);
               },
               shooterSubsystem));
       // Fender Shot
