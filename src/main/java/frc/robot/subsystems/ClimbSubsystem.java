@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -38,7 +39,8 @@ public class ClimbSubsystem extends SubsystemBase {
   private NetworkTableEntry sbclimberpositionTwo;
   private NetworkTableEntry sbclimberspeedTwo;
   private NetworkTableEntry sbclimberheightTwo;
-  private NetworkTableEntry sbClimberSpeedInput;
+  private NetworkTableEntry sbclimbSpeedInput;
+  private NetworkTableEntry sbClimbingMode;
 
   public ClimbSubsystem(Joystick joystick) {
     m_climbJoystick = joystick;
@@ -47,6 +49,7 @@ public class ClimbSubsystem extends SubsystemBase {
     climbHeightTwo = 0;
 
     // One is left, two is right
+
     m_climbMotorControllerOne =
         new MotorController("Climb Motor One", Constants.ClimbMotorOne, 60, true);
     m_climbMotorControllerTwo =
@@ -63,9 +66,16 @@ public class ClimbSubsystem extends SubsystemBase {
     // m_limitSwitch = new DigitalInput(Constants.LimitSwitchChannel);
 
     climberTab = Shuffleboard.getTab("ClimbBase");
+    sbClimbingMode =
+        climberTab
+            .add("Manual Mode Enable", false)
+            .withSize(2, 2)
+            .withPosition(5, 1)
+            .withWidget(BuiltInWidgets.kToggleSwitch)
+            .getEntry();
 
-    sbClimberSpeedInput =
-        climberTab.add("Climber Speed input", 0).withSize(2, 2).withPosition(5, 0).getEntry();
+    sbclimbSpeedInput =
+        climberTab.add("Climber Speed input", 0.1).withSize(2, 2).withPosition(5, 0).getEntry();
 
     sbClimbEnabbled =
         climberTab.add("Climb Eanbled", false).withSize(2, 2).withPosition(0, 0).getEntry();
@@ -110,7 +120,11 @@ public class ClimbSubsystem extends SubsystemBase {
     sbClimbEnabbled.setBoolean(climbEnabbled);
   }
 
-  public void RunManual() {
+  public boolean getclimbingmode() {
+    return sbClimbingMode.getBoolean(false);
+  }
+
+  public void runManual() {
     if (climbEnabbled
     /** && !m_limitSwitch.get() */
     ) {
@@ -118,24 +132,12 @@ public class ClimbSubsystem extends SubsystemBase {
       joystickAxis = -m_climbJoystick.getRawAxis(Constants.leftJoystickY);
       if (joystickAxis > 0.1 || joystickAxis < -0.1) {
         if (joystickAxis > 0) {
-          if (climbHeightOne <= 20.0) {
-            m_climbMotorControllerOne.getSparkMax().set(sbClimberSpeedInput.getDouble(0));
-            ;
-          }
-          if (climbHeightTwo <= 20.0) {
-            m_climbMotorControllerTwo.getSparkMax().set(sbClimberSpeedInput.getDouble(0));
-            ;
-          }
+          m_climbMotorControllerOne.getSparkMax().set(sbclimbSpeedInput.getDouble(0));
+          m_climbMotorControllerTwo.getSparkMax().set(sbclimbSpeedInput.getDouble(0));
         }
         if (joystickAxis < 0) {
-          if (climbHeightOne >= 0) {
-            m_climbMotorControllerOne.getSparkMax().set(-sbClimberSpeedInput.getDouble(0));
-            ;
-          }
-          if (climbHeightTwo >= 0) {
-            m_climbMotorControllerTwo.getSparkMax().set(-sbClimberSpeedInput.getDouble(0));
-            ;
-          }
+          m_climbMotorControllerOne.getSparkMax().set(-sbclimbSpeedInput.getDouble(0));
+          m_climbMotorControllerTwo.getSparkMax().set(-sbclimbSpeedInput.getDouble(0));
         }
       } else {
         m_climbMotorControllerOne.getSparkMax().set(0);
@@ -152,10 +154,10 @@ public class ClimbSubsystem extends SubsystemBase {
       joystickAxis = -m_climbJoystick.getRawAxis(Constants.leftJoystickY);
       if (joystickAxis > 0.1 || joystickAxis < -0.1) {
         if (joystickAxis > 0) {
-          if (climbHeightOne <= 20.0) {
+          if (climbHeightOne <= Constants.climbHeightMax) {
             climbHeightOne = climbHeightOne + (joystickAxis / 10);
           }
-          if (climbHeightTwo <= 20.0) {
+          if (climbHeightTwo <= Constants.climbHeightMax) {
             climbHeightTwo = climbHeightTwo + (joystickAxis / 10);
           }
         }
