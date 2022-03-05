@@ -19,11 +19,11 @@
   ],
   "primary motor ports": [
     13,
-    6
+    14
   ],
   "primary motors inverted": [
     false,
-    true
+    false
   ],
   "secondary encoder inverted": true,
   "secondary encoder ports": [
@@ -31,11 +31,11 @@
     3
   ],
   "secondary motor ports": [
-    14,
+    6,
     7
   ],
   "secondary motors inverted": [
-    false,
+    true,
     true
   ],
   "velocity measurement period": 100
