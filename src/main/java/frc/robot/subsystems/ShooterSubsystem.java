@@ -40,6 +40,23 @@ public class ShooterSubsystem extends SubsystemBase {
   private int I_Zone;
   private double MaxOutput;
   private double smoothRPM;
+  
+  private ShuffleboardTab driverTab = Shuffleboard.getTab("Driver View");
+  private NetworkTableEntry BHoodReady = driverTab.add("Hood Ready", true).getEntry();
+  private NetworkTableEntry BFlywheelReady = driverTab.add("Flywheel Ready", true).getEntry();
+  private NetworkTableEntry BCargoRunning = driverTab.add("Cargo Running", true).getEntry();
+  private NetworkTableEntry SAimMode = driverTab.add("Aim Mode", "Test").getEntry();
+
+  private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
+  private NetworkTableEntry DTRPM = operatorTab.add("T-RPM",0).getEntry();
+  private NetworkTableEntry DTAngle = operatorTab.add("T-Angle",0).getEntry();
+  private NetworkTableEntry DRPM = operatorTab.add("RPM", 0).getEntry();
+  private NetworkTableEntry DAngle = operatorTab.add("Angle", 0).getEntry();
+  private NetworkTableEntry BHood = operatorTab.add("Hood",true).getEntry();
+  private NetworkTableEntry BFlywheel = operatorTab.add("Flywheel",true).getEntry();
+  private NetworkTableEntry BCargo = operatorTab.add("Cargo",true).getEntry();
+  private NetworkTableEntry Dty = operatorTab.add("ty", 0).getEntry();
+  private NetworkTableEntry DDistance = operatorTab.add("Distance",0).getEntry();
 
   private ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter Tab");
   // TODO: Fine for now, but we really need to fix this tab when we have shuffleboard decided
@@ -72,8 +89,6 @@ public class ShooterSubsystem extends SubsystemBase {
           .getEntry();
   private NetworkTableEntry SShootingMode =
       shooterTab.add("Shooting Mode", "TEST").withPosition(1, 5).getEntry();
-  private NetworkTableEntry DDistance =
-      shooterTab.add("Distance to goal", 0.0).withPosition(2, 0).getEntry();
   private NetworkTableEntry DShooterRPM =
       shooterTab.add("Shooter RPM", 0.0).withPosition(2, 1).getEntry();
   private NetworkTableEntry DCargoRunning =
