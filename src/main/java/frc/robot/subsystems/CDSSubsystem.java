@@ -89,7 +89,6 @@ public class CDSSubsystem extends SubsystemBase {
     if (reverse) {
       CDSWheelControllerOne.getSparkMax().set(-Constants.CDSWheelControllerSpeed);
       CDSWheelControllerDirection.setString("Reverse");
-      
     } else {
       CDSWheelControllerOne.getSparkMax().set(Constants.CDSWheelControllerSpeed);
       SmartDashboard.putString("CDS Wheel Direction", "Forward");
