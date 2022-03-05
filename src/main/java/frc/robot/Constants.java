@@ -24,7 +24,7 @@ public final class Constants {
     IntakeSubsystem   (true),
     ShooterSubsystem  (true),
     LimelightSubsystem(true),
-    ClimbSubsystem    (false); //Out of order (temperaraly)
+    ClimbSubsystem    (true);
     // spotless:on
 
     private final Boolean enabled;
