@@ -119,27 +119,27 @@ public class ClimbSubsystem extends SubsystemBase {
       if (joystickAxis > 0.1 || joystickAxis < -0.1) {
         if (joystickAxis > 0) {
           if (climbHeightOne <= 20.0) {
-            m_climbMotorControllerOne.getSparkMax().set(sbClimberSpeedInput.getDouble(0));
+            m_climbMotorControllerOne.set(sbClimberSpeedInput.getDouble(0));
             ;
           }
           if (climbHeightTwo <= 20.0) {
-            m_climbMotorControllerTwo.getSparkMax().set(sbClimberSpeedInput.getDouble(0));
+            m_climbMotorControllerTwo.set(sbClimberSpeedInput.getDouble(0));
             ;
           }
         }
         if (joystickAxis < 0) {
           if (climbHeightOne >= 0) {
-            m_climbMotorControllerOne.getSparkMax().set(-sbClimberSpeedInput.getDouble(0));
+            m_climbMotorControllerOne.set(-sbClimberSpeedInput.getDouble(0));
             ;
           }
           if (climbHeightTwo >= 0) {
-            m_climbMotorControllerTwo.getSparkMax().set(-sbClimberSpeedInput.getDouble(0));
+            m_climbMotorControllerTwo.set(-sbClimberSpeedInput.getDouble(0));
             ;
           }
         }
       } else {
-        m_climbMotorControllerOne.getSparkMax().set(0);
-        m_climbMotorControllerTwo.getSparkMax().set(0);
+        m_climbMotorControllerOne.set(0);
+        m_climbMotorControllerTwo.set(0);
       }
     }
   }
@@ -185,9 +185,9 @@ public class ClimbSubsystem extends SubsystemBase {
   public void periodic() {
 
     SmartDashboard.putNumber(
-        "Climb motor 1 Applied Output", m_climbMotorControllerOne.getSparkMax().getAppliedOutput());
+        "Climb motor 1 Applied Output", m_climbMotorControllerOne.getAppliedOutput());
     SmartDashboard.putNumber(
-        "Climb motor 2 Applied Output", m_climbMotorControllerTwo.getSparkMax().getAppliedOutput());
+        "Climb motor 2 Applied Output", m_climbMotorControllerTwo.getAppliedOutput());
     SmartDashboard.putNumber(
         "Climb Hight One", m_climbMotorControllerOne.getEncoder().getPosition());
     if (sbclimbHeightOne.getDouble(0) != climbHeightOne) {

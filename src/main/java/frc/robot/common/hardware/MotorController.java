@@ -7,10 +7,9 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
-public class MotorController {
+public class MotorController extends CANSparkMax {
 
   private String mName;
-  private CANSparkMax mSparkMax;
   private RelativeEncoder mEncoder;
   private SparkMaxPIDController mPIDController;
 
@@ -23,21 +22,21 @@ public class MotorController {
 
   // default constructor
   public MotorController(String name, int deviceID) {
+    super(deviceID, MotorType.kBrushless);
     mName = name;
-    mSparkMax = new CANSparkMax(deviceID, MotorType.kBrushless);
-    mSparkMax.restoreFactoryDefaults();
+    restoreFactoryDefaults();
 
     // Create default values for Spark Max motor controller
-    mSparkMax.setSmartCurrentLimit(40); // default current limit is 40A
-    mSparkMax.setIdleMode(CANSparkMax.IdleMode.kCoast); // default mode is Coast
-    mPIDController = mSparkMax.getPIDController();
-    mEncoder = mSparkMax.getEncoder();
+    setSmartCurrentLimit(40); // default current limit is 40A
+    setIdleMode(CANSparkMax.IdleMode.kCoast); // default mode is Coast
+    mPIDController = getPIDController();
+    mEncoder = getEncoder();
   }
 
   public MotorController(String name, int deviceID, int smartCurrentLimit, boolean... enablePid) {
     this(name, deviceID); // intializes CANSparkMax and Encoder
-    mSparkMax.setSmartCurrentLimit(smartCurrentLimit); // set smartCurrentLimit
-    mSparkMax.setIdleMode(CANSparkMax.IdleMode.kCoast); // default mode is Coast
+    setSmartCurrentLimit(smartCurrentLimit); // set smartCurrentLimit
+    setOpenLoopRampRate(Constants.openLoopRampRate);
 
     // If enablePid has any number of booleans greater than 0 we are enabling pid
     if (enablePid.length > 0) {
@@ -47,19 +46,8 @@ public class MotorController {
 
       mFF = SmartDashboard.getNumber(mName + " FF Value", 0.0);
 
-      mPIDController = mSparkMax.getPIDController();
       setPID();
     }
-    mSparkMax.setOpenLoopRampRate(Constants.openLoopRampRate);
-  }
-
-  public CANSparkMax getSparkMax() {
-    // Check first that mSparkMax has been instantiated
-    if (mSparkMax == null) {
-      throw new NullPointerException(
-          "Spark MAX motor for " + this.mName + " has not been instantiated.");
-    }
-    return mSparkMax;
   }
 
   public RelativeEncoder getEncoder() {
@@ -81,17 +69,7 @@ public class MotorController {
 
   // sets speed of motor
   public void setSpeed(double speed) {
-    mSparkMax.set(speed);
-  }
-
-  // set follow
-  public void setFollow(MotorController m) {
-    mSparkMax.follow(m.getSparkMax());
-  }
-
-  // set inverted
-  public void setInverted(boolean b) {
-    mSparkMax.setInverted(b);
+    set(speed);
   }
 
   public String getName() {
@@ -105,11 +83,6 @@ public class MotorController {
       throw new NullPointerException("Encoder for " + this.mName + " has not been instantiated.");
     }
     return mEncoder.getVelocity();
-  }
-
-  // get boolean for whether if it's inverted
-  public boolean isInverted() {
-    return mSparkMax.getInverted();
   }
 
   public void setPID() {
@@ -151,10 +124,5 @@ public class MotorController {
         mPIDController.setFF(mFF);
       }
     }
-  }
-
-  // Mode can be coast or brake
-  public void setIdleMode(CANSparkMax.IdleMode mode) {
-    mSparkMax.setIdleMode(mode);
   }
 }
