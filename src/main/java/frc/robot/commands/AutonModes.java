@@ -57,7 +57,6 @@ public class AutonModes {
   // amount of time before starting auton
   public static double initialWaitTime = 1;
 
-  private double waiter;
   // this constructor is the default, only needs driveBaseSubsystem, useful when only wanting to
   // test taxi without worrying about other subsystems
   public AutonModes(DriveBaseSubsystem d) {
@@ -154,8 +153,7 @@ public class AutonModes {
   }
 
   private void initializeCommandGroups() {
-    // TODO: the wait time should not be a constant, should be configurable
-
+    
     taxiCommand =
         new SequentialCommandGroup(
             new WaitCommand(initialWaitTime),

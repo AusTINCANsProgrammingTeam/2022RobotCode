@@ -21,11 +21,11 @@ public final class Constants {
     // Change booleans to disable a subsystem in RobotContainer
     // spotless:off
     DriveBaseSubsystem(true),
-    CDSSubsystem      (false),
-    IntakeSubsystem   (false),
-    ShooterSubsystem  (false),
-    LimelightSubsystem(false),
-    ClimbSubsystem    (false);
+    CDSSubsystem      (true),
+    IntakeSubsystem   (true),
+    ShooterSubsystem  (true),
+    LimelightSubsystem(true),
+    ClimbSubsystem    (true);
     // spotless:on
 
     private final Boolean enabled;
@@ -115,21 +115,21 @@ public final class Constants {
 
   // Actual IDs on robot, used to activate the right motors
 
-  // TODO: kit bot values for now, change later
-  public static final int driveLeftFront = 13; // 13 on real robot
-  public static final int driveLeftRear = 14; // 14 on real robot
-  public static final int driveRightFront = 6; // 6 on real robot
-  public static final int driveRightRear = 7; // 7 on real robot
+  public static final int driveLeftFront = 13; // 13 on real robot, 1 on kitbot
+  public static final int driveLeftRear = 14;  // 14 on real robot, 2 on kitbot
+  public static final int driveRightFront = 6; // 6 on real robot,  3 on kitbot
+  public static final int driveRightRear = 7;  // 7 on real robot,  4 on kitbot
 
   // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
   public static final int driveLeftFrontIndex = 0;
   public static final int driveLeftRearIndex = 1;
   public static final int driveRightFrontIndex = 2;
   public static final int driveRightRearIndex = 3;
+
   public static final int driveBaseCurrentLimit = 60;
 
   // drive base pid values
-  public static final double[] driveRightPID = {0.00035, 0.0000008, 0};
+  public static final double[] driveRightPID = {0.00035, 0.0000008, 0}; // TODO: need to tune for real robot
   public static final double[] driveLeftPID = {0.000005, 0.0000008, 0};
 
   // AUTONOMOUS Constants
@@ -146,7 +146,7 @@ public final class Constants {
 
   public static final double kpDriveVel = 2.7243; // -> real robot. Kitbot - 2.1938
   public static final double arbFeedForward =
-      8.6045E-07; // voltage applied to the motor after the result of the specified control mode
+      5.3711E-07; // voltage applied to the motor after the result of the specified control mode
   public static final double trackWidth = 0.559; // track width of kitbot
   public static final DifferentialDriveKinematics driveKinematics =
       new DifferentialDriveKinematics(trackWidth);
