@@ -32,7 +32,7 @@ public class ShooterHeld extends CommandBase {
     }
     m_ShooterSubsystem = shooterSubsystem;
     m_LimelightSubsystem = limelightSubsystem;
-    // m_CDSSubsystem = CDSSubsystem;
+    m_CDSSubsystem = CDSSubsystem;
     SmartDashboard.putBoolean("wheelReady", false);
     LLEnabled = llEnabled;
   }

@@ -89,6 +89,10 @@ public class MotorController {
     mSparkMax.follow(m.getSparkMax());
   }
 
+  public void setFollow(MotorController m, boolean inverted) {
+    mSparkMax.follow(m.getSparkMax(), inverted);
+  }
+
   // set inverted
   public void setInverted(boolean b) {
     mSparkMax.setInverted(b);

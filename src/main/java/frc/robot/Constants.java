@@ -254,7 +254,7 @@ public final class Constants {
     public static final double kMaxI = 0.9;
     public static final double kMaxISlotId = 0;
     public static final double kMinOutput = 1;
-    public static final double kA = 0.075;
+    public static final double kA = 0.15;
   }
 
   // Climb Constants
