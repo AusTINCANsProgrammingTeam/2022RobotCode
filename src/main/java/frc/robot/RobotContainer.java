@@ -224,9 +224,9 @@ public class RobotContainer {
         && CDSForwardCommand != null
         && outtakeCommand != null) {
       // takes ball in
-      buttons[Constants.RBumper].whileHeld(intakeForwardCommand).whileHeld(CDSForwardCommand);
+      buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
       // spits ball out
-      buttons[Constants.RTriggerButton].whileHeld(intakeReverseCommand).whileHeld(outtakeCommand);
+      buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
     }
 
     if (axisCount1 == 0 && buttonCount1 == 0) {
@@ -276,6 +276,11 @@ public class RobotContainer {
       if (climbSubsystem != null) {
         buttons2[Constants.startButton].whenPressed(
             new InstantCommand(climbSubsystem::climbEnabbledEnable, climbSubsystem));
+      }
+
+      if (outtakeCommand != null && CDSForwardCommand != null) {
+        buttons2[Constants.RBumper].whileHeld(CDSForwardCommand);
+        buttons2[Constants.RTriggerButton].whileHeld(outtakeCommand);
       }
 
       System.out.printf("Using Competition Two-controller button mappings");
