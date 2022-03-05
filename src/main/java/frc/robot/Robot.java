@@ -42,9 +42,7 @@ public class Robot extends TimedRobot {
     chooser.addOption("Four Ball", robotContainer.getAutonomousCommand("four ball"));
     SmartDashboard.putData("Auto Mode", chooser);
 
-    if (RobotContainer.getDriveBase() != null) {
-      tabContainer = new TabContainer(RobotContainer.getDriveBase());
-    }
+    if (RobotContainer.getDriveBase() != null) {}
   }
 
   // This function is called every robot packet, no matter the mode. Use this for items like

@@ -60,7 +60,7 @@ public class RobotContainer {
   private IntakeReverseCommand intakeReverseCommand;
   private ClimbCommand climbCommand;
 
-  private ShooterHeld shooterHeld;
+  private ShooterHeld shooterHeldLow, shooterHeldAuto;
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
@@ -120,9 +120,12 @@ public class RobotContainer {
   }
 
   private void initSubsystems() {
+
     // subsystems
     for (Constants.Subsystems sub : Constants.Subsystems.values()) {
       if (sub.isEnabled()) {
+
+        controllerCheck();
 
         // System.out.println((String) k + " " + subSysEnables.get((String) k));
         switch (sub.toString()) {
@@ -158,7 +161,6 @@ public class RobotContainer {
             }
           case "ClimbSubsystem":
             {
-              controllerCheck();
               if (axisCount1 > 0 && buttonCount1 > 0) {
                 climbSubsystem = new ClimbSubsystem(operatorJoystick);
                 climbCommand = new ClimbCommand(climbSubsystem);
@@ -195,10 +197,12 @@ public class RobotContainer {
       CDSSubsystem.setDefaultCommand(new CDSBallManagementCommand(CDSSubsystem, intakeSubsystem));
     }
     if (shooterSubsystem != null && CDSSubsystem != null) {
-      shooterHeld =
+      shooterHeldAuto =
           new ShooterHeld(
               shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
-      shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, CDSSubsystem, false);
+      shooterHeldLow =
+          new ShooterHeld(
+              shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
     }
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
@@ -217,51 +221,64 @@ public class RobotContainer {
   private void configureButtonBindings() {
     controllerCheck();
 
-    // Intake
-    if (intakeForwardCommand != null && intakeReverseCommand != null) {
-      buttons[Constants.BButton].whileHeld(intakeForwardCommand);
-      buttons[Constants.RTriggerButton].whileHeld(intakeReverseCommand);
+    // Intake / CDS
+    if (intakeForwardCommand != null && outtakeCommand != null) {
+      // takes ball in
+      buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
+      // spits ball out
+      buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
     }
 
-    // Shooter
-    if (shooterSubsystem != null && shooterHeld != null) {
-      buttons[Constants.LTriggerButton].whileHeld(shooterHeld);
-      // buttons[Constants.LJoystickButton].whenPressed(
-      // new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
-      // buttons[Constants.RJoystickButton].whenPressed(
-      // new InstantCommand(shooterSubsystem::cycleAimModePrevious,
-      // shooterSubsystem));
+    if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
+      // Auto Aim Shot
+      buttons[Constants.LBumper].whileHeld(
+          shooterHeldAuto.beforeStarting(
+              () -> {
+                shooterSubsystem.setAimMode(Constants.AimModes.AUTO);
+              },
+              shooterSubsystem));
+      // Fender Shot
+      buttons[Constants.LTriggerButton].whileHeld(
+          shooterHeldLow.beforeStarting(
+              () -> {
+                shooterSubsystem.setAimMode(Constants.AimModes.LOW);
+              },
+              shooterSubsystem));
     }
 
-    // CDS
-    if (CDSSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-    }
+    if (axisCount1 == 0 && buttonCount1 == 0) {
 
-    if (CDSForwardCommand != null && outtakeCommand != null) {
-      buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
-      // buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
-      buttons[Constants.AButton].whileHeld(outtakeCommand);
-    }
+      // Shooter
+      if (shooterSubsystem != null && shooterHeldAuto != null) {
+        buttons[Constants.backButton].whenPressed(shooterHeldAuto);
+        buttons[Constants.LJoystickButton].whenPressed(
+            new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
+        buttons[Constants.RJoystickButton].whenPressed(
+            new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
+      }
 
-    // CDS
-    if (CDSSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-      CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
-    }
+      // Limelight
+      if (limelightAlign != null) {
+        buttons[Constants.startButton].whenPressed(limelightAlign);
+      }
 
-    // Climb
-    if (climbSubsystem != null) {
-      if (!Constants.oneController) {
+      // ClimbSubysystem has no binding because there are not enuf axises
+      if (climbSubsystem != null) {}
+
+      System.out.printf("Using Testing One-controller button mappings");
+    } else {
+
+      if (climbSubsystem != null) {
         buttons2[Constants.startButton].whenPressed(
             new InstantCommand(climbSubsystem::climbEnabbledEnable, climbSubsystem));
       }
 
-      if (CDSForwardCommand != null && outtakeCommand != null) {
-        buttons2[Constants.RBumper].whileHeld(outtakeCommand);
-        buttons2[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
+      if (outtakeCommand != null && CDSForwardCommand != null) {
+        buttons2[Constants.RBumper].whileHeld(CDSForwardCommand);
+        buttons2[Constants.RTriggerButton].whileHeld(outtakeCommand);
       }
-      System.out.printf("Compitition Mode");
+
+      System.out.printf("Using Competition Two-controller button mappings");
     }
   }
 

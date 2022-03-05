@@ -24,7 +24,7 @@ public final class Constants {
     IntakeSubsystem   (true),
     ShooterSubsystem  (true),
     LimelightSubsystem(true),
-    ClimbSubsystem    (true);
+    ClimbSubsystem    (false); //Out of order (temperaraly)
     // spotless:on
 
     private final Boolean enabled;
@@ -184,7 +184,7 @@ public final class Constants {
   public static final int middleSensorActivation = 450;
   public static final int backSensorActivation = 600;
 
-  public static final boolean testMode = true; // if false CDS will eject balls of wrong color
+  public static final boolean testMode = false; // if false CDS will eject balls of wrong color
 
   // spotless:off
   // Controller Constants {
