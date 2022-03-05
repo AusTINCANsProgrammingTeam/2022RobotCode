@@ -59,7 +59,7 @@ public class RobotContainer {
   private IntakeReverseCommand intakeReverseCommand;
   private ClimbCommand climbCommand;
 
-  private ShooterHeld shooterHeld;
+  private ShooterHeld shooterHeldLow, shooterHeldAuto;
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
@@ -196,10 +196,12 @@ public class RobotContainer {
       CDSSubsystem.setDefaultCommand(new CDSBallManagementCommand(CDSSubsystem, intakeSubsystem));
     }
     if (shooterSubsystem != null && CDSSubsystem != null) {
-      shooterHeld =
+      shooterHeldAuto =
           new ShooterHeld(
               shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
-      shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, CDSSubsystem, false);
+      shooterHeldLow =
+          new ShooterHeld(
+              shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
     }
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
@@ -229,22 +231,28 @@ public class RobotContainer {
       buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
     }
 
-    if (shooterSubsystem != null && shooterHeld != null) {
+    if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
       // Auto Aim Shot
       buttons[Constants.LBumper].whileHeld(
-          shooterHeld.beforeStarting(
-              () -> shooterSubsystem.setAimMode(Constants.AimModes.AUTO), shooterSubsystem));
+          shooterHeldAuto.beforeStarting(
+              () -> {
+                shooterSubsystem.setAimMode(Constants.AimModes.AUTO);
+              },
+              shooterSubsystem));
       // Fender Shot
       buttons[Constants.LTriggerButton].whileHeld(
-          shooterHeld.beforeStarting(
-              () -> shooterSubsystem.setAimMode(Constants.AimModes.LOW), shooterSubsystem));
+          shooterHeldLow.beforeStarting(
+              () -> {
+                shooterSubsystem.setAimMode(Constants.AimModes.LOW);
+              },
+              shooterSubsystem));
     }
 
     if (axisCount1 == 0 && buttonCount1 == 0) {
 
       // Shooter
-      if (shooterSubsystem != null && shooterHeld != null) {
-        buttons[Constants.backButton].whenPressed(shooterHeld);
+      if (shooterSubsystem != null && shooterHeldAuto != null) {
+        buttons[Constants.backButton].whenPressed(shooterHeldAuto);
         buttons[Constants.LJoystickButton].whenPressed(
             new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
         buttons[Constants.RJoystickButton].whenPressed(
