@@ -243,7 +243,7 @@ public final class Constants {
     public static final double LLAngle =
         54.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as
     // exact as possible
-    public static final double cargoForward = 1;
+    public static final double cargoForward = 0.65;
     public static final double cargoReverse = -0.4;
     public static final double kP = 2.5e-4;
     public static final double kI = 19e-6;

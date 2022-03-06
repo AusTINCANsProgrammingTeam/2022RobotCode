@@ -12,21 +12,17 @@ public class IntakeForwardCommand extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
   private final IntakeSubsystem mIntakeSubsystem;
 
-  private final CDSSubsystem mCdsSubsystem;
-
-  public IntakeForwardCommand(IntakeSubsystem intakeSubsystem, CDSSubsystem cdsSubsystem) {
+  public IntakeForwardCommand(IntakeSubsystem intakeSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intakeSubsystem);
-    addRequirements(cdsSubsystem);
     mIntakeSubsystem = intakeSubsystem;
-    mCdsSubsystem = cdsSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     mIntakeSubsystem.toggleIntake(false);
-    mCdsSubsystem.CDSWheelToggle(false);
+    //mCdsSubsystem.CDSWheelToggle(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,7 +33,6 @@ public class IntakeForwardCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     mIntakeSubsystem.stopIntake();
-    mCdsSubsystem.stopCDSWheel(); // remove if stuff doesn't work well
   }
 
   // Returns true when the command should end.
