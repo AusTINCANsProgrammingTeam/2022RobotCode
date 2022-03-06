@@ -95,7 +95,7 @@ public class RobotContainer {
     // initialize the button bindings
     for (int i = 1; i < buttons.length; i++) {
       buttons[i] = new JoystickButton(driverJoystick, i);
-      // buttons2[i] = new JoystickButton(operatorJoystick, i);
+      buttons2[i] = new JoystickButton(operatorJoystick, i);
     }
     configureButtonBindings();
 
@@ -273,7 +273,7 @@ public class RobotContainer {
       }
 
       if (outtakeCommand != null && CDSForwardCommand != null) {
-        buttons2[Constants.RBumper].whileHeld(CDSForwardCommand);
+        buttons[Constants.RBumper].whileHeld(CDSForwardCommand);
         buttons2[Constants.RTriggerButton].whileHeld(outtakeCommand);
       }
 
