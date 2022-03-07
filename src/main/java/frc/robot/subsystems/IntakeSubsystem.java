@@ -25,18 +25,18 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void toggleIntake(boolean reverse) {
     if (reverse) {
-      intakeMotorControllerOne.getSparkMax().set(-Constants.intakeMotorSpeed);
+      intakeMotorControllerOne.set(-Constants.intakeMotorSpeed);
       SmartDashboard.putString("Intake Motor Direction", "Reverse");
       SmartDashboard.putNumber("Intake Motor Speed", -Constants.intakeMotorSpeed);
     } else {
-      intakeMotorControllerOne.getSparkMax().set(Constants.intakeMotorSpeed);
+      intakeMotorControllerOne.set(Constants.intakeMotorSpeed);
       SmartDashboard.putString("Intake Motor Direction", "Forward");
       SmartDashboard.putNumber("Intake Motor Speed", Constants.intakeMotorSpeed);
     }
   }
 
   public void stopIntake() {
-    intakeMotorControllerOne.getSparkMax().set(0.0);
+    intakeMotorControllerOne.set(0.0);
     SmartDashboard.putNumber("Intake Motor Speed", 0.0);
   }
 
