@@ -169,7 +169,7 @@ public final class Constants {
 
   // Intake Contstants
   public static final int intakeMotorOneID = 1;
-  public static final double intakeMotorSpeed = 0.70;
+  public static final double intakeMotorSpeed = 1.0;
   public static final int initialBallSensorChannel = 0;
   public static final int middleBallSensorChannel = 1;
   public static final int finalBallSensorChannel = 2;
@@ -179,7 +179,7 @@ public final class Constants {
   public static final int CDSWheelControllerOneID = 2;
   public static final int CDSWheelControllerTwoID = 9;
   public static final double CDSBeltSpeed = 0.40;
-  public static final double CDSWheelControllerSpeed = 0.25;
+  public static final double CDSWheelControllerSpeed = 0.65;
   public static final int frontSensorActivation = 200;
   public static final int middleSensorActivation = 450;
   public static final int backSensorActivation = 600;
@@ -243,7 +243,7 @@ public final class Constants {
     public static final double LLAngle =
         54.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as
     // exact as possible
-    public static final double cargoForward = 0.65;
+    public static final double cargoForward = 1.0;
     public static final double cargoReverse = -0.4;
     public static final double kP = 2.5e-4;
     public static final double kI = 19e-6;

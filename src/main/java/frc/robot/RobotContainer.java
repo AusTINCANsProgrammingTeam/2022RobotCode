@@ -223,21 +223,21 @@ public class RobotContainer {
     // Intake / CDS
     if (intakeForwardCommand != null && outtakeCommand != null) {
       // takes ball in
-      buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
+      buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
       // spits ball out
-      buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
+      buttons[Constants.RBumper].whileHeld(outtakeCommand);
     }
 
     if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
       // Auto Aim Shot
-      buttons[Constants.LBumper].whileHeld(
+      buttons[Constants.LTriggerButton].whileHeld(
           shooterHeldAuto.beforeStarting(
               () -> {
                 shooterSubsystem.setAimMode(Constants.AimModes.TEST);
               },
               shooterSubsystem));
       // Fender Shot
-      buttons[Constants.LTriggerButton].whileHeld(
+      buttons[Constants.LBumper].whileHeld(
           shooterHeldLow.beforeStarting(
               () -> {
                 shooterSubsystem.setAimMode(Constants.AimModes.LOW);
@@ -273,8 +273,8 @@ public class RobotContainer {
       }
 
       if (outtakeCommand != null && CDSForwardCommand != null) {
-        buttons[Constants.RBumper].whileHeld(CDSForwardCommand);
-        buttons2[Constants.RTriggerButton].whileHeld(outtakeCommand);
+        buttons[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
+        buttons2[Constants.RBumper].whileHeld(outtakeCommand);
       }
 
       System.out.printf("Using Competition Two-controller button mappings");
