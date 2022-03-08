@@ -202,19 +202,12 @@ public class RobotContainer {
       buttons[Constants.AButton].whenPressed(limelightAlign);
     }
 
-<<<<<<< HEAD
-    /*if (climbSubsystem != null) {
-      buttons[Constants.AButton].whileHeld(climbUPCommand);
-      buttons[Constants.XButton].whileHeld(climbDOWNCommand);
-    }*/
-=======
     if (climbSubsystem != null) {
       if (!Constants.oneController) {
         buttons2[Constants.startButton].whenPressed(
             new InstantCommand(climbSubsystem::toggleClimbEnable, climbSubsystem));
       }
     }
->>>>>>> main
   }
 
   private void initializeTrajectories() {
