@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 
 public class MotorController {
 
@@ -49,7 +50,7 @@ public class MotorController {
       mPIDController = mSparkMax.getPIDController();
       setPID();
     }
-    mSparkMax.setOpenLoopRampRate(.1);
+    mSparkMax.setOpenLoopRampRate(Constants.openLoopRampRate);
   }
 
   public CANSparkMax getSparkMax() {
@@ -86,6 +87,10 @@ public class MotorController {
   // set follow
   public void setFollow(MotorController m) {
     mSparkMax.follow(m.getSparkMax());
+  }
+
+  public void setFollow(MotorController m, boolean inverted) {
+    mSparkMax.follow(m.getSparkMax(), inverted);
   }
 
   // set inverted
