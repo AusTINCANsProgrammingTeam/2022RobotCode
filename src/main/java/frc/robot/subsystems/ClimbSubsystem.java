@@ -21,9 +21,6 @@ import frc.robot.common.hardware.MotorController;
 public class ClimbSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private NetworkTableEntry sbclimbHeightOne;
-  private NetworkTableEntry sbclimbHeightTwo;
-  private NetworkTableEntry sbClimbEnabbled;
   private Joystick m_climbJoystick;
   private MotorController m_climbMotorControllerOne;
   private MotorController m_climbMotorControllerTwo;
@@ -36,11 +33,14 @@ public class ClimbSubsystem extends SubsystemBase {
   private NetworkTableEntry sbclimberpositionOne;
   private NetworkTableEntry sbclimberspeedOne;
   private NetworkTableEntry sbclimberheightOne;
+  private NetworkTableEntry sbclimbHeightOne;
   private NetworkTableEntry sbclimberpositionTwo;
   private NetworkTableEntry sbclimberspeedTwo;
   private NetworkTableEntry sbclimberheightTwo;
+  private NetworkTableEntry sbclimbHeightTwo;
   private NetworkTableEntry sbclimbSpeedInput;
   private NetworkTableEntry sbClimbingMode;
+  private NetworkTableEntry sbClimbEnabbled;
 
   public ClimbSubsystem(Joystick joystick) {
     m_climbJoystick = joystick;
