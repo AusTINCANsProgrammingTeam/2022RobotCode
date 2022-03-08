@@ -41,7 +41,7 @@ public final class Constants {
   public enum AimModes {
     AUTO,
     // TODO: Plug real values in for these aimModes
-    LOW(3200.0, 0.0) {
+    LOW(1500.0, 0.0) {
       @Override
       public AimModes previous() {
         return values()[values().length - 1];
@@ -49,7 +49,7 @@ public final class Constants {
     },
     EJECT(2500.0, 0.0),
     LAUNCH(0.0, 0.0),
-    TARMAC(4200.0, 0.0),
+    TARMAC(2650.0, 0.0),
     TEST {
       @Override
       public AimModes next() {
@@ -246,9 +246,9 @@ public final class Constants {
     public static final double cargoForward = 1.0;
     public static final double cargoReverse = -0.4;
     public static final double kP = 2.5e-4;
-    public static final double kI = 19e-6;
-    public static final double kD = 0.005;
-    public static final double kF = 0.0;
+    public static final double kI = 2.5e-7;
+    public static final double kD = 2e-6;
+    public static final double kF = 1e-4;
     public static final double kIZone = 0.9;
     public static final double kMaxOutput = 0;
     public static final double kMaxI = 0.9;
