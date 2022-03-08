@@ -18,8 +18,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
-import frc.robot.commands.ClimbDOWNCommand;
-import frc.robot.commands.ClimbUPCommand;
+import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
@@ -45,7 +44,9 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private static final Joystick driverJoystick = new Joystick(Constants.portNumber0);
+  private static final Joystick operatorJoystick = new Joystick(Constants.portNumber1);
   private JoystickButton[] buttons = new JoystickButton[13];
+  private JoystickButton[] buttons2 = new JoystickButton[13];
 
   // subsystems
 
@@ -60,8 +61,7 @@ public class RobotContainer {
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
   private IntakeForwardCommand intakeForwardCommand;
   private IntakeReverseCommand intakeReverseCommand;
-  private ClimbUPCommand climbUPCommand;
-  private ClimbDOWNCommand climbDOWNCommand;
+  private ClimbCommand climbCommand;
 
   // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
   private ShooterHeld shooterHeld;
@@ -84,6 +84,7 @@ public class RobotContainer {
     // initialize the button bindings
     for (int i = 1; i < buttons.length; i++) {
       buttons[i] = new JoystickButton(driverJoystick, i);
+      buttons2[i] = new JoystickButton(operatorJoystick, i);
     }
     configureButtonBindings();
 
@@ -129,10 +130,11 @@ public class RobotContainer {
             }
           case "ClimbSubsystem":
             {
-              System.out.println("Climb enabled");
-              climbSubsystem = new ClimbSubsystem();
-              climbUPCommand = new ClimbUPCommand(climbSubsystem);
-              climbDOWNCommand = new ClimbDOWNCommand(climbSubsystem);
+              if (!Constants.oneController) {
+                climbSubsystem = new ClimbSubsystem(operatorJoystick);
+                climbCommand = new ClimbCommand(climbSubsystem);
+                System.out.println("Climb enabled");
+              }
               break;
             }
         }
@@ -160,6 +162,9 @@ public class RobotContainer {
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
     }
+    if (climbSubsystem != null) {
+      climbSubsystem.setDefaultCommand(climbCommand);
+    }
   }
 
   // Use this method to define your button->command mappings. Buttons can be
@@ -172,8 +177,8 @@ public class RobotContainer {
 
     // Intake
     if (intakeForwardCommand != null && intakeReverseCommand != null) {
-      buttons[Constants.LBumper].whileHeld(intakeForwardCommand);
-      buttons[Constants.RBumper].whileHeld(intakeReverseCommand);
+      buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
+      buttons[Constants.RTriggerButton].whileHeld(intakeReverseCommand);
     }
 
     // Shooter
@@ -197,10 +202,19 @@ public class RobotContainer {
       buttons[Constants.AButton].whenPressed(limelightAlign);
     }
 
+<<<<<<< HEAD
     /*if (climbSubsystem != null) {
       buttons[Constants.AButton].whileHeld(climbUPCommand);
       buttons[Constants.XButton].whileHeld(climbDOWNCommand);
     }*/
+=======
+    if (climbSubsystem != null) {
+      if (!Constants.oneController) {
+        buttons2[Constants.startButton].whenPressed(
+            new InstantCommand(climbSubsystem::toggleClimbEnable, climbSubsystem));
+      }
+    }
+>>>>>>> main
   }
 
   private void initializeTrajectories() {
