@@ -115,7 +115,9 @@ public class ClimbSubsystem extends SubsystemBase {
     m_climbMotorControllerTwo.getPIDCtrl().setD(Constants.climbLeftPID[2]);
   }
 
-  public void climbEnabbledEnable() {
+  public void climbEnable() {
+    climbHeightOne = m_climbMotorControllerOne.getEncoder().getPosition();
+    climbHeightTwo = m_climbMotorControllerTwo.getEncoder().getPosition();
     climbEnabbled = !climbEnabbled;
     sbClimbEnabbled.setBoolean(climbEnabbled);
   }
@@ -200,7 +202,7 @@ public class ClimbSubsystem extends SubsystemBase {
     sbclimberspeedOne.setDouble(m_climbMotorControllerOne.getEncoder().getVelocity());
     sbclimberpositionOne.setDouble(m_climbMotorControllerOne.getEncoder().getPosition());
 
-    m_climbMotorControllerOne.updateSmartDashboard();
+    //m_climbMotorControllerOne.updateSmartDashboard();
     SmartDashboard.putNumber(
         "Climb IAccum One", m_climbMotorControllerOne.getPIDCtrl().getIAccum());
 
@@ -214,7 +216,7 @@ public class ClimbSubsystem extends SubsystemBase {
     sbclimberspeedTwo.setDouble(m_climbMotorControllerTwo.getEncoder().getVelocity());
     sbclimberpositionTwo.setDouble(m_climbMotorControllerTwo.getEncoder().getPosition());
 
-    m_climbMotorControllerTwo.updateSmartDashboard();
+    //m_climbMotorControllerTwo.updateSmartDashboard();
     SmartDashboard.putNumber(
         "Climb IAccum Two", m_climbMotorControllerTwo.getPIDCtrl().getIAccum());
   }
