@@ -41,6 +41,12 @@ public class ClimbSubsystem extends SubsystemBase {
   private NetworkTableEntry sbclimbSpeedInput;
   private NetworkTableEntry sbClimbingMode;
   private NetworkTableEntry sbClimbEnabbled;
+  private NetworkTableEntry sbClimbOneP;
+  private NetworkTableEntry sbClimbOneI;
+  private NetworkTableEntry sbClimbOneD;
+  private NetworkTableEntry sbClimbTwoP;
+  private NetworkTableEntry sbClimbTwoI;
+  private NetworkTableEntry sbClimbTwoD;
 
   public ClimbSubsystem(Joystick joystick) {
     m_climbJoystick = joystick;
@@ -105,19 +111,58 @@ public class ClimbSubsystem extends SubsystemBase {
 
     sbclimberpositionTwo =
         climberTab.add("Climber position 2", 0).withSize(2, 2).withPosition(2, 4).getEntry();
+    sbClimbOneP =
+        climberTab
+            .add("Climber One P", Constants.climbRightPID[0])
+            .withSize(2, 2)
+            .withPosition(3, 0)
+            .getEntry();
+    sbClimbOneI =
+        climberTab
+            .add("Climber One I", Constants.climbRightPID[1])
+            .withSize(2, 2)
+            .withPosition(3, 1)
+            .getEntry();
+    sbClimbOneD =
+        climberTab
+            .add("Climber One D", Constants.climbRightPID[2])
+            .withSize(2, 2)
+            .withPosition(3, 2)
+            .getEntry();
+    sbClimbTwoP =
+        climberTab
+            .add("Climber Two P", Constants.climbLeftPID[0])
+            .withSize(2, 2)
+            .withPosition(3, 3)
+            .getEntry();
+    sbClimbTwoI =
+        climberTab
+            .add("Climber Two I", Constants.climbLeftPID[1])
+            .withSize(2, 2)
+            .withPosition(3, 4)
+            .getEntry();
+    sbClimbTwoD =
+        climberTab
+            .add("Climber Two D", Constants.climbLeftPID[2])
+            .withSize(2, 2)
+            .withPosition(3, 5)
+            .getEntry();
 
-    m_climbMotorControllerOne.getPIDCtrl().setP(Constants.climbRightPID[0]);
-    m_climbMotorControllerOne.getPIDCtrl().setI(Constants.climbRightPID[1]);
-    m_climbMotorControllerOne.getPIDCtrl().setD(Constants.climbRightPID[2]);
+    m_climbMotorControllerOne.getPIDCtrl().setP(sbClimbOneP.getDouble(0));
+    m_climbMotorControllerOne.getPIDCtrl().setI(sbClimbOneI.getDouble(0));
+    m_climbMotorControllerOne.getPIDCtrl().setD(sbClimbOneD.getDouble(0));
 
-    m_climbMotorControllerTwo.getPIDCtrl().setP(Constants.climbLeftPID[0]);
-    m_climbMotorControllerTwo.getPIDCtrl().setI(Constants.climbLeftPID[1]);
-    m_climbMotorControllerTwo.getPIDCtrl().setD(Constants.climbLeftPID[2]);
+    m_climbMotorControllerTwo.getPIDCtrl().setP(sbClimbTwoP.getDouble(0));
+    m_climbMotorControllerTwo.getPIDCtrl().setI(sbClimbTwoI.getDouble(0));
+    m_climbMotorControllerTwo.getPIDCtrl().setD(sbClimbTwoD.getDouble(0));
+  }
+
+  public void resetTargetedHeight() {
+    climbHeightOne = m_climbMotorControllerOne.getEncoder().getPosition();
+    climbHeightTwo = m_climbMotorControllerTwo.getEncoder().getPosition();
   }
 
   public void climbEnable() {
-    climbHeightOne = m_climbMotorControllerOne.getEncoder().getPosition();
-    climbHeightTwo = m_climbMotorControllerTwo.getEncoder().getPosition();
     climbEnabbled = !climbEnabbled;
     sbClimbEnabbled.setBoolean(climbEnabbled);
   }
@@ -202,7 +247,7 @@ public class ClimbSubsystem extends SubsystemBase {
     sbclimberspeedOne.setDouble(m_climbMotorControllerOne.getEncoder().getVelocity());
     sbclimberpositionOne.setDouble(m_climbMotorControllerOne.getEncoder().getPosition());
 
-    //m_climbMotorControllerOne.updateSmartDashboard();
+    // m_climbMotorControllerOne.updateSmartDashboard();
     SmartDashboard.putNumber(
         "Climb IAccum One", m_climbMotorControllerOne.getPIDCtrl().getIAccum());
 
@@ -216,9 +261,24 @@ public class ClimbSubsystem extends SubsystemBase {
     sbclimberspeedTwo.setDouble(m_climbMotorControllerTwo.getEncoder().getVelocity());
     sbclimberpositionTwo.setDouble(m_climbMotorControllerTwo.getEncoder().getPosition());
 
-    //m_climbMotorControllerTwo.updateSmartDashboard();
+    // m_climbMotorControllerTwo.updateSmartDashboard();
     SmartDashboard.putNumber(
         "Climb IAccum Two", m_climbMotorControllerTwo.getPIDCtrl().getIAccum());
+    if ((m_climbMotorControllerOne.getPIDCtrl().getP() != sbClimbOneP.getDouble(0))
+        || (m_climbMotorControllerOne.getPIDCtrl().getI() != sbClimbOneI.getDouble(0))
+        || (m_climbMotorControllerOne.getPIDCtrl().getD() != sbClimbOneD.getDouble(0))) {
+      m_climbMotorControllerOne.getPIDCtrl().setP(sbClimbOneP.getDouble(0));
+      m_climbMotorControllerOne.getPIDCtrl().setI(sbClimbOneI.getDouble(0));
+      m_climbMotorControllerOne.getPIDCtrl().setD(sbClimbOneD.getDouble(0));
+    }
+
+    if ((m_climbMotorControllerTwo.getPIDCtrl().getP() != sbClimbTwoP.getDouble(0))
+        || (m_climbMotorControllerTwo.getPIDCtrl().getI() != sbClimbTwoI.getDouble(0))
+        || (m_climbMotorControllerTwo.getPIDCtrl().getD() != sbClimbTwoD.getDouble(0))) {
+      m_climbMotorControllerOne.getPIDCtrl().setP(sbClimbOneP.getDouble(0));
+      m_climbMotorControllerOne.getPIDCtrl().setI(sbClimbOneI.getDouble(0));
+      m_climbMotorControllerOne.getPIDCtrl().setD(sbClimbOneD.getDouble(0));
+    }
   }
 
   public boolean getLimitSwitchVal() {

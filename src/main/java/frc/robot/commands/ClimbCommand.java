@@ -25,6 +25,7 @@ public class ClimbCommand extends CommandBase {
   @Override
   public void execute() {
     if (m_subsystem.getclimbingmode()) {
+      m_subsystem.resetTargetedHeight();
       m_subsystem.runManual();
     } else {
       m_subsystem.enableClimb();
