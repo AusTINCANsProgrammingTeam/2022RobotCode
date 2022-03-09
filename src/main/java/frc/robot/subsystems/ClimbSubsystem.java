@@ -155,18 +155,18 @@ public class ClimbSubsystem extends SubsystemBase {
       if (joystickAxis > 0.1 || joystickAxis < -0.1) {
         if (joystickAxis > 0) {
           if (climbHeightOne <= Constants.climbHeightMax) {
-            climbHeightOne = climbHeightOne + (joystickAxis / 10);
+            climbHeightOne = climbHeightOne + (joystickAxis / 10 * 4);
           }
           if (climbHeightTwo <= Constants.climbHeightMax) {
-            climbHeightTwo = climbHeightTwo + (joystickAxis / 10);
+            climbHeightTwo = climbHeightTwo + (joystickAxis / 10 * 4);
           }
         }
         if (joystickAxis < 0) {
           if (climbHeightOne >= 0) {
-            climbHeightOne = climbHeightOne + (joystickAxis / 10);
+            climbHeightOne = climbHeightOne + (joystickAxis / 10 * 4);
           }
           if (climbHeightTwo >= 0) {
-            climbHeightTwo = climbHeightTwo + (joystickAxis / 10);
+            climbHeightTwo = climbHeightTwo + (joystickAxis / 10 * 4);
           }
         }
       }
@@ -199,6 +199,7 @@ public class ClimbSubsystem extends SubsystemBase {
     }
     sbclimberspeedOne.setDouble(m_climbMotorControllerOne.getEncoder().getVelocity());
     sbclimberpositionOne.setDouble(m_climbMotorControllerOne.getEncoder().getPosition());
+
     m_climbMotorControllerOne.updateSmartDashboard();
     SmartDashboard.putNumber(
         "Climb IAccum One", m_climbMotorControllerOne.getPIDCtrl().getIAccum());
@@ -212,6 +213,7 @@ public class ClimbSubsystem extends SubsystemBase {
     }
     sbclimberspeedTwo.setDouble(m_climbMotorControllerTwo.getEncoder().getVelocity());
     sbclimberpositionTwo.setDouble(m_climbMotorControllerTwo.getEncoder().getPosition());
+
     m_climbMotorControllerTwo.updateSmartDashboard();
     SmartDashboard.putNumber(
         "Climb IAccum Two", m_climbMotorControllerTwo.getPIDCtrl().getIAccum());
