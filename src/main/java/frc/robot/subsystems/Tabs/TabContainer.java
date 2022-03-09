@@ -18,6 +18,8 @@ public class TabContainer {
   }
 
   public void periodic() {
-    mTabDriveBase.periodic();
+    if (mTabDriveBase != null) {
+      mTabDriveBase.periodic();
+    }
   }
 }

@@ -46,7 +46,7 @@ public class TabDriveBase {
     // This is the tab for controlling auton
     sbWaitTimeSlider =
         Shuffleboard.getTab("Auton")
-            .add("Max Speed", 1)
+            .add("Wait Time", 1)
             .withWidget(BuiltInWidgets.kNumberSlider)
             .withProperties(Map.of("min", 1, "max", 10)) // specify widget properties here
             .getEntry();
