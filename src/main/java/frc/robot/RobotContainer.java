@@ -269,7 +269,7 @@ public class RobotContainer {
 
       if (climbSubsystem != null) {
         buttons2[Constants.startButton].whenPressed(
-            new InstantCommand(climbSubsystem::climbEnabbledEnable, climbSubsystem));
+            new InstantCommand(climbSubsystem::climbEnable, climbSubsystem));
       }
 
       if (outtakeCommand != null && CDSForwardCommand != null) {
