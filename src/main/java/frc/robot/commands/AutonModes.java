@@ -185,15 +185,19 @@ public class AutonModes {
                   () ->
                       driveBaseSubsystem.resetOdometry(
                           twoBallTrajectory.getInitialPose())), // go out to get ball
-              new IntakeForwardCommand(intakeSubsystem, cdsSubsystem).andThen(() -> driveBaseSubsystem.stopDriveMotors())
-              );
+              new IntakeForwardCommand(intakeSubsystem, cdsSubsystem)
+                  .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
 
       twoBallCommand =
           new SequentialCommandGroup(
               new WaitCommand(initialWaitTime),
               twoBallParallel,
               new WaitCommand(Constants.delayshot),
-              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, (limelightSubsystem != null))
+              new ShooterPressed(
+                      shooterSubsystem,
+                      limelightSubsystem,
+                      cdsSubsystem,
+                      (limelightSubsystem != null))
                   .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
 
       threeBallCommand = null;
@@ -207,10 +211,10 @@ public class AutonModes {
         System.out.println("Auton: Taxi mode selected.");
         return taxiCommand;
       case "one ball":
-       System.out.println("Auton: One Ball mode selected.");
+        System.out.println("Auton: One Ball mode selected.");
         return oneBallCommand;
       case "two ball":
-       System.out.println("Auton: Two Ball mode selected.");
+        System.out.println("Auton: Two Ball mode selected.");
         return twoBallCommand;
       case "three ball":
         System.out.println("Auton: Three Ball mode selected.");
@@ -224,7 +228,6 @@ public class AutonModes {
     }
   }
 
-  
   public static void setWaitTime(double waitTime) {
     initialWaitTime = waitTime; // get value from shuffleboard, units in seconds
   }

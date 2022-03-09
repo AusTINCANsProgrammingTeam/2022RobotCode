@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.Tabs.TabContainer;
 
 // The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -19,7 +18,7 @@ import frc.robot.subsystems.Tabs.TabContainer;
 
 public class Robot extends TimedRobot {
   private Command autonomousCommand;
-  private SendableChooser<Command> chooser = new SendableChooser<>();
+  private SendableChooser<String> chooser = new SendableChooser<>();
   private RobotContainer robotContainer;
   private TabContainer tabContainer;
 
@@ -36,15 +35,15 @@ public class Robot extends TimedRobot {
     robotContainer = new RobotContainer();
 
     // TODO: change to correct paths
-    chooser.setDefaultOption("Taxi", robotContainer.getAutonomousCommand("taxi"));
-    chooser.addOption("One Ball", robotContainer.getAutonomousCommand("one ball"));
-    chooser.addOption("Two Ball", robotContainer.getAutonomousCommand("two ball"));
-    chooser.addOption("Three Ball", robotContainer.getAutonomousCommand("three ball"));
-    chooser.addOption("Four Ball", robotContainer.getAutonomousCommand("four ball"));
+    chooser.setDefaultOption("Taxi", "taxi");
+    chooser.addOption("One Ball", "oneball");
+    chooser.addOption("Two Ball", "twoball");
+    chooser.addOption("Three Ball", "threeball");
+    chooser.addOption("Four Ball", "fourball");
     SmartDashboard.putData("Auto Mode", chooser);
 
     if (RobotContainer.getDriveBase() != null) {
-      TabContainer tabContainer = new TabContainer(RobotContainer.getDriveBase());
+      tabContainer = new TabContainer(RobotContainer.getDriveBase());
     }
   }
 
@@ -56,8 +55,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    tabContainer.periodic();
-
+    if(tabContainer != null) {
+      tabContainer.periodic();
+    }
+    
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -80,7 +81,7 @@ public class Robot extends TimedRobot {
   // This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    autonomousCommand = chooser.getSelected();
+    autonomousCommand = robotContainer.getAutonomousCommand(chooser.getSelected());
 
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {

@@ -4,10 +4,10 @@
 
 package frc.robot.subsystems.Tabs;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.DriveBaseSubsystem;
 
-// Might remove TabContainer and TabDriveBase later and standardized with the rest of the team's approach
+// Might remove TabContainer and TabDriveBase later and standardized with the rest of the team's
+// approach
 public class TabContainer {
   private TabDriveBase mTabDriveBase;
 
