@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.common.hardware.ColorSensorMuxed;
 import frc.robot.common.hardware.MotorController;
 import frc.robot.common.hardware.PicoColorSensor;
 
@@ -26,11 +25,15 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSWheelControllerTwo;
   private String allianceColor;
   private PicoColorSensor picoSensors = new PicoColorSensor();
-  //private ColorSensorMuxed colorSensors;
+  // private ColorSensorMuxed colorSensors;
 
   private boolean isReady = true; // Variable for whether CDS is ready for shooter action
   private int ballCount = 0;
   private static int sensorReadDelay = 0; // Delay in reading sensors in number of 20ms loops
+
+  private boolean Sensor0On = false;
+  private boolean Sensor1On = false;
+  private boolean Sensor2On = false;
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry CDSWheelControllerDirection =
@@ -61,7 +64,6 @@ public class CDSSubsystem extends SubsystemBase {
 
     CDSBeltController.setIdleMode(IdleMode.kBrake);
     CDSWheelControllerOne.setIdleMode(IdleMode.kCoast);
-
 
     String allianceColor = DriverStation.getAlliance().toString();
     SmartDashboard.putString("Alliance Color", allianceColor);
@@ -137,8 +139,8 @@ public class CDSSubsystem extends SubsystemBase {
     int frontProx = picoSensors.getProximity2();
     int midProx = picoSensors.getProximity1();
     int backProx = picoSensors.getProximity0();
-    int[] sensorProxes = new int[]{frontProx, midProx, backProx};
-  
+    int[] sensorProxes = new int[] {frontProx, midProx, backProx};
+
     SmartDashboard.putNumber("Front Sensor Proximity", sensorProxes[2]);
     SmartDashboard.putNumber("Middle Sensor Proximity", sensorProxes[1]);
     SmartDashboard.putNumber("Back Sensor Proximity", sensorProxes[0]);
@@ -200,4 +202,15 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public void periodic() {}
+
+  public void heyColorsSensorseAreYouThere() {
+    Sensor0On = picoSensors.isSensor0Connected();
+    System.out.println(Sensor0On);
+
+    Sensor1On = picoSensors.isSensor1Connected();
+    System.out.println(Sensor1On);
+
+    Sensor2On = picoSensors.isSensor2Connected();
+    System.out.println(Sensor2On);
+  }
 }
