@@ -32,6 +32,7 @@ public class MotorController extends CANSparkMax {
     mEncoder = getEncoder();
   }
 
+  // Set PID option for motor controller
   public MotorController(String name, int deviceID, double[] PID) {
     this(name, deviceID); // intializes CANSparkMax, Encoder, and PIDController
     setPID(PID);
@@ -71,7 +72,7 @@ public class MotorController extends CANSparkMax {
     return mEncoder.getVelocity();
   }
 
-  public void activatePID(double[] PID) {
+  private void activatePID(double[] PID) {
     // Check first that mPIDController has been instantiated
     if (mPIDController == null) {
       throw new NullPointerException(
@@ -81,6 +82,11 @@ public class MotorController extends CANSparkMax {
     mPIDController.setP(mP);
     mPIDController.setI(mI);
     mPIDController.setD(mD);
+
+    // add the values to smart dashboard
+    SmartDashboard.putNumber(mName + " P value", mP);
+    SmartDashboard.putNumber(mName + " I value", mI);
+    SmartDashboard.putNumber(mName + " D value", mD);
 
     updateSmartDashboard(); // post onto smart dashboard
   }

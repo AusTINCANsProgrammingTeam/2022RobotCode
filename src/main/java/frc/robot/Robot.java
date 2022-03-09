@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.Tabs.TabContainer;
 
 // The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -42,7 +43,9 @@ public class Robot extends TimedRobot {
     chooser.addOption("Four Ball", robotContainer.getAutonomousCommand("four ball"));
     SmartDashboard.putData("Auto Mode", chooser);
 
-    if (RobotContainer.getDriveBase() != null) {}
+    if (RobotContainer.getDriveBase() != null) {
+      TabContainer tabContainer = new TabContainer(RobotContainer.getDriveBase());
+    }
   }
 
   // This function is called every robot packet, no matter the mode. Use this for items like
@@ -53,7 +56,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    // tabContainer.periodic();
+    tabContainer.periodic();
 
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,

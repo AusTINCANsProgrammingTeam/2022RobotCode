@@ -66,8 +66,7 @@ public class TabDriveBase {
       sbLeftPosition.setDouble(positions[0]); // in meters
       sbRightPosition.setDouble(positions[1]);
 
-      double waitTime = sbWaitTimeSlider.getDouble(1);
-      AutonModes.setWaitTime(waitTime);
+      AutonModes.setWaitTime(sbWaitTimeSlider.getDouble(1));
 
       // TODO: compare encoder value to value from biconsumer, should be equal
       SmartDashboard.putNumber("left speed (rpm) [encoder]", leftSpeed);

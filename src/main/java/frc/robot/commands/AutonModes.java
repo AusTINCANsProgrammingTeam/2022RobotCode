@@ -154,10 +154,11 @@ public class AutonModes {
 
   private void initializeCommandGroups() {
 
+    // TODO: add deploy intake command at the beginning of each one
+
     taxiCommand =
         new SequentialCommandGroup(
-            new WaitCommand(initialWaitTime),
-            // taxiRamseteCommands[0]);
+            new WaitCommand(initialWaitTime), // units in seconds
             taxiRamseteCommand
                 .beforeStarting(
                     () -> driveBaseSubsystem.resetOdometry(taxiTrajectory.getInitialPose()))
@@ -167,12 +168,11 @@ public class AutonModes {
       oneBallCommand =
           new SequentialCommandGroup(
               new WaitCommand(initialWaitTime),
-              // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem),
               new ShooterPressed(
                   shooterSubsystem,
                   limelightSubsystem,
                   cdsSubsystem,
-                  true), // also has a time delay of 2-3 seconds
+                  (limelightSubsystem != null)), // also has a time delay of 2-3 seconds
               new WaitCommand(Constants.delaytaxi),
               oneBallRamseteCommand
                   .beforeStarting(
@@ -184,9 +184,8 @@ public class AutonModes {
               twoBallRamseteCommand.beforeStarting(
                   () ->
                       driveBaseSubsystem.resetOdometry(
-                          twoBallTrajectory.getInitialPose())) // go out to get ball
-              // new IntakeForwardCommand(intakeSubsystem)
-              //     .andThen(() -> driveBaseSubsystem.stopDriveMotors())
+                          twoBallTrajectory.getInitialPose())), // go out to get ball
+              new IntakeForwardCommand(intakeSubsystem, cdsSubsystem).andThen(() -> driveBaseSubsystem.stopDriveMotors())
               );
 
       twoBallCommand =
@@ -194,8 +193,7 @@ public class AutonModes {
               new WaitCommand(initialWaitTime),
               twoBallParallel,
               new WaitCommand(Constants.delayshot),
-              // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem)
-              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true)
+              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, (limelightSubsystem != null))
                   .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
 
       threeBallCommand = null;
@@ -206,21 +204,28 @@ public class AutonModes {
   public Command getChosenCommand(String commandName) {
     switch (commandName) {
       case "taxi":
+        System.out.println("Auton: Taxi mode selected.");
         return taxiCommand;
       case "one ball":
+       System.out.println("Auton: One Ball mode selected.");
         return oneBallCommand;
       case "two ball":
+       System.out.println("Auton: Two Ball mode selected.");
         return twoBallCommand;
       case "three ball":
+        System.out.println("Auton: Three Ball mode selected.");
         return threeBallCommand;
       case "four ball":
+        System.out.println("Auton: Four Ball mode selected.");
         return fourBallCommand;
       default:
+        System.out.println("Auton: No mode selected.");
         return null;
     }
   }
 
+  
   public static void setWaitTime(double waitTime) {
-    initialWaitTime = waitTime; // get value from shuffleboard
+    initialWaitTime = waitTime; // get value from shuffleboard, units in seconds
   }
 }
