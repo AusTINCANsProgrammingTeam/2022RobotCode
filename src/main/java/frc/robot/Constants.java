@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.wpilibj.I2C.Port;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -42,16 +41,16 @@ public final class Constants {
   public enum AimModes {
     AUTO,
     // TODO: Plug real values in for these aimModes
-    LOW(0.0, 0.0) {
+    LOW(3200.0, 0.0) {
       @Override
       public AimModes previous() {
         return values()[values().length - 1];
       }
     },
-    EJECT(0.0, 0.0),
+    EJECT(2500.0, 0.0),
     LAUNCH(0.0, 0.0),
-    TARMAC(0.0, 0.0),
-    TEST() {
+    TARMAC(4200.0, 0.0),
+    TEST {
       @Override
       public AimModes next() {
         return values()[0];
@@ -107,15 +106,19 @@ public final class Constants {
   // Constants for wheel motors
   public static final double wheelRadius =
       3.0125; // radius of wheel, use for calculating angular values
+  public static final double openLoopRampRate =
+      0.2; // Rate at which the motors reach maximum speed; TODO: tune for optimal performance
   public static final double gearRatio = 10.75; // 10.75 : 1 gear ratio <--- kitbot
   // 10.75 motor rotations : 1 wheel rotation
   public static final double inchesInMeter = 39.3701;
 
   // Actual IDs on robot, used to activate the right motors
-  public static final int driveLeftFront = 6;
-  public static final int driveLeftRear = 7;
-  public static final int driveRightFront = 13;
-  public static final int driveRightRear = 14;
+
+  // TODO: kit bot values for now, change later
+  public static final int driveLeftFront = 13; // 13 on real robot
+  public static final int driveLeftRear = 14; // 14 on real robot
+  public static final int driveRightFront = 6; // 6 on real robot
+  public static final int driveRightRear = 7; // 7 on real robot
 
   // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
   public static final int driveLeftFrontIndex = 0;
@@ -129,13 +132,17 @@ public final class Constants {
   public static final double[] driveLeftPID = {0.000005, 0.0000008, 0};
 
   // AUTONOMOUS Constants
-
+  public static final String taxiout = "TaxiOut.wpilib.json";
+  public static final String taxioutfender = "TaxiOutFromFender.wpilib.json";
+  public static final String taxioutball = "TaxiOutGrabBall.wpilib.json";
   // Volts, constants for ramseteCommand
-  public static final double ksVolts = 0.13323; // Ks,
+  public static final double ksVolts = 0.13323; // Ks
   public static final double kvVoltSecondsPerMeter = 2.8295; // Kv, Velocity
   public static final double kaVoltSecondsSquaredPerMeter = 0.31462; // Ka, Accelleration
 
   public static final double kpDriveVel = 2.1938; // Kp, Velocity
+  public static final double arbFeedForward =
+      8.6045E-07; // voltage applied to the motor after the result of the specified control mode
   public static final double trackWidth = 0.69;
   public static final DifferentialDriveKinematics driveKinematics =
       new DifferentialDriveKinematics(trackWidth);
@@ -145,6 +152,9 @@ public final class Constants {
   public static final double ramseteB = 2; // Convergence, larger values are more aggressive
   public static final double ramseteZeta = 0.7; // Damping, larger values offer more damping
 
+  public static final double delaytaxi = 1.0; // 1 second wait time
+  public static final double delayshot = 0.5; // 0.5 second wait time
+
   // TODO: Replace 0.69 with actual track width in meters and run characterization on real robot
 
   // Encoder constants
@@ -152,11 +162,10 @@ public final class Constants {
   // Controller modes
   public static final boolean oneController = true;
 
-  // TODO: Replace these with the correct ports
-  public static final int leftEncoderDIOone = 0;
-  public static final int leftEncoderDIOtwo = 1;
-  public static final int rightEncoderDIOone = 2;
-  public static final int rightEncoderDIOtwo = 3;
+  // Encoder Constants
+  // TODO: Change to true when using external encoders
+  public static final boolean usingExternal = false;
+  public static final int encoderCountsPerRev = 8192;
 
   // Intake Contstants
   public static final int intakeMotorOneID = 1;
@@ -167,56 +176,61 @@ public final class Constants {
 
   // CDS Constants
   public static final int CDSBeltID = 3;
-  public static final int CDSWheelControllerOneID = 9;
-  public static final int CDSWheelControllerTwoID = 2;
-  public static final double CDSBeltSpeed = 0.25;
-  public static final double CDSWheelControllerSpeed = 0.15;
-  public static final Port colorSensorPort = Port.kOnboard; // Placeholder Value, to be changed
+  public static final int CDSWheelControllerOneID = 2;
+  public static final int CDSWheelControllerTwoID = 9;
+  public static final double CDSBeltSpeed = 0.40;
+  public static final double CDSWheelControllerSpeed = 0.25;
+  public static final int frontSensorActivation = 200;
+  public static final int middleSensorActivation = 450;
+  public static final int backSensorActivation = 600;
+
+  public static final boolean testMode = false; // if false CDS will eject balls of wrong color
 
   // spotless:off
   // Controller Constants {
-    public static final int portNumber0 = 0;
-    public static final int portNumber1 = 1;
+  public static final int portNumber0 = 0;
+  public static final int portNumber1 = 1;
 
-    // Buttons not in use
-    public static final int XButton = 1;
-    public static final int AButton = 2;
-    public static final int BButton = 3;
-    public static final int YButton = 4;
+  // Buttons not in use
+  public static final int XButton = 1;
+  public static final int AButton = 2;
+  public static final int BButton = 3;
+  public static final int YButton = 4;
 
-    // Intake Subsystem
-    public static final int LBumper = 5; // Intake forward
-    public static final int RBumper = 6; // Intake reverse
+  // Intake Subsystem
+  public static final int LBumper = 5; // Intake forward
+  public static final int RBumper = 6; // Intake reverse
 
-    // CDS Subsystem
-    public static final int LTriggerButton = 7; // CDS forward
-    public static final int RTriggerButton = 8; // CDS reverse
+  // CDS Subsystem
+  public static final int LTriggerButton = 7; // CDS forward
+  public static final int RTriggerButton = 8; // CDS reverse
 
-    // Shooter Prime/LimeLight
-    public static final int backButton = 9; // Button starts ShooterPrime
-    public static final int startButton = 10; // Button to align LimeLight
+  // Shooter Prime/LimeLight
+  public static final int backButton = 9; // Button starts ShooterPrime
+  public static final int startButton = 10; // Button to align LimeLight
 
-    // Shooter Subsystem mode change
-    public static final int LJoystickButton = 11; // Button for Shooter mode
-    public static final int RJoystickButton = 12; // BUtton for Shooter mode
+  // Shooter Subsystem mode change
+  public static final int LJoystickButton = 11; // Button for Shooter mode
+  public static final int RJoystickButton = 12; // BUtton for Shooter mode
 
-    // POV's not in use
-    public static final int POVup = 0;
-    public static final int POVdown = 180;
-    public static final int POVright = 90;
-    public static final int POVleft = 270;
+  // POV's not in use
+  public static final int POVup = 0;
+  public static final int POVdown = 180;
+  public static final int POVright = 90;
+  public static final int POVleft = 270;
 
-    // DriveBase Subsystem
-    public static final int leftJoystickX = 0; // Unused but will easily be accidentally activated if used
-    public static final int leftJoystickY = 1; // arcade forward / tank left turning
-    public static final int rightJoystickX = 2; // arcade turning
-    public static final int rightJoystickY = 3; // tank right turning
-  // }
+  // Joystick
+
+  // Unused but will easily be accidentally activated if used
+  public static final int leftJoystickX = 0;
+  public static final int leftJoystickY = 1; // arcade forward / tank left turning
+  public static final int rightJoystickX = 2; // arcade turning
+  public static final int rightJoystickY = 3; // tank right turning
 
   // Shooter Constants
   public static final class Shooter {
     public static final int shooterID = 10; // ID of the shooter
-    public static final int shooter2ID = 11;
+    public static final int shooter2ID = 11; // ID of the second shooter motor
     // public static final int hoodID = 0; // ID of the hood;
     public static final int shooterCargoID = 4;
 
@@ -229,20 +243,25 @@ public final class Constants {
     public static final double LLAngle =
         54.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as
     // exact as possible
-
-    public static final double kP = 6e-4;
-    public static final double kI = 6e-7;
-    public static final double kD = 0.0;
+    public static final double cargoForward = 0.65;
+    public static final double cargoReverse = -0.4;
+    public static final double kP = 2.5e-4;
+    public static final double kI = 19e-6;
+    public static final double kD = 0.005;
     public static final double kF = 0.0;
     public static final double kIZone = 0.9;
     public static final double kMaxOutput = 0;
     public static final double kMaxI = 0.9;
     public static final double kMaxISlotId = 0;
     public static final double kMinOutput = 1;
+    public static final double kA = 0.075;
   }
 
   // Climb Constants
   public static final int ClimbMotorOne = 5;
   public static final int ClimbMotorTwo = 12;
-  public static final int LimitSwitchChannel = 12; // Check what number this needs to be
+  public static final int climbHeightMax = 20;
+  public static final double[] climbRightPID = {0.25, 0.005, 1.0};
+  public static final double[] climbLeftPID = {0.25, 0.005, 1.0};
+  // public static final int LimitSwitchChannel = 12; // Check what number this needs to be
 }

@@ -4,25 +4,23 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.AutonModes;
+import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
-import frc.robot.commands.CDSReverseCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
+import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShooterHeld;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -30,8 +28,6 @@ import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import java.io.IOException;
-import java.nio.file.Path;
 
 // This class is where the bulk of the robot should be declared. Since Command-based is a
 // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -41,6 +37,7 @@ import java.nio.file.Path;
 
 public class RobotContainer {
   public static ShuffleboardTab debugTab;
+  public static ShuffleboardTab controllerDetection;
 
   // The robot's subsystems and commands are defined here...
   private static final Joystick driverJoystick = new Joystick(Constants.portNumber0);
@@ -49,7 +46,6 @@ public class RobotContainer {
   private JoystickButton[] buttons2 = new JoystickButton[13];
 
   // subsystems
-
   private static ClimbSubsystem climbSubsystem;
   private static DriveBaseSubsystem driveBaseSubsystem;
   private static CDSSubsystem CDSSubsystem;
@@ -63,19 +59,34 @@ public class RobotContainer {
   private IntakeReverseCommand intakeReverseCommand;
   private ClimbCommand climbCommand;
 
-  // private BeamBreakCommand beamBreakCommand = new BeamBreakCommand(intakeSubsystem);
-  private ShooterHeld shooterHeld;
+  private ShooterHeld shooterHeldLow, shooterHeldAuto;
   private CDSForwardCommand CDSForwardCommand;
-  private CDSReverseCommand CDSReverseCommand;
+  private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
 
   // auton
-  private Trajectory[] mTrajectories; // multiple trajectories
-  private int trajectoryIndex = 0;
-  private Trajectory trajectory;
+  private AutonModes autonModes;
+  private Command chosenAutonMode = null;
+
+  // Controller Check Variables
+  private NetworkTableEntry sbaxisCount0;
+  private NetworkTableEntry sbaxisCount1;
+  private NetworkTableEntry sbbuttonCount0;
+  private NetworkTableEntry sbbuttonCount1;
+  private int axisCount0;
+  private int buttonCount0;
+  private int axisCount1;
+  private int buttonCount1;
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
+    controllerDetection = Shuffleboard.getTab("Controller Detector");
+
+    sbaxisCount0 = controllerDetection.add("Port0 AxisCount", 0).withSize(2, 2).getEntry();
+    sbbuttonCount0 = controllerDetection.add("Port0 ButtonCount", 0).withSize(2, 2).getEntry();
+    sbaxisCount1 = controllerDetection.add("Port1 AxisCount", 0).withSize(2, 2).getEntry();
+    sbbuttonCount1 = controllerDetection.add("Port1 ButtonCount", 0).withSize(2, 2).getEntry();
+
     debugTab = Shuffleboard.getTab("debug");
 
     initSubsystems();
@@ -88,20 +99,39 @@ public class RobotContainer {
     }
     configureButtonBindings();
 
-    initializeTrajectories();
+    initAuton();
+  }
+
+  private void controllerCheck() {
+    axisCount0 = DriverStation.getStickAxisCount(Constants.portNumber0);
+    buttonCount0 = DriverStation.getStickButtonCount(Constants.portNumber0);
+    sbaxisCount0.setDouble(axisCount0);
+    sbbuttonCount0.setDouble(buttonCount0);
+
+    axisCount1 = DriverStation.getStickAxisCount(Constants.portNumber1);
+    buttonCount1 = DriverStation.getStickButtonCount(Constants.portNumber1);
+    sbaxisCount1.setDouble(axisCount1);
+    sbbuttonCount1.setDouble(buttonCount1);
+
+    System.out.printf(
+        "axisCount0 %d buttonCount0 %d axisCount1 %d buttonCount1 %d\n ",
+        axisCount0, buttonCount0, axisCount1, buttonCount1);
   }
 
   private void initSubsystems() {
+
     // subsystems
     for (Constants.Subsystems sub : Constants.Subsystems.values()) {
       if (sub.isEnabled()) {
+
+        controllerCheck();
 
         // System.out.println((String) k + " " + subSysEnables.get((String) k));
         switch (sub.toString()) {
           case "DriveBaseSubsystem":
             {
               System.out.println("Drivebase enabled");
-              driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, false);
+              driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, Constants.usingExternal);
               break;
             }
           case "CDSSubsystem":
@@ -130,7 +160,7 @@ public class RobotContainer {
             }
           case "ClimbSubsystem":
             {
-              if (!Constants.oneController) {
+              if (axisCount1 > 0 && buttonCount1 > 0) {
                 climbSubsystem = new ClimbSubsystem(operatorJoystick);
                 climbCommand = new ClimbCommand(climbSubsystem);
                 System.out.println("Climb enabled");
@@ -150,14 +180,32 @@ public class RobotContainer {
     }
     if (CDSSubsystem != null && shooterSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem);
     }
-    if (intakeSubsystem != null) {
-      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
-      intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
+    // CDS
+    if (CDSSubsystem != null) {
+      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+      // CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
+      // CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
+      // CDSSubsystem.senseColor();
+    }
+
+    if (intakeSubsystem != null && CDSSubsystem != null) {
+      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, CDSSubsystem);
+      intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, CDSSubsystem);
+      outtakeCommand = new OuttakeCommand(intakeSubsystem, CDSSubsystem);
+      CDSSubsystem.setDefaultCommand(new CDSBallManagementCommand(CDSSubsystem, intakeSubsystem));
     }
     if (shooterSubsystem != null && CDSSubsystem != null) {
+<<<<<<< HEAD
       shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, CDSSubsystem, driveBaseSubsystem, (limelightSubsystem != null));
+=======
+      shooterHeldAuto =
+          new ShooterHeld(
+              shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
+      shooterHeldLow =
+          new ShooterHeld(
+              shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
+>>>>>>> origin/main
     }
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
@@ -174,13 +222,17 @@ public class RobotContainer {
   // it to a {@link
   // edu.wpi.first.wpilibj2.command.button.JoystickButton}.
   private void configureButtonBindings() {
+    controllerCheck();
 
-    // Intake
-    if (intakeForwardCommand != null && intakeReverseCommand != null) {
+    // Intake / CDS
+    if (intakeForwardCommand != null && outtakeCommand != null) {
+      // takes ball in
       buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
-      buttons[Constants.RTriggerButton].whileHeld(intakeReverseCommand);
+      // spits ball out
+      buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
     }
 
+<<<<<<< HEAD
     // Shooter
     if (shooterSubsystem != null && shooterHeld != null) {
       buttons[Constants.backButton].whileHeld(shooterHeld);
@@ -188,15 +240,28 @@ public class RobotContainer {
           new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
       buttons[Constants.RJoystickButton].whenPressed(
           new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
+=======
+    if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
+      // Auto Aim Shot
+      buttons[Constants.LBumper].whileHeld(
+          shooterHeldAuto.beforeStarting(
+              () -> {
+                shooterSubsystem.setAimMode(Constants.AimModes.AUTO);
+              },
+              shooterSubsystem));
+      // Fender Shot
+      buttons[Constants.LTriggerButton].whileHeld(
+          shooterHeldLow.beforeStarting(
+              () -> {
+                shooterSubsystem.setAimMode(Constants.AimModes.LOW);
+              },
+              shooterSubsystem));
+>>>>>>> origin/main
     }
 
-    if (CDSForwardCommand != null && CDSReverseCommand != null) {
-      buttons[Constants.LTriggerButton].whileHeld(CDSForwardCommand);
-      buttons[Constants.RTriggerButton].whileHeld(CDSReverseCommand);
-      // CDSSubsystem.getAllianceColor();
-      CDSSubsystem.senseColor();
-    }
+    if (axisCount1 == 0 && buttonCount1 == 0) {
 
+<<<<<<< HEAD
     // Limelight
     if (limelightAlign != null) {
       buttons[Constants.AButton].whenPressed(limelightAlign);
@@ -206,55 +271,82 @@ public class RobotContainer {
       if (!Constants.oneController) {
         buttons2[Constants.startButton].whenPressed(
             new InstantCommand(climbSubsystem::toggleClimbEnable, climbSubsystem));
+=======
+      // Shooter
+      if (shooterSubsystem != null && shooterHeldAuto != null) {
+        buttons[Constants.backButton].whenPressed(shooterHeldAuto);
+        buttons[Constants.LJoystickButton].whenPressed(
+            new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
+        buttons[Constants.RJoystickButton].whenPressed(
+            new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
+>>>>>>> origin/main
       }
+
+      // Limelight
+      if (limelightAlign != null) {
+        buttons[Constants.startButton].whenPressed(limelightAlign);
+      }
+
+      // ClimbSubysystem has no binding because there are not enuf axises
+      if (climbSubsystem != null) {}
+
+      System.out.printf("Using Testing One-controller button mappings");
+    } else {
+
+      if (climbSubsystem != null) {
+        buttons2[Constants.startButton].whenPressed(
+            new InstantCommand(climbSubsystem::climbEnabbledEnable, climbSubsystem));
+      }
+
+      if (outtakeCommand != null && CDSForwardCommand != null) {
+        buttons2[Constants.RBumper].whileHeld(CDSForwardCommand);
+        buttons2[Constants.RTriggerButton].whileHeld(outtakeCommand);
+      }
+
+      System.out.printf("Using Competition Two-controller button mappings");
     }
   }
 
-  private void initializeTrajectories() {
-    // auton with just a one straight path
-    String trajectoryJSON = "paths/Straight.wpilib.json";
-    try {
-      Path trajectoryPath =
-          Filesystem.getDeployDirectory()
-              .toPath()
-              .resolve(trajectoryJSON); // goes to scr/main/deploy/paths
-      trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-
-    } catch (IOException ex) {
-      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+  public Command getAutonomousCommand(String pathname) {
+    if (autonModes != null) {
+      chosenAutonMode = autonModes.getChosenCommand(pathname);
+      return chosenAutonMode;
     }
-  }
-
-  // Use this to pass the autonomous command to the main {@link Robot} class.
-  // @return the command to run in autonomous
-  public Command getAutonomousCommand() {
-    if (driveBaseSubsystem != null && trajectory != null) {
-      // Ramsete Command for Pathweaver
-      RamseteCommand ramseteCommand =
-          new RamseteCommand(
-              trajectory,
-              driveBaseSubsystem::getPose,
-              new RamseteController(
-                  Constants.ramseteB,
-                  Constants.ramseteZeta), // ramsete follower to follow trajectory
-              Constants.driveKinematics,
-              driveBaseSubsystem::acceptWheelSpeeds,
-              driveBaseSubsystem);
-
-      driveBaseSubsystem.resetOdometry(trajectory.getInitialPose());
-
-      return ramseteCommand.andThen(() -> driveBaseSubsystem.acceptWheelSpeeds(0, 0));
-    }
-
     return null;
   }
 
-  // TODO: create get methods for other subsystems to pass into TabContainer, or find a more
+  private void initAuton() {
+    if (driveBaseSubsystem != null) {
+      if (shooterSubsystem != null
+          && limelightSubsystem != null
+          && CDSSubsystem != null
+          && intakeSubsystem != null) {
+        autonModes =
+            new AutonModes(
+                driveBaseSubsystem,
+                shooterSubsystem,
+                limelightSubsystem,
+                CDSSubsystem,
+                intakeSubsystem);
+
+      } else {
+        autonModes =
+            new AutonModes(
+                driveBaseSubsystem); // default constructor, if other subsystems are disabled only
+        // use drivebase for taxi
+      }
+    } else {
+      autonModes = null;
+    }
+  }
+
+  // TODO: create get methods for other subsystems to pass into TabContainer, or
+  // find a more
   // efficient way
   public static DriveBaseSubsystem getDriveBase() {
-    if (driveBaseSubsystem == null) {
-      return null;
+    if (driveBaseSubsystem != null) {
+      return driveBaseSubsystem;
     }
-    return driveBaseSubsystem;
+    return null;
   }
 }

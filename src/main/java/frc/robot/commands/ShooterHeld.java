@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
@@ -26,6 +27,8 @@ public class ShooterHeld extends CommandBase {
       CDSSubsystem cdsSubsystem,
       DriveBaseSubsystem driveBaseSubsystem,
       boolean llEnabled) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(cdsSubsystem);
     addRequirements(shooterSubsystem);
     addRequirements(driveBaseSubsystem);
     if (llEnabled) {
@@ -34,10 +37,9 @@ public class ShooterHeld extends CommandBase {
     m_DriveBaseSubsystem = driveBaseSubsystem;
     m_ShooterSubsystem = shooterSubsystem;
     m_LimelightSubsystem = limelightSubsystem;
-    // m_CDSSubsystem = cdsSubsystem;
+    // m_CDSSubsystem = CDSSubsystem;
     SmartDashboard.putBoolean("wheelReady", false);
     LLEnabled = llEnabled;
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -55,31 +57,33 @@ public class ShooterHeld extends CommandBase {
       // If below will bypass the LL check if the stopper is already running, or the LL is disabled.
       // Otherwise, alignment is checked.
       if (i > 0 || !LLEnabled || m_LimelightSubsystem.calculatePID() == 0.0) {
+        if (i == 0) {
+          m_CDSSubsystem.CDSBeltToggle(false);
+          m_ShooterSubsystem.runCargo(Constants.Shooter.cargoForward);
+          m_ShooterSubsystem.setCargoBoolean(true);
+        }
         i++;
-        m_ShooterSubsystem.runCargo(true, true);
-        m_ShooterSubsystem.setCargoBoolean(true);
         if (i >= 50) { // 1000 miliseconds delay TODO: Use a CDS method for this when possible
           i = 0;
-          m_ShooterSubsystem.runCargo(false, false);
+          m_CDSSubsystem.stopCDS();
+          m_ShooterSubsystem.runCargo(0);
           m_ShooterSubsystem.setCargoBoolean(false);
         }
-
-      } else {
-        m_ShooterSubsystem.runCargo(false, false);
       }
-      m_ShooterSubsystem.updateIdelay(i);
+    } else {
+      m_ShooterSubsystem.setCargoBoolean(false);
+      m_CDSSubsystem.stopCDS();
+      m_ShooterSubsystem.runCargo(Constants.Shooter.cargoReverse);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_ShooterSubsystem.runCargo(false, false);
+    m_ShooterSubsystem.runCargo(0);
     m_ShooterSubsystem.windFlywheel(0);
     m_ShooterSubsystem.setCargoBoolean(false);
-    m_ShooterSubsystem.updateIdelay(0);
-
-    // SmartDashboard.putBoolean("wheelReady", false);
+    m_CDSSubsystem.stopCDS();
   }
 
   // Returns true when the command should end.

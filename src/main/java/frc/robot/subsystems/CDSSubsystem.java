@@ -5,9 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -16,18 +14,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.common.hardware.ColorSensorMuxed;
 import frc.robot.common.hardware.MotorController;
 
-/** Add your docs here. */
 public class CDSSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private MotorController CDSBeltController;
   private MotorController CDSWheelControllerOne;
   private MotorController CDSWheelControllerTwo;
-  private ColorSensorV3 colorSensorOne;
-  private DigitalInput backBeamBreak;
   private String allianceColor;
+  private ColorSensorMuxed colorSensors;
+
+  private boolean isReady = true; // Variable for whether CDS is ready for shooter action
+  private int ballCount = 0;
+  private static int sensorReadDelay = 0; // Delay in reading sensors in number of 20ms loops
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry CDSWheelControllerDirection =
@@ -47,56 +48,129 @@ public class CDSSubsystem extends SubsystemBase {
 
   public CDSSubsystem() {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
+    CDSBeltController.setInverted(true);
     CDSWheelControllerOne =
         new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerOneID, 40);
     CDSWheelControllerTwo =
         new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerTwoID, 40);
 
-    CDSWheelControllerTwo.getSparkMax().follow(CDSWheelControllerOne.getSparkMax(), true);
+    CDSWheelControllerOne.setInverted(true);
+    CDSWheelControllerTwo.follow(CDSWheelControllerOne, true);
 
-    colorSensorOne = new ColorSensorV3(Constants.colorSensorPort);
-    backBeamBreak = new DigitalInput(Constants.initialBallSensorChannel);
+    CDSBeltController.setIdleMode(IdleMode.kBrake);
+    CDSWheelControllerOne.setIdleMode(IdleMode.kCoast);
+
+    colorSensors = new ColorSensorMuxed(0, 1, 3);
 
     String allianceColor = DriverStation.getAlliance().toString();
     SmartDashboard.putString("Alliance Color", allianceColor);
   }
 
-  public void CDSBeltWheelControllerToggle(boolean reverse) {
+  public void CDSToggleAll(boolean reverse) {
     if (reverse) {
-      CDSWheelControllerOne.getSparkMax().set(Constants.CDSWheelControllerSpeed);
-      CDSWheelControllerDirection.setString("Reverse");
+      CDSWheelControllerOne.set(-Constants.CDSWheelControllerSpeed);
+      SmartDashboard.putString("CDS Wheel Direction", "Reverse");
+      SmartDashboard.putNumber("CDS Wheel Speed", -Constants.CDSWheelControllerSpeed);
 
-      CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
-      CDSBeltController.setIdleMode(IdleMode.kBrake);
-      CDSBeltControllerDirection.setString("Reverse");
-
+      CDSBeltController.set(-Constants.CDSBeltSpeed);
+      SmartDashboard.putString("CDS Belt Direction", "Reverse");
+      SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
     } else {
-      CDSWheelControllerOne.getSparkMax().set(Constants.CDSWheelControllerSpeed);
-      CDSWheelControllerDirection.setString("Forward");
+      CDSWheelControllerOne.set(Constants.CDSWheelControllerSpeed);
+      SmartDashboard.putString("CDS Wheel Direction", "Forward");
+      SmartDashboard.putNumber("CDS Wheel Speed", Constants.CDSWheelControllerSpeed);
 
-      CDSBeltController.getSparkMax().set(-Constants.CDSBeltSpeed);
-      CDSBeltControllerDirection.setString("Forward");
+      CDSBeltController.set(Constants.CDSBeltSpeed);
+      SmartDashboard.putString("CDS Belt Direction", "Forward");
+      SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
     }
   }
 
-  public int[] getSensorStatus() {
-    int frontStatus = colorSensorOne.getProximity() > 800 ? 1 : 0;
-    int backStatus = backBeamBreak.get() ? 1 : 0;
-    int[] beamBreakArray = {frontStatus, backStatus};
+  public void CDSWheelToggle(boolean reverse) {
+    if (reverse) {
+      CDSWheelControllerOne.set(-Constants.CDSWheelControllerSpeed);
+      CDSWheelControllerDirection.setString("Reverse");
+    } else {
+      CDSWheelControllerOne.set(Constants.CDSWheelControllerSpeed);
+      SmartDashboard.putString("CDS Wheel Direction", "Forward");
+      SmartDashboard.putNumber("CDS Wheel Speed", Constants.CDSWheelControllerSpeed);
+    }
+  }
+
+  public void CDSBeltToggle(boolean reverse) {
+    if (reverse) {
+      CDSBeltController.set(-Constants.CDSBeltSpeed);
+      SmartDashboard.putString("CDS Belt Direction", "Reverse");
+      SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
+
+    } else {
+      CDSBeltController.set(Constants.CDSBeltSpeed);
+      SmartDashboard.putString("CDS Belt Direction", "Forward");
+      SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
+    }
+  }
+
+  public double getBeltSpeed() {
+    return CDSBeltController.getSpeed();
+  }
+
+  public double getWheelSpeed() {
+    return CDSWheelControllerOne.getSpeed();
+  }
+
+  public void stopCDS() {
+    // stops all motors in the CDS
+    CDSWheelControllerOne.set(0.0);
+    CDSBeltController.set(0.0);
+    SmartDashboard.putNumber("CDS Wheel Speed", 0.0);
+    SmartDashboard.putNumber("CDS Belt Speed", 0.0);
+  }
+
+  public void stopCDSWheel() {
+    // Stops only the centering wheels
+    CDSWheelControllerOne.set(0.0);
+    SmartDashboard.putNumber("CDS Wheel Speed", 0.0);
+  }
+
+  public boolean[] getSensorStatus() {
+    int[] sensorStatuses = colorSensors.getProximities();
+    SmartDashboard.putNumber("Front Sensor Proximity", sensorStatuses[2]);
+    SmartDashboard.putNumber("Middle Sensor Proximity", sensorStatuses[1]);
+    SmartDashboard.putNumber("Back Sensor Proximity", sensorStatuses[0]);
+
+    boolean backStatus = sensorStatuses[0] > Constants.backSensorActivation;
+    boolean middleStatus = sensorStatuses[1] > Constants.middleSensorActivation;
+    boolean frontStatus = sensorStatuses[2] > Constants.frontSensorActivation;
+    boolean[] beamBreakArray = {backStatus, middleStatus, frontStatus};
+
+    ballCount = 0;
+    for (boolean status : beamBreakArray) {
+      if (status) {
+        ballCount++;
+      }
+    }
+    SmartDashboard.putNumber("Ball Count", ballCount);
+
     return beamBreakArray;
   }
 
-  /*
-  public String getAllianceColor() {
-    Alliance alliance = DriverStation.getAlliance();
-    SmartDashboard.putString("Alliance Color", alliance.toString());
-    return alliance.toString();
-  }*/
+  public int getNextOpenSensor(boolean[] sensorStatus) {
+    // Starts at 0 and ends short of the centering wheel
+    for (int i = 0; i < sensorStatus.length - 1; i++) {
+      if (!sensorStatus[i]) {
+        return i;
+      }
+    }
+    return -1;
+  }
 
   public String senseColor() {
-    Color color = colorSensorOne.getColor();
-    double redAmount = color.red;
-    double blueAmount = color.blue;
+    Color[] colors = colorSensors.getColors();
+
+    // Only sensing colors for first sensor so that we can handle it when it's coming in and not
+    // dealing with any other complexities
+    double redAmount = colors[2].red;
+    double blueAmount = colors[2].blue;
     if (redAmount > blueAmount) {
       SmartDashboard.putString("Ball Color", "Red");
       return "Red";
@@ -106,22 +180,21 @@ public class CDSSubsystem extends SubsystemBase {
     }
   }
 
-  public void stopCDS() {
-    CDSWheelControllerOne.getSparkMax().set(0.0);
-    CDSBeltController.getSparkMax().set(0.0);
+  public String getAllianceColor() {
+    return allianceColor;
   }
 
-  @Override
-  public void periodic() {
-    CDSBeltControllerSpeed.setDouble(CDSBeltController.getEncoder().getVelocity());
-    CDSWheelControllerSpeed.setDouble(CDSWheelControllerTwo.getEncoder().getVelocity());
-    String ballColor = senseColor();
-    SmartDashboard.putString("Ball Color", ballColor);
-    SmartDashboard.putBoolean("Ball Color Match", ballColor == allianceColor);
-
-    // Ball indexing
-    int[] sensorStatus = getSensorStatus();
-    int ballCount = sensorStatus[0] + sensorStatus[1];
-    SmartDashboard.putNumber("Ball Count", ballCount);
+  public int getBallCount() {
+    return ballCount;
   }
+
+  public boolean getReady() {
+    return isReady;
+  }
+
+  public void setReady(boolean status) {
+    isReady = status;
+  }
+
+  public void periodic() {}
 }
