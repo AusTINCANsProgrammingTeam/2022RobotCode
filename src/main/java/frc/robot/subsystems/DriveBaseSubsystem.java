@@ -112,10 +112,10 @@ public class DriveBaseSubsystem extends SubsystemBase {
         m_motorControllers[Constants.driveRightFrontIndex]);
 
     //open loop ramp rate    
-    //m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax().setOpenLoopRampRate(.1);
-    //m_motorControllers[Constants.driveRightFrontIndex].getSparkMax().setOpenLoopRampRate(.1);
-    //m_motorControllers[Constants.driveLeftRearIndex].getSparkMax().setOpenLoopRampRate(.1);
-    //m_motorControllers[Constants.driveRightRearIndex].getSparkMax().setOpenLoopRampRate(.1);
+    m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax().setOpenLoopRampRate(.25);
+    m_motorControllers[Constants.driveRightFrontIndex].getSparkMax().setOpenLoopRampRate(.25);
+    m_motorControllers[Constants.driveLeftRearIndex].getSparkMax().setOpenLoopRampRate(.25);
+    m_motorControllers[Constants.driveRightRearIndex].getSparkMax().setOpenLoopRampRate(.25);
 
     // differential drive
     m_differentialDrive =

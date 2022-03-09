@@ -101,6 +101,8 @@ public class ShooterSubsystem extends SubsystemBase {
     // Initializes the SparkMAX for the flywheel motors
     flywheelController = new MotorController("Flywheel", Constants.Shooter.shooterID, 40, true);
     flywheel2Controller = new MotorController("Flywheel 2", Constants.Shooter.shooter2ID);
+    flywheelController.getSparkMax().enableVoltageCompensation(11);
+    flywheel2Controller.getSparkMax().enableVoltageCompensation(11);
     flywheelPID = flywheelController.getPID();
     flywheelEncoder = flywheelController.getEncoder();
     flywheel2Controller.getSparkMax().follow(flywheelController.getSparkMax(), true);
