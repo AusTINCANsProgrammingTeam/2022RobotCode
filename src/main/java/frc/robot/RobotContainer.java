@@ -179,15 +179,15 @@ public class RobotContainer {
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
     }
     if (CDSSubsystem != null && shooterSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
     }
     // CDS
-    if (CDSSubsystem != null) {
+    /*if (CDSSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
       // CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
       // CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
       // CDSSubsystem.senseColor();
-    }
+    }*/
 
     if (intakeSubsystem != null && CDSSubsystem != null) {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, CDSSubsystem);

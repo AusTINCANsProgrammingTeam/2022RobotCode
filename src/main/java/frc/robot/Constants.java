@@ -186,6 +186,8 @@ public final class Constants {
 
   public static final boolean testMode = false; // if false CDS will eject balls of wrong color
 
+  public static final double stopperWheelSpeed = -0.10;
+
   // spotless:off
   // Controller Constants {
   public static final int portNumber0 = 0;

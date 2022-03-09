@@ -9,29 +9,35 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
+import frc.robot.subsystems.CDSSubsystem;
 
 /** Add your docs here. */
 public class IntakeSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
+  private CDSSubsystem cdsSubsystem;
   private MotorController intakeMotorControllerOne;
 
   public IntakeSubsystem() {
     intakeMotorControllerOne =
         new MotorController("Intake Motor One", Constants.intakeMotorOneID, 40);
     intakeMotorControllerOne.setInverted(true);
+    cdsSubsystem = new CDSSubsystem();
   }
 
   public void toggleIntake(boolean reverse) {
-    if (reverse) {
-      intakeMotorControllerOne.set(-Constants.intakeMotorSpeed);
-      SmartDashboard.putString("Intake Motor Direction", "Reverse");
-      SmartDashboard.putNumber("Intake Motor Speed", -Constants.intakeMotorSpeed);
-    } else {
-      intakeMotorControllerOne.set(Constants.intakeMotorSpeed);
-      SmartDashboard.putString("Intake Motor Direction", "Forward");
-      SmartDashboard.putNumber("Intake Motor Speed", Constants.intakeMotorSpeed);
+    // only runs intake if ball count isn't too high (addresses #140)
+    if (cdsSubsystem.getBallCount() <= 2) {
+      if (reverse) {
+        intakeMotorControllerOne.set(-Constants.intakeMotorSpeed);
+        SmartDashboard.putString("Intake Motor Direction", "Reverse");
+        SmartDashboard.putNumber("Intake Motor Speed", -Constants.intakeMotorSpeed);
+      } else {
+        intakeMotorControllerOne.set(Constants.intakeMotorSpeed);
+        SmartDashboard.putString("Intake Motor Direction", "Forward");
+        SmartDashboard.putNumber("Intake Motor Speed", Constants.intakeMotorSpeed);
+      }
     }
   }
 

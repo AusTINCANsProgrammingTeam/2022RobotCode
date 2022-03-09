@@ -26,11 +26,9 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSWheelControllerTwo;
   private String allianceColor;
   private PicoColorSensor picoSensors = new PicoColorSensor();
-  //private ColorSensorMuxed colorSensors;
 
   private boolean isReady = true; // Variable for whether CDS is ready for shooter action
   private int ballCount = 0;
-  private static int sensorReadDelay = 0; // Delay in reading sensors in number of 20ms loops
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry CDSWheelControllerDirection =
@@ -60,8 +58,6 @@ public class CDSSubsystem extends SubsystemBase {
     CDSWheelControllerTwo.follow(CDSWheelControllerOne, true);
 
     CDSBeltController.setIdleMode(IdleMode.kBrake);
-    CDSWheelControllerOne.setIdleMode(IdleMode.kCoast);
-
 
     String allianceColor = DriverStation.getAlliance().toString();
     SmartDashboard.putString("Alliance Color", allianceColor);
