@@ -154,19 +154,19 @@ public class ClimbSubsystem extends SubsystemBase {
       joystickAxis = -m_climbJoystick.getRawAxis(Constants.leftJoystickY);
       if (joystickAxis > 0.1 || joystickAxis < -0.1) {
         if (joystickAxis > 0) {
-          if (climbHeightOne <= Constants.climbHeightMax) {
-            climbHeightOne = climbHeightOne + (joystickAxis / 10);
+          if (climbHeightOne  + (joystickAxis / 10 * 8) <= Constants.climbHeightMax) {
+            climbHeightOne = climbHeightOne + (joystickAxis / 10 * 8);
           }
-          if (climbHeightTwo <= Constants.climbHeightMax) {
-            climbHeightTwo = climbHeightTwo + (joystickAxis / 10);
+          if (climbHeightTwo  + (joystickAxis / 10 * 8) <= Constants.climbHeightMax) {
+            climbHeightTwo = climbHeightTwo + (joystickAxis / 10 * 8);
           }
         }
         if (joystickAxis < 0) {
-          if (climbHeightOne >= 0) {
-            climbHeightOne = climbHeightOne + (joystickAxis / 10);
+          if (climbHeightOne + (joystickAxis / 10 * 6) >= 0) {
+            climbHeightOne = climbHeightOne + (joystickAxis / 10 * 6);
           }
-          if (climbHeightTwo >= 0) {
-            climbHeightTwo = climbHeightTwo + (joystickAxis / 10);
+          if (climbHeightTwo + (joystickAxis / 10 * 6) >= 0) {
+            climbHeightTwo = climbHeightTwo + (joystickAxis / 10 * 6);
           }
         }
       }
