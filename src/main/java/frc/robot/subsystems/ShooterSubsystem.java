@@ -100,19 +100,13 @@ public class ShooterSubsystem extends SubsystemBase {
     flywheelPID = flywheelController.getPIDCtrl();
     flywheelEncoder = flywheelController.getEncoder();
     flywheelController.setInverted(true);
-    flywheel2Controller.follow(flywheelController);
+    flywheel2Controller.follow(flywheelController, true);
     // Initializes the SparkMAX for the hood TODO: Set this up when possible
     /*hoodController = new  MotorController("Hood", Constants.hoodID);
     hoodPID = hoodController.getPID();
     hoodEncoder = hoodController.getEncoder();*/
     // Initializes the SparkMAX for the cargo stopper
     stopperController = new MotorController("Shooter Cargo", Constants.Shooter.shooterCargoID);
-    // Initializes PID for the flywheel
-    flywheelPID.setP(5e-4);
-    flywheelPID.setI(6e-7);
-    flywheelPID.setIMaxAccum(0.9, 0);
-    flywheelPID.setD(0.0);
-    flywheelPID.setOutputRange(0, 1);
     // Initializes PID for the hood TODO: Set this up when possible
     /*hoodPID.setP(0.0);
     hoodPID.setI(0.0);

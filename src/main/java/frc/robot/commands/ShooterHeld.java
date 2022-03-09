@@ -32,7 +32,7 @@ public class ShooterHeld extends CommandBase {
     }
     m_ShooterSubsystem = shooterSubsystem;
     m_LimelightSubsystem = limelightSubsystem;
-    // m_CDSSubsystem = CDSSubsystem;
+    m_CDSSubsystem = CDSSubsystem;
     SmartDashboard.putBoolean("wheelReady", false);
     LLEnabled = llEnabled;
   }
@@ -56,13 +56,13 @@ public class ShooterHeld extends CommandBase {
           m_ShooterSubsystem.runCargo(Constants.Shooter.cargoForward);
           m_ShooterSubsystem.setCargoBoolean(true);
         }
-        i++;
+        /*i++;
         if (i >= 50) { // 1000 miliseconds delay TODO: Use a CDS method for this when possible
           i = 0;
           m_CDSSubsystem.stopCDS();
           m_ShooterSubsystem.runCargo(0);
           m_ShooterSubsystem.setCargoBoolean(false);
-        }
+        }*/
       }
     } else {
       m_ShooterSubsystem.setCargoBoolean(false);

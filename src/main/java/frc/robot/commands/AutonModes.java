@@ -172,7 +172,7 @@ public class AutonModes {
                   shooterSubsystem,
                   limelightSubsystem,
                   cdsSubsystem,
-                  true), // also has a time delay of 2-3 seconds
+                  (limelightSubsystem != null)), // also has a time delay of 2-3 seconds
               new WaitCommand(Constants.delaytaxi),
               oneBallRamseteCommand
                   .beforeStarting(
@@ -195,7 +195,7 @@ public class AutonModes {
               twoBallParallel,
               new WaitCommand(Constants.delayshot),
               // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem)
-              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true)
+              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, (limelightSubsystem != null))
                   .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
 
       threeBallCommand = null;
