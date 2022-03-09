@@ -6,6 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.hal.SerialPortJNI;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
@@ -94,7 +95,8 @@ public class PicoColorSensor implements AutoCloseable {
 
   private void threadMain() {
     // Using JNI for a non allocating read
-    int port = SerialPortJNI.serialInitializePort((byte)1);
+    int port = SerialPortJNI.serialInitializePort((byte) 2); // kUSB1
+
     SerialPortJNI.serialSetBaudRate(port, 115200);
     SerialPortJNI.serialSetDataBits(port, (byte)8);
     SerialPortJNI.serialSetParity(port, (byte)0);
@@ -121,7 +123,7 @@ public class PicoColorSensor implements AutoCloseable {
           threadLock.lock();
           this.hasColor0 = false;
           this.hasColor1 = false;
-		  this.hasColor2 = false;
+		      this.hasColor2 = false;
         } finally {
           threadLock.unlock();
         }
@@ -172,7 +174,7 @@ public class PicoColorSensor implements AutoCloseable {
         this.lastReadTime = ts;
         this.hasColor0 = hasColor0;
         this.hasColor1 = hasColor1;
-		this.hasColor2 = hasColor2;
+		    this.hasColor2 = hasColor2;
         if (hasColor0) {
           this.color0.red = color0.red;
           this.color0.green = color0.green;
