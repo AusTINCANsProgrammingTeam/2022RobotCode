@@ -54,6 +54,9 @@ public class AutonModes {
   private Command threeBallCommand;
   private Command fourBallCommand;
 
+  // amount of time before starting auton
+  public static double initialWaitTime = 1;
+
   // this constructor is the default, only needs driveBaseSubsystem, useful when only wanting to
   // test taxi without worrying about other subsystems
   public AutonModes(DriveBaseSubsystem d) {
@@ -124,12 +127,12 @@ public class AutonModes {
   }
 
   private void initializeTrajectories() {
-    taxiTrajectory = getTrajectory("paths/TaxiOut.wpilib.json");
+    taxiTrajectory = getTrajectory(Constants.taxiPath);
 
     if (allSubsystemsEnabled) {
-      oneBallTrajectory = getTrajectory("paths/TaxiOutFromFender.wpilib.json");
+      oneBallTrajectory = getTrajectory(Constants.oneBallPath);
 
-      twoBallTrajectory = getTrajectory("paths/TaxiOutToGrabBall.wpilib.json");
+      twoBallTrajectory = getTrajectory(Constants.twoBallPath);
 
       // threeBallTrajectories
       // fourBallTrajectories
@@ -150,28 +153,31 @@ public class AutonModes {
   }
 
   private void initializeCommandGroups() {
-    // TODO: the wait time should not be a constant, should be configurable
+
+    // TODO: add deploy intake command at the beginning of each one
 
     taxiCommand =
         new SequentialCommandGroup(
-            new WaitCommand(Constants.delaytaxi),
-            // taxiRamseteCommands[0]);
-            taxiRamseteCommand.beforeStarting(
-                () -> driveBaseSubsystem.resetOdometry(taxiTrajectory.getInitialPose())));
+            new WaitCommand(initialWaitTime), // units in seconds
+            taxiRamseteCommand
+                .beforeStarting(
+                    () -> driveBaseSubsystem.resetOdometry(taxiTrajectory.getInitialPose()))
+                .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
 
     if (allSubsystemsEnabled) {
       oneBallCommand =
           new SequentialCommandGroup(
-              new WaitCommand(Constants.delayshot),
-              // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem),
+              new WaitCommand(initialWaitTime),
               new ShooterPressed(
                   shooterSubsystem,
                   limelightSubsystem,
                   cdsSubsystem,
-                  true), // also has a time delay of 2-3 seconds
+                  (limelightSubsystem != null)), // also has a time delay of 2-3 seconds
               new WaitCommand(Constants.delaytaxi),
-              oneBallRamseteCommand.beforeStarting(
-                  () -> driveBaseSubsystem.resetOdometry(oneBallTrajectory.getInitialPose())));
+              oneBallRamseteCommand
+                  .beforeStarting(
+                      () -> driveBaseSubsystem.resetOdometry(oneBallTrajectory.getInitialPose()))
+                  .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
 
       twoBallParallel =
           new ParallelDeadlineGroup(
@@ -179,15 +185,20 @@ public class AutonModes {
                   () ->
                       driveBaseSubsystem.resetOdometry(
                           twoBallTrajectory.getInitialPose())), // go out to get ball
-              new IntakeForwardCommand(intakeSubsystem, cdsSubsystem));
+              new IntakeForwardCommand(intakeSubsystem, cdsSubsystem)
+                  .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
 
       twoBallCommand =
           new SequentialCommandGroup(
-              new WaitCommand(Constants.delaytaxi),
+              new WaitCommand(initialWaitTime),
               twoBallParallel,
               new WaitCommand(Constants.delayshot),
-              // new ShooterPrime(shooterSubsystem, limelightSubsystem, cdsSubsystem)
-              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true));
+              new ShooterPressed(
+                      shooterSubsystem,
+                      limelightSubsystem,
+                      cdsSubsystem,
+                      (limelightSubsystem != null))
+                  .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
 
       threeBallCommand = null;
       fourBallCommand = null;
@@ -197,23 +208,27 @@ public class AutonModes {
   public Command getChosenCommand(String commandName) {
     switch (commandName) {
       case "taxi":
-        System.out.println("Taxi command chosen.");
+        System.out.println("Auton: Taxi mode selected.");
         return taxiCommand;
       case "one ball":
-        System.out.println("One ball command chosen.");
+        System.out.println("Auton: One Ball mode selected.");
         return oneBallCommand;
       case "two ball":
-        System.out.println("Two ball command chosen.");
+        System.out.println("Auton: Two Ball mode selected.");
         return twoBallCommand;
       case "three ball":
-        System.out.println("Three ball command chosen.");
+        System.out.println("Auton: Three Ball mode selected.");
         return threeBallCommand;
       case "four ball":
-        System.out.println("Four ball command chosen.");
+        System.out.println("Auton: Four Ball mode selected.");
         return fourBallCommand;
       default:
-        System.out.println("No command chosen.");
+        System.out.println("Auton: No mode selected.");
         return null;
     }
+  }
+
+  public static void setWaitTime(double waitTime) {
+    initialWaitTime = waitTime; // get value from shuffleboard, units in seconds
   }
 }

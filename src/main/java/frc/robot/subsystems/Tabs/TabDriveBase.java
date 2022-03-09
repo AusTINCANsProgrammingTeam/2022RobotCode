@@ -4,7 +4,9 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.AutonModes;
 import frc.robot.subsystems.DriveBaseSubsystem;
+import java.util.Map;
 
 public class TabDriveBase {
 
@@ -14,6 +16,7 @@ public class TabDriveBase {
   private NetworkTableEntry sbGyroAngle;
   private NetworkTableEntry sbLeftPosition;
   private NetworkTableEntry sbRightPosition;
+  private NetworkTableEntry sbWaitTimeSlider;
 
   // TODO: other indicators for motor controllers: if inverted, what motors they're following, +
   // other factors important to driver and debugging
@@ -39,6 +42,14 @@ public class TabDriveBase {
 
     sbLeftPosition = dtTab.add("Left Position", 0).withSize(2, 2).withPosition(0, 3).getEntry();
     sbRightPosition = dtTab.add("Right Position", 0).withSize(2, 2).withPosition(6, 3).getEntry();
+
+    // This is the tab for controlling auton
+    sbWaitTimeSlider =
+        Shuffleboard.getTab("Auton")
+            .add("Wait Time", 1)
+            .withWidget(BuiltInWidgets.kNumberSlider)
+            .withProperties(Map.of("min", 1, "max", 10)) // specify widget properties here
+            .getEntry();
   }
 
   public void periodic() {
@@ -54,6 +65,8 @@ public class TabDriveBase {
       sbGyroAngle.setDouble(gyroAngle);
       sbLeftPosition.setDouble(positions[0]); // in meters
       sbRightPosition.setDouble(positions[1]);
+
+      AutonModes.setWaitTime(sbWaitTimeSlider.getDouble(1));
 
       // TODO: compare encoder value to value from biconsumer, should be equal
       SmartDashboard.putNumber("left speed (rpm) [encoder]", leftSpeed);
