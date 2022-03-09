@@ -129,6 +129,14 @@ public class CDSSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("CDS Wheel Speed", 0.0);
   }
 
+  public boolean sensorsOnline() {
+    boolean sensor0Online = picoSensors.isSensor0Connected(); 
+    boolean sensor1Online = picoSensors.isSensor1Connected();
+    boolean sensor2Online = picoSensors.isSensor2Connected();
+
+    return sensor0Online == sensor1Online == sensor2Online;
+  }
+
   public boolean[] getSensorStatus() {
     int frontProx = picoSensors.getProximity2();
     int midProx = picoSensors.getProximity1();

@@ -28,6 +28,7 @@ import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.commands.CombinedIntakeCDSForwardCommand;
 
 // This class is where the bulk of the robot should be declared. Since Command-based is a
 // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -57,6 +58,8 @@ public class RobotContainer {
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
   private IntakeForwardCommand intakeForwardCommand;
   private IntakeReverseCommand intakeReverseCommand;
+  private CDSBallManagementCommand ballManagementCommand;
+  private CombinedIntakeCDSForwardCommand combinedIntakeCDS;
   private ClimbCommand climbCommand;
 
   private ShooterHeld shooterHeldLow, shooterHeldAuto;
@@ -182,19 +185,19 @@ public class RobotContainer {
       CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, shooterSubsystem);
     }
     // CDS
-    /*if (CDSSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-      // CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
-      // CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
-      // CDSSubsystem.senseColor();
-    }*/
-
     if (intakeSubsystem != null && CDSSubsystem != null) {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, CDSSubsystem);
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, CDSSubsystem);
       outtakeCommand = new OuttakeCommand(intakeSubsystem, CDSSubsystem);
-      CDSSubsystem.setDefaultCommand(new CDSBallManagementCommand(CDSSubsystem, intakeSubsystem));
+      
+      if (CDSSubsystem.sensorsOnline() == true) {
+        ballManagementCommand = new CDSBallManagementCommand(CDSSubsystem, intakeSubsystem);
+        CDSSubsystem.setDefaultCommand(ballManagementCommand);
+      } else {
+        combinedIntakeCDS = new CombinedIntakeCDSForwardCommand(intakeSubsystem, CDSSubsystem);
+      }
     }
+
     if (shooterSubsystem != null && CDSSubsystem != null) {
       shooterHeldAuto =
           new ShooterHeld(
@@ -226,6 +229,11 @@ public class RobotContainer {
       buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
       // spits ball out
       buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
+    }
+
+    if (ballManagementCommand != null) {
+      // New command for intake and CDS bundled
+      buttons[Constants.RBumper].whileHeld(combinedIntakeCDS);
     }
 
     if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
