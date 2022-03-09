@@ -25,7 +25,8 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSWheelControllerOne;
   private MotorController CDSWheelControllerTwo;
   private String allianceColor;
-  private ColorSensorMuxed colorSensors;
+  private PicoColorSensor picoSensors = new PicoColorSensor();
+  //private ColorSensorMuxed colorSensors;
 
   private boolean isReady = true; // Variable for whether CDS is ready for shooter action
   private int ballCount = 0;
@@ -61,7 +62,6 @@ public class CDSSubsystem extends SubsystemBase {
     CDSBeltController.setIdleMode(IdleMode.kBrake);
     CDSWheelControllerOne.setIdleMode(IdleMode.kCoast);
 
-    colorSensors = new ColorSensorMuxed(0, 1, 3);
 
     String allianceColor = DriverStation.getAlliance().toString();
     SmartDashboard.putString("Alliance Color", allianceColor);
@@ -134,14 +134,18 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public boolean[] getSensorStatus() {
-    int[] sensorStatuses = colorSensors.getProximities();
-    SmartDashboard.putNumber("Front Sensor Proximity", sensorStatuses[2]);
-    SmartDashboard.putNumber("Middle Sensor Proximity", sensorStatuses[1]);
-    SmartDashboard.putNumber("Back Sensor Proximity", sensorStatuses[0]);
+    int frontProx = picoSensors.getProximity2();
+    int midProx = picoSensors.getProximity1();
+    int backProx = picoSensors.getProximity0();
+    int[] sensorProxes = new int[]{frontProx, midProx, backProx};
+  
+    SmartDashboard.putNumber("Front Sensor Proximity", sensorProxes[2]);
+    SmartDashboard.putNumber("Middle Sensor Proximity", sensorProxes[1]);
+    SmartDashboard.putNumber("Back Sensor Proximity", sensorProxes[0]);
 
-    boolean backStatus = sensorStatuses[0] > Constants.backSensorActivation;
-    boolean middleStatus = sensorStatuses[1] > Constants.middleSensorActivation;
-    boolean frontStatus = sensorStatuses[2] > Constants.frontSensorActivation;
+    boolean backStatus = sensorProxes[0] > Constants.backSensorActivation;
+    boolean middleStatus = sensorProxes[1] > Constants.middleSensorActivation;
+    boolean frontStatus = sensorProxes[2] > Constants.frontSensorActivation;
     boolean[] beamBreakArray = {backStatus, middleStatus, frontStatus};
 
     ballCount = 0;
@@ -166,13 +170,11 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public String senseColor() {
-    Color[] colors = colorSensors.getColors();
-
     // Only sensing colors for first sensor so that we can handle it when it's coming in and not
     // dealing with any other complexities
-    double redAmount = colors[2].red;
-    double blueAmount = colors[2].blue;
-    if (redAmount > blueAmount) {
+    Color picoColor = picoSensors.getColor2();
+
+    if (picoColor.red > picoColor.blue) {
       SmartDashboard.putString("Ball Color", "Red");
       return "Red";
     } else {
