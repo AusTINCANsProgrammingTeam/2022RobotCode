@@ -55,10 +55,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    if(tabContainer != null) {
+    if (tabContainer != null) {
       tabContainer.periodic();
     }
-    
+
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
