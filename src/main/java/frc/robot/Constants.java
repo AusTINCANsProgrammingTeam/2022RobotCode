@@ -140,12 +140,12 @@ public final class Constants {
   public static final String twoBallPath = "paths/TaxiOutToGrabBall.wpilib.json";
 
   // Volts, constants for ramseteCommand
-  public static final double ksVolts = 0.28665; // Ks
-  public static final double kvVoltSecondsPerMeter = 1.4563; // Kv, Velocity
-  public static final double kaVoltSecondsSquaredPerMeter = 0.21703; // Ka, Accelleration
+  public static final double ksVolts = 0.2358; // Ks
+  public static final double kvVoltSecondsPerMeter = 0.81588; // Kv, Velocity
+  public static final double kaVoltSecondsSquaredPerMeter = 0.129; // Ka, Accelleration
 
   public static final double arbFeedForward =
-      0.00046254; // voltage applied to the motor after the result of the specified control mode
+      1.9829E-07; // voltage applied to the motor after the result of the specified control mode
   public static final double trackWidth = 0.559; // track width of kitbot
   public static final DifferentialDriveKinematics driveKinematics =
       new DifferentialDriveKinematics(trackWidth);
