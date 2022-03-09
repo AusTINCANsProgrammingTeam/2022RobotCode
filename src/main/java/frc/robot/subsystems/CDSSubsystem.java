@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.common.hardware.ColorSensorMuxed;
 import frc.robot.common.hardware.MotorController;
+import frc.robot.common.hardware.PicoColorSensor;
 
 public class CDSSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
