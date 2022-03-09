@@ -25,9 +25,9 @@ public class OuttakeCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    CDSSubsystem.CDSBeltToggle(false);
-    CDSSubsystem.CDSWheelToggle(false);
-    intakeSubsystem.toggleIntake(false);
+    CDSSubsystem.CDSBeltToggle(true);
+    CDSSubsystem.CDSWheelToggle(true);
+    intakeSubsystem.toggleIntake(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
