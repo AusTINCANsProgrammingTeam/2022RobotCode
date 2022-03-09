@@ -111,6 +111,12 @@ public class ShooterSubsystem extends SubsystemBase {
     hoodPID.setI(0.0);
     hoodPID.setD(0.0);
     hoodPID.setOutputRange(0, 1);*/
+    // Initializes PID for the shooter
+    flywheelPID.setP(Constants.Shooter.kP);
+    flywheelPID.setI(Constants.Shooter.kI);
+    flywheelPID.setIMaxAccum(Constants.Shooter.kMaxI, 0);
+    flywheelPID.setD(Constants.Shooter.kD);
+    flywheelPID.setOutputRange(0, 1);
 
     DistanceArray = new ShooterConfig[3];
 
