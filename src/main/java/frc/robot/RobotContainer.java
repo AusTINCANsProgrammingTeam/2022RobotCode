@@ -94,7 +94,7 @@ public class RobotContainer {
 
     // initialize the button bindings
     for (int i = 1; i < buttons.length; i++) {
-      buttons[i] = new JoystickButton(driverJoystick, i);
+      buttons2[i] = new JoystickButton(driverJoystick, i);
       buttons2[i] = new JoystickButton(operatorJoystick, i);
     }
     configureButtonBindings();
