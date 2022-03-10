@@ -54,9 +54,7 @@ public class CDSAutoAdvanceCommand extends CommandBase {
           CDSSubsystem.stopCDS();
           runningCDS = false;
           setpointIndex = -1;
-        } else {
-          Shuffleboard.addEventMarker("Auto Advance Broke", EventImportance.kCritical);
-        }
+        } 
       }
     }
   }

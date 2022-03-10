@@ -72,6 +72,8 @@ public class CDSSubsystem extends SubsystemBase {
     if (reverse) {
       CDSWheelControllerOne.getSparkMax().set(-Constants.CDSWheelControllerSpeed);
       CDSWheelControllerDirection.setString("Reverse");
+      ShuffleboardTab OperatorView = Shuffleboard.getTab("CDS Speed");
+      OperatorView.add("CDS Wheel Speed", Constants.CDSWheelControllerSpeed).withWidget(BuiltInWidgets.kDial);
 
       CDSBeltController.getSparkMax().set(Constants.CDSBeltSpeed);
       CDSBeltController.setIdleMode(IdleMode.kBrake);
@@ -134,7 +136,6 @@ public class CDSSubsystem extends SubsystemBase {
         ballCount++;
       }
     }
-
     SmartDashboard.putNumber("Ball Count", ballCount);
     Shuffleboard.addEventMarker("" + ballCount, EventImportance.kNormal);
 
@@ -185,7 +186,7 @@ public class CDSSubsystem extends SubsystemBase {
       }
     }*/
   }
-
+  
   /*
   public String getAllianceColor() {
     Alliance alliance = DriverStation.getAlliance();

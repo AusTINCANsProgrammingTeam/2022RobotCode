@@ -187,6 +187,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public void setCargoBoolean(boolean a) {
     if (a) {
       DCargoRunning.setDouble(targetRPM * 0.5);
+      Shuffleboard.addEventMarker("Cargo Fired", EventImportance.kHigh);
     } else {
       DCargoRunning.setDouble(0);
     }

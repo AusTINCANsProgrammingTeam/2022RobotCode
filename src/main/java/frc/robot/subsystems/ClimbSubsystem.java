@@ -27,7 +27,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public ClimbSubsystem(Joystick joystick) {
     m_climbJoystick = joystick;
-    toggleClimb = false;
+    toggleClimb = false; 
     climbHeight = 0;
 
     // One is left, two is right
@@ -41,7 +41,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     m_limitSwitch = new DigitalInput(Constants.LimitSwitchChannel);
   }
-
+  
   public void toggleClimbEnable() {
     toggleClimb = !toggleClimb;
   }

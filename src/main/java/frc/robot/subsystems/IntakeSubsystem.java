@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 // import edu.wpi.first.wpilibj2.*;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -26,12 +28,13 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void toggleIntake(boolean reverse) {
+    ShuffleboardTab OperatorView = Shuffleboard.getTab("Intake Speed");
+    OperatorView.add("Intake Wheel Speed", Constants.intakeMotorSpeed).withWidget(BuiltInWidgets.kDial);
     if (reverse) {
       intakeMotorControllerOne.getSparkMax().set(-Constants.intakeMotorSpeed);
       SmartDashboard.putString("Intake Motor Direction", "Reverse");
       SmartDashboard.putNumber("Intake Motor Speed", -Constants.intakeMotorSpeed);
-      Shuffleboard.addEventMarker(
-          "Auto Eject Ran / Reverse Intake Activated", EventImportance.kHigh);
+      Shuffleboard.addEventMarker("Auto Eject Ran / Reverse Intake Activated", EventImportance.kHigh);
     } else {
       intakeMotorControllerOne.getSparkMax().set(Constants.intakeMotorSpeed);
       SmartDashboard.putString("Intake Motor Direction", "Forward");
