@@ -81,6 +81,8 @@ public class AutonModes {
       CDSSubsystem c,
       IntakeSubsystem i) {
 
+    System.out.println("---------Going through right constructor.");
+
     this.driveBaseSubsystem = d;
     this.shooterSubsystem = s;
     this.limelightSubsystem = l;
@@ -172,7 +174,7 @@ public class AutonModes {
                   shooterSubsystem,
                   limelightSubsystem,
                   cdsSubsystem,
-                  (limelightSubsystem != null)), // also has a time delay of 2-3 seconds
+                  false), // also has a time delay of 2-3 seconds
               new WaitCommand(Constants.delaytaxi),
               oneBallRamseteCommand
                   .beforeStarting(
