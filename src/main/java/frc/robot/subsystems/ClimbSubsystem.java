@@ -57,9 +57,11 @@ public class ClimbSubsystem extends SubsystemBase {
     // One is left, two is right
 
     m_climbMotorControllerOne =
-        new MotorController("Climb Motor One", Constants.ClimbMotorOne, 60, true);
+        new MotorController("Climb Motor One", Constants.ClimbMotorOne, Constants.climbLeftPID);
+    m_climbMotorControllerOne.setSmartCurrentLimit(60);
     m_climbMotorControllerTwo =
-        new MotorController("Climb Motor Two", Constants.ClimbMotorTwo, 60, true);
+        new MotorController("Climb Motor Two", Constants.ClimbMotorTwo, Constants.climbRightPID);
+    m_climbMotorControllerTwo.setSmartCurrentLimit(60);
     m_climbMotorControllerTwo.setInverted(true);
     // m_climbMotorControllerTwo.getPID().setOutputRange(-.4, .4);
     // m_climbMotorControllerOne.getPID().setOutputRange(-.4, .4);
@@ -160,6 +162,7 @@ public class ClimbSubsystem extends SubsystemBase {
   public void resetTargetedHeight() {
     climbHeightOne = m_climbMotorControllerOne.getEncoder().getPosition();
     climbHeightTwo = m_climbMotorControllerTwo.getEncoder().getPosition();
+
   }
 
   public void climbEnable() {

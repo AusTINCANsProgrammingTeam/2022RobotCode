@@ -26,7 +26,7 @@ public class DriveBaseTeleopCommand extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    subsystem.stopMotorsFunction();
+    subsystem.stopDriveMotors();
   }
 
   @Override

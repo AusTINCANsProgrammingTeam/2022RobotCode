@@ -41,7 +41,7 @@ public final class Constants {
   public enum AimModes {
     AUTO,
     // TODO: Plug real values in for these aimModes
-    LOW(3200.0, 0.0) {
+    LOW(1500.0, 0.0) {
       @Override
       public AimModes previous() {
         return values()[values().length - 1];
@@ -49,7 +49,7 @@ public final class Constants {
     },
     EJECT(2500.0, 0.0),
     LAUNCH(0.0, 0.0),
-    TARMAC(4200.0, 0.0),
+    TARMAC(2650.0, 0.0),
     TEST {
       @Override
       public AimModes next() {
@@ -101,49 +101,55 @@ public final class Constants {
     }
   }
 
+  // motor controller constants
+  public static final int defaultCurrentLimit = 40;
+
   // DRIVEBASE Constants
 
   // Constants for wheel motors
-  public static final double wheelRadius =
-      3.0125; // radius of wheel, use for calculating angular values
+  public static final double wheelRadius = 2; // radius of wheel, use for calculating angular values
   public static final double openLoopRampRate =
       0.2; // Rate at which the motors reach maximum speed; TODO: tune for optimal performance
-  public static final double gearRatio = 10.75; // 10.75 : 1 gear ratio <--- kitbot
+  public static final double gearRatio = 6.2; // 10.75 : 1 gear ratio <--- kitbot
   // 10.75 motor rotations : 1 wheel rotation
   public static final double inchesInMeter = 39.3701;
 
   // Actual IDs on robot, used to activate the right motors
 
-  // TODO: kit bot values for now, change later
-  public static final int driveLeftFront = 13; // 13 on real robot
-  public static final int driveLeftRear = 14; // 14 on real robot
-  public static final int driveRightFront = 6; // 6 on real robot
-  public static final int driveRightRear = 7; // 7 on real robot
+  public static final int driveLeftFront = 13; // 13 on real robot, 1 on kitbot
+  public static final int driveLeftRear = 14; // 14 on real robot, 2 on kitbot
+  public static final int driveRightFront = 6; // 6 on real robot,  3 on kitbot
+  public static final int driveRightRear = 7; // 7 on real robot,  4 on kitbot
 
   // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
   public static final int driveLeftFrontIndex = 0;
   public static final int driveLeftRearIndex = 1;
   public static final int driveRightFrontIndex = 2;
   public static final int driveRightRearIndex = 3;
+
   public static final int driveBaseCurrentLimit = 60;
 
   // drive base pid values
-  public static final double[] driveRightPID = {0.00035, 0.0000008, 0};
+  public static final double[] driveRightPID = {
+    0.00035, 0.0000008, 0
+  }; // TODO: need to tune for real robot
   public static final double[] driveLeftPID = {0.000005, 0.0000008, 0};
 
   // AUTONOMOUS Constants
-  public static final String taxiout = "TaxiOut.wpilib.json";
-  public static final String taxioutfender = "TaxiOutFromFender.wpilib.json";
-  public static final String taxioutball = "TaxiOutGrabBall.wpilib.json";
-  // Volts, constants for ramseteCommand
-  public static final double ksVolts = 0.13323; // Ks
-  public static final double kvVoltSecondsPerMeter = 2.8295; // Kv, Velocity
-  public static final double kaVoltSecondsSquaredPerMeter = 0.31462; // Ka, Accelleration
 
-  public static final double kpDriveVel = 2.1938; // Kp, Velocity
+  // Path json files
+  public static final String taxiPath = "paths/TaxiOut.wpilib.json";
+  public static final String oneBallPath = "paths/TaxiOutFromFender.wpilib.json";
+  public static final String twoBallPath = "paths/TaxiOutToGrabBall.wpilib.json";
+
+  // Volts, constants for ramseteCommand
+  public static final double ksVolts = 0.28665; // Ks
+  public static final double kvVoltSecondsPerMeter = 1.4563; // Kv, Velocity
+  public static final double kaVoltSecondsSquaredPerMeter = 0.21703; // Ka, Accelleration
+
   public static final double arbFeedForward =
-      8.6045E-07; // voltage applied to the motor after the result of the specified control mode
-  public static final double trackWidth = 0.69;
+      0.00046254; // voltage applied to the motor after the result of the specified control mode
+  public static final double trackWidth = 0.559; // track width of kitbot
   public static final DifferentialDriveKinematics driveKinematics =
       new DifferentialDriveKinematics(trackWidth);
   public static final double unitsPerRotation = 0.4787787204;
@@ -169,7 +175,7 @@ public final class Constants {
 
   // Intake Contstants
   public static final int intakeMotorOneID = 1;
-  public static final double intakeMotorSpeed = 0.70;
+  public static final double intakeMotorSpeed = 1.0;
   public static final int initialBallSensorChannel = 0;
   public static final int middleBallSensorChannel = 1;
   public static final int finalBallSensorChannel = 2;
@@ -179,7 +185,7 @@ public final class Constants {
   public static final int CDSWheelControllerOneID = 2;
   public static final int CDSWheelControllerTwoID = 9;
   public static final double CDSBeltSpeed = 0.40;
-  public static final double CDSWheelControllerSpeed = 0.25;
+  public static final double CDSWheelControllerSpeed = 0.65;
   public static final int frontSensorActivation = 200;
   public static final int middleSensorActivation = 450;
   public static final int backSensorActivation = 600;
@@ -229,11 +235,13 @@ public final class Constants {
 
   // Shooter Constants
   public static final class Shooter {
+    // Motor IDs
     public static final int shooterID = 10; // ID of the shooter
     public static final int shooter2ID = 11; // ID of the second shooter motor
     // public static final int hoodID = 0; // ID of the hood;
     public static final int shooterCargoID = 4;
 
+    // LL Placement
     public static final double highHeight =
         8.0 + 8.0 / 12.0; // Height of the high goal in ft from the carpet
     public static final double lowHeight =
@@ -243,18 +251,24 @@ public final class Constants {
     public static final double LLAngle =
         54.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as
     // exact as possible
-    public static final double cargoForward = 0.65;
+
+    // Motor Speeds
+    public static final double cargoForward = 1.0;
     public static final double cargoReverse = -0.4;
-    public static final double kP = 2.5e-4;
-    public static final double kI = 19e-6;
-    public static final double kD = 0.005;
-    public static final double kF = 0.0;
-    public static final double kIZone = 0.9;
-    public static final double kMaxOutput = 0;
-    public static final double kMaxI = 0.9;
-    public static final double kMaxISlotId = 0;
+
+    // PID settings
+    // kp was 2.5e-4 and kd was 2e-6, kff was 1e-4
+    public static final double kPIDFArray[] = {3.1605e-7, 2.5e-7, 0};
+    public static final double kMaxIAccum = 0.9;
+    public static final int kMaxISlot = 0;
+    public static final double kMaxOutput = 0.9;
     public static final double kMinOutput = 1;
-    public static final double kA = 0.075;
+    public static final double kA = 0.15; // Smoothing alpha, do not cofuse with kAg
+    // PID FF gains
+    public static final double kSg = 0.28665;
+    public static final double kAg = 0.21703;
+    public static final double kVg = 1.4563;
+    public static final double kAccel = 0;
   }
 
   // Climb Constants
