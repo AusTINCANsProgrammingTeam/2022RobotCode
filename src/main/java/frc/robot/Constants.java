@@ -23,8 +23,8 @@ public final class Constants {
     CDSSubsystem      (true),
     IntakeSubsystem   (true),
     ShooterSubsystem  (true),
-    LimelightSubsystem(false),
-    ClimbSubsystem    (false);
+    LimelightSubsystem(true),
+    ClimbSubsystem    (true);
     // spotless:on
 
     private final Boolean enabled;
