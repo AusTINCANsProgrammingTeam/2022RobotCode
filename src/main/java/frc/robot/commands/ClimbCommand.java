@@ -6,15 +6,19 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.DriveBaseSubsystem;
 
 public class ClimbCommand extends CommandBase {
 
   private final ClimbSubsystem m_subsystem;
+  private final DriveBaseSubsystem m_drivesubsystem;
 
-  public ClimbCommand(ClimbSubsystem s) {
+  public ClimbCommand(ClimbSubsystem s,DriveBaseSubsystem  d) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(s);
+    addRequirements(d);
     m_subsystem = s;
+    m_drivesubsystem = d;
   }
 
   // Called when the command is initially scheduled.
@@ -24,7 +28,9 @@ public class ClimbCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
     if (m_subsystem.getclimbingmode()) {
+      m_drivesubsystem.setArcadedrivespeed(30);
       m_subsystem.resetTargetedHeight();
       m_subsystem.runManual();
     } else {

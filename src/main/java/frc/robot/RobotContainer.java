@@ -162,7 +162,7 @@ public class RobotContainer {
             {
               if (axisCount1 > 0 && buttonCount1 > 0) {
                 climbSubsystem = new ClimbSubsystem(operatorJoystick);
-                climbCommand = new ClimbCommand(climbSubsystem);
+                climbCommand = new ClimbCommand(climbSubsystem,driveBaseSubsystem);
                 System.out.println("Climb enabled");
               }
               break;
