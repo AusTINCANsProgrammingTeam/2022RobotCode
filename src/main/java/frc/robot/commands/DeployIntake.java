@@ -11,6 +11,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class DeployIntake extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
   private final IntakeSubsystem mIntakeSubsystem;
+
   private final CDSSubsystem mCdsSubsystem;
 
   private int msCurrent = 0;
