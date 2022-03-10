@@ -26,5 +26,4 @@
     },
   ],
   "java.test.defaultConfig": "WPIlibUnitTests",
-  "wpilib.autoSaveOnDeploy": true
 }
