@@ -68,19 +68,19 @@ public class CDSSubsystem extends SubsystemBase {
 
   public void CDSToggleAll(boolean reverse) {
     if (reverse) {
-      CDSWheelControllerOne.setSpeed(-Constants.CDSWheelControllerSpeed);
+      CDSWheelControllerOne.set(-Constants.CDSWheelControllerSpeed);
       SmartDashboard.putString("CDS Wheel Direction", "Reverse");
       SmartDashboard.putNumber("CDS Wheel Speed", -Constants.CDSWheelControllerSpeed);
 
-      CDSBeltController.setSpeed(-Constants.CDSBeltSpeed);
+      CDSBeltController.set(-Constants.CDSBeltSpeed);
       SmartDashboard.putString("CDS Belt Direction", "Reverse");
       SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
     } else {
-      CDSWheelControllerOne.setSpeed(Constants.CDSWheelControllerSpeed);
+      CDSWheelControllerOne.set(Constants.CDSWheelControllerSpeed);
       SmartDashboard.putString("CDS Wheel Direction", "Forward");
       SmartDashboard.putNumber("CDS Wheel Speed", Constants.CDSWheelControllerSpeed);
 
-      CDSBeltController.setSpeed(Constants.CDSBeltSpeed);
+      CDSBeltController.set(Constants.CDSBeltSpeed);
       SmartDashboard.putString("CDS Belt Direction", "Forward");
       SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
     }
@@ -88,10 +88,10 @@ public class CDSSubsystem extends SubsystemBase {
 
   public void CDSWheelToggle(boolean reverse) {
     if (reverse) {
-      CDSWheelControllerOne.setSpeed(-Constants.CDSWheelControllerSpeed);
+      CDSWheelControllerOne.set(-Constants.CDSWheelControllerSpeed);
       CDSWheelControllerDirection.setString("Reverse");
     } else {
-      CDSWheelControllerOne.setSpeed(Constants.CDSWheelControllerSpeed);
+      CDSWheelControllerOne.set(Constants.CDSWheelControllerSpeed);
       SmartDashboard.putString("CDS Wheel Direction", "Forward");
       SmartDashboard.putNumber("CDS Wheel Speed", Constants.CDSWheelControllerSpeed);
     }
