@@ -11,9 +11,11 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class CombinedIntakeCDSForwardCommand extends CommandBase {
   /** Creates a new OuttakeCommand. */
   private final CDSSubsystem CDSSubsystem;
+
   private final IntakeSubsystem intakeSubsystem;
 
-  public CombinedIntakeCDSForwardCommand(IntakeSubsystem mIntakeSubsystem, CDSSubsystem mCDSSubsystem) {
+  public CombinedIntakeCDSForwardCommand(
+      IntakeSubsystem mIntakeSubsystem, CDSSubsystem mCDSSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(mIntakeSubsystem);
     addRequirements(mCDSSubsystem);

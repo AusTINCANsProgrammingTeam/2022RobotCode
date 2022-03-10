@@ -16,6 +16,7 @@ import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.CombinedIntakeCDSForwardCommand;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
@@ -28,7 +29,6 @@ import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.commands.CombinedIntakeCDSForwardCommand;
 
 // This class is where the bulk of the robot should be declared. Since Command-based is a
 // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -189,7 +189,7 @@ public class RobotContainer {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, CDSSubsystem);
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, CDSSubsystem);
       outtakeCommand = new OuttakeCommand(intakeSubsystem, CDSSubsystem);
-      
+
       if (CDSSubsystem.sensorsOnline() == true) {
         ballManagementCommand = new CDSBallManagementCommand(CDSSubsystem, intakeSubsystem);
         CDSSubsystem.setDefaultCommand(ballManagementCommand);
@@ -231,7 +231,7 @@ public class RobotContainer {
       buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
     }
 
-    if (ballManagementCommand != null) {
+    if (combinedIntakeCDS != null) {
       // New command for intake and CDS bundled
       buttons[Constants.RBumper].whileHeld(combinedIntakeCDS);
     }

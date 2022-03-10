@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.common.hardware.ColorSensorMuxed;
 import frc.robot.common.hardware.MotorController;
 import frc.robot.common.hardware.PicoColorSensor;
 
@@ -32,10 +31,10 @@ public class CDSSubsystem extends SubsystemBase {
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry CDSWheelControllerDirection =
-      CDSTab.add("CDS Wheel Direction", "Not Running")
-          .withPosition(1, 0)
-          .withWidget(BuiltInWidgets.kToggleSwitch)
-          .getEntry();
+   CDSTab.add("CDS Wheel Direction", "Not Running")
+   .withPosition(1, 0)
+   .withWidget(BuiltInWidgets.kToggleSwitch)
+   .getEntry();
   private NetworkTableEntry CDSBeltControllerDirection =
       CDSTab.add("CDS Belt Direction", "Not Running")
           .withPosition(2, 0)
@@ -86,7 +85,7 @@ public class CDSSubsystem extends SubsystemBase {
   public void CDSWheelToggle(boolean reverse) {
     if (reverse) {
       CDSWheelControllerOne.set(-Constants.CDSWheelControllerSpeed);
-      CDSWheelControllerDirection.setString("Reverse");
+      // CDSWheelControllerDirection.setString("Reverse");
     } else {
       CDSWheelControllerOne.set(Constants.CDSWheelControllerSpeed);
       SmartDashboard.putString("CDS Wheel Direction", "Forward");
@@ -130,19 +129,19 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public boolean sensorsOnline() {
-    boolean sensor0Online = picoSensors.isSensor0Connected(); 
+    boolean sensor0Online = picoSensors.isSensor0Connected();
     boolean sensor1Online = picoSensors.isSensor1Connected();
     boolean sensor2Online = picoSensors.isSensor2Connected();
 
-    return sensor0Online == sensor1Online == sensor2Online;
+    return sensor0Online && sensor1Online && sensor2Online;
   }
 
   public boolean[] getSensorStatus() {
     int frontProx = picoSensors.getProximity2();
     int midProx = picoSensors.getProximity1();
     int backProx = picoSensors.getProximity0();
-    int[] sensorProxes = new int[]{frontProx, midProx, backProx};
-  
+    int[] sensorProxes = new int[] {frontProx, midProx, backProx};
+
     SmartDashboard.putNumber("Front Sensor Proximity", sensorProxes[2]);
     SmartDashboard.putNumber("Middle Sensor Proximity", sensorProxes[1]);
     SmartDashboard.putNumber("Back Sensor Proximity", sensorProxes[0]);

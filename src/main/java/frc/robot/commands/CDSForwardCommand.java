@@ -12,6 +12,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class CDSForwardCommand extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
   private final CDSSubsystem mCDSSubsystem;
+
   private final ShooterSubsystem mShooterSubsystem;
 
   public CDSForwardCommand(CDSSubsystem CDSSubsystem, ShooterSubsystem shooterSubsystem) {
