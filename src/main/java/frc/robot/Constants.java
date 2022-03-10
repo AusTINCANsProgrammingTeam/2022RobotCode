@@ -20,9 +20,9 @@ public final class Constants {
     // Change booleans to disable a subsystem in RobotContainer
     // spotless:off
     DriveBaseSubsystem(true),
-    CDSSubsystem      (false),
-    IntakeSubsystem   (false),
-    ShooterSubsystem  (false),
+    CDSSubsystem      (true),
+    IntakeSubsystem   (true),
+    ShooterSubsystem  (true),
     LimelightSubsystem(false),
     ClimbSubsystem    (false);
     // spotless:on

@@ -306,7 +306,7 @@ public class RobotContainer {
       } else {
         autonModes =
             new AutonModes(
-                driveBaseSubsystem); // default constructor, if other subsystems are disabled only
+                driveBaseSubsystem, intakeSubsystem, CDSSubsystem); // default constructor, if other subsystems are disabled only
         // use drivebase for taxi
       }
     } else {

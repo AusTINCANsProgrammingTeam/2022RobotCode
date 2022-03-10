@@ -15,7 +15,7 @@ public class DeployIntake extends CommandBase {
   private final CDSSubsystem mCdsSubsystem;
 
   private int msCurrent = 0;
-  private final int runTime = 500; // how long to run intake for
+  private final int runTime = 2500; // how long to run intake for
 
   public DeployIntake(IntakeSubsystem intakeSubsystem, CDSSubsystem cdsSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -30,26 +30,25 @@ public class DeployIntake extends CommandBase {
   public void initialize() {
     mIntakeSubsystem.toggleIntake(false);
     mCdsSubsystem.CDSWheelToggle(false);
+    msCurrent = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (msCurrent >= runTime) {
-      mIntakeSubsystem.stopIntake();
-      mCdsSubsystem.stopCDS();
-    } else {
       msCurrent += 20;
-    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    mIntakeSubsystem.stopIntake();
+    mCdsSubsystem.stopCDS();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return msCurrent >= runTime;
   }
 }

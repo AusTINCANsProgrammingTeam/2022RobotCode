@@ -59,8 +59,10 @@ public class AutonModes {
 
   // this constructor is the default, only needs driveBaseSubsystem, useful when only wanting to
   // test taxi without worrying about other subsystems
-  public AutonModes(DriveBaseSubsystem d) {
+  public AutonModes(DriveBaseSubsystem d, IntakeSubsystem i, CDSSubsystem c) {
     this.driveBaseSubsystem = d;
+    this.intakeSubsystem = i;
+    this.cdsSubsystem = c;
 
     allSubsystemsEnabled = false;
 
