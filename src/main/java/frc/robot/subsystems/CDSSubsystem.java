@@ -44,6 +44,8 @@ public class CDSSubsystem extends SubsystemBase {
       CDSTab.add("CDS Wheel speed", 0).withPosition(3, 0).getEntry();
   private NetworkTableEntry CDSBeltControllerSpeed =
       CDSTab.add("CDS Belt speed", 0).withPosition(4, 0).getEntry();
+    private NetworkTableEntry ballManagementEnabled = 
+      CDSTab.add("Ball Management Enabled", true).withPosition(5, 0).getEntry();
 
   public CDSSubsystem() {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
@@ -85,7 +87,7 @@ public class CDSSubsystem extends SubsystemBase {
   public void CDSWheelToggle(boolean reverse) {
     if (reverse) {
       CDSWheelControllerOne.set(-Constants.CDSWheelControllerSpeed);
-      // CDSWheelControllerDirection.setString("Reverse");
+      CDSWheelControllerDirection.setString("Reverse");
     } else {
       CDSWheelControllerOne.set(Constants.CDSWheelControllerSpeed);
       SmartDashboard.putString("CDS Wheel Direction", "Forward");
@@ -184,6 +186,10 @@ public class CDSSubsystem extends SubsystemBase {
       SmartDashboard.putString("Ball Color", "Blue");
       return "Blue";
     }
+  }
+
+  public boolean managementEnabled() {
+    return SmartDashboard.getBoolean("Ball Management Enabled", true);
   }
 
   public String getAllianceColor() {

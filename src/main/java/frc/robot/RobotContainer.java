@@ -231,7 +231,9 @@ public class RobotContainer {
       buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
     }
 
-    if (combinedIntakeCDS != null) {
+    // if 1 or more sensors are down or if ball management is disabled on SmartDashboard, 
+    // then override default forward intake button with command that controls intake and CDS together
+    if (combinedIntakeCDS != null || !CDSSubsystem.managementEnabled()) {
       // New command for intake and CDS bundled
       buttons[Constants.RBumper].whileHeld(combinedIntakeCDS);
     }
