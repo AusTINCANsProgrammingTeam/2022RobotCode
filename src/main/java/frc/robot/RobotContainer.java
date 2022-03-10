@@ -133,7 +133,7 @@ public class RobotContainer {
               driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, Constants.usingExternal);
               break;
             }
-          case "cdsSubsystem":
+          case "CDSSubsystem":
             {
               System.out.println("CDS enabled");
               cdsSubsystem = new CDSSubsystem();
