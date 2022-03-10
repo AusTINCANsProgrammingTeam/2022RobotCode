@@ -131,6 +131,7 @@ public class ShooterSubsystem extends SubsystemBase {
       flywheelPID.setIAccum(0);
     } else {
       targetRPM = rpm;
+      SmartDashboard.putNumber("trpm", rpm);
       // flywheelPID.setFF(flywheelFF.calculate(rpm));
       flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
     }
