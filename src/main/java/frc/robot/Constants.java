@@ -235,11 +235,13 @@ public final class Constants {
 
   // Shooter Constants
   public static final class Shooter {
+    // Motor IDs
     public static final int shooterID = 10; // ID of the shooter
     public static final int shooter2ID = 11; // ID of the second shooter motor
     // public static final int hoodID = 0; // ID of the hood;
     public static final int shooterCargoID = 4;
 
+    // LL Placement
     public static final double highHeight =
         8.0 + 8.0 / 12.0; // Height of the high goal in ft from the carpet
     public static final double lowHeight =
@@ -249,18 +251,24 @@ public final class Constants {
     public static final double LLAngle =
         54.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as
     // exact as possible
+
+    // Motor Speeds
     public static final double cargoForward = 1.0;
     public static final double cargoReverse = -0.4;
-    public static final double kP = 2.5e-4;
-    public static final double kI = 2.5e-7;
-    public static final double kD = 2e-6;
-    public static final double kF = 1e-4;
-    public static final double kIZone = 0.9;
-    public static final double kMaxOutput = 0;
-    public static final double kMaxI = 0.9;
-    public static final double kMaxISlotId = 0;
+
+    // PID settings
+    // kp was 2.5e-4 and kd was 2e-6, kff was 1e-4
+    public static final double kPIDFArray[] = {3.1605e-7, 2.5e-7, 0};
+    public static final double kMaxIAccum = 0.9;
+    public static final int kMaxISlot = 0;
+    public static final double kMaxOutput = 0.9;
     public static final double kMinOutput = 1;
-    public static final double kA = 0.15;
+    public static final double kA = 0.15; // Smoothing alpha, do not cofuse with kAg
+    // PID FF gains
+    public static final double kSg = 0.28665;
+    public static final double kAg = 0.21703;
+    public static final double kVg = 1.4563;
+    public static final double kAccel = 0;
   }
 
   // Climb Constants
