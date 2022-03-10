@@ -41,8 +41,7 @@ public class ShooterSubsystem extends SubsystemBase {
       shooterTab.add("PID I", Constants.Shooter.kPIDFArray[1]).withPosition(0, 2).getEntry();
   private NetworkTableEntry PID_D =
       shooterTab.add("PID D", Constants.Shooter.kPIDFArray[2]).withPosition(0, 3).getEntry();
-  private NetworkTableEntry PID_F =
-      shooterTab.add("PID F", Constants.Shooter.kPIDFArray[3]).withPosition(0, 4).getEntry();
+  private NetworkTableEntry PID_F = shooterTab.add("PID F", 0).withPosition(0, 4).getEntry();
   private NetworkTableEntry SShootingMode =
       shooterTab.add("Shooting Mode", "TEST").withPosition(1, 5).getEntry();
   private NetworkTableEntry DDistance =
