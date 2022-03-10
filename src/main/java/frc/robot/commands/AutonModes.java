@@ -158,6 +158,7 @@ public class AutonModes {
 
     taxiCommand =
         new SequentialCommandGroup(
+            new DeployIntake(intakeSubsystem, cdsSubsystem),
             new WaitCommand(initialWaitTime), // units in seconds
             taxiRamseteCommand
                 .beforeStarting(
@@ -167,6 +168,7 @@ public class AutonModes {
     if (allSubsystemsEnabled) {
       oneBallCommand =
           new SequentialCommandGroup(
+              new DeployIntake(intakeSubsystem, cdsSubsystem),
               new WaitCommand(initialWaitTime),
               new ShooterPressed(
                   shooterSubsystem,
@@ -190,6 +192,7 @@ public class AutonModes {
 
       twoBallCommand =
           new SequentialCommandGroup(
+              new DeployIntake(intakeSubsystem, cdsSubsystem),
               new WaitCommand(initialWaitTime),
               twoBallParallel,
               new WaitCommand(Constants.delayshot),
