@@ -257,8 +257,8 @@ public final class Constants {
     public static final double cargoReverse = -0.4;
 
     // PID settings
-    // kp was 2.5e-4 and kd was 2e-6, kff was 1e-4
-    public static final double kPIDFArray[] = {3.1605e-7, 2.5e-7, 0};
+    // kp was 3.1605e-7 and kd was 0, kff was 1e-4
+    public static final double kPIDFArray[] = {2.5e-4, 2.5e-7, 2e-6};
     public static final double kMaxIAccum = 0.9;
     public static final int kMaxISlot = 0;
     public static final double kMaxOutput = 0.9;
@@ -266,8 +266,8 @@ public final class Constants {
     public static final double kA = 0.15; // Smoothing alpha, do not cofuse with kAg
     // PID FF gains
     public static final double kSg = 0.28665;
-    public static final double kAg = 0.21703;
     public static final double kVg = 1.4563;
+    public static final double kAg = 0.21703;
     public static final double kAccel = 0;
   }
 
