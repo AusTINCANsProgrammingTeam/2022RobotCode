@@ -79,22 +79,16 @@ public class DriveBaseSubsystem extends SubsystemBase {
     // motor controllers
     m_motorControllers[Constants.driveLeftFrontIndex] =
         new MotorController(
-            "Differential Left Front",
-            Constants.driveLeftFront,
-            Constants.driveBaseCurrentLimit,
-            true);
+            "Differential Left Front", Constants.driveLeftFront, Constants.driveLeftPID);
     m_motorControllers[Constants.driveLeftRearIndex] =
         new MotorController(
-            "Differential Left Rear", Constants.driveLeftRear, Constants.driveBaseCurrentLimit);
+            "Differential Left Rear", Constants.driveLeftRear, Constants.driveLeftPID);
     m_motorControllers[Constants.driveRightFrontIndex] =
         new MotorController(
-            "Differential Right Front",
-            Constants.driveRightFront,
-            Constants.driveBaseCurrentLimit,
-            true);
+            "Differential Right Front", Constants.driveRightFront, Constants.driveRightPID);
     m_motorControllers[Constants.driveRightRearIndex] =
         new MotorController(
-            "Differential Right Rear", Constants.driveRightRear, Constants.driveBaseCurrentLimit);
+            "Differential Right Rear", Constants.driveRightRear, Constants.driveRightPID);
 
     // invert right side motors
     m_motorControllers[Constants.driveRightFrontIndex].setInverted(true);
@@ -335,9 +329,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
         .getPIDCtrl()
         .setReference(rightSpeed, CANSparkMax.ControlType.kVelocity, 0, Constants.arbFeedForward);
 
-    // m_motorControllers[Constants.driveLeftFrontIndex].getPID().setReference(leftSpeed,
+    // m_motorControllers[Constants.driveLeftFrontIndex].getPIDController().setReference(leftSpeed,
     // CANSparkMax.ControlType.kVelocity);
-    // m_motorControllers[Constants.driveRightFrontIndex].getPID().setReference(rightSpeed,
+    // m_motorControllers[Constants.driveRightFrontIndex].getPIDController().setReference(rightSpeed,
     // CANSparkMax.ControlType.kVelocity);
 
     m_differentialDrive.feed();

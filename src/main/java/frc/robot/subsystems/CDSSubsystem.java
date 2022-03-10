@@ -47,12 +47,12 @@ public class CDSSubsystem extends SubsystemBase {
       CDSTab.add("CDS Belt speed", 0).withPosition(4, 0).getEntry();
 
   public CDSSubsystem() {
-    CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
+    CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID);
     CDSBeltController.setInverted(true);
     CDSWheelControllerOne =
-        new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerOneID, 40);
+        new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerOneID);
     CDSWheelControllerTwo =
-        new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerTwoID, 40);
+        new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerTwoID);
 
     CDSWheelControllerOne.setInverted(true);
     CDSWheelControllerTwo.follow(CDSWheelControllerOne, true);
@@ -60,7 +60,7 @@ public class CDSSubsystem extends SubsystemBase {
     CDSBeltController.setIdleMode(IdleMode.kBrake);
     CDSWheelControllerOne.setIdleMode(IdleMode.kCoast);
 
-    //colorSensors = new ColorSensorMuxed(0, 1, 3);
+    // colorSensors = new ColorSensorMuxed(0, 1, 3);
 
     String allianceColor = DriverStation.getAlliance().toString();
     SmartDashboard.putString("Alliance Color", allianceColor);

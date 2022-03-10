@@ -1,7 +1,6 @@
 package frc.robot.common.hardware;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,8 +17,6 @@ public class MotorController extends CANSparkMax {
   private double mI;
   private double mD;
 
-  private double mFF; // feedforward value
-
   // default constructor
   public MotorController(String name, int deviceID) {
     super(deviceID, MotorType.kBrushless);
@@ -27,27 +24,25 @@ public class MotorController extends CANSparkMax {
     restoreFactoryDefaults();
 
     // Create default values for Spark Max motor controller
-    setSmartCurrentLimit(40); // default current limit is 40A
+    setSmartCurrentLimit(Constants.defaultCurrentLimit); // default current limit is 40A
     setIdleMode(CANSparkMax.IdleMode.kCoast); // default mode is Coast
+    setOpenLoopRampRate(Constants.openLoopRampRate); // default open loop rate
+
     mPIDController = getPIDController();
     mEncoder = getEncoder();
   }
 
-  public MotorController(String name, int deviceID, int smartCurrentLimit, boolean... enablePid) {
-    this(name, deviceID); // intializes CANSparkMax and Encoder
-    setSmartCurrentLimit(smartCurrentLimit); // set smartCurrentLimit
-    setOpenLoopRampRate(Constants.openLoopRampRate);
+  // Set PID option for motor controller
+  public MotorController(String name, int deviceID, double[] PID) {
+    this(name, deviceID); // intializes CANSparkMax, Encoder, and PIDController
+    setPID(PID);
+  }
 
-    // If enablePid has any number of booleans greater than 0 we are enabling pid
-    if (enablePid.length > 0) {
-      mP = SmartDashboard.getNumber(mName + " P Value", 0.000025);
-      mI = SmartDashboard.getNumber(mName + " I Value", 0.0);
-      mD = SmartDashboard.getNumber(mName + " D Value", 0.0);
-
-      mFF = SmartDashboard.getNumber(mName + " FF Value", 0.0);
-
-      setPID();
-    }
+  public void setPID(double[] PID) {
+    mP = PID[0];
+    mI = PID[1];
+    mD = PID[2];
+    activatePID(PID);
   }
 
   public SparkMaxPIDController getPIDCtrl() {
@@ -77,7 +72,7 @@ public class MotorController extends CANSparkMax {
     return mEncoder.getVelocity();
   }
 
-  public void setPID() {
+  private void activatePID(double[] PID) {
     // Check first that mPIDController has been instantiated
     if (mPIDController == null) {
       throw new NullPointerException(
@@ -88,32 +83,38 @@ public class MotorController extends CANSparkMax {
     mPIDController.setI(mI);
     mPIDController.setD(mD);
 
-    SmartDashboard.putNumber(mName + " P Value", mP);
-    SmartDashboard.putNumber(mName + " I Value", mI);
-    SmartDashboard.putNumber(mName + " D Value", mD);
+    // add the values to smart dashboard
+    SmartDashboard.putNumber(mName + " P value", mP);
+    SmartDashboard.putNumber(mName + " I value", mI);
+    SmartDashboard.putNumber(mName + " D value", mD);
 
-    SmartDashboard.putNumber(mName + " FF Value", mFF);
+    updateSmartDashboard(); // post onto smart dashboard
   }
 
   // Updates the Smart Dashboard and checks the PID values to determine if update is needed
   public void updateSmartDashboard() {
-    // The simulation crashes whenever .getEncoder() is called
     if (mPIDController != null) {
-      if (SmartDashboard.getNumber(mName + " P Value", mP) != mP) {
-        mP = SmartDashboard.getNumber(mName + " P Value", mP);
+      // TODO: having a sole shuffleboard tab for PID tuning might be beneficical, there's a built
+      // in widget especially for PID
+
+      // check if values were updated in smart dashboard
+      // nothing in it at the start, assign it to value passed in earlier
+      double currentP = SmartDashboard.getNumber(mName + " P value", mP);
+      if (currentP != mP) {
+        mP = currentP;
         mPIDController.setP(mP);
       }
-      if (SmartDashboard.getNumber(mName + " I Value", mI) != mI) {
-        mI = SmartDashboard.getNumber(mName + " I Value", mI);
+
+      double currentI = SmartDashboard.getNumber(mName + " I value", mI);
+      if (currentI != mI) {
+        mI = currentI;
         mPIDController.setI(mI);
       }
-      if (SmartDashboard.getNumber(mName + " D Value", mD) != mD) {
-        mD = SmartDashboard.getNumber(mName + " D Value", mD);
+
+      double currentD = SmartDashboard.getNumber(mName + " D value", mD);
+      if (currentD != mD) {
+        mD = currentD;
         mPIDController.setD(mD);
-      }
-      if (SmartDashboard.getNumber(mName + " FF Value", mFF) != mFF) {
-        mFF = SmartDashboard.getNumber(mName + " FF Value", mFF);
-        mPIDController.setFF(mFF);
       }
     }
   }

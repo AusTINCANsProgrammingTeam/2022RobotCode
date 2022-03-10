@@ -46,7 +46,7 @@ public class TabDriveBase {
     // This is the tab for controlling auton
     sbWaitTimeSlider =
         Shuffleboard.getTab("Auton")
-            .add("Max Speed", 1)
+            .add("Wait Time", 1)
             .withWidget(BuiltInWidgets.kNumberSlider)
             .withProperties(Map.of("min", 1, "max", 10)) // specify widget properties here
             .getEntry();
@@ -66,8 +66,7 @@ public class TabDriveBase {
       sbLeftPosition.setDouble(positions[0]); // in meters
       sbRightPosition.setDouble(positions[1]);
 
-      double waitTime = sbWaitTimeSlider.getDouble(1);
-      AutonModes.setWaitTime(waitTime);
+      AutonModes.setWaitTime(sbWaitTimeSlider.getDouble(1));
 
       // TODO: compare encoder value to value from biconsumer, should be equal
       SmartDashboard.putNumber("left speed (rpm) [encoder]", leftSpeed);

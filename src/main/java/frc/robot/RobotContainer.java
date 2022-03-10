@@ -291,9 +291,7 @@ public class RobotContainer {
 
   private void initAuton() {
     if (driveBaseSubsystem != null) {
-      if (shooterSubsystem != null
-          && CDSSubsystem != null
-          && intakeSubsystem != null) {
+      if (shooterSubsystem != null && CDSSubsystem != null && intakeSubsystem != null) {
         autonModes =
             new AutonModes(
                 driveBaseSubsystem,
