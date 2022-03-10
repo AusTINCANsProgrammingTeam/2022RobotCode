@@ -91,8 +91,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
             "Differential Right Rear", Constants.driveRightRear, Constants.driveRightPID);
 
     // invert right side motors
-    m_motorControllers[Constants.driveRightFrontIndex].setInverted(true);
-    m_motorControllers[Constants.driveRightRearIndex].setInverted(true);
+    m_motorControllers[Constants.driveLeftFrontIndex].setInverted(true);
+    m_motorControllers[Constants.driveLeftRearIndex].setInverted(true);
 
     // Forces rear motors of each side to follow the first
     m_motorControllers[Constants.driveLeftRearIndex].follow(
@@ -205,8 +205,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
   // Normal Arcade Drive
   public void arcadeDrive() {
     m_differentialDrive.arcadeDrive(
-        m_driverJoystick.getRawAxis(Constants.leftJoystickY),
-        -0.85 * m_driverJoystick.getRawAxis(Constants.rightJoystickX),
+        -0.85 * m_driverJoystick.getRawAxis(Constants.leftJoystickY),
+        m_driverJoystick.getRawAxis(Constants.rightJoystickX),
         true);
     // joystick has y-axis flipped so up is negative why down is positive
   }
@@ -214,7 +214,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   // Arcade Drive where you can only move forwards and backwards for testing
   public void arcadeDrive(double rotation) {
     m_differentialDrive.arcadeDrive(
-        -1 * m_driverJoystick.getRawAxis(Constants.leftJoystickY), rotation);
+        -0.85 * m_driverJoystick.getRawAxis(Constants.leftJoystickY), rotation);
   }
 
   // TODO: Make a command to switch modes (extra)
