@@ -131,9 +131,9 @@ public final class Constants {
 
   // drive base pid values
   public static final double[] driveRightPID = {
-    0.00035, 0.0000008, 0
+    0.00035, 0.0000008, 0, 0
   }; // TODO: need to tune for real robot
-  public static final double[] driveLeftPID = {0.000005, 0.0000008, 0};
+  public static final double[] driveLeftPID = {0.000005, 0.0000008, 0, 0};
 
   // AUTONOMOUS Constants
 
