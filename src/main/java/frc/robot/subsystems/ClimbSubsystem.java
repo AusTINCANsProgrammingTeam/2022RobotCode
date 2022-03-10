@@ -171,6 +171,10 @@ public class ClimbSubsystem extends SubsystemBase {
     return sbClimbingMode.getBoolean(false);
   }
 
+  public boolean getclimbingenable() {
+    return sbClimbEnabbled.getBoolean(false);
+  }
+
   public void runManual() {
     if (climbEnabbled
     /** && !m_limitSwitch.get() */
@@ -227,7 +231,8 @@ public class ClimbSubsystem extends SubsystemBase {
           .setReference(climbHeightTwo, CANSparkMax.ControlType.kPosition);
       sbclimbHeightTwo.setNumber(climbHeightTwo);
     } else {
-      // m_climbMotorControllerOne.getPID().setReference(0, CANSparkMax.ControlType.kVoltage);
+      // m_climbMotorControllerOne.getPID().setReference(0,
+      // CANSparkMax.ControlType.kVoltage);
     }
   }
 

@@ -16,6 +16,7 @@ import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.ClimbEnable;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
@@ -63,6 +64,7 @@ public class RobotContainer {
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
+  private ClimbEnable ClimbEnabling;
 
   // auton
   private AutonModes autonModes;
@@ -162,7 +164,7 @@ public class RobotContainer {
             {
               if (axisCount1 > 0 && buttonCount1 > 0) {
                 climbSubsystem = new ClimbSubsystem(operatorJoystick);
-                climbCommand = new ClimbCommand(climbSubsystem,driveBaseSubsystem);
+                climbCommand = new ClimbCommand(climbSubsystem);
                 System.out.println("Climb enabled");
               }
               break;
@@ -208,6 +210,9 @@ public class RobotContainer {
     }
     if (climbSubsystem != null) {
       climbSubsystem.setDefaultCommand(climbCommand);
+    }
+    if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
+      ClimbEnabling = new ClimbEnable(climbSubsystem, driveBaseSubsystem);
     }
   }
 
@@ -268,8 +273,7 @@ public class RobotContainer {
     } else {
 
       if (climbSubsystem != null) {
-        buttons2[Constants.startButton].whenPressed(
-            new InstantCommand(climbSubsystem::climbEnable, climbSubsystem));
+        buttons2[Constants.startButton].whenPressed(ClimbEnabling);
       }
 
       if (outtakeCommand != null && CDSForwardCommand != null) {
