@@ -9,14 +9,12 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.AimModes;
-import frc.robot.Constants.Shooter;
 import frc.robot.common.hardware.MotorController;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -63,7 +61,8 @@ public class ShooterSubsystem extends SubsystemBase {
     smoothRPM = 0;
     aimMode = AimModes.TEST;
     // Initializes the SparkMAX for the flywheel motors
-    flywheelController = new MotorController("Flywheel", Constants.Shooter.shooterID, Constants.Shooter.kPIDFArray);
+    flywheelController =
+        new MotorController("Flywheel", Constants.Shooter.shooterID, Constants.Shooter.kPIDFArray);
     flywheel2Controller = new MotorController("Flywheel 2", Constants.Shooter.shooter2ID);
     flywheelPID = flywheelController.getPIDCtrl();
     flywheelEncoder = flywheelController.getEncoder();
@@ -218,12 +217,12 @@ public class ShooterSubsystem extends SubsystemBase {
     DShooterRPM.setDouble(currentRPM);
     DSmoothRPM.setDouble(smoothRPM);
     DDistance.setDouble(getDistance());
-      if ((flywheelPID.getP() != PID_P.getDouble(0))
-          || (flywheelPID.getI() != PID_I.getDouble(0))
-          || (flywheelPID.getD() != PID_D.getDouble(0))
-          || (flywheelPID.getFF() != PID_F.getDouble(0))) {
-        updatePID();
-      }
+    if ((flywheelPID.getP() != PID_P.getDouble(0))
+        || (flywheelPID.getI() != PID_I.getDouble(0))
+        || (flywheelPID.getD() != PID_D.getDouble(0))
+        || (flywheelPID.getFF() != PID_F.getDouble(0))) {
+      updatePID();
+    }
     /*   if (DShootingMode.getDouble(0) != aimMode.ordinal()) {
     setAimMode((int) DShootingMode.getDouble(0)); */
     // }
