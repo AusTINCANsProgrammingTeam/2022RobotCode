@@ -47,6 +47,7 @@ public class CDSBallManagementCommand extends CommandBase {
     SmartDashboard.putBoolean("Middle Sensor Status", sensorStatus[1]);
     SmartDashboard.putBoolean("Back Sensor Status", sensorStatus[0]);
 
+    // Calls Auto Eject
     if (!ejectRunning) {
       // Checks if conditions for ejection are met:
       // A ball count of over 2 OR ball color is wrong and test mode is off (meaning ball color
@@ -74,13 +75,13 @@ public class CDSBallManagementCommand extends CommandBase {
     if (!ejectRunning) {
       SmartDashboard.putBoolean("CDS Running", runningCDS);
       if (!runningCDS) {
-        // Send ball to setpoint
+        // Send ball to sensor
         SmartDashboard.putBooleanArray("Sensor Statuses", sensorStatus);
         if (sensorStatus[2]) {
           int nextOpenSensor = CDSSubsystem.getNextOpenSensor(sensorStatus);
           SmartDashboard.putNumber("Open Sensor Index", nextOpenSensor);
           if (nextOpenSensor != -1) {
-            // There is an open setpoint avaliable, run CDS
+            // There is an open sensor avaliable, run CDS
             runningCDS = true;
             sensorIndex = nextOpenSensor;
             CDSSubsystem.CDSToggleAll(false);
@@ -88,7 +89,7 @@ public class CDSBallManagementCommand extends CommandBase {
           }
         }
       } else {
-        // Check if ball has reached setpoint, stop if it has
+        // Check if ball has reached sensor, stop if it has
         SmartDashboard.putNumber("Open Sensor Index", sensorIndex);
         if (sensorStatus[sensorIndex]) {
           CDSSubsystem.stopCDS();
