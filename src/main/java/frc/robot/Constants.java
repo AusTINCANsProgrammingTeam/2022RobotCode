@@ -41,7 +41,7 @@ public final class Constants {
   public enum AimModes {
     AUTO,
     // TODO: Plug real values in for these aimModes
-    LOW(1500.0, 0.0) {
+    LOW(3200.0, 0.0) {
       @Override
       public AimModes previous() {
         return values()[values().length - 1];
@@ -49,7 +49,7 @@ public final class Constants {
     },
     EJECT(2500.0, 0.0),
     LAUNCH(0.0, 0.0),
-    TARMAC(2650.0, 0.0),
+    TARMAC(4200.0, 0.0),
     TEST {
       @Override
       public AimModes next() {
@@ -131,9 +131,9 @@ public final class Constants {
 
   // drive base pid values
   public static final double[] driveRightPID = {
-    0.00035, 0.0000008, 0, 0
+    0.00035, 0.0000008, 0
   }; // TODO: need to tune for real robot
-  public static final double[] driveLeftPID = {0.000005, 0.0000008, 0, 0};
+  public static final double[] driveLeftPID = {0.000005, 0.0000008, 0};
 
   // AUTONOMOUS Constants
 
@@ -175,7 +175,7 @@ public final class Constants {
 
   // Intake Contstants
   public static final int intakeMotorOneID = 1;
-  public static final double intakeMotorSpeed = 1.0;
+  public static final double intakeMotorSpeed = 0.70;
   public static final int initialBallSensorChannel = 0;
   public static final int middleBallSensorChannel = 1;
   public static final int finalBallSensorChannel = 2;
@@ -185,7 +185,7 @@ public final class Constants {
   public static final int CDSWheelControllerOneID = 2;
   public static final int CDSWheelControllerTwoID = 9;
   public static final double CDSBeltSpeed = 0.40;
-  public static final double CDSWheelControllerSpeed = 0.65;
+  public static final double CDSWheelControllerSpeed = 0.25;
   public static final int frontSensorActivation = 200;
   public static final int middleSensorActivation = 450;
   public static final int backSensorActivation = 600;
@@ -249,14 +249,18 @@ public final class Constants {
     public static final double LLAngle =
         54.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as
     // exact as possible
-    public static final double cargoForward = 1.0;
+    public static final double cargoForward = 0.65;
     public static final double cargoReverse = -0.4;
-    public static final double kPIDFArray[] = {2.5e-4, 2.5e-7, 2e-6, 1e-4};
-    public static final double kMaxIAccum = 0.9;
-    public static final int kMaxISlot = 0;
-    public static final double kMaxOutput = 0.9;
+    public static final double kP = 2.5e-4;
+    public static final double kI = 19e-6;
+    public static final double kD = 0.005;
+    public static final double kF = 0.0;
+    public static final double kIZone = 0.9;
+    public static final double kMaxOutput = 0;
+    public static final double kMaxI = 0.9;
+    public static final double kMaxISlotId = 0;
     public static final double kMinOutput = 1;
-    public static final double kA = 0.15;
+    public static final double kA = 0.075;
   }
 
   // Climb Constants
