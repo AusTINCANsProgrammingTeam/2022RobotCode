@@ -16,60 +16,35 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.AimModes;
+import frc.robot.Constants.Shooter;
 import frc.robot.common.hardware.MotorController;
 
 public class ShooterSubsystem extends SubsystemBase {
+
   private MotorController flywheelController;
   private MotorController flywheel2Controller;
-  private MotorController hoodController;
   private SparkMaxPIDController flywheelPID;
-  private SparkMaxPIDController hoodPID;
   private RelativeEncoder flywheelEncoder;
+  private MotorController hoodController;
+  private SparkMaxPIDController hoodPID;
   private RelativeEncoder hoodEncoder;
   private MotorController stopperController;
-  private AimModes aimMode;
 
+  private AimModes aimMode;
   private double targetRPM;
   private double currentRPM;
-  private double Pconstant;
-  private double Iconstant;
-  private double Dconstant;
-  private double Fconstant;
-  private double IMaxAccumconstant;
-  private int IMaxAccumIDconstant;
-  private int I_Zone;
-  private double MaxOutput;
   private double smoothRPM;
 
   private ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter Tab");
   // TODO: Fine for now, but we really need to fix this tab when we have shuffleboard decided
-  private NetworkTableEntry dashTunePid =
-      shooterTab
-          .add("Tune PID", true)
-          .withPosition(0, 0)
-          .withWidget(BuiltInWidgets.kToggleSwitch)
-          .getEntry();
   private NetworkTableEntry PID_P =
-      shooterTab.add("PID P", Constants.Shooter.kP).withPosition(0, 1).getEntry();
+      shooterTab.add("PID P", Constants.Shooter.kPIDFArray[0]).withPosition(0, 1).getEntry();
   private NetworkTableEntry PID_I =
-      shooterTab.add("PID I", Constants.Shooter.kI).withPosition(0, 2).getEntry();
+      shooterTab.add("PID I", Constants.Shooter.kPIDFArray[1]).withPosition(0, 2).getEntry();
   private NetworkTableEntry PID_D =
-      shooterTab.add("PID D", Constants.Shooter.kD).withPosition(0, 3).getEntry();
+      shooterTab.add("PID D", Constants.Shooter.kPIDFArray[2]).withPosition(0, 3).getEntry();
   private NetworkTableEntry PID_F =
-      shooterTab.add("PID F", Constants.Shooter.kF).withPosition(0, 4).getEntry();
-  private NetworkTableEntry PID_IMaxAccum =
-      shooterTab.add("PID I Max Accum", Constants.Shooter.kMaxI).withPosition(0, 5).getEntry();
-  private NetworkTableEntry PID_Izone =
-      shooterTab.add("PID I Range", Constants.Shooter.kIZone).withPosition(1, 0).getEntry();
-  private NetworkTableEntry PID_MaxOutput =
-      shooterTab.add("PID Peak Output", Constants.Shooter.kMaxOutput).withPosition(1, 1).getEntry();
-  private NetworkTableEntry PID_MinOutput =
-      shooterTab.add("PID Min Out ", Constants.Shooter.kMinOutput).withPosition(1, 2).getEntry();
-  private NetworkTableEntry PID_IMaxAccumID =
-      shooterTab
-          .add("PID Peak Output Slot ID", Constants.Shooter.kMaxISlotId)
-          .withPosition(1, 3)
-          .getEntry();
+      shooterTab.add("PID F", Constants.Shooter.kPIDFArray[3]).withPosition(0, 4).getEntry();
   private NetworkTableEntry SShootingMode =
       shooterTab.add("Shooting Mode", "TEST").withPosition(1, 5).getEntry();
   private NetworkTableEntry DDistance =
@@ -81,21 +56,14 @@ public class ShooterSubsystem extends SubsystemBase {
   private NetworkTableEntry DShooterRPMInput =
       shooterTab.add("Shooter RPM Input", 3550).withPosition(2, 3).getEntry();
   private NetworkTableEntry DSmoothRPM = shooterTab.add("Smooth RPM", 0.0).getEntry();
-  private double MaxOutputConstant;
-  private double MinOutputConstant;
+
   private ShooterConfig[] DistanceArray;
-  // private NetworkTableEntry PID_F = shooterTab.addPersistent("PID F",
-  // Constants.Shooter.).withPosition(3, 2).getEntry();
-  // private NetworkTableEntry PID_Izone = shooterTab.addPersistent("PID I Range",
-  // Constants.Shooter.).withPosition(4, 2).getEntry();
-  // private NetworkTableEntry PID_MaxOutput = shooterTab.addPersistent("PID Peak Output",
-  // Constants.Shooter.d).withPosition(5, 2).getEntry();
 
   public ShooterSubsystem() {
     smoothRPM = 0;
     aimMode = AimModes.TEST;
     // Initializes the SparkMAX for the flywheel motors
-    flywheelController = new MotorController("Flywheel", Constants.Shooter.shooterID, 40, true);
+    flywheelController = new MotorController("Flywheel", Constants.Shooter.shooterID, Constants.Shooter.kPIDFArray);
     flywheel2Controller = new MotorController("Flywheel 2", Constants.Shooter.shooter2ID);
     flywheelPID = flywheelController.getPIDCtrl();
     flywheelEncoder = flywheelController.getEncoder();
@@ -111,15 +79,11 @@ public class ShooterSubsystem extends SubsystemBase {
     hoodPID.setI(0.0);
     hoodPID.setD(0.0);
     hoodPID.setOutputRange(0, 1);*/
-    // Initializes PID for the shooter
-    flywheelPID.setP(Constants.Shooter.kP);
-    flywheelPID.setI(Constants.Shooter.kI);
-    flywheelPID.setIMaxAccum(Constants.Shooter.kMaxI, 0);
-    flywheelPID.setD(Constants.Shooter.kD);
-    flywheelPID.setOutputRange(0, 1);
+    // Initializes Additional PID for the shooter
+    flywheelPID.setIMaxAccum(Constants.Shooter.kMaxIAccum, Constants.Shooter.kMaxISlot);
+    flywheelPID.setOutputRange(Constants.Shooter.kMinOutput, Constants.Shooter.kMaxOutput);
 
     DistanceArray = new ShooterConfig[3];
-
     DistanceArray[0] = new ShooterConfig(5, 64, 2263);
     DistanceArray[1] = new ShooterConfig(10, 80, 3065);
     DistanceArray[2] = new ShooterConfig(15, 82, 3420);
@@ -128,24 +92,10 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void updatePID() {
-
-    if (dashTunePid.getBoolean(false)) {
-
-      Pconstant = PID_P.getDouble(0);
-      Iconstant = PID_I.getDouble(0);
-      Dconstant = PID_D.getDouble(0);
-      Fconstant = PID_F.getDouble(0);
-      MaxOutputConstant = PID_MaxOutput.getDouble(0);
-      MinOutputConstant = PID_MinOutput.getDouble(0);
-      IMaxAccumconstant = PID_IMaxAccum.getDouble(0);
-      IMaxAccumIDconstant = (int) PID_IMaxAccumID.getDouble(0);
-      flywheelPID.setOutputRange(MaxOutputConstant, MinOutputConstant);
-      flywheelPID.setP(Pconstant);
-      flywheelPID.setI(Iconstant);
-      flywheelPID.setD(Dconstant);
-      flywheelPID.setFF(Fconstant);
-      flywheelPID.setIMaxAccum(IMaxAccumconstant, IMaxAccumIDconstant);
-    }
+    flywheelPID.setP(PID_P.getDouble(0));
+    flywheelPID.setI(PID_I.getDouble(0));
+    flywheelPID.setD(PID_D.getDouble(0));
+    flywheelPID.setFF(PID_F.getDouble(0));
   }
 
   public void adjustHood(double a) {
@@ -268,14 +218,12 @@ public class ShooterSubsystem extends SubsystemBase {
     DShooterRPM.setDouble(currentRPM);
     DSmoothRPM.setDouble(smoothRPM);
     DDistance.setDouble(getDistance());
-    if (dashTunePid.getBoolean(false)) {
       if ((flywheelPID.getP() != PID_P.getDouble(0))
           || (flywheelPID.getI() != PID_I.getDouble(0))
-          || (flywheelPID.getD() != PID_D.getDouble(0))) {
+          || (flywheelPID.getD() != PID_D.getDouble(0))
+          || (flywheelPID.getFF() != PID_F.getDouble(0))) {
         updatePID();
       }
-      // dashTunePid.setBoolean(false);
-    }
     /*   if (DShootingMode.getDouble(0) != aimMode.ordinal()) {
     setAimMode((int) DShootingMode.getDouble(0)); */
     // }

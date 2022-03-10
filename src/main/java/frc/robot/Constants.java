@@ -251,14 +251,10 @@ public final class Constants {
     // exact as possible
     public static final double cargoForward = 1.0;
     public static final double cargoReverse = -0.4;
-    public static final double kP = 2.5e-4;
-    public static final double kI = 2.5e-7;
-    public static final double kD = 2e-6;
-    public static final double kF = 1e-4;
-    public static final double kIZone = 0.9;
-    public static final double kMaxOutput = 0;
-    public static final double kMaxI = 0.9;
-    public static final double kMaxISlotId = 0;
+    public static final double kPIDFArray[] = {2.5e-4, 2.5e-7, 2e-6, 1e-4};
+    public static final double kMaxIAccum = 0.9;
+    public static final int kMaxISlot = 0;
+    public static final double kMaxOutput = 0.9;
     public static final double kMinOutput = 1;
     public static final double kA = 0.15;
   }
