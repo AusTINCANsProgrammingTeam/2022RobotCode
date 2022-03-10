@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutonModes;
-import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveBaseTeleopCommand;
@@ -193,7 +192,8 @@ public class RobotContainer {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, CDSSubsystem);
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, CDSSubsystem);
       outtakeCommand = new OuttakeCommand(intakeSubsystem, CDSSubsystem);
-      CDSSubsystem.setDefaultCommand(new CDSBallManagementCommand(CDSSubsystem, intakeSubsystem));
+      // CDSSubsystem.setDefaultCommand(new CDSBallManagementCommand(CDSSubsystem,
+      // intakeSubsystem));
     }
     if (shooterSubsystem != null && CDSSubsystem != null) {
       shooterHeldAuto =
@@ -223,21 +223,21 @@ public class RobotContainer {
     // Intake / CDS
     if (intakeForwardCommand != null && outtakeCommand != null) {
       // takes ball in
-      buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
+      buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
       // spits ball out
-      buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
+      buttons[Constants.RBumper].whileHeld(outtakeCommand);
     }
 
     if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
       // Auto Aim Shot
-      buttons[Constants.LBumper].whileHeld(
+      buttons[Constants.LTriggerButton].whileHeld(
           shooterHeldAuto.beforeStarting(
               () -> {
-                shooterSubsystem.setAimMode(Constants.AimModes.AUTO);
+                shooterSubsystem.setAimMode(Constants.AimModes.TARMAC);
               },
               shooterSubsystem));
       // Fender Shot
-      buttons[Constants.LTriggerButton].whileHeld(
+      buttons[Constants.LBumper].whileHeld(
           shooterHeldLow.beforeStarting(
               () -> {
                 shooterSubsystem.setAimMode(Constants.AimModes.LOW);
@@ -273,8 +273,8 @@ public class RobotContainer {
       }
 
       if (outtakeCommand != null && CDSForwardCommand != null) {
-        buttons2[Constants.RBumper].whileHeld(CDSForwardCommand);
-        buttons2[Constants.RTriggerButton].whileHeld(outtakeCommand);
+        buttons2[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
+        buttons2[Constants.RBumper].whileHeld(outtakeCommand);
       }
 
       System.out.printf("Using Competition Two-controller button mappings");

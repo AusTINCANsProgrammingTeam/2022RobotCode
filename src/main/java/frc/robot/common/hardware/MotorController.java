@@ -16,6 +16,7 @@ public class MotorController extends CANSparkMax {
   private double mP;
   private double mI;
   private double mD;
+  private double mFF;
 
   // default constructor
   public MotorController(String name, int deviceID) {
@@ -42,6 +43,7 @@ public class MotorController extends CANSparkMax {
     mP = PID[0];
     mI = PID[1];
     mD = PID[2];
+    mFF = PID[3];
     activatePID(PID);
   }
 
@@ -82,6 +84,7 @@ public class MotorController extends CANSparkMax {
     mPIDController.setP(mP);
     mPIDController.setI(mI);
     mPIDController.setD(mD);
+    mPIDController.setFF(mFF);
 
     // add the values to smart dashboard
     SmartDashboard.putNumber(mName + " P value", mP);
@@ -115,6 +118,12 @@ public class MotorController extends CANSparkMax {
       if (currentD != mD) {
         mD = currentD;
         mPIDController.setD(mD);
+      }
+
+      double currentFF = SmartDashboard.getNumber(mName + " FF value", mFF);
+      if (currentFF != mFF) {
+        mFF = currentFF;
+        mPIDController.setFF(mFF);
       }
     }
   }
