@@ -13,7 +13,7 @@ public class ClimbCommand extends CommandBase {
   private final ClimbSubsystem m_subsystem;
   private final DriveBaseSubsystem m_drivesubsystem;
 
-  public ClimbCommand(ClimbSubsystem s,DriveBaseSubsystem  d) {
+  public ClimbCommand(ClimbSubsystem s, DriveBaseSubsystem d) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(s);
     addRequirements(d);

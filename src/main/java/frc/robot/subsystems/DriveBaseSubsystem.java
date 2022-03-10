@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Encoder;
@@ -20,6 +21,8 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
@@ -29,18 +32,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.common.hardware.MotorController;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-
 
 public class DriveBaseSubsystem extends SubsystemBase {
   private ShuffleboardTab driverTab = Shuffleboard.getTab("Driver Teleop tab");
-  private NetworkTableEntry teleopSpeed = driverTab.add("Speed percentage", 100).withPosition(0, 1).getEntry();
-
-
+  private NetworkTableEntry teleopSpeed =
+      driverTab.add("Speed percentage", 100).withPosition(0, 1).getEntry();
 
   private final Joystick m_driverJoystick;
   private final MotorController[] m_motorControllers;
@@ -63,14 +59,11 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private RelativeEncoder m_leftEncoder;
   private RelativeEncoder m_rightEncoder;
   private SimpleMotorFeedforward m_sMotorFeedforward;
-  
 
   private boolean usingExternal = false;
-  
 
   public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {
 
-    
     m_driverJoystick = joystick;
 
     m_motorControllers = new MotorController[4];
@@ -226,17 +219,14 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.driveRightFrontIndex].updateSmartDashboard();
   }
 
-  public void setArcadedrivespeed(double input){
+  public void setArcadedrivespeed(double input) {
     teleopSpeed.setDouble(input);
-    
-
   }
-
 
   // Normal Arcade Drive
   public void arcadeDrive() {
     m_differentialDrive.arcadeDrive(
-        m_driverJoystick.getRawAxis(Constants.leftJoystickY)*(teleopSpeed.getDouble(100)/100 ),
+        m_driverJoystick.getRawAxis(Constants.leftJoystickY) * (teleopSpeed.getDouble(100) / 100),
         -0.85 * m_driverJoystick.getRawAxis(Constants.rightJoystickX),
         true);
     // joystick has y-axis flipped so up is negative why down is positive
