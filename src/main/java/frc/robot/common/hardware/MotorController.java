@@ -54,11 +54,6 @@ public class MotorController extends CANSparkMax {
     return mPIDController;
   }
 
-  // sets speed of motor
-  public void setSpeed(double speed) {
-    set(speed);
-  }
-
   public String getName() {
     return this.mName;
   }

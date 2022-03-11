@@ -146,7 +146,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void runCargo(double speed) {
-    stopperController.setSpeed(speed);
+    stopperController.set(speed);
   }
 
   public boolean wheelReady() {

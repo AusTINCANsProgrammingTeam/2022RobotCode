@@ -59,8 +59,10 @@ public class AutonModes {
 
   // this constructor is the default, only needs driveBaseSubsystem, useful when only wanting to
   // test taxi without worrying about other subsystems
-  public AutonModes(DriveBaseSubsystem d) {
+  public AutonModes(DriveBaseSubsystem d, IntakeSubsystem i, CDSSubsystem c) {
     this.driveBaseSubsystem = d;
+    this.intakeSubsystem = i;
+    this.cdsSubsystem = c;
 
     allSubsystemsEnabled = false;
 
@@ -158,6 +160,7 @@ public class AutonModes {
 
     taxiCommand =
         new SequentialCommandGroup(
+            new DeployIntake(intakeSubsystem, cdsSubsystem),
             new WaitCommand(initialWaitTime), // units in seconds
             taxiRamseteCommand
                 .beforeStarting(
@@ -167,6 +170,7 @@ public class AutonModes {
     if (allSubsystemsEnabled) {
       oneBallCommand =
           new SequentialCommandGroup(
+              new DeployIntake(intakeSubsystem, cdsSubsystem),
               new WaitCommand(initialWaitTime),
               new ShooterPressed(
                   shooterSubsystem,
@@ -190,6 +194,7 @@ public class AutonModes {
 
       twoBallCommand =
           new SequentialCommandGroup(
+              new DeployIntake(intakeSubsystem, cdsSubsystem),
               new WaitCommand(initialWaitTime),
               twoBallParallel,
               new WaitCommand(Constants.delayshot),
