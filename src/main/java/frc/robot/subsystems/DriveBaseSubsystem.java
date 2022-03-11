@@ -266,11 +266,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_field.setRobotPose(m_odometry.getPoseMeters());
   }
 
-
   public void stopDriveMotors() {
     // Calls Arcade Drive with a zero to both speed and rotation in order to stop the motors
     setSpeeds(0.0, 0.0);
-
   }
 
   public CANSparkMax getRightMotor() {

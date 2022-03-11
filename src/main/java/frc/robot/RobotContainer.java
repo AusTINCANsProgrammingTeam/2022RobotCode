@@ -129,39 +129,45 @@ public class RobotContainer {
 
         // System.out.println((String) k + " " + subSysEnables.get((String) k));
         switch (sub.toString()) {
-          case "DriveBaseSubsystem": {
-            System.out.println("Drivebase enabled");
-            driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, Constants.usingExternal);
-            break;
-          }
-          case "CDSSubsystem": {
-            System.out.println("CDS enabled");
-            CDSSubsystem = new CDSSubsystem();
-            break;
-          }
-          case "IntakeSubsystem": {
-            System.out.println("Intake enabled");
-            intakeSubsystem = new IntakeSubsystem();
-            break;
-          }
-          case "ShooterSubsystem": {
-            System.out.println("Shooter enabled");
-            shooterSubsystem = new ShooterSubsystem();
-            break;
-          }
-          case "LimelightSubsystem": {
-            System.out.println("Limelight enabled");
-            limelightSubsystem = new LimelightSubsystem();
-            break;
-          }
-          case "ClimbSubsystem": {
-            if (axisCount1 > 0 && buttonCount1 > 0) {
-              climbSubsystem = new ClimbSubsystem(operatorJoystick);
-              climbCommand = new ClimbCommand(climbSubsystem);
-              System.out.println("Climb enabled");
+          case "DriveBaseSubsystem":
+            {
+              System.out.println("Drivebase enabled");
+              driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, Constants.usingExternal);
+              break;
             }
-            break;
-          }
+          case "CDSSubsystem":
+            {
+              System.out.println("CDS enabled");
+              CDSSubsystem = new CDSSubsystem();
+              break;
+            }
+          case "IntakeSubsystem":
+            {
+              System.out.println("Intake enabled");
+              intakeSubsystem = new IntakeSubsystem();
+              break;
+            }
+          case "ShooterSubsystem":
+            {
+              System.out.println("Shooter enabled");
+              shooterSubsystem = new ShooterSubsystem();
+              break;
+            }
+          case "LimelightSubsystem":
+            {
+              System.out.println("Limelight enabled");
+              limelightSubsystem = new LimelightSubsystem();
+              break;
+            }
+          case "ClimbSubsystem":
+            {
+              if (axisCount1 > 0 && buttonCount1 > 0) {
+                climbSubsystem = new ClimbSubsystem(operatorJoystick);
+                climbCommand = new ClimbCommand(climbSubsystem);
+                System.out.println("Climb enabled");
+              }
+              break;
+            }
         }
       }
     }
@@ -192,10 +198,12 @@ public class RobotContainer {
       // intakeSubsystem));
     }
     if (shooterSubsystem != null && CDSSubsystem != null) {
-      shooterHeldAuto = new ShooterHeld(
-          shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
-      shooterHeldLow = new ShooterHeld(
-          shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
+      shooterHeldAuto =
+          new ShooterHeld(
+              shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
+      shooterHeldLow =
+          new ShooterHeld(
+              shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
     }
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
@@ -259,8 +267,7 @@ public class RobotContainer {
       }
 
       // ClimbSubysystem has no binding because there are not enuf axises
-      if (climbSubsystem != null) {
-      }
+      if (climbSubsystem != null) {}
 
       System.out.printf("Using Testing One-controller button mappings");
     } else {
@@ -292,16 +299,18 @@ public class RobotContainer {
           && limelightSubsystem != null
           && CDSSubsystem != null
           && intakeSubsystem != null) {
-        autonModes = new AutonModes(
-            driveBaseSubsystem,
-            shooterSubsystem,
-            limelightSubsystem,
-            CDSSubsystem,
-            intakeSubsystem);
+        autonModes =
+            new AutonModes(
+                driveBaseSubsystem,
+                shooterSubsystem,
+                limelightSubsystem,
+                CDSSubsystem,
+                intakeSubsystem);
 
       } else {
-        autonModes = new AutonModes(
-            driveBaseSubsystem); // default constructor, if other subsystems are disabled only
+        autonModes =
+            new AutonModes(
+                driveBaseSubsystem); // default constructor, if other subsystems are disabled only
         // use drivebase for taxi
       }
     } else {
