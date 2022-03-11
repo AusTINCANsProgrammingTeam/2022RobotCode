@@ -145,6 +145,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
 
+    // TODO: Tune PID values
     // set PID values
     m_motorControllers[Constants.driveRightFrontIndex]
         .getPIDCtrl()
@@ -209,6 +210,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // Normal Arcade Drive
   public void arcadeDrive() {
+    // Note: -0.85 to accomodate comfort of driver (sensitivity)
     m_differentialDrive.arcadeDrive(
         -0.85 * m_driverJoystick.getRawAxis(Constants.leftJoystickY),
         m_driverJoystick.getRawAxis(Constants.rightJoystickX),
