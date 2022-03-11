@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
+
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -43,8 +45,8 @@ public class ShooterSubsystem extends SubsystemBase {
       shooterTab.add("PID I", Constants.Shooter.kPIDFArray[1]).withPosition(0, 2).getEntry();
   private NetworkTableEntry PID_D =
       shooterTab.add("PID D", Constants.Shooter.kPIDFArray[2]).withPosition(0, 3).getEntry();
-  private NetworkTableEntry PID_Acc =
-      shooterTab.add("PID Acc", Constants.Shooter.kAccel).withPosition(0, 4).getEntry();
+  private NetworkTableEntry PID_F =
+      shooterTab.add("PID F", 0).withPosition(0, 4).getEntry();
   private NetworkTableEntry SShootingMode =
       shooterTab.add("Shooting Mode", "TEST").withPosition(1, 5).getEntry();
   private NetworkTableEntry DDistance =
@@ -86,7 +88,6 @@ public class ShooterSubsystem extends SubsystemBase {
     // Initializes Additional PID for the shooter
     flywheelPID.setIMaxAccum(Constants.Shooter.kMaxIAccum, Constants.Shooter.kMaxISlot);
     flywheelPID.setOutputRange(Constants.Shooter.kMinOutput, Constants.Shooter.kMaxOutput);
-    flywheelPID.setFF(1e-4); // TODO: delete when testing FF
 
     DistanceArray = new ShooterConfig[3];
     DistanceArray[0] = new ShooterConfig(5, 64, 2263);
@@ -131,8 +132,6 @@ public class ShooterSubsystem extends SubsystemBase {
       flywheelPID.setIAccum(0);
     } else {
       targetRPM = rpm;
-      SmartDashboard.putNumber("trpm", rpm);
-      // flywheelPID.setFF(flywheelFF.calculate(rpm));
       flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
     }
   }
@@ -183,7 +182,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double getDistance() {
     // Uses Limelight to find distance to High Goal
-    SmartDashboard.putNumber("ty", getTY());
     return (Constants.Shooter.highHeight - Constants.Shooter.LLHeight)
         / Math.tan(Math.toRadians((getTY() + Constants.Shooter.LLAngle))); // Return distance in ft
   }
@@ -210,14 +208,13 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void updateSmartDashboard() {
-    SmartDashboard.putString("AimMode", "");
-    SmartDashboard.putNumber("IAccum", flywheelPID.getIAccum());
-    SmartDashboard.putNumber("Distance", getDistance());
-    SmartDashboard.putNumber("RPM", flywheelEncoder.getVelocity());
   }
 
   @Override
   public void periodic() {
+    flywheelController.setVoltage(flywheelFF.calculate(2650));
+    SmartDashboard.putNumber("rpm", flywheelEncoder.getVelocity());
+    SmartDashboard.putNumber("ff", flywheelPID.getFF());
     currentRPM = flywheelEncoder.getVelocity();
     smoothRPM = Constants.Shooter.kA * currentRPM + smoothRPM * (1 - Constants.Shooter.kA);
     // This method will be called once per scheduler run
@@ -227,7 +224,7 @@ public class ShooterSubsystem extends SubsystemBase {
     if ((flywheelPID.getP() != PID_P.getDouble(0))
         || (flywheelPID.getI() != PID_I.getDouble(0))
         || (flywheelPID.getD() != PID_D.getDouble(0))
-        || (flywheelPID.getFF() != PID_Acc.getDouble(0))) {
+        || (flywheelPID.getFF() != PID_F.getDouble(0))) {
       updatePID();
     }
     /*   if (DShootingMode.getDouble(0) != aimMode.ordinal()) {
