@@ -12,14 +12,11 @@ public class IntakeForwardCommand extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
   private final IntakeSubsystem mIntakeSubsystem;
 
-  private final CDSSubsystem mCdsSubsystem;
 
-  public IntakeForwardCommand(IntakeSubsystem intakeSubsystem, CDSSubsystem cdsSubsystem) {
+  public IntakeForwardCommand(IntakeSubsystem intakeSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intakeSubsystem);
-    addRequirements(cdsSubsystem);
     mIntakeSubsystem = intakeSubsystem;
-    mCdsSubsystem = cdsSubsystem;
   }
 
   // Called when the command is initially scheduled.
@@ -36,7 +33,6 @@ public class IntakeForwardCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     mIntakeSubsystem.stopIntake();
-    mCdsSubsystem.stopCDSWheel();
   }
 
   // Returns true when the command should end.
