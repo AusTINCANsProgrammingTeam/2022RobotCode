@@ -60,7 +60,7 @@ public class CDSSubsystem extends SubsystemBase {
     CDSBeltController.setIdleMode(IdleMode.kBrake);
     CDSWheelControllerOne.setIdleMode(IdleMode.kCoast);
 
-    // colorSensors = new ColorSensorMuxed(0, 1, 3);
+    colorSensors = new ColorSensorMuxed(0, 1, 2);
 
     String allianceColor = DriverStation.getAlliance().toString();
     SmartDashboard.putString("Alliance Color", allianceColor);
