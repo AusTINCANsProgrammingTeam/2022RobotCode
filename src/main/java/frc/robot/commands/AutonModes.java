@@ -33,7 +33,7 @@ public class AutonModes {
   // private Trajectory[] taxiTrajectories;
   private Trajectory taxiTrajectory;
   private Trajectory oneBallTrajectory;
-  private Trajectory twoBallTrajectory;
+  private Trajectory[] twoBallTrajectory = new Trajectory[2];
 
   private Trajectory[] threeBallTrajectories;
   private Trajectory[] fourBallTrajectories;
@@ -41,7 +41,7 @@ public class AutonModes {
   // Ramsete Commands, commands for following paths from pathweaver
   private RamseteCommand taxiRamseteCommand;
   private RamseteCommand oneBallRamseteCommand;
-  private RamseteCommand twoBallRamseteCommand;
+  private RamseteCommand[] twoBallRamseteCommand = new RamseteCommand[2];
 
   private RamseteCommand[] threeRamseteCommands;
   private RamseteCommand[] fourRamseteCommands;
@@ -134,7 +134,8 @@ public class AutonModes {
     if (allSubsystemsEnabled) {
       oneBallTrajectory = getTrajectory(Constants.oneBallPath);
 
-      twoBallTrajectory = getTrajectory(Constants.twoBallPath);
+      twoBallTrajectory[0] = getTrajectory(Constants.twoBallPath);
+      twoBallTrajectory[1] = getTrajectory("paths/GoBackIntoFender.wpilib.json");
 
       // threeBallTrajectories
       // fourBallTrajectories
@@ -147,7 +148,8 @@ public class AutonModes {
     if (allSubsystemsEnabled) {
       oneBallRamseteCommand = getRamseteCommand(oneBallTrajectory);
 
-      twoBallRamseteCommand = getRamseteCommand(twoBallTrajectory);
+      twoBallRamseteCommand[0] = getRamseteCommand(twoBallTrajectory[0]);
+      twoBallRamseteCommand[1] = getRamseteCommand(twoBallTrajectory[1]);
 
       // threeBallRamseteCommand
       // fourBallRamseteCommand
@@ -183,17 +185,22 @@ public class AutonModes {
 
       twoBallParallel =
           new ParallelDeadlineGroup(
-              twoBallRamseteCommand.beforeStarting(
+              twoBallRamseteCommand[0].beforeStarting(
                   () ->
                       driveBaseSubsystem.resetOdometry(
-                          twoBallTrajectory.getInitialPose()))); // go out to get ball
-      // new IntakeForwardCommand(intakeSubsystem, cdsSubsystem)
-      //     .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
+                          twoBallTrajectory[0].getInitialPose())), // go out to get ball
+              new IntakeForwardCommand(intakeSubsystem, cdsSubsystem)
+                  .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
 
       twoBallCommand =
           new SequentialCommandGroup(
               new WaitCommand(initialWaitTime),
               twoBallParallel,
+              twoBallRamseteCommand[1].beforeStarting(() -> { 
+                  driveBaseSubsystem.resetOdometry(twoBallTrajectory[1].getInitialPose()); 
+                  driveBaseSubsystem.setReverse(); 
+                }
+              ),
               new WaitCommand(Constants.delayshot),
               new ShooterPressed(
                       shooterSubsystem,

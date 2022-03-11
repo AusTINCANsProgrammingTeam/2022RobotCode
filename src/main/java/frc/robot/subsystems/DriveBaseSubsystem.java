@@ -55,6 +55,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private SimpleMotorFeedforward m_sMotorFeedforward;
 
   private boolean usingExternal = false;
+  private boolean isReverse = false;
 
   public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {
     m_driverJoystick = joystick;
@@ -295,8 +296,18 @@ public class DriveBaseSubsystem extends SubsystemBase {
     getRightMotor().set(right);
   }
 
+  public void setReverse() {
+    isReverse = true;
+  }
+
   // for trajectory (ramseteCommand)
   public void acceptWheelSpeeds(double leftSpeed, double rightSpeed) {
+    if(isReverse == true) {
+      double temp = leftSpeed;
+      leftSpeed = -rightSpeed;
+      rightSpeed = -temp;
+    }
+
     // leftSpeed and rightSpeed in m/s, need to convert it to rpm
 
     leftSpeed =

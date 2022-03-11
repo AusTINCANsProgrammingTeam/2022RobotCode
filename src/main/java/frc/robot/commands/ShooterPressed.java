@@ -55,7 +55,7 @@ public class ShooterPressed extends CommandBase {
         }
         i++;
       }
-    } else {
+    } else if (i == 0) {
       m_CDSSubsystem.stopCDS();
       m_ShooterSubsystem.runCargo(Constants.Shooter.cargoReverse);
       m_ShooterSubsystem.setCargoBoolean(false);
@@ -65,6 +65,7 @@ public class ShooterPressed extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_CDSSubsystem.stopCDS();
     m_ShooterSubsystem.runCargo(0);
     m_ShooterSubsystem.windFlywheel(0);
     m_ShooterSubsystem.setCargoBoolean(false);

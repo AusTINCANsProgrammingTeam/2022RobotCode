@@ -36,10 +36,10 @@ public class Robot extends TimedRobot {
 
     // TODO: change to correct paths
     chooser.setDefaultOption("Taxi", "taxi");
-    chooser.addOption("One Ball", "oneball");
-    chooser.addOption("Two Ball", "twoball");
-    chooser.addOption("Three Ball", "threeball");
-    chooser.addOption("Four Ball", "fourball");
+    chooser.addOption("One Ball", "one ball");
+    chooser.addOption("Two Ball", "two ball");
+    chooser.addOption("Three Ball", "three ball");
+    chooser.addOption("Four Ball", "four ball");
     SmartDashboard.putData("Auto Mode", chooser);
 
     if (RobotContainer.getDriveBase() != null) {
@@ -80,8 +80,7 @@ public class Robot extends TimedRobot {
   // This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    // autonomousCommand = robotContainer.getAutonomousCommand(chooser.getSelected());
-    autonomousCommand = robotContainer.getAutonomousCommand("one ball");
+    autonomousCommand = robotContainer.getAutonomousCommand(chooser.getSelected());
 
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
