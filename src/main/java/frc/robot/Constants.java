@@ -23,8 +23,8 @@ public final class Constants {
     CDSSubsystem      (true),
     IntakeSubsystem   (true),
     ShooterSubsystem  (true),
-    LimelightSubsystem(false),
-    ClimbSubsystem    (false);
+    LimelightSubsystem(true),
+    ClimbSubsystem    (true);
     // spotless:on
 
     private final Boolean enabled;
@@ -140,7 +140,9 @@ public final class Constants {
   // Path json files
   public static final String taxiPath = "paths/TaxiOut.wpilib.json";
   public static final String oneBallPath = "paths/TaxiOutFromFender.wpilib.json";
-  public static final String twoBallPath = "paths/TaxiOutToGrabBall.wpilib.json";
+  public static final String twoBallPath[] = {
+    "paths/TaxiOutToGrabBall.wpilib.json", "paths/GoBackIntoFender.wpilib.json"
+  };
 
   // Volts, constants for ramseteCommand
   public static final double ksVolts = 0.2358; // Ks

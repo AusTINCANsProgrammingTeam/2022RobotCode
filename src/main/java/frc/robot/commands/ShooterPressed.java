@@ -56,6 +56,7 @@ public class ShooterPressed extends CommandBase {
         i++;
       }
     } else if (i == 0) {
+      // when wheel is not ready and i is still 0
       m_CDSSubsystem.stopCDS();
       m_ShooterSubsystem.runCargo(Constants.Shooter.cargoReverse);
       m_ShooterSubsystem.setCargoBoolean(false);

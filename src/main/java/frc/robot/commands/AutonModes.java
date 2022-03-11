@@ -134,8 +134,8 @@ public class AutonModes {
     if (allSubsystemsEnabled) {
       oneBallTrajectory = getTrajectory(Constants.oneBallPath);
 
-      twoBallTrajectory[0] = getTrajectory(Constants.twoBallPath);
-      twoBallTrajectory[1] = getTrajectory("paths/GoBackIntoFender.wpilib.json");
+      twoBallTrajectory[0] = getTrajectory(Constants.twoBallPath[0]);
+      twoBallTrajectory[1] = getTrajectory(Constants.twoBallPath[1]);
 
       // threeBallTrajectories
       // fourBallTrajectories
@@ -196,18 +196,22 @@ public class AutonModes {
           new SequentialCommandGroup(
               new WaitCommand(initialWaitTime),
               twoBallParallel,
-              twoBallRamseteCommand[1].beforeStarting(() -> { 
-                  driveBaseSubsystem.resetOdometry(twoBallTrajectory[1].getInitialPose()); 
-                  driveBaseSubsystem.setReverse(); 
-                }
-              ),
+              twoBallRamseteCommand[1].beforeStarting(
+                  () -> {
+                    driveBaseSubsystem.resetOdometry(twoBallTrajectory[1].getInitialPose());
+                    driveBaseSubsystem.setReverse();
+                  }),
               new WaitCommand(Constants.delayshot),
               new ShooterPressed(
                       shooterSubsystem,
                       limelightSubsystem,
                       cdsSubsystem,
                       (limelightSubsystem != null))
-                  .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
+                  .andThen(
+                      () -> {
+                        driveBaseSubsystem.stopDriveMotors();
+                        driveBaseSubsystem.setReverse();      // reverse motors back
+                      }));
 
       threeBallCommand = null;
       fourBallCommand = null;
