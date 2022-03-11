@@ -210,7 +210,7 @@ public class AutonModes {
                   .andThen(
                       () -> {
                         driveBaseSubsystem.stopDriveMotors();
-                        driveBaseSubsystem.setReverse();      // reverse motors back
+                        driveBaseSubsystem.setReverse(); // reverse motors back
                       }));
 
       threeBallCommand = null;
