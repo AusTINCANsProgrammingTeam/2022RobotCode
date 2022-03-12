@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -52,7 +53,7 @@ public class AutonModes {
 
   private Command testCommand; // for testing miscellaneous: for example single ramsete commands
 
-  // amount of time before starting auton
+  // amount of time in seconds before starting auton
   public static double initialWaitTime = 1;
 
   // constructor used when only need to use driveBase, for example when testing testCommand
@@ -134,9 +135,10 @@ public class AutonModes {
 
       // first ramsete command needs to have driveBase reset odometry to match that of pathweaver
       if (i == 0) {
+        Pose2d p = trajectories[i].getInitialPose();
         ramseteCommands[i] =
             r.beforeStarting(
-                () -> driveBaseSubsystem.resetOdometry(trajectories[0].getInitialPose()));
+                () -> driveBaseSubsystem.resetOdometry(p));
       } else {
         ramseteCommands[i] = r;
       }
@@ -192,18 +194,13 @@ public class AutonModes {
               new DeployIntake(intakeSubsystem, cdsSubsystem),
               new WaitCommand(initialWaitTime),
               twoBallParallel,
-              twoBallRamseteCommands[1].beforeStarting(() -> driveBaseSubsystem.setReverse()),
+              twoBallRamseteCommands[1].andThen(() -> driveBaseSubsystem.stopDriveMotors()),
               new WaitCommand(Constants.delayshot),
               new ShooterPressed(
                       shooterSubsystem,
                       limelightSubsystem,
                       cdsSubsystem,
-                      (limelightSubsystem != null))
-                  .andThen(
-                      () -> {
-                        driveBaseSubsystem.stopDriveMotors();
-                        driveBaseSubsystem.setReverse(); // reverse motors back
-                      }));
+                      (limelightSubsystem != null)));
 
       // threeBallCommand
       // fourBallCommand
@@ -217,7 +214,7 @@ public class AutonModes {
     testRamseteCommands = getRamseteCommands(getTrajectories(Constants.Auton.TEST.getPaths()));
     testCommand =
         new SequentialCommandGroup(
-            testRamseteCommands[0],
+            testRamseteCommands[0].andThen(() -> driveBaseSubsystem.stopDriveMotors()),
             testRamseteCommands[1].andThen(() -> driveBaseSubsystem.stopDriveMotors()));
   }
 

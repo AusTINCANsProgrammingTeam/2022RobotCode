@@ -20,9 +20,9 @@ public final class Constants {
     // Change booleans to disable a subsystem in RobotContainer
     // spotless:off
     DriveBaseSubsystem(true),
-    CDSSubsystem      (false),
-    IntakeSubsystem   (false),
-    ShooterSubsystem  (false),
+    CDSSubsystem      (true),
+    IntakeSubsystem   (true),
+    ShooterSubsystem  (true),
     LimelightSubsystem(false),
     ClimbSubsystem    (false);
     // spotless:on
@@ -140,13 +140,11 @@ public final class Constants {
   public enum Auton {
     TAXI("paths/TaxiOut.wpilib.json"),
     ONEBALL("paths/TaxiOutFromFender.wpilib.json"),
-    TWOBALL("paths/TaxiOutToGrabBall.wpilib.json", "paths/GoBackIntoFender.wpilib.json"),
+    TWOBALL("paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json"),
     THREEBALL,
     FOURBALL,
     FIVEBALL,
-    TEST(
-        "paths/Forward.wpilib.json",
-        "paths/Backward.wpilib.json"); // change according to what path you want to test
+    TEST("paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json"); // change according to what path you want to test
 
     private String paths[];
 

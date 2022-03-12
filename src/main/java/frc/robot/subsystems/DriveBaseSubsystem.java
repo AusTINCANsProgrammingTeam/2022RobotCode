@@ -305,17 +305,17 @@ public class DriveBaseSubsystem extends SubsystemBase {
   // toggles inversion of motors
   public void setReverse() {
     // isReverse = true;
-    if (m_motorControllers[Constants.driveLeftFront].getInverted() == true) {
-      m_motorControllers[Constants.driveRightFront].setInverted(true);
-      m_motorControllers[Constants.driveRightRear].setInverted(true);
-      m_motorControllers[Constants.driveLeftFront].setInverted(false);
-      m_motorControllers[Constants.driveLeftRear].setInverted(false);
-    } else {
-      m_motorControllers[Constants.driveRightFront].setInverted(false);
-      m_motorControllers[Constants.driveRightRear].setInverted(false);
-      m_motorControllers[Constants.driveLeftFront].setInverted(true);
-      m_motorControllers[Constants.driveLeftRear].setInverted(true);
-    }
+    // if (m_motorControllers[Constants.driveLeftFront].getInverted() == true) {
+    //   m_motorControllers[Constants.driveRightFront].setInverted(true);
+    //   m_motorControllers[Constants.driveRightRear].setInverted(true);
+    //   m_motorControllers[Constants.driveLeftFront].setInverted(false);
+    //   m_motorControllers[Constants.driveLeftRear].setInverted(false);
+    // } else {
+    //   m_motorControllers[Constants.driveRightFront].setInverted(false);
+    //   m_motorControllers[Constants.driveRightRear].setInverted(false);
+    //   m_motorControllers[Constants.driveLeftFront].setInverted(true);
+    //   m_motorControllers[Constants.driveLeftRear].setInverted(true);
+    // }
   }
 
   // for trajectory (ramseteCommand)

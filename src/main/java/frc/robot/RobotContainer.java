@@ -310,6 +310,7 @@ public class RobotContainer {
     }
     else {
       System.out.println("No subsystems enabled.");
+      autonModes = null;
     }
   }
 
