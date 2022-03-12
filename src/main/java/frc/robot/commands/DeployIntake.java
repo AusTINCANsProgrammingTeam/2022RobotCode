@@ -15,7 +15,7 @@ public class DeployIntake extends CommandBase {
   private final CDSSubsystem mCdsSubsystem;
 
   private int msCurrent = 0;
-  private final int runTime = 2500; // how long to run intake for
+  private final int runTime = 1750; // how long to run intake for
 
   public DeployIntake(IntakeSubsystem intakeSubsystem, CDSSubsystem cdsSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.

@@ -118,7 +118,7 @@ public final class Constants {
     // spotless: off
     TAXI("Taxi", "paths/TaxiOut.wpilib.json"),
     ONEBALL("Taxi", "paths/TaxiOutFromFender.wpilib.json"),
-    TWOBALL("TwoBall", "paths/TaxiOutToGrabBall.wpilib.json", "paths/GoBackIntoFender.wpilib.json"),
+    TWOBALL("TwoBall", "paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json"),
     THREEBALL(
         "ThreeBall", "paths/GrabTwoBalls.wpilib.json", "paths/GoBackWithTwoBalls.wpilib.json"),
     FOURBALL,
