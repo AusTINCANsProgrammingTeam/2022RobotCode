@@ -97,8 +97,6 @@ public class RobotContainer {
       buttons2[i] = new JoystickButton(operatorJoystick, i);
     }
     configureButtonBindings();
-
-    initAuton();
   }
 
   private void controllerCheck() {
@@ -289,28 +287,50 @@ public class RobotContainer {
     return null;
   }
 
-  private void initAuton() {
-    if (driveBaseSubsystem != null && intakeSubsystem != null && cdsSubsystem != null) {
-      if (shooterSubsystem != null) {
-        System.out.println("Shooter enabled in auton.");
-        autonModes =
-            new AutonModes(
-                driveBaseSubsystem,
-                shooterSubsystem,
-                limelightSubsystem,
-                cdsSubsystem,
-                intakeSubsystem);
-      } else {
-        System.out.println("Basic auton without shooter enabled.");
-        autonModes = new AutonModes(driveBaseSubsystem, intakeSubsystem, cdsSubsystem);
-      }
-    } else if(driveBaseSubsystem != null) {
-      System.out.println("Test mode activated.");
-      autonModes = new AutonModes(driveBaseSubsystem);
+  public void initAuton(Constants.Auton mode) {
+    // switch for readibility
+    boolean success = true;
+    switch (mode) {
+      case TEST:
+        if (driveBaseSubsystem != null) {
+          autonModes = new AutonModes(driveBaseSubsystem);
+        } else {
+          success = false;
+        }
+        break;
+      case TAXI:
+        if (driveBaseSubsystem != null && intakeSubsystem != null && cdsSubsystem != null) {
+          autonModes = new AutonModes(driveBaseSubsystem, intakeSubsystem, cdsSubsystem);
+        } else {
+          success = false;
+        }
+        break;
+      case ONEBALL: // all of these modes go down to the FIVEBALL case
+      case TWOBALL:
+      case THREEBALL:
+      case FOURBALL:
+      case FIVEBALL:
+        if (shooterSubsystem != null
+            && driveBaseSubsystem != null
+            && intakeSubsystem != null
+            && cdsSubsystem != null) {
+          autonModes =
+              new AutonModes(
+                  driveBaseSubsystem,
+                  shooterSubsystem,
+                  limelightSubsystem,
+                  cdsSubsystem,
+                  intakeSubsystem);
+        } else {
+          success = false;
+        }
+        break;
+      default:
+        System.out.println("No mode selected");
+        break;
     }
-    else {
-      System.out.println("No subsystems enabled.");
-      autonModes = null;
+    if (success == false) {
+      System.out.println(mode.getName() + " mode unable to be created.");
     }
   }
 
