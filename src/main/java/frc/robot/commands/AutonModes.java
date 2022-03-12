@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -33,7 +34,6 @@ public class AutonModes {
   private Command taxiRamseteCommand;
   private Command oneBallRamseteCommand;
   private Command[] twoBallRamseteCommands;
-
   private Command[] threeBallRamseteCommands;
   private Command[] fourBallRamseteCommands;
   private Command[] fiveBallRamseteCommands;
@@ -43,16 +43,19 @@ public class AutonModes {
   // command groups
   private Command taxiCommand;
   private Command oneBallCommand;
+  // --------------------------
   private Command twoBallCommand;
   private Command twoBallParallel;
-
+  // -----------------------------
+  private Command threeBallParallel;
   private Command threeBallCommand;
+  // -------------------------------
   private Command fourBallCommand;
   private Command fiveBallCommand;
 
   private Command testCommand; // for testing miscellaneous: for example single ramsete commands
 
-  // amount of time before starting auton
+  // amount of time in seconds before starting auton
   public static double initialWaitTime = 1;
 
   // constructor used when only need to use driveBase, for example when testing testCommand
@@ -134,9 +137,8 @@ public class AutonModes {
 
       // first ramsete command needs to have driveBase reset odometry to match that of pathweaver
       if (i == 0) {
-        ramseteCommands[i] =
-            r.beforeStarting(
-                () -> driveBaseSubsystem.resetOdometry(trajectories[0].getInitialPose()));
+        Pose2d p = trajectories[i].getInitialPose();
+        ramseteCommands[i] = r.beforeStarting(() -> driveBaseSubsystem.resetOdometry(p));
       } else {
         ramseteCommands[i] = r;
       }
@@ -157,19 +159,19 @@ public class AutonModes {
       twoBallRamseteCommands =
           getRamseteCommands(getTrajectories(Constants.Auton.TWOBALL.getPaths()));
 
-      // threeBallRamseteCommand
+      threeBallRamseteCommands =
+          getRamseteCommands(getTrajectories(Constants.Auton.THREEBALL.getPaths()));
+
       // fourBallRamseteCommand
+      // fiveBallRamseteCommand
     }
   }
 
   private void initializeCommandGroups() {
-
-    // TODO: add deploy intake command at the beginning of each one
-
     taxiCommand =
         new SequentialCommandGroup(
-            new DeployIntake(intakeSubsystem, cdsSubsystem),
-            new WaitCommand(initialWaitTime), // units in seconds
+            new DeployIntake(intakeSubsystem, cdsSubsystem), // deploy/extend the intake
+            new WaitCommand(initialWaitTime), // wait before starting, units in seconds
             taxiRamseteCommand.andThen(() -> driveBaseSubsystem.stopDriveMotors()));
 
     if (shooterEnabled) {
@@ -183,29 +185,41 @@ public class AutonModes {
 
       twoBallParallel =
           new ParallelDeadlineGroup(
-              twoBallRamseteCommands[0], // travel to get ball
-              new IntakeForwardCommand(intakeSubsystem, cdsSubsystem)
-                  .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
+              twoBallRamseteCommands[0].andThen(
+                  () -> driveBaseSubsystem.stopDriveMotors()), // travel to get ball
+              new IntakeForwardCommand(intakeSubsystem),
+              new CDSForwardCommand(cdsSubsystem));
 
       twoBallCommand =
           new SequentialCommandGroup(
               new DeployIntake(intakeSubsystem, cdsSubsystem),
               new WaitCommand(initialWaitTime),
               twoBallParallel,
-              twoBallRamseteCommands[1].beforeStarting(() -> driveBaseSubsystem.setReverse()),
+              twoBallRamseteCommands[1].andThen(() -> driveBaseSubsystem.stopDriveMotors()),
               new WaitCommand(Constants.delayshot),
-              new ShooterPressed(
-                      shooterSubsystem,
-                      limelightSubsystem,
-                      cdsSubsystem,
-                      (limelightSubsystem != null))
-                  .andThen(
-                      () -> {
-                        driveBaseSubsystem.stopDriveMotors();
-                        driveBaseSubsystem.setReverse(); // reverse motors back
-                      }));
+              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
 
-      // threeBallCommand
+      threeBallParallel =
+          new ParallelDeadlineGroup(
+              threeBallRamseteCommands[0].andThen(
+                  () -> driveBaseSubsystem.stopDriveMotors()), // travel to get the two balls
+              new IntakeForwardCommand(intakeSubsystem),
+              new CDSForwardCommand(cdsSubsystem));
+
+      threeBallCommand =
+          new SequentialCommandGroup(
+              new DeployIntake(intakeSubsystem, cdsSubsystem),
+              new WaitCommand(initialWaitTime),
+              new ShooterPressed(
+                  shooterSubsystem, limelightSubsystem, cdsSubsystem, false), // shoot preloaded
+              threeBallParallel,
+              threeBallRamseteCommands[1].andThen(() -> driveBaseSubsystem.stopDriveMotors()),
+              new ShooterPressed(
+                  shooterSubsystem,
+                  limelightSubsystem,
+                  cdsSubsystem,
+                  false)); // shoot the two acquired balls
+
       // fourBallCommand
       // fiveBallCommand
 
@@ -217,7 +231,7 @@ public class AutonModes {
     testRamseteCommands = getRamseteCommands(getTrajectories(Constants.Auton.TEST.getPaths()));
     testCommand =
         new SequentialCommandGroup(
-            testRamseteCommands[0],
+            testRamseteCommands[0].andThen(() -> driveBaseSubsystem.stopDriveMotors()),
             testRamseteCommands[1].andThen(() -> driveBaseSubsystem.stopDriveMotors()));
   }
 

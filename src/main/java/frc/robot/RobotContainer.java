@@ -187,10 +187,10 @@ public class RobotContainer {
     }
 
     if (intakeSubsystem != null && cdsSubsystem != null) {
-      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
+      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, cdsSubsystem);
       outtakeCommand = new OuttakeCommand(intakeSubsystem, cdsSubsystem);
-      // cdsSubsystem.setDefaultCommand(new CDSBallManagementCommand(cdsSubsystem,
+      // CDSSubsystem.setDefaultCommand(new CDSBallManagementCommand(CDSSubsystem,
       // intakeSubsystem));
     }
     if (shooterSubsystem != null && cdsSubsystem != null) {
@@ -271,7 +271,7 @@ public class RobotContainer {
       }
 
       if (outtakeCommand != null && CDSForwardCommand != null) {
-        buttons2[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
+        buttons[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
         buttons2[Constants.RBumper].whileHeld(outtakeCommand);
       }
 
