@@ -74,74 +74,76 @@ public class ClimbSubsystem extends SubsystemBase {
     // Shuffle Board Widgets
     climbTab = Shuffleboard.getTab("ClimbBase");
 
-    // Row 1
+    // Climb Arm 1
     sbclimbpositionOne =
         climbTab.add("Climb position 1", 0).withSize(2, 1).withPosition(0, 0).getEntry();
     sbclimbHeightOne =
-        climbTab.add("Climb Hight 1", 0).withSize(2, 1).withPosition(2, 0).getEntry();
+        climbTab.add("Climb Hight 1", 0).withSize(2, 1).withPosition(0, 1).getEntry();
     sbClimbOneP =
         climbTab
             .add("climb One P", Constants.climbRightPID[0])
             .withSize(2, 1)
-            .withPosition(4, 0)
+            .withPosition(0, 2)
             .getEntry();
     sbClimbOneI =
         climbTab
             .add("climb One I", Constants.climbRightPID[1])
             .withSize(2, 1)
-            .withPosition(6, 0)
+            .withPosition(0, 3)
             .getEntry();
     sbClimbOneD =
         climbTab
             .add("climb One D", Constants.climbRightPID[2])
             .withSize(2, 1)
-            .withPosition(8, 0)
+            .withPosition(0, 4)
             .getEntry();
-    sbclimbspeedOne =
-        climbTab.add("Climb Current Speed 1", 0).withSize(2, 1).withPosition(10, 0).getEntry();
     sbclimbheightOne =
-        climbTab.add("Climb targetted height 1", 0).withSize(2, 1).withPosition(12, 0).getEntry();
+        climbTab.add("Climb targetted height 1", 0).withSize(2, 2).withPosition(2, 2).getEntry();
+    sbclimbspeedOne =
+        climbTab.add("Climb Current Speed 1", 0).withSize(2, 1).withPosition(2, 4).getEntry();
+    
 
-    // Row 2
+    // Climb Arm 2
     sbclimbpositionTwo =
-        climbTab.add("climb position 2", 0).withSize(2, 1).withPosition(0, 1).getEntry();
+        climbTab.add("climb position 2", 0).withSize(2, 1).withPosition(8, 0).getEntry();
     sbclimbHeightTwo =
-        climbTab.add("Climb Hight 2", 0).withSize(2, 1).withPosition(2, 1).getEntry();
+        climbTab.add("Climb Hight 2", 0).withSize(2, 1).withPosition(8, 1).getEntry();
     sbClimbTwoP =
         climbTab
             .add("climb Two P", Constants.climbLeftPID[0])
             .withSize(2, 1)
-            .withPosition(4, 1)
+            .withPosition(8, 2)
             .getEntry();
     sbClimbTwoI =
         climbTab
             .add("climb Two I", Constants.climbLeftPID[1])
             .withSize(2, 1)
-            .withPosition(6, 1)
+            .withPosition(8, 3)
             .getEntry();
     sbClimbTwoD =
         climbTab
             .add("climb Two D", Constants.climbLeftPID[2])
             .withSize(2, 1)
-            .withPosition(8, 1)
+            .withPosition(8, 4)
             .getEntry();
-    sbclimbspeedTwo =
-        climbTab.add("climb Current Speed 2", 0).withSize(2, 1).withPosition(10, 1).getEntry();
     sbclimbheightTwo =
-        climbTab.add("Climb targetted height 2", 0).withSize(2, 1).withPosition(12, 1).getEntry();
+        climbTab.add("Climb targetted height 2", 0).withSize(2, 2).withPosition(6, 2).getEntry();
+    sbclimbspeedTwo =
+        climbTab.add("climb Current Speed 2", 0).withSize(2, 1).withPosition(6, 4).getEntry();
+    
 
-    // Row 3 & 4
+    // Both Arms
     sbClimbEnabbled =
-        climbTab.add("Climb Eanbled", false).withSize(2, 2).withPosition(5, 2).getEntry();
+        climbTab.add("Climb Eanbled", false).withSize(3, 2).withPosition(2, 0).getEntry();
     sbclimbMode =
         climbTab
             .add("Manual Mode Enable", false)
-            .withSize(2, 2)
-            .withPosition(7, 2)
+            .withSize(3, 2)
+            .withPosition(5, 0)
             .withWidget(BuiltInWidgets.kToggleSwitch)
             .getEntry();
     sbclimbSpeedInput =
-        climbTab.add("Climb Speed input", 0.1).withSize(2, 1).withPosition(6, 4).getEntry();
+        climbTab.add("Climb Speed input", 0.1).withSize(2, 3).withPosition(4, 2).getEntry();
 
     m_climbMotorControllerOne.getPIDCtrl().setP(sbClimbOneP.getDouble(0));
     m_climbMotorControllerOne.getPIDCtrl().setI(sbClimbOneI.getDouble(0));
