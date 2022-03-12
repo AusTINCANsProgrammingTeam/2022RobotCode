@@ -44,7 +44,9 @@ public class Robot extends TimedRobot {
     chooser.addOption("Five Ball", Constants.Auton.FIVEBALL);
     chooser.addOption("Test Mode", Constants.Auton.TEST);
 
-    SmartDashboard.putData("Auto Mode", chooser); //  TODO: find a way to put it into desired specific named tabs such as "Auton"
+    SmartDashboard.putData(
+        "Auto Mode",
+        chooser); //  TODO: find a way to put it into desired specific named tabs such as "Auton"
 
     if (RobotContainer.getDriveBase() != null) {
       tabContainer = new TabContainer(RobotContainer.getDriveBase());
