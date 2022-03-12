@@ -54,7 +54,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private RelativeEncoder m_rightEncoder;
   private SimpleMotorFeedforward m_sMotorFeedforward;
 
-  private boolean usingExternal = false;
+  private boolean usingExternal;
+  private boolean isReverse = false;
 
   public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {
     m_driverJoystick = joystick;
@@ -62,6 +63,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers = new MotorController[4];
     m_gyro = new AHRS(Port.kMXP);
     m_gyro.reset(); // resets the heading of the robot to 0
+
+    this.usingExternal = usingExternal;
 
     if (Robot.isSimulation()) {
       if (!usingExternal) {
@@ -74,7 +77,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
         new SimpleMotorFeedforward(
             Constants.ksVolts,
             Constants.kvVoltSecondsPerMeter,
-            Constants.kaVoltSecondsSquaredPerMeter);
+            Constants
+                .kaVoltSecondsSquaredPerMeter); // We have this just in case we need it, not used at
+    // the moment
 
     // motor controllers
     m_motorControllers[Constants.driveLeftFrontIndex] =
@@ -297,8 +302,30 @@ public class DriveBaseSubsystem extends SubsystemBase {
     getRightMotor().set(right);
   }
 
+  // toggles inversion of motors
+  public void setReverse() {
+    // isReverse = true;
+    if (m_motorControllers[Constants.driveLeftFront].getInverted() == true) {
+      m_motorControllers[Constants.driveRightFront].setInverted(true);
+      m_motorControllers[Constants.driveRightRear].setInverted(true);
+      m_motorControllers[Constants.driveLeftFront].setInverted(false);
+      m_motorControllers[Constants.driveLeftRear].setInverted(false);
+    } else {
+      m_motorControllers[Constants.driveRightFront].setInverted(false);
+      m_motorControllers[Constants.driveRightRear].setInverted(false);
+      m_motorControllers[Constants.driveLeftFront].setInverted(true);
+      m_motorControllers[Constants.driveLeftRear].setInverted(true);
+    }
+  }
+
   // for trajectory (ramseteCommand)
   public void acceptWheelSpeeds(double leftSpeed, double rightSpeed) {
+    // if(isReverse == true) {
+    //   double temp = leftSpeed;
+    //   leftSpeed = -rightSpeed;
+    //   rightSpeed = -temp;
+    // }
+
     // leftSpeed and rightSpeed in m/s, need to convert it to rpm
 
     leftSpeed =
