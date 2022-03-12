@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
 import frc.robot.common.hardware.PicoColorSensor;
+import frc.robot.common.hardware.ColorSensorMuxed;
 
 public class CDSSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
@@ -133,13 +134,13 @@ public class CDSSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("CDS Wheel Speed", 0.0);
   }
 
-  public boolean sensorsOnline() {
+  /*public boolean sensorsOnline() {
     boolean sensor0Online = picoSensors.isSensor0Connected();
     boolean sensor1Online = picoSensors.isSensor1Connected();
     boolean sensor2Online = picoSensors.isSensor2Connected();
 
     return sensor0Online && sensor1Online && sensor2Online;
-  }
+  }*/
 
   public boolean[] getSensorStatus() {
     int[] sensorStatuses = colorSensors.getProximities();
@@ -189,9 +190,9 @@ public class CDSSubsystem extends SubsystemBase {
     }
   }
 
-  public boolean managementEnabled() {
+  /*public boolean managementEnabled() {
     return SmartDashboard.getBoolean("Ball Management Enabled", true);
-  }
+  }*/
 
   public String getAllianceColor() {
     return allianceColor;

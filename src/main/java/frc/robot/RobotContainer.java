@@ -190,7 +190,7 @@ public class RobotContainer {
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, CDSSubsystem);
       outtakeCommand = new OuttakeCommand(intakeSubsystem, CDSSubsystem);
 
-      if (CDSSubsystem.sensorsOnline() == true) {
+      if (Constants.ballManagementEnabled) {
         ballManagementCommand = new CDSBallManagementCommand(CDSSubsystem, intakeSubsystem);
         CDSSubsystem.setDefaultCommand(ballManagementCommand);
       } else {
@@ -230,11 +230,8 @@ public class RobotContainer {
       // spits ball out
       buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
     }
-
-    // if 1 or more sensors are down or if ball management is disabled on SmartDashboard, 
-    // then override default forward intake button with command that controls intake and CDS together
-    if (combinedIntakeCDS != null || !CDSSubsystem.managementEnabled()) {
-      // New command for intake and CDS bundled
+    
+    if (combinedIntakeCDS != null) {
       buttons[Constants.RBumper].whileHeld(combinedIntakeCDS);
     }
 
