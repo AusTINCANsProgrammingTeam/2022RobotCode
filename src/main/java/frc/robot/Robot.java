@@ -18,7 +18,7 @@ import frc.robot.subsystems.Tabs.TabContainer;
 
 public class Robot extends TimedRobot {
   private Command autonomousCommand;
-  private SendableChooser<Command> chooser = new SendableChooser<>();
+  private SendableChooser<String> chooser = new SendableChooser<>();
   private RobotContainer robotContainer;
   private TabContainer tabContainer;
 
@@ -35,11 +35,11 @@ public class Robot extends TimedRobot {
     robotContainer = new RobotContainer();
 
     // TODO: change to correct paths
-    chooser.setDefaultOption("Taxi", robotContainer.getAutonomousCommand("taxi"));
-    chooser.addOption("One Ball", robotContainer.getAutonomousCommand("one ball"));
-    chooser.addOption("Two Ball", robotContainer.getAutonomousCommand("two ball"));
-    chooser.addOption("Three Ball", robotContainer.getAutonomousCommand("three ball"));
-    chooser.addOption("Four Ball", robotContainer.getAutonomousCommand("four ball"));
+    chooser.setDefaultOption("Taxi", "taxi");
+    chooser.addOption("One Ball", "one ball");
+    chooser.addOption("Two Ball", "two ball");
+    chooser.addOption("Three Ball", "three ball");
+    chooser.addOption("Four Ball", "four ball");
     SmartDashboard.putData("Auto Mode", chooser);
 
     if (RobotContainer.getDriveBase() != null) {
@@ -55,14 +55,15 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    tabContainer.periodic();
+    if (tabContainer != null) {
+      tabContainer.periodic();
+    }
 
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
 
-    // schedule driverbaseteleop command
     CommandScheduler.getInstance().run();
   }
 
@@ -79,7 +80,7 @@ public class Robot extends TimedRobot {
   // This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    autonomousCommand = chooser.getSelected();
+    autonomousCommand = robotContainer.getAutonomousCommand(chooser.getSelected());
 
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {

@@ -16,9 +16,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
@@ -54,15 +54,17 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private RelativeEncoder m_rightEncoder;
   private SimpleMotorFeedforward m_sMotorFeedforward;
 
-  private boolean usingExternal = false;
+  private boolean usingExternal;
+  private boolean isReverse = false;
 
   public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {
     m_driverJoystick = joystick;
 
     m_motorControllers = new MotorController[4];
-    m_gyro = new AHRS(I2C.Port.kMXP);
+    m_gyro = new AHRS(Port.kMXP);
     m_gyro.reset(); // resets the heading of the robot to 0
-    m_gyro1 = new AnalogGyro(1);
+
+    this.usingExternal = usingExternal;
 
     if (Robot.isSimulation()) {
       if (!usingExternal) {
@@ -75,54 +77,45 @@ public class DriveBaseSubsystem extends SubsystemBase {
         new SimpleMotorFeedforward(
             Constants.ksVolts,
             Constants.kvVoltSecondsPerMeter,
-            Constants.kaVoltSecondsSquaredPerMeter);
+            Constants
+                .kaVoltSecondsSquaredPerMeter); // We have this just in case we need it, not used at
+    // the moment
 
     // motor controllers
     m_motorControllers[Constants.driveLeftFrontIndex] =
         new MotorController(
-            "Differential Left Front",
-            Constants.driveLeftFront,
-            Constants.driveBaseCurrentLimit,
-            true);
+            "Differential Left Front", Constants.driveLeftFront, Constants.driveLeftPID);
     m_motorControllers[Constants.driveLeftRearIndex] =
         new MotorController(
-            "Differential Left Rear", Constants.driveLeftRear, Constants.driveBaseCurrentLimit);
+            "Differential Left Rear", Constants.driveLeftRear, Constants.driveLeftPID);
     m_motorControllers[Constants.driveRightFrontIndex] =
         new MotorController(
-            "Differential Right Front",
-            Constants.driveRightFront,
-            Constants.driveBaseCurrentLimit,
-            true);
+            "Differential Right Front", Constants.driveRightFront, Constants.driveRightPID);
     m_motorControllers[Constants.driveRightRearIndex] =
         new MotorController(
-            "Differential Right Rear", Constants.driveRightRear, Constants.driveBaseCurrentLimit);
+            "Differential Right Rear", Constants.driveRightRear, Constants.driveRightPID);
 
     // invert right side motors
-    m_motorControllers[Constants.driveRightFrontIndex].setInverted(true);
-    m_motorControllers[Constants.driveRightRearIndex].setInverted(true);
+    m_motorControllers[Constants.driveLeftFrontIndex].setInverted(true);
+    m_motorControllers[Constants.driveLeftRearIndex].setInverted(true);
 
     // Forces rear motors of each side to follow the first
-    m_motorControllers[Constants.driveLeftRearIndex].setFollow(
+    m_motorControllers[Constants.driveLeftRearIndex].follow(
         m_motorControllers[Constants.driveLeftFrontIndex]);
-    m_motorControllers[Constants.driveRightRearIndex].setFollow(
+    m_motorControllers[Constants.driveRightRearIndex].follow(
         m_motorControllers[Constants.driveRightFrontIndex]);
-
-    // open loop ramp rate
-    // m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax().setOpenLoopRampRate(.1);
-    // m_motorControllers[Constants.driveRightFrontIndex].getSparkMax().setOpenLoopRampRate(.1);
-    // m_motorControllers[Constants.driveLeftRearIndex].getSparkMax().setOpenLoopRampRate(.1);
-    // m_motorControllers[Constants.driveRightRearIndex].getSparkMax().setOpenLoopRampRate(.1);
 
     // differential drive
     m_differentialDrive =
         new DifferentialDrive(
-            m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax(),
-            m_motorControllers[Constants.driveRightFrontIndex].getSparkMax());
+            m_motorControllers[Constants.driveLeftFrontIndex],
+            m_motorControllers[Constants.driveRightFrontIndex]);
 
     this.usingExternal = usingExternal; // gets key if using external or internal encoders
     initializeEncoders();
 
     if (Robot.isSimulation()) {
+      m_gyro1 = new AnalogGyro(1);
       m_gyroSim = new AnalogGyroSim(m_gyro1);
       if (usingExternal == true) {
         // m_leftEncoderSim = new EncoderSim(m_leftEncoder);   // no "Encoder" object anymore
@@ -152,14 +145,21 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
 
+    // TODO: Tune PID values
     // set PID values
-    m_motorControllers[Constants.driveRightFrontIndex].getPID().setP(Constants.driveRightPID[0]);
-    m_motorControllers[Constants.driveRightFrontIndex].getPID().setI(Constants.driveRightPID[1]);
-    m_motorControllers[Constants.driveRightFrontIndex].getPID().setD(Constants.driveRightPID[2]);
+    m_motorControllers[Constants.driveRightFrontIndex]
+        .getPIDCtrl()
+        .setP(Constants.driveRightPID[0]);
+    m_motorControllers[Constants.driveRightFrontIndex]
+        .getPIDCtrl()
+        .setI(Constants.driveRightPID[1]);
+    m_motorControllers[Constants.driveRightFrontIndex]
+        .getPIDCtrl()
+        .setD(Constants.driveRightPID[2]);
 
-    m_motorControllers[Constants.driveLeftFrontIndex].getPID().setP(Constants.driveLeftPID[0]);
-    m_motorControllers[Constants.driveLeftFrontIndex].getPID().setI(Constants.driveLeftPID[1]);
-    m_motorControllers[Constants.driveLeftFrontIndex].getPID().setD(Constants.driveLeftPID[2]);
+    m_motorControllers[Constants.driveLeftFrontIndex].getPIDCtrl().setP(Constants.driveLeftPID[0]);
+    m_motorControllers[Constants.driveLeftFrontIndex].getPIDCtrl().setI(Constants.driveLeftPID[1]);
+    m_motorControllers[Constants.driveLeftFrontIndex].getPIDCtrl().setD(Constants.driveLeftPID[2]);
 
     // rear motor pid controllers should follow
   }
@@ -168,13 +168,11 @@ public class DriveBaseSubsystem extends SubsystemBase {
     if (usingExternal) {
       // external encoders
       m_leftEncoder =
-          m_motorControllers[Constants.driveLeftFrontIndex]
-              .getSparkMax()
-              .getAlternateEncoder(Constants.encoderCountsPerRev);
+          m_motorControllers[Constants.driveLeftFrontIndex].getAlternateEncoder(
+              Constants.encoderCountsPerRev);
       m_rightEncoder =
-          m_motorControllers[Constants.driveRightFrontIndex]
-              .getSparkMax()
-              .getAlternateEncoder(Constants.encoderCountsPerRev);
+          m_motorControllers[Constants.driveRightFrontIndex].getAlternateEncoder(
+              Constants.encoderCountsPerRev);
 
     } else {
       // internal encoders
@@ -205,13 +203,17 @@ public class DriveBaseSubsystem extends SubsystemBase {
     // updates pid values of leaders only not the followers
     m_motorControllers[Constants.driveLeftFrontIndex].updateSmartDashboard();
     m_motorControllers[Constants.driveRightFrontIndex].updateSmartDashboard();
+
+    // acceptWheelSpeeds(2, 0);
+
   }
 
   // Normal Arcade Drive
   public void arcadeDrive() {
+    // Note: -0.85 to accomodate comfort of driver (sensitivity)
     m_differentialDrive.arcadeDrive(
-        m_driverJoystick.getRawAxis(Constants.leftJoystickY),
-        -0.85 * m_driverJoystick.getRawAxis(Constants.rightJoystickX),
+        -0.85 * m_driverJoystick.getRawAxis(Constants.leftJoystickY),
+        m_driverJoystick.getRawAxis(Constants.rightJoystickX),
         true);
     // joystick has y-axis flipped so up is negative why down is positive
   }
@@ -219,7 +221,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   // Arcade Drive where you can only move forwards and backwards for testing
   public void arcadeDrive(double rotation) {
     m_differentialDrive.arcadeDrive(
-        -1 * m_driverJoystick.getRawAxis(Constants.leftJoystickY), rotation);
+        -0.85 * m_driverJoystick.getRawAxis(Constants.leftJoystickY), rotation);
   }
 
   // TODO: Make a command to switch modes (extra)
@@ -235,19 +237,17 @@ public class DriveBaseSubsystem extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     m_DifferentialDrivetrainSim.setInputs(
-        -m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax().get()
+        -m_motorControllers[Constants.driveLeftFrontIndex].get()
             * RobotController.getInputVoltage(),
-        -m_motorControllers[Constants.driveRightFrontIndex].getSparkMax().get()
+        -m_motorControllers[Constants.driveRightFrontIndex].get()
             * RobotController.getInputVoltage());
 
     m_gyroSim.setAngle(-m_DifferentialDrivetrainSim.getHeading().getDegrees());
 
     m_DifferentialDrivetrainSim.update(0.01);
 
-    SmartDashboard.putNumber(
-        "LMotor", m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax().get());
-    SmartDashboard.putNumber(
-        "RMotor", m_motorControllers[Constants.driveRightFrontIndex].getSparkMax().get());
+    SmartDashboard.putNumber("LMotor", m_motorControllers[Constants.driveLeftFrontIndex].get());
+    SmartDashboard.putNumber("RMotor", m_motorControllers[Constants.driveRightFrontIndex].get());
 
     m_leftEncoderSim.setDistance(m_DifferentialDrivetrainSim.getLeftPositionMeters());
     m_leftEncoderSim.setRate(m_DifferentialDrivetrainSim.getLeftVelocityMetersPerSecond());
@@ -260,17 +260,17 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_field.setRobotPose(m_odometry.getPoseMeters());
   }
 
-  public void stopMotorsFunction() {
+  public void stopDriveMotors() {
     // Calls Arcade Drive with a zero to both speed and rotation in order to stop the motors
-    m_differentialDrive.arcadeDrive(0.0, 0.0);
+    setSpeeds(0.0, 0.0);
   }
 
   public CANSparkMax getRightMotor() {
-    return m_motorControllers[Constants.driveRightFrontIndex].getSparkMax();
+    return m_motorControllers[Constants.driveRightFrontIndex];
   }
 
   public CANSparkMax getLeftMotor() {
-    return m_motorControllers[Constants.driveLeftFrontIndex].getSparkMax();
+    return m_motorControllers[Constants.driveLeftFrontIndex];
   }
 
   // return speed of left side motors
@@ -302,8 +302,30 @@ public class DriveBaseSubsystem extends SubsystemBase {
     getRightMotor().set(right);
   }
 
+  // toggles inversion of motors
+  public void setReverse() {
+    // isReverse = true;
+    if (m_motorControllers[Constants.driveLeftFront].getInverted() == true) {
+      m_motorControllers[Constants.driveRightFront].setInverted(true);
+      m_motorControllers[Constants.driveRightRear].setInverted(true);
+      m_motorControllers[Constants.driveLeftFront].setInverted(false);
+      m_motorControllers[Constants.driveLeftRear].setInverted(false);
+    } else {
+      m_motorControllers[Constants.driveRightFront].setInverted(false);
+      m_motorControllers[Constants.driveRightRear].setInverted(false);
+      m_motorControllers[Constants.driveLeftFront].setInverted(true);
+      m_motorControllers[Constants.driveLeftRear].setInverted(true);
+    }
+  }
+
   // for trajectory (ramseteCommand)
   public void acceptWheelSpeeds(double leftSpeed, double rightSpeed) {
+    // if(isReverse == true) {
+    //   double temp = leftSpeed;
+    //   leftSpeed = -rightSpeed;
+    //   rightSpeed = -temp;
+    // }
+
     // leftSpeed and rightSpeed in m/s, need to convert it to rpm
 
     leftSpeed =
@@ -330,15 +352,15 @@ public class DriveBaseSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("right speed (rpm [biconsumer])", rightSpeed);
 
     m_motorControllers[Constants.driveLeftFrontIndex]
-        .getPID()
+        .getPIDCtrl()
         .setReference(leftSpeed, CANSparkMax.ControlType.kVelocity, 0, Constants.arbFeedForward);
     m_motorControllers[Constants.driveRightFrontIndex]
-        .getPID()
+        .getPIDCtrl()
         .setReference(rightSpeed, CANSparkMax.ControlType.kVelocity, 0, Constants.arbFeedForward);
 
-    // m_motorControllers[Constants.driveLeftFrontIndex].getPID().setReference(leftSpeed,
+    // m_motorControllers[Constants.driveLeftFrontIndex].getPIDController().setReference(leftSpeed,
     // CANSparkMax.ControlType.kVelocity);
-    // m_motorControllers[Constants.driveRightFrontIndex].getPID().setReference(rightSpeed,
+    // m_motorControllers[Constants.driveRightFrontIndex].getPIDController().setReference(rightSpeed,
     // CANSparkMax.ControlType.kVelocity);
 
     m_differentialDrive.feed();
