@@ -292,6 +292,7 @@ public class RobotContainer {
   private void initAuton() {
     if (driveBaseSubsystem != null && intakeSubsystem != null && cdsSubsystem != null) {
       if (shooterSubsystem != null) {
+        System.out.println("Shooter enabled in auton.");
         autonModes =
             new AutonModes(
                 driveBaseSubsystem,
@@ -300,10 +301,16 @@ public class RobotContainer {
                 cdsSubsystem,
                 intakeSubsystem);
       } else {
+        System.out.println("Basic auton without shooter enabled.");
         autonModes = new AutonModes(driveBaseSubsystem, intakeSubsystem, cdsSubsystem);
       }
-    } else {
-      System.out.println("DriveBaseSubsystem, IntakeSubsystem, and CDSSubsystem is not enabled.");
+    } else if(driveBaseSubsystem != null) {
+      System.out.println("Test mode activated.");
+      autonModes = new AutonModes(driveBaseSubsystem);
+    }
+    else {
+      System.out.println("No subsystems enabled.");
+      autonModes = null;
     }
   }
 
