@@ -86,8 +86,8 @@ public final class Constants {
 
   // Constants for wheel motors
   public static final double wheelRadius = 2; // radius of wheel, use for calculating angular values
-  public static final double openLoopRampRate =
-      0.2; // Rate at which the motors reach maximum speed; TODO: tune for optimal performance
+  // Rate at which the motors reach maximum speed; TODO: tune for optimal performance
+  public static final double openLoopRampRate = 0.2;
   public static final double gearRatio = 6.2; // 10.75 : 1 gear ratio <--- kitbot
   // 10.75 motor rotations : 1 wheel rotation
   public static final double inchesInMeter = 39.3701;
@@ -108,19 +108,45 @@ public final class Constants {
   public static final int driveBaseCurrentLimit = 60;
 
   // drive base pid values
-  public static final double[] driveRightPID = {
-    0.00035, 0.0000008, 0
-  }; // TODO: need to tune for real robot
+  // TODO: need to tune for real robot
+  public static final double[] driveRightPID = {0.00035, 0.0000008, 0};
   public static final double[] driveLeftPID = {0.000005, 0.0000008, 0};
 
   // AUTONOMOUS Constants
 
-  // Path json files
-  public static final String taxiPath = "paths/TaxiOut.wpilib.json";
-  public static final String oneBallPath = "paths/TaxiOutFromFender.wpilib.json";
-  public static final String twoBallPath[] = {
-    "paths/TaxiOutToGrabBall.wpilib.json", "paths/GoBackIntoFender.wpilib.json"
-  };
+  public enum Auton {
+    // spotless: off
+    TAXI("Taxi", "paths/TaxiOut.wpilib.json"),
+    ONEBALL("Taxi", "paths/TaxiOutFromFender.wpilib.json"),
+    TWOBALL("TwoBall", "paths/TaxiOutToGrabBall.wpilib.json", "paths/GoBackIntoFender.wpilib.json"),
+    THREEBALL(
+        "ThreeBall", "paths/GrabTwoBalls.wpilib.json", "paths/GoBackWithTwoBalls.wpilib.json"),
+    FOURBALL,
+    FIVEBALL,
+    TEST("Test", "paths/FlippedVectorTest1.wpilib.json", "paths/FlippedVectorTest2.wpilib.json");
+    // change according to what path you want to test
+    // spotless: on
+
+    private String paths[];
+    private String name;
+
+    private Auton() {
+      paths = null;
+    }
+
+    private Auton(String name, String... paths) {
+      this.name = name;
+      this.paths = paths;
+    }
+
+    public String getName() {
+      return this.name;
+    }
+
+    public String[] getPaths() {
+      return this.paths;
+    }
+  }
 
   // Volts, constants for ramseteCommand
   public static final double ksVolts = 0.2358; // Ks
