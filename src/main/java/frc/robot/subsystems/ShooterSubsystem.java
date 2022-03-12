@@ -69,6 +69,7 @@ public class ShooterSubsystem extends SubsystemBase {
     flywheelController.enableVoltageCompensation(11);
     flywheel2Controller.enableVoltageCompensation(11);
     flywheel2Controller.follow(flywheelController, true);
+
     // Initializes the SparkMAX for the hood TODO: Set this up when possible
     /*hoodController = new  MotorController("Hood", Constants.hoodID);
     hoodPID = hoodController.getPID();
@@ -142,7 +143,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void runCargo(double speed) {
-    stopperController.setSpeed(speed);
+    stopperController.set(speed);
   }
 
   public boolean wheelReady() {
