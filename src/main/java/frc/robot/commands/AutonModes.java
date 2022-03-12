@@ -176,11 +176,7 @@ public class AutonModes {
           new SequentialCommandGroup(
               new DeployIntake(intakeSubsystem, cdsSubsystem),
               new WaitCommand(initialWaitTime),
-              new ShooterPressed(
-                  shooterSubsystem,
-                  limelightSubsystem,
-                  cdsSubsystem,
-                  false), // also has a time delay of 2-3 seconds
+              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
               new WaitCommand(Constants.delaytaxi),
               oneBallRamseteCommand
                   .beforeStarting(
