@@ -189,7 +189,7 @@ public class AutonModes {
                   () ->
                       driveBaseSubsystem.resetOdometry(
                           twoBallTrajectory[0].getInitialPose())), // go out to get ball
-              new IntakeForwardCommand(intakeSubsystem, cdsSubsystem)
+              new IntakeForwardCommand(intakeSubsystem)
                   .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
 
       twoBallCommand =
