@@ -230,7 +230,7 @@ public class RobotContainer {
       // spits ball out
       buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
     }
-    
+
     if (combinedIntakeCDS != null) {
       buttons[Constants.RBumper].whileHeld(combinedIntakeCDS);
     }

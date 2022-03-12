@@ -14,9 +14,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.common.hardware.MotorController;
-import frc.robot.common.hardware.PicoColorSensor;
 import frc.robot.common.hardware.ColorSensorMuxed;
+import frc.robot.common.hardware.MotorController;
 
 public class CDSSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
@@ -32,10 +31,10 @@ public class CDSSubsystem extends SubsystemBase {
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry CDSWheelControllerDirection =
-   CDSTab.add("CDS Wheel Direction", "Not Running")
-   .withPosition(1, 0)
-   .withWidget(BuiltInWidgets.kToggleSwitch)
-   .getEntry();
+      CDSTab.add("CDS Wheel Direction", "Not Running")
+          .withPosition(1, 0)
+          .withWidget(BuiltInWidgets.kToggleSwitch)
+          .getEntry();
   private NetworkTableEntry CDSBeltControllerDirection =
       CDSTab.add("CDS Belt Direction", "Not Running")
           .withPosition(2, 0)
@@ -45,7 +44,7 @@ public class CDSSubsystem extends SubsystemBase {
       CDSTab.add("CDS Wheel speed", 0).withPosition(3, 0).getEntry();
   private NetworkTableEntry CDSBeltControllerSpeed =
       CDSTab.add("CDS Belt speed", 0).withPosition(4, 0).getEntry();
-    private NetworkTableEntry ballManagementEnabled = 
+  private NetworkTableEntry ballManagementEnabled =
       CDSTab.add("Ball Management Enabled", true).withPosition(5, 0).getEntry();
 
   public CDSSubsystem() {
