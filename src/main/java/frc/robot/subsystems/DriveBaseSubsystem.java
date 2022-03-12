@@ -112,6 +112,12 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.driveRightRearIndex].follow(
         m_motorControllers[Constants.driveRightFrontIndex]);
 
+    // set drive motors to brake mode
+    m_motorControllers[Constants.driveLeftFrontIndex].setIdleMode(CANSparkMax.IdleMode.kBrake);
+    m_motorControllers[Constants.driveLeftRearIndex].setIdleMode(CANSparkMax.IdleMode.kBrake);
+    m_motorControllers[Constants.driveRightFrontIndex].setIdleMode(CANSparkMax.IdleMode.kBrake);
+    m_motorControllers[Constants.driveRightRearIndex].setIdleMode(CANSparkMax.IdleMode.kBrake);
+
     // differential drive
     m_differentialDrive =
         new DifferentialDrive(
@@ -225,8 +231,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public void arcadeDrive() {
     // Note: -0.85 to accomodate comfort of driver (sensitivity)
     m_differentialDrive.arcadeDrive(
-        m_driverJoystick.getRawAxis(Constants.leftJoystickY) * (teleopSpeed.getDouble(100) / 100),
-        -0.85 * m_driverJoystick.getRawAxis(Constants.rightJoystickX),
+        m_driverJoystick.getRawAxis(Constants.leftJoystickY) * -(teleopSpeed.getDouble(100) / 100),
+        m_driverJoystick.getRawAxis(Constants.rightJoystickX),
         true);
     // joystick has y-axis flipped so up is negative why down is positive
   }

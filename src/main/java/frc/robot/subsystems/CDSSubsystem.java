@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -31,15 +30,9 @@ public class CDSSubsystem extends SubsystemBase {
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry CDSWheelControllerDirection =
-      CDSTab.add("CDS Wheel Direction", "Not Running")
-          .withPosition(1, 0)
-          .withWidget(BuiltInWidgets.kToggleSwitch)
-          .getEntry();
+      CDSTab.add("CDS Wheel Direction", "Not Running").withPosition(1, 0).getEntry();
   private NetworkTableEntry CDSBeltControllerDirection =
-      CDSTab.add("CDS Belt Direction", "Not Running")
-          .withPosition(2, 0)
-          .withWidget(BuiltInWidgets.kToggleSwitch)
-          .getEntry();
+      CDSTab.add("CDS Belt Direction", "Not Running").withPosition(2, 0).getEntry();
   private NetworkTableEntry CDSWheelControllerSpeed =
       CDSTab.add("CDS Wheel speed", 0).withPosition(3, 0).getEntry();
   private NetworkTableEntry CDSBeltControllerSpeed =
