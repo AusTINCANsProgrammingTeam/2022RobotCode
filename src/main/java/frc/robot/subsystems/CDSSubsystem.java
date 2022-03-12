@@ -31,6 +31,10 @@ public class CDSSubsystem extends SubsystemBase {
   private int setpointIndex;
   private ColorSensorMuxed colorSensors;
 
+  private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
+  private NetworkTableEntry DCDSSpeed = operatorTab.add("CDS Speed",0).getEntry();
+  private NetworkTableEntry BManualCDS = operatorTab.add("Manual CDS", 0).getEntry();
+
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry CDSWheelControllerDirection =
       CDSTab.add("CDS Wheel Direction", "Not Running")

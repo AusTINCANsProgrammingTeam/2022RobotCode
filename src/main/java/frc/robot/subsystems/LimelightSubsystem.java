@@ -20,10 +20,6 @@ public class LimelightSubsystem extends SubsystemBase {
   private PIDController m_PidController;
   private boolean isFinished;
 
-  private ShuffleboardTab operatorTab = Shuffleboard.getTab("Driver View");
-  private NetworkTableEntry BAssistActive = operatorTab.add("Assist Active", true).getEntry();
-  private NetworkTableEntry Dtx = operatorTab.add("tx", 0).getEntry();
-
   public LimelightSubsystem() {
     // NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(1);
     m_PidController = new PIDController(0.1, 0, 0);
