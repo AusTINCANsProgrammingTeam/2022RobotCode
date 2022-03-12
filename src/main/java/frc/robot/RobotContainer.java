@@ -13,11 +13,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutonModes;
+import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.ClimbEnable;
+import frc.robot.commands.CombinedIntakeCDSForwardCommand;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
+import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShooterHeld;
@@ -55,6 +58,9 @@ public class RobotContainer {
   // commands
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
   private IntakeForwardCommand intakeForwardCommand;
+  private IntakeReverseCommand intakeReverseCommand;
+  private CDSBallManagementCommand ballManagementCommand;
+  private CombinedIntakeCDSForwardCommand combinedIntakeCDS;
   private ClimbCommand climbCommand;
 
   private ShooterHeld shooterHeldLow, shooterHeldAuto;
@@ -142,22 +148,22 @@ public class RobotContainer {
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
     }
     if (cdsSubsystem != null && shooterSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(cdsSubsystem);
+      CDSForwardCommand = new CDSForwardCommand(cdsSubsystem, shooterSubsystem);
     }
-    // CDS
-    if (cdsSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(cdsSubsystem);
-      // cdsSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(cdsSubsystem));
-      // CDSReverseCommand = new CDSReverseCommand(cdsSubsystem, shooterSubsystem);
-      // cdsSubsystem.senseColor();
+    if (intakeSubsystem != null && cdsSubsystem != null) {
+      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
+      intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, cdsSubsystem);
+      outtakeCommand = new OuttakeCommand(intakeSubsystem, cdsSubsystem);
+
+      if (Constants.ballManagementEnabled) {
+        intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
+        ballManagementCommand = new CDSBallManagementCommand(cdsSubsystem, intakeSubsystem);
+        cdsSubsystem.setDefaultCommand(ballManagementCommand);
+      } else {
+        combinedIntakeCDS = new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem);
+      }
     }
 
-    if (intakeSubsystem != null && cdsSubsystem != null) {
-      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
-      outtakeCommand = new OuttakeCommand(intakeSubsystem, cdsSubsystem);
-      // CDSSubsystem.setDefaultCommand(new CDSBallManagementCommand(CDSSubsystem,
-      // intakeSubsystem));
-    }
     if (shooterSubsystem != null && cdsSubsystem != null) {
       shooterHeldAuto =
           new ShooterHeld(
@@ -187,11 +193,15 @@ public class RobotContainer {
     controllerCheck();
 
     // Intake / CDS
-    if (intakeForwardCommand != null && outtakeCommand != null) {
-      // takes ball in
-      buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
+    if (outtakeCommand != null) {
       // spits ball out
       buttons[Constants.RBumper].whileHeld(outtakeCommand);
+    }
+
+    if (combinedIntakeCDS != null) {
+      buttons[Constants.RTriggerButton].whileHeld(combinedIntakeCDS);
+    } else {
+      buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
     }
 
     if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
@@ -237,8 +247,8 @@ public class RobotContainer {
         buttons2[Constants.startButton].whenPressed(ClimbEnabling);
       }
 
-      if (outtakeCommand != null && CDSForwardCommand != null) {
-        buttons[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
+      if (outtakeCommand != null && intakeForwardCommand != null) {
+        buttons2[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
         buttons2[Constants.RBumper].whileHeld(outtakeCommand);
       }
 

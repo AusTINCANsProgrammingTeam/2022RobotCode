@@ -187,8 +187,7 @@ public class AutonModes {
           new ParallelDeadlineGroup(
               twoBallRamseteCommands[0].andThen(
                   () -> driveBaseSubsystem.stopDriveMotors()), // travel to get ball
-              new IntakeForwardCommand(intakeSubsystem),
-              new CDSForwardCommand(cdsSubsystem));
+              new IntakeForwardCommand(intakeSubsystem, cdsSubsystem));
 
       twoBallCommand =
           new SequentialCommandGroup(
@@ -203,8 +202,7 @@ public class AutonModes {
           new ParallelDeadlineGroup(
               threeBallRamseteCommands[0].andThen(
                   () -> driveBaseSubsystem.stopDriveMotors()), // travel to get the two balls
-              new IntakeForwardCommand(intakeSubsystem),
-              new CDSForwardCommand(cdsSubsystem));
+              new IntakeForwardCommand(intakeSubsystem, cdsSubsystem));
 
       threeBallCommand =
           new SequentialCommandGroup(
