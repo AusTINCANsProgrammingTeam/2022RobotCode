@@ -48,12 +48,12 @@ public class CDSSubsystem extends SubsystemBase {
       CDSTab.add("Ball Management Enabled", true).withPosition(5, 0).getEntry();
 
   public CDSSubsystem() {
-    CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID, 40);
+    CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID);
     CDSBeltController.setInverted(true);
     CDSWheelControllerOne =
-        new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerOneID, 40);
+        new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerOneID);
     CDSWheelControllerTwo =
-        new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerTwoID, 40);
+        new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerTwoID);
 
     CDSWheelControllerOne.setInverted(true);
     CDSWheelControllerTwo.follow(CDSWheelControllerOne, true);

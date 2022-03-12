@@ -16,32 +16,10 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
 
-  public enum Subsystems {
-    // Change booleans to disable a subsystem in RobotContainer
-    // spotless:off
-    DriveBaseSubsystem(true),
-    CDSSubsystem      (true),
-    IntakeSubsystem   (true),
-    ShooterSubsystem  (true),
-    LimelightSubsystem(true),
-    ClimbSubsystem    (true);
-    // spotless:on
-
-    private final Boolean enabled;
-
-    Subsystems(Boolean b) {
-      this.enabled = b;
-    }
-
-    public final Boolean isEnabled() {
-      return this.enabled;
-    }
-  }
-
   public enum AimModes {
     AUTO,
     // TODO: Plug real values in for these aimModes
-    LOW(3200.0, 0.0) {
+    LOW(1500.0, 0.0) {
       @Override
       public AimModes previous() {
         return values()[values().length - 1];
@@ -49,7 +27,7 @@ public final class Constants {
     },
     EJECT(2500.0, 0.0),
     LAUNCH(0.0, 0.0),
-    TARMAC(4200.0, 0.0),
+    TARMAC(2650.0, 0.0),
     TEST {
       @Override
       public AimModes next() {
@@ -101,49 +79,83 @@ public final class Constants {
     }
   }
 
+  // motor controller constants
+  public static final int defaultCurrentLimit = 40;
+
   // DRIVEBASE Constants
 
   // Constants for wheel motors
-  public static final double wheelRadius =
-      3.0125; // radius of wheel, use for calculating angular values
-  public static final double openLoopRampRate =
-      0.2; // Rate at which the motors reach maximum speed; TODO: tune for optimal performance
-  public static final double gearRatio = 10.75; // 10.75 : 1 gear ratio <--- kitbot
+  public static final double wheelRadius = 2; // radius of wheel, use for calculating angular values
+  // Rate at which the motors reach maximum speed; TODO: tune for optimal performance
+  public static final double openLoopRampRate = 0.2;
+  public static final double gearRatio = 6.2; // 10.75 : 1 gear ratio <--- kitbot
   // 10.75 motor rotations : 1 wheel rotation
   public static final double inchesInMeter = 39.3701;
 
   // Actual IDs on robot, used to activate the right motors
 
-  // TODO: kit bot values for now, change later
-  public static final int driveLeftFront = 13; // 13 on real robot
-  public static final int driveLeftRear = 14; // 14 on real robot
-  public static final int driveRightFront = 6; // 6 on real robot
-  public static final int driveRightRear = 7; // 7 on real robot
+  public static final int driveLeftFront = 13; // 13 on real robot, 1 on kitbot
+  public static final int driveLeftRear = 14; // 14 on real robot, 2 on kitbot
+  public static final int driveRightFront = 6; // 6 on real robot,  3 on kitbot
+  public static final int driveRightRear = 7; // 7 on real robot,  4 on kitbot
 
   // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
   public static final int driveLeftFrontIndex = 0;
   public static final int driveLeftRearIndex = 1;
   public static final int driveRightFrontIndex = 2;
   public static final int driveRightRearIndex = 3;
+
   public static final int driveBaseCurrentLimit = 60;
 
   // drive base pid values
+  // TODO: need to tune for real robot
   public static final double[] driveRightPID = {0.00035, 0.0000008, 0};
   public static final double[] driveLeftPID = {0.000005, 0.0000008, 0};
 
   // AUTONOMOUS Constants
-  public static final String taxiout = "TaxiOut.wpilib.json";
-  public static final String taxioutfender = "TaxiOutFromFender.wpilib.json";
-  public static final String taxioutball = "TaxiOutGrabBall.wpilib.json";
-  // Volts, constants for ramseteCommand
-  public static final double ksVolts = 0.13323; // Ks
-  public static final double kvVoltSecondsPerMeter = 2.8295; // Kv, Velocity
-  public static final double kaVoltSecondsSquaredPerMeter = 0.31462; // Ka, Accelleration
 
-  public static final double kpDriveVel = 2.1938; // Kp, Velocity
+  public enum Auton {
+    // spotless: off
+    TAXI("Taxi", "paths/TaxiOut.wpilib.json"),
+    ONEBALL("Taxi", "paths/TaxiOutFromFender.wpilib.json"),
+    TWOBALL("TwoBall", "paths/TaxiOutToGrabBall.wpilib.json", "paths/GoBackIntoFender.wpilib.json"),
+    THREEBALL(
+        "ThreeBall", "paths/GrabTwoBalls.wpilib.json", "paths/GoBackWithTwoBalls.wpilib.json"),
+    FOURBALL,
+    FIVEBALL,
+    TEST("Test", "paths/FlippedVectorTest1.wpilib.json", "paths/FlippedVectorTest2.wpilib.json");
+    // change according to what path you want to test
+    // spotless: on
+
+    private String paths[];
+    private String name;
+
+    private Auton() {
+      paths = null;
+    }
+
+    private Auton(String name, String... paths) {
+      this.name = name;
+      this.paths = paths;
+    }
+
+    public String getName() {
+      return this.name;
+    }
+
+    public String[] getPaths() {
+      return this.paths;
+    }
+  }
+
+  // Volts, constants for ramseteCommand
+  public static final double ksVolts = 0.2358; // Ks
+  public static final double kvVoltSecondsPerMeter = 0.81588; // Kv, Velocity
+  public static final double kaVoltSecondsSquaredPerMeter = 0.129; // Ka, Accelleration
+
   public static final double arbFeedForward =
-      8.6045E-07; // voltage applied to the motor after the result of the specified control mode
-  public static final double trackWidth = 0.69;
+      1.9829E-07; // voltage applied to the motor after the result of the specified control mode
+  public static final double trackWidth = 0.559; // track width of kitbot
   public static final DifferentialDriveKinematics driveKinematics =
       new DifferentialDriveKinematics(trackWidth);
   public static final double unitsPerRotation = 0.4787787204;
@@ -169,7 +181,7 @@ public final class Constants {
 
   // Intake Contstants
   public static final int intakeMotorOneID = 1;
-  public static final double intakeMotorSpeed = 0.70;
+  public static final double intakeMotorSpeed = 1.0;
   public static final int initialBallSensorChannel = 0;
   public static final int middleBallSensorChannel = 1;
   public static final int finalBallSensorChannel = 2;
@@ -181,7 +193,7 @@ public final class Constants {
   public static final int CDSWheelControllerOneID = 2;
   public static final int CDSWheelControllerTwoID = 9;
   public static final double CDSBeltSpeed = 0.40;
-  public static final double CDSWheelControllerSpeed = 0.25;
+  public static final double CDSWheelControllerSpeed = 0.65;
   public static final int frontSensorActivation = 200;
   public static final int middleSensorActivation = 450;
   public static final int backSensorActivation = 600;
@@ -233,11 +245,13 @@ public final class Constants {
 
   // Shooter Constants
   public static final class Shooter {
+    // Motor IDs
     public static final int shooterID = 10; // ID of the shooter
     public static final int shooter2ID = 11; // ID of the second shooter motor
     // public static final int hoodID = 0; // ID of the hood;
     public static final int shooterCargoID = 4;
 
+    // LL Placement
     public static final double highHeight =
         8.0 + 8.0 / 12.0; // Height of the high goal in ft from the carpet
     public static final double lowHeight =
@@ -247,24 +261,25 @@ public final class Constants {
     public static final double LLAngle =
         54.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as
     // exact as possible
-    public static final double cargoForward = 0.65;
+
+    // Motor Speeds
+    public static final double cargoForward = 1.0;
     public static final double cargoReverse = -0.4;
-    public static final double kP = 2.5e-4;
-    public static final double kI = 19e-6;
-    public static final double kD = 0.005;
-    public static final double kF = 0.0;
-    public static final double kIZone = 0.9;
-    public static final double kMaxOutput = 0;
-    public static final double kMaxI = 0.9;
-    public static final double kMaxISlotId = 0;
-    public static final double kMinOutput = 1;
-    public static final double kA = 0.075;
+
+    // PID settings
+    public static final double kPIDFArray[] = {2.5e-8, 5.5e-8, 0};
+    public static final double kF = 1.9e-4;
+    public static final double kMaxIAccum = 0.9;
+    public static final int kMaxISlot = 0;
+    public static final double kMaxOutput = 1.0;
+    public static final double kMinOutput = 0;
+    public static final double kA = 0.25;
   }
 
   // Climb Constants
   public static final int ClimbMotorOne = 5;
   public static final int ClimbMotorTwo = 12;
-  public static final int climbHeightMax = 20;
+  public static final int climbHeightMax = 65;
   public static final double[] climbRightPID = {0.25, 0.005, 1.0};
   public static final double[] climbLeftPID = {0.25, 0.005, 1.0};
   // public static final int LimitSwitchChannel = 12; // Check what number this needs to be

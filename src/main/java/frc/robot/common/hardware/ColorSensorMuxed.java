@@ -24,8 +24,8 @@ public class ColorSensorMuxed {
     i2cMux = new I2C(Port.kMXP, tca9548Addr);
     i2cPorts = new ArrayList<Integer>();
     for (int p : ports) {
+      i2cPorts.add(p);
       if (setI2cPort(p)) {
-        i2cPorts.add(p);
         // Initialize each device, only need to keep last object
         sensors = new ColorSensorV3(Port.kMXP);
       } else {
