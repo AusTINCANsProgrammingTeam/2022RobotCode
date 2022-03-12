@@ -23,11 +23,12 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void toggleIntake(boolean reverse) {
+    // only runs intake if ball count isn't too high (addresses #140)
     if (reverse) {
       intakeMotorControllerOne.set(-Constants.intakeMotorSpeed);
       SmartDashboard.putString("Intake Motor Direction", "Reverse");
       SmartDashboard.putNumber("Intake Motor Speed", -Constants.intakeMotorSpeed);
-    } else {
+    } else if (!reverse) {
       intakeMotorControllerOne.set(Constants.intakeMotorSpeed);
       SmartDashboard.putString("Intake Motor Direction", "Forward");
       SmartDashboard.putNumber("Intake Motor Speed", Constants.intakeMotorSpeed);

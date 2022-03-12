@@ -187,6 +187,8 @@ public final class Constants {
   public static final int finalBallSensorChannel = 2;
 
   // CDS Constants
+  public static final boolean ballManagementEnabled = false;
+
   public static final int CDSBeltID = 3;
   public static final int CDSWheelControllerOneID = 2;
   public static final int CDSWheelControllerTwoID = 9;
@@ -197,6 +199,8 @@ public final class Constants {
   public static final int backSensorActivation = 600;
 
   public static final boolean testMode = false; // if false CDS will eject balls of wrong color
+
+  public static final double stopperWheelSpeed = -0.10;
 
   // spotless:off
   // Controller Constants {
