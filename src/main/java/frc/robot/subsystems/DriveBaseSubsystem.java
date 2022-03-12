@@ -112,12 +112,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.driveRightRearIndex].follow(
         m_motorControllers[Constants.driveRightFrontIndex]);
 
-    // set drive motors to brake mode
-    m_motorControllers[Constants.driveLeftFrontIndex].setIdleMode(CANSparkMax.IdleMode.kBrake);
-    m_motorControllers[Constants.driveLeftRearIndex].setIdleMode(CANSparkMax.IdleMode.kBrake);
-    m_motorControllers[Constants.driveRightFrontIndex].setIdleMode(CANSparkMax.IdleMode.kBrake);
-    m_motorControllers[Constants.driveRightRearIndex].setIdleMode(CANSparkMax.IdleMode.kBrake);
-
     // differential drive
     m_differentialDrive =
         new DifferentialDrive(
