@@ -247,8 +247,8 @@ public class RobotContainer {
         buttons2[Constants.startButton].whenPressed(ClimbEnabling);
       }
 
-      if (outtakeCommand != null && CDSForwardCommand != null) {
-        buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
+      if (outtakeCommand != null && intakeForwardCommand != null) {
+        buttons2[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
         buttons2[Constants.RBumper].whileHeld(outtakeCommand);
       }
 
