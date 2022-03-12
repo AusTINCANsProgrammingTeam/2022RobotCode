@@ -238,12 +238,12 @@ public final class Constants {
 
     // PID settings
     public static final double kPIDFArray[] = {2.5e-8, 5.5e-8, 0};
-    public static final double kF = 1.9e-4;
+    public static final double kF = 2.0e-4;
     public static final double kMaxIAccum = 0.9;
     public static final int kMaxISlot = 0;
     public static final double kMaxOutput = 1.0;
     public static final double kMinOutput = 0;
-    public static final double kA = 0.25;
+    public static final double kA = 0.35;
   }
 
   // Climb Constants
