@@ -101,7 +101,6 @@ public class ClimbSubsystem extends SubsystemBase {
         climbTab.add("Climb targetted height 1", 0).withSize(2, 2).withPosition(2, 2).getEntry();
     sbclimbspeedOne =
         climbTab.add("Climb Current Speed 1", 0).withSize(2, 1).withPosition(2, 4).getEntry();
-    
 
     // Climb Arm 2
     sbclimbpositionTwo =
@@ -130,7 +129,6 @@ public class ClimbSubsystem extends SubsystemBase {
         climbTab.add("Climb targetted height 2", 0).withSize(2, 2).withPosition(6, 2).getEntry();
     sbclimbspeedTwo =
         climbTab.add("climb Current Speed 2", 0).withSize(2, 1).withPosition(6, 4).getEntry();
-    
 
     // Both Arms
     sbClimbEnabbled =
@@ -144,14 +142,6 @@ public class ClimbSubsystem extends SubsystemBase {
             .getEntry();
     sbclimbSpeedInput =
         climbTab.add("Climb Speed input", 0.1).withSize(2, 3).withPosition(4, 2).getEntry();
-
-    m_climbMotorControllerOne.getPIDCtrl().setP(sbClimbOneP.getDouble(0));
-    m_climbMotorControllerOne.getPIDCtrl().setI(sbClimbOneI.getDouble(0));
-    m_climbMotorControllerOne.getPIDCtrl().setD(sbClimbOneD.getDouble(0));
-
-    m_climbMotorControllerTwo.getPIDCtrl().setP(sbClimbTwoP.getDouble(0));
-    m_climbMotorControllerTwo.getPIDCtrl().setI(sbClimbTwoI.getDouble(0));
-    m_climbMotorControllerTwo.getPIDCtrl().setD(sbClimbTwoD.getDouble(0));
   }
 
   public void resetTargetedHeight() {
