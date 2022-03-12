@@ -20,11 +20,11 @@ public final class Constants {
     // Change booleans to disable a subsystem in RobotContainer
     // spotless:off
     DriveBaseSubsystem(true),
-    CDSSubsystem      (true),
-    IntakeSubsystem   (true),
-    ShooterSubsystem  (true),
-    LimelightSubsystem(true),
-    ClimbSubsystem    (true);
+    CDSSubsystem      (false),
+    IntakeSubsystem   (false),
+    ShooterSubsystem  (false),
+    LimelightSubsystem(false),
+    ClimbSubsystem    (false);
     // spotless:on
 
     private final Boolean enabled;
@@ -145,8 +145,8 @@ public final class Constants {
     FOURBALL,
     FIVEBALL,
     TEST(
-        "paths/FlippedVectorTest1.wpilib.json",
-        "paths/FlippedVectorTest2.wpilib.json"); // change according to what path you want to test
+        "paths/Forward.wpilib.json",
+        "paths/Backward.wpilib.json"); // change according to what path you want to test
 
     private String paths[];
 
