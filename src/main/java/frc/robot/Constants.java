@@ -16,28 +16,6 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
 
-  public enum Subsystems {
-    // Change booleans to disable a subsystem in RobotContainer
-    // spotless:off
-    DriveBaseSubsystem(true),
-    CDSSubsystem      (true),
-    IntakeSubsystem   (true),
-    ShooterSubsystem  (true),
-    LimelightSubsystem(false),
-    ClimbSubsystem    (false);
-    // spotless:on
-
-    private final Boolean enabled;
-
-    Subsystems(Boolean b) {
-      this.enabled = b;
-    }
-
-    public final Boolean isEnabled() {
-      return this.enabled;
-    }
-  }
-
   public enum AimModes {
     AUTO,
     // TODO: Plug real values in for these aimModes
