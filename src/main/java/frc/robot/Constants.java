@@ -141,7 +141,7 @@ public final class Constants {
     TAXI("paths/TaxiOut.wpilib.json"),
     ONEBALL("paths/TaxiOutFromFender.wpilib.json"),
     TWOBALL("paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json"),
-    THREEBALL,
+    THREEBALL("paths/GrabTwoBalls.wpilib.json", "paths/GoBackWithTwoBalls.wpilib.json"),
     FOURBALL,
     FIVEBALL,
     TEST(
