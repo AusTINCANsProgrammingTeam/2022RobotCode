@@ -18,7 +18,7 @@ import frc.robot.subsystems.Tabs.TabContainer;
 
 public class Robot extends TimedRobot {
   private Command autonomousCommand;
-  private SendableChooser<String> chooser = new SendableChooser<>();
+  private SendableChooser<Constants.Auton> chooser = new SendableChooser<>();
   private RobotContainer robotContainer;
   private TabContainer tabContainer;
 
@@ -34,13 +34,19 @@ public class Robot extends TimedRobot {
 
     robotContainer = new RobotContainer();
 
-    // TODO: change to correct paths
-    chooser.setDefaultOption("Taxi", "taxi");
-    chooser.addOption("One Ball", "one ball");
-    chooser.addOption("Two Ball", "two ball");
-    chooser.addOption("Three Ball", "three ball");
-    chooser.addOption("Four Ball", "four ball");
-    SmartDashboard.putData("Auto Mode", chooser);
+    chooser.setDefaultOption("Taxi", Constants.Auton.TAXI); // default is taxi mode
+
+    chooser.addOption("Taxi", Constants.Auton.TAXI);
+    chooser.addOption("One Ball", Constants.Auton.ONEBALL);
+    chooser.addOption("Two Ball", Constants.Auton.TWOBALL);
+    chooser.addOption("Three Ball", Constants.Auton.THREEBALL);
+    chooser.addOption("Four Ball", Constants.Auton.FOURBALL);
+    chooser.addOption("Five Ball", Constants.Auton.FIVEBALL);
+    chooser.addOption("Test Mode", Constants.Auton.TEST);
+
+    SmartDashboard.putData(
+        "Auto Mode",
+        chooser); //  TODO: find a way to put it into desired specific named tabs such as "Auton"
 
     if (RobotContainer.getDriveBase() != null) {
       tabContainer = new TabContainer(RobotContainer.getDriveBase());
@@ -80,6 +86,7 @@ public class Robot extends TimedRobot {
   // This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    robotContainer.initAuton(chooser.getSelected());
     autonomousCommand = robotContainer.getAutonomousCommand(chooser.getSelected());
 
     // schedule the autonomous command (example)
