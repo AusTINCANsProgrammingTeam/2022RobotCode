@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.ClimbEnable;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.LimelightAlign;
@@ -60,6 +61,7 @@ public class RobotContainer {
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
+  private ClimbEnable ClimbEnabling;
 
   // auton
   private AutonModes autonModes;
@@ -95,8 +97,6 @@ public class RobotContainer {
       buttons2[i] = new JoystickButton(operatorJoystick, i);
     }
     configureButtonBindings();
-
-    initAuton();
   }
 
   private void controllerCheck() {
@@ -172,6 +172,9 @@ public class RobotContainer {
     if (climbSubsystem != null) {
       climbSubsystem.setDefaultCommand(climbCommand);
     }
+    if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
+      ClimbEnabling = new ClimbEnable(climbSubsystem, driveBaseSubsystem);
+    }
   }
 
   // Use this method to define your button->command mappings. Buttons can be
@@ -231,8 +234,7 @@ public class RobotContainer {
     } else {
 
       if (climbSubsystem != null) {
-        buttons2[Constants.startButton].whenPressed(
-            new InstantCommand(climbSubsystem::climbEnabbledEnable, climbSubsystem));
+        buttons2[Constants.startButton].whenPressed(ClimbEnabling);
       }
 
       if (outtakeCommand != null && CDSForwardCommand != null) {
@@ -244,29 +246,58 @@ public class RobotContainer {
     }
   }
 
-  public Command getAutonomousCommand(String pathname) {
+  public Command getAutonomousCommand(Constants.Auton a) {
     if (autonModes != null) {
-      chosenAutonMode = autonModes.getChosenCommand(pathname);
+      chosenAutonMode = autonModes.getChosenCommand(a);
       return chosenAutonMode;
     }
     return null;
   }
 
-  private void initAuton() {
-    if (driveBaseSubsystem != null && intakeSubsystem != null && cdsSubsystem != null) {
-      if (shooterSubsystem != null) {
-        autonModes =
-            new AutonModes(
-                driveBaseSubsystem,
-                shooterSubsystem,
-                limelightSubsystem,
-                cdsSubsystem,
-                intakeSubsystem);
-      } else {
-        autonModes = new AutonModes(driveBaseSubsystem, intakeSubsystem, cdsSubsystem);
-      }
-    } else {
-      System.out.println("DriveBaseSubsystem, IntakeSubsystem, and CDSSubsystem is not enabled.");
+  public void initAuton(Constants.Auton mode) {
+    // switch for readibility
+    boolean success = true;
+    switch (mode) {
+      case TEST:
+        if (driveBaseSubsystem != null) {
+          autonModes = new AutonModes(driveBaseSubsystem);
+        } else {
+          success = false;
+        }
+        break;
+      case TAXI:
+        if (driveBaseSubsystem != null && intakeSubsystem != null && cdsSubsystem != null) {
+          autonModes = new AutonModes(driveBaseSubsystem, intakeSubsystem, cdsSubsystem);
+        } else {
+          success = false;
+        }
+        break;
+      case ONEBALL: // all of these modes go down to the FIVEBALL case
+      case TWOBALL:
+      case THREEBALL:
+      case FOURBALL:
+      case FIVEBALL:
+        if (shooterSubsystem != null
+            && driveBaseSubsystem != null
+            && intakeSubsystem != null
+            && cdsSubsystem != null) {
+          autonModes =
+              new AutonModes(
+                  driveBaseSubsystem,
+                  shooterSubsystem,
+                  limelightSubsystem,
+                  cdsSubsystem,
+                  intakeSubsystem);
+        } else {
+          success = false;
+        }
+        break;
+      default:
+        System.out.println("No mode selected");
+        break;
+    }
+    if (success == false) {
+      System.out.println(mode.getName() + " mode unable to be created.");
     }
   }
 
