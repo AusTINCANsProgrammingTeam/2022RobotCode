@@ -16,6 +16,7 @@ import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.ClimbEnable;
 import frc.robot.commands.CombinedIntakeCDSForwardCommand;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
@@ -102,8 +103,6 @@ public class RobotContainer {
       buttons2[i] = new JoystickButton(operatorJoystick, i);
     }
     configureButtonBindings();
-
-    initAuton();
   }
 
   private void controllerCheck() {
@@ -149,22 +148,17 @@ public class RobotContainer {
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
     }
     if (cdsSubsystem != null && shooterSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+      CDSForwardCommand = new CDSForwardCommand(cdsSubsystem, shooterSubsystem);
     }
-    // CDS
-    if (CDSSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-      // CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
-      // CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
-      // CDSSubsystem.senseColor();
     if (intakeSubsystem != null && cdsSubsystem != null) {
+      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, cdsSubsystem);
       outtakeCommand = new OuttakeCommand(intakeSubsystem, cdsSubsystem);
 
       if (Constants.ballManagementEnabled) {
         intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
         ballManagementCommand = new CDSBallManagementCommand(cdsSubsystem, intakeSubsystem);
-        CDSSubsystem.setDefaultCommand(ballManagementCommand);
+        cdsSubsystem.setDefaultCommand(ballManagementCommand);
       } else {
         combinedIntakeCDS = new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem);
       }
@@ -254,7 +248,7 @@ public class RobotContainer {
       }
 
       if (outtakeCommand != null && CDSForwardCommand != null) {
-        buttons[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
+        buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
         buttons2[Constants.RBumper].whileHeld(outtakeCommand);
       }
 

@@ -48,7 +48,7 @@ public class CDSBallManagementCommand extends CommandBase {
       SmartDashboard.putBoolean("Middle Sensor Status", sensorStatus[1]);
       SmartDashboard.putBoolean("Back Sensor Status", sensorStatus[0]);
 
-    //Calls Auto Eject
+      // Calls Auto Eject
       if (!ejectRunning) {
         // Checks if conditions for ejection are met:
         // A ball count of over 2 OR ball color is wrong and test mode is off (meaning ball color
@@ -58,7 +58,7 @@ public class CDSBallManagementCommand extends CommandBase {
             || (sensorStatus[2]
                 && CDSSubsystem.getAllianceColor() != CDSSubsystem.senseColor()
                 && !Constants.testMode)) {
-       intakeSubsystem.toggleIntake(true);
+          intakeSubsystem.toggleIntake(true);
           CDSSubsystem.CDSWheelToggle(true);
           ejectRunning = true;
         }
