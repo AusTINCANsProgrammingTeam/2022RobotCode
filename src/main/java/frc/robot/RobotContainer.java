@@ -17,7 +17,6 @@ import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
-import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShooterHeld;
@@ -55,7 +54,6 @@ public class RobotContainer {
   // commands
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
   private IntakeForwardCommand intakeForwardCommand;
-  private IntakeReverseCommand intakeReverseCommand;
   private ClimbCommand climbCommand;
 
   private ShooterHeld shooterHeldLow, shooterHeldAuto;
@@ -118,56 +116,22 @@ public class RobotContainer {
   }
 
   private void initSubsystems() {
-
     // subsystems
-    for (Constants.Subsystems sub : Constants.Subsystems.values()) {
-      if (sub.isEnabled()) {
+    controllerCheck();
 
-        controllerCheck();
+    driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, Constants.usingExternal);
 
-        // System.out.println((String) k + " " + subSysEnables.get((String) k));
-        switch (sub.toString()) {
-          case "DriveBaseSubsystem":
-            {
-              System.out.println("Drivebase enabled");
-              driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, Constants.usingExternal);
-              break;
-            }
-          case "CDSSubsystem":
-            {
-              System.out.println("CDS enabled");
-              cdsSubsystem = new CDSSubsystem();
-              break;
-            }
-          case "IntakeSubsystem":
-            {
-              System.out.println("Intake enabled");
-              intakeSubsystem = new IntakeSubsystem();
-              break;
-            }
-          case "ShooterSubsystem":
-            {
-              System.out.println("Shooter enabled");
-              shooterSubsystem = new ShooterSubsystem();
-              break;
-            }
-          case "LimelightSubsystem":
-            {
-              System.out.println("Limelight enabled");
-              limelightSubsystem = new LimelightSubsystem();
-              break;
-            }
-          case "ClimbSubsystem":
-            {
-              if (axisCount1 > 0 && buttonCount1 > 0) {
-                climbSubsystem = new ClimbSubsystem(operatorJoystick);
-                climbCommand = new ClimbCommand(climbSubsystem);
-                System.out.println("Climb enabled");
-              }
-              break;
-            }
-        }
-      }
+    cdsSubsystem = new CDSSubsystem();
+
+    intakeSubsystem = new IntakeSubsystem();
+
+    shooterSubsystem = new ShooterSubsystem();
+
+    limelightSubsystem = new LimelightSubsystem();
+
+    if (axisCount1 > 0 && buttonCount1 > 0) {
+      climbSubsystem = new ClimbSubsystem(operatorJoystick);
+      climbCommand = new ClimbCommand(climbSubsystem);
     }
   }
 
@@ -190,7 +154,6 @@ public class RobotContainer {
 
     if (intakeSubsystem != null && cdsSubsystem != null) {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
-      intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, cdsSubsystem);
       outtakeCommand = new OuttakeCommand(intakeSubsystem, cdsSubsystem);
       // CDSSubsystem.setDefaultCommand(new CDSBallManagementCommand(CDSSubsystem,
       // intakeSubsystem));
