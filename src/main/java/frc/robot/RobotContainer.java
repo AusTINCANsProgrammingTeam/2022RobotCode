@@ -189,10 +189,10 @@ public class RobotContainer {
     }
 
     if (intakeSubsystem != null && cdsSubsystem != null) {
-      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
+      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, cdsSubsystem);
       outtakeCommand = new OuttakeCommand(intakeSubsystem, cdsSubsystem);
-      // cdsSubsystem.setDefaultCommand(new CDSBallManagementCommand(cdsSubsystem,
+      // CDSSubsystem.setDefaultCommand(new CDSBallManagementCommand(CDSSubsystem,
       // intakeSubsystem));
     }
     if (shooterSubsystem != null && cdsSubsystem != null) {
@@ -273,7 +273,7 @@ public class RobotContainer {
       }
 
       if (outtakeCommand != null && CDSForwardCommand != null) {
-        buttons2[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
+        buttons[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
         buttons2[Constants.RBumper].whileHeld(outtakeCommand);
       }
 
@@ -304,11 +304,10 @@ public class RobotContainer {
         System.out.println("Basic auton without shooter enabled.");
         autonModes = new AutonModes(driveBaseSubsystem, intakeSubsystem, cdsSubsystem);
       }
-    } else if(driveBaseSubsystem != null) {
+    } else if (driveBaseSubsystem != null) {
       System.out.println("Test mode activated.");
       autonModes = new AutonModes(driveBaseSubsystem);
-    }
-    else {
+    } else {
       System.out.println("No subsystems enabled.");
       autonModes = null;
     }

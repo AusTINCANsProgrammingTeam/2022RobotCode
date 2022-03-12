@@ -136,9 +136,7 @@ public class AutonModes {
       // first ramsete command needs to have driveBase reset odometry to match that of pathweaver
       if (i == 0) {
         Pose2d p = trajectories[i].getInitialPose();
-        ramseteCommands[i] =
-            r.beforeStarting(
-                () -> driveBaseSubsystem.resetOdometry(p));
+        ramseteCommands[i] = r.beforeStarting(() -> driveBaseSubsystem.resetOdometry(p));
       } else {
         ramseteCommands[i] = r;
       }
@@ -186,7 +184,7 @@ public class AutonModes {
       twoBallParallel =
           new ParallelDeadlineGroup(
               twoBallRamseteCommands[0], // travel to get ball
-              new IntakeForwardCommand(intakeSubsystem, cdsSubsystem)
+              new IntakeForwardCommand(intakeSubsystem)
                   .andThen(() -> driveBaseSubsystem.stopDriveMotors()));
 
       twoBallCommand =
@@ -197,10 +195,10 @@ public class AutonModes {
               twoBallRamseteCommands[1].andThen(() -> driveBaseSubsystem.stopDriveMotors()),
               new WaitCommand(Constants.delayshot),
               new ShooterPressed(
-                      shooterSubsystem,
-                      limelightSubsystem,
-                      cdsSubsystem,
-                      (limelightSubsystem != null)));
+                  shooterSubsystem,
+                  limelightSubsystem,
+                  cdsSubsystem,
+                  (limelightSubsystem != null)));
 
       // threeBallCommand
       // fourBallCommand
