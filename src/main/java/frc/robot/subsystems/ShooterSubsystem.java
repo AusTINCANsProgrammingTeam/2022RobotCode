@@ -206,13 +206,6 @@ public class ShooterSubsystem extends SubsystemBase {
     }
   }
 
-  public void updateSmartDashboard() {
-    SmartDashboard.putString("AimMode", "");
-    SmartDashboard.putNumber("IAccum", flywheelPID.getIAccum());
-    SmartDashboard.putNumber("Distance", getDistance());
-    SmartDashboard.putNumber("RPM", flywheelEncoder.getVelocity());
-  }
-
   @Override
   public void periodic() {
     currentRPM = flywheelEncoder.getVelocity();
