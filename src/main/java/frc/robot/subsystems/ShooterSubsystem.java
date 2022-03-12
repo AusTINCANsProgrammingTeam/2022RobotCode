@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -23,7 +22,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private MotorController flywheelController;
   private MotorController flywheel2Controller;
   private SparkMaxPIDController flywheelPID;
-  private SimpleMotorFeedforward flywheelFF;
   private RelativeEncoder flywheelEncoder;
   private MotorController hoodController;
   private SparkMaxPIDController hoodPID;
@@ -43,8 +41,8 @@ public class ShooterSubsystem extends SubsystemBase {
       shooterTab.add("PID I", Constants.Shooter.kPIDFArray[1]).withPosition(0, 2).getEntry();
   private NetworkTableEntry PID_D =
       shooterTab.add("PID D", Constants.Shooter.kPIDFArray[2]).withPosition(0, 3).getEntry();
-  private NetworkTableEntry PID_Acc =
-      shooterTab.add("PID Acc", Constants.Shooter.kAccel).withPosition(0, 4).getEntry();
+  private NetworkTableEntry PID_F =
+      shooterTab.add("PID F", Constants.Shooter.kF).withPosition(0, 4).getEntry();
   private NetworkTableEntry SShootingMode =
       shooterTab.add("Shooting Mode", "TEST").withPosition(1, 5).getEntry();
   private NetworkTableEntry DDistance =
@@ -67,11 +65,11 @@ public class ShooterSubsystem extends SubsystemBase {
         new MotorController("Flywheel", Constants.Shooter.shooterID, Constants.Shooter.kPIDFArray);
     flywheel2Controller = new MotorController("Flywheel 2", Constants.Shooter.shooter2ID);
     flywheelPID = flywheelController.getPIDCtrl();
-    flywheelFF =
-        new SimpleMotorFeedforward(
-            Constants.Shooter.kSg, Constants.Shooter.kVg, Constants.Shooter.kAg);
     flywheelEncoder = flywheelController.getEncoder();
+    flywheelController.enableVoltageCompensation(11);
+    flywheel2Controller.enableVoltageCompensation(11);
     flywheel2Controller.follow(flywheelController, true);
+
     // Initializes the SparkMAX for the hood TODO: Set this up when possible
     /*hoodController = new  MotorController("Hood", Constants.hoodID);
     hoodPID = hoodController.getPID();
@@ -86,7 +84,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // Initializes Additional PID for the shooter
     flywheelPID.setIMaxAccum(Constants.Shooter.kMaxIAccum, Constants.Shooter.kMaxISlot);
     flywheelPID.setOutputRange(Constants.Shooter.kMinOutput, Constants.Shooter.kMaxOutput);
-    flywheelPID.setFF(1e-4); // TODO: delete when testing FF
+    flywheelPID.setFF(Constants.Shooter.kF);
 
     DistanceArray = new ShooterConfig[3];
     DistanceArray[0] = new ShooterConfig(5, 64, 2263);
@@ -100,6 +98,7 @@ public class ShooterSubsystem extends SubsystemBase {
     flywheelPID.setP(PID_P.getDouble(0));
     flywheelPID.setI(PID_I.getDouble(0));
     flywheelPID.setD(PID_D.getDouble(0));
+    flywheelPID.setFF(PID_F.getDouble(0));
   }
 
   public void adjustHood(double a) {
@@ -131,8 +130,6 @@ public class ShooterSubsystem extends SubsystemBase {
       flywheelPID.setIAccum(0);
     } else {
       targetRPM = rpm;
-      SmartDashboard.putNumber("trpm", rpm);
-      // flywheelPID.setFF(flywheelFF.calculate(rpm));
       flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
     }
   }
@@ -146,7 +143,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void runCargo(double speed) {
-    stopperController.setSpeed(speed);
+    stopperController.set(speed);
   }
 
   public boolean wheelReady() {
@@ -227,7 +224,7 @@ public class ShooterSubsystem extends SubsystemBase {
     if ((flywheelPID.getP() != PID_P.getDouble(0))
         || (flywheelPID.getI() != PID_I.getDouble(0))
         || (flywheelPID.getD() != PID_D.getDouble(0))
-        || (flywheelPID.getFF() != PID_Acc.getDouble(0))) {
+        || (flywheelPID.getFF() != PID_F.getDouble(0))) {
       updatePID();
     }
     /*   if (DShootingMode.getDouble(0) != aimMode.ordinal()) {

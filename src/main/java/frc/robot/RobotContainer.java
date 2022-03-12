@@ -48,7 +48,7 @@ public class RobotContainer {
   // subsystems
   private static ClimbSubsystem climbSubsystem;
   private static DriveBaseSubsystem driveBaseSubsystem;
-  private static CDSSubsystem CDSSubsystem;
+  private static CDSSubsystem cdsSubsystem;
   private static IntakeSubsystem intakeSubsystem;
   private static ShooterSubsystem shooterSubsystem;
   private static LimelightSubsystem limelightSubsystem;
@@ -138,7 +138,7 @@ public class RobotContainer {
           case "CDSSubsystem":
             {
               System.out.println("CDS enabled");
-              CDSSubsystem = new CDSSubsystem();
+              cdsSubsystem = new CDSSubsystem();
               break;
             }
           case "IntakeSubsystem":
@@ -179,31 +179,31 @@ public class RobotContainer {
       driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
     }
-    if (CDSSubsystem != null && shooterSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+    if (cdsSubsystem != null && shooterSubsystem != null) {
+      CDSForwardCommand = new CDSForwardCommand(cdsSubsystem);
     }
     // CDS
-    if (CDSSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-      // CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
-      // CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
-      // CDSSubsystem.senseColor();
+    if (cdsSubsystem != null) {
+      CDSForwardCommand = new CDSForwardCommand(cdsSubsystem);
+      // cdsSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(cdsSubsystem));
+      // CDSReverseCommand = new CDSReverseCommand(cdsSubsystem, shooterSubsystem);
+      // cdsSubsystem.senseColor();
     }
 
-    if (intakeSubsystem != null && CDSSubsystem != null) {
-      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, CDSSubsystem);
-      intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, CDSSubsystem);
-      outtakeCommand = new OuttakeCommand(intakeSubsystem, CDSSubsystem);
+    if (intakeSubsystem != null && cdsSubsystem != null) {
+      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
+      intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, cdsSubsystem);
+      outtakeCommand = new OuttakeCommand(intakeSubsystem, cdsSubsystem);
       // CDSSubsystem.setDefaultCommand(new CDSBallManagementCommand(CDSSubsystem,
       // intakeSubsystem));
     }
-    if (shooterSubsystem != null && CDSSubsystem != null) {
+    if (shooterSubsystem != null && cdsSubsystem != null) {
       shooterHeldAuto =
           new ShooterHeld(
-              shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
+              shooterSubsystem, limelightSubsystem, cdsSubsystem, (limelightSubsystem != null));
       shooterHeldLow =
           new ShooterHeld(
-              shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
+              shooterSubsystem, limelightSubsystem, cdsSubsystem, (limelightSubsystem != null));
     }
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
@@ -277,7 +277,7 @@ public class RobotContainer {
       }
 
       if (outtakeCommand != null && CDSForwardCommand != null) {
-        buttons2[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
+        buttons[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
         buttons2[Constants.RBumper].whileHeld(outtakeCommand);
       }
 
@@ -294,27 +294,20 @@ public class RobotContainer {
   }
 
   private void initAuton() {
-    if (driveBaseSubsystem != null) {
-      if (shooterSubsystem != null
-          && limelightSubsystem != null
-          && CDSSubsystem != null
-          && intakeSubsystem != null) {
+    if (driveBaseSubsystem != null && intakeSubsystem != null && cdsSubsystem != null) {
+      if (shooterSubsystem != null) {
         autonModes =
             new AutonModes(
                 driveBaseSubsystem,
                 shooterSubsystem,
                 limelightSubsystem,
-                CDSSubsystem,
+                cdsSubsystem,
                 intakeSubsystem);
-
       } else {
-        autonModes =
-            new AutonModes(
-                driveBaseSubsystem); // default constructor, if other subsystems are disabled only
-        // use drivebase for taxi
+        autonModes = new AutonModes(driveBaseSubsystem, intakeSubsystem, cdsSubsystem);
       }
     } else {
-      autonModes = null;
+      System.out.println("DriveBaseSubsystem, IntakeSubsystem, and CDSSubsystem is not enabled.");
     }
   }
 

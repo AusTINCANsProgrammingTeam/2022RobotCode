@@ -140,15 +140,17 @@ public final class Constants {
   // Path json files
   public static final String taxiPath = "paths/TaxiOut.wpilib.json";
   public static final String oneBallPath = "paths/TaxiOutFromFender.wpilib.json";
-  public static final String twoBallPath = "paths/TaxiOutToGrabBall.wpilib.json";
+  public static final String twoBallPath[] = {
+    "paths/TaxiOutToGrabBall.wpilib.json", "paths/GoBackIntoFender.wpilib.json"
+  };
 
   // Volts, constants for ramseteCommand
-  public static final double ksVolts = 0.28665; // Ks
-  public static final double kvVoltSecondsPerMeter = 1.4563; // Kv, Velocity
-  public static final double kaVoltSecondsSquaredPerMeter = 0.21703; // Ka, Accelleration
+  public static final double ksVolts = 0.2358; // Ks
+  public static final double kvVoltSecondsPerMeter = 0.81588; // Kv, Velocity
+  public static final double kaVoltSecondsSquaredPerMeter = 0.129; // Ka, Accelleration
 
   public static final double arbFeedForward =
-      0.00046254; // voltage applied to the motor after the result of the specified control mode
+      1.9829E-07; // voltage applied to the motor after the result of the specified control mode
   public static final double trackWidth = 0.559; // track width of kitbot
   public static final DifferentialDriveKinematics driveKinematics =
       new DifferentialDriveKinematics(trackWidth);
@@ -257,18 +259,13 @@ public final class Constants {
     public static final double cargoReverse = -0.4;
 
     // PID settings
-    // kp was 3.1605e-7 and kd was 0, kff was 1e-4
-    public static final double kPIDFArray[] = {2.5e-4, 2.5e-7, 2e-6};
+    public static final double kPIDFArray[] = {2.5e-8, 5.5e-8, 0};
+    public static final double kF = 1.9e-4;
     public static final double kMaxIAccum = 0.9;
     public static final int kMaxISlot = 0;
     public static final double kMaxOutput = 1.0;
     public static final double kMinOutput = 0;
-    public static final double kA = 0.15; // Smoothing alpha, do not cofuse with kAg
-    // PID FF gains
-    public static final double kSg = 0.28665;
-    public static final double kVg = 1.4563;
-    public static final double kAg = 0.21703;
-    public static final double kAccel = 0;
+    public static final double kA = 0.25;
   }
 
   // Climb Constants
