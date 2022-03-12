@@ -61,7 +61,7 @@ public class CDSSubsystem extends SubsystemBase {
     CDSBeltController.setIdleMode(IdleMode.kBrake);
     CDSWheelControllerOne.setIdleMode(IdleMode.kCoast);
 
-    colorSensors = new ColorSensorMuxed(0, 1, 3);
+    colorSensors = new ColorSensorMuxed(2, 1, 0); // front to back color sensor ports on new robotn
 
     String allianceColor = DriverStation.getAlliance().toString();
     SmartDashboard.putString("Alliance Color", allianceColor);

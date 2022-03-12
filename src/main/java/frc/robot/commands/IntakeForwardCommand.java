@@ -25,8 +25,8 @@ public class IntakeForwardCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mIntakeSubsystem.toggleIntake(true);
-    mCdsSubsystem.CDSWheelToggle(true);
+    mIntakeSubsystem.toggleIntake(false);
+    mCdsSubsystem.CDSWheelToggle(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

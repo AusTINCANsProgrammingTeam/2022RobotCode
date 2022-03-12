@@ -186,11 +186,11 @@ public class RobotContainer {
     }
     // CDS
     if (intakeSubsystem != null && CDSSubsystem != null) {
-      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, CDSSubsystem);
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, CDSSubsystem);
       outtakeCommand = new OuttakeCommand(intakeSubsystem, CDSSubsystem);
 
       if (Constants.ballManagementEnabled) {
+        intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, CDSSubsystem);
         ballManagementCommand = new CDSBallManagementCommand(CDSSubsystem, intakeSubsystem);
         CDSSubsystem.setDefaultCommand(ballManagementCommand);
       } else {
@@ -224,15 +224,15 @@ public class RobotContainer {
     controllerCheck();
 
     // Intake / CDS
-    if (intakeForwardCommand != null && outtakeCommand != null) {
-      // takes ball in
-      buttons[Constants.RBumper].whileHeld(intakeForwardCommand);
+    if (outtakeCommand != null) {
       // spits ball out
-      buttons[Constants.RTriggerButton].whileHeld(outtakeCommand);
+      buttons[Constants.RBumper].whileHeld(outtakeCommand);
     }
 
     if (combinedIntakeCDS != null) {
-      buttons[Constants.RBumper].whileHeld(combinedIntakeCDS);
+      buttons[Constants.RTriggerButton].whileHeld(combinedIntakeCDS);
+    } else {
+      buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
     }
 
     if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
