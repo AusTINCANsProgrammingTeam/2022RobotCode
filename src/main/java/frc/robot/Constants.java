@@ -137,12 +137,31 @@ public final class Constants {
 
   // AUTONOMOUS Constants
 
-  // Path json files
-  public static final String taxiPath = "paths/TaxiOut.wpilib.json";
-  public static final String oneBallPath = "paths/TaxiOutFromFender.wpilib.json";
-  public static final String twoBallPath[] = {
-    "paths/TaxiOutToGrabBall.wpilib.json", "paths/GoBackIntoFender.wpilib.json"
-  };
+  public enum Auton {
+    TAXI("paths/TaxiOut.wpilib.json"),
+    ONEBALL("paths/TaxiOutFromFender.wpilib.json"),
+    TWOBALL("paths/TaxiOutToGrabBall.wpilib.json", "paths/GoBackIntoFender.wpilib.json"),
+    THREEBALL,
+    FOURBALL,
+    FIVEBALL,
+    TEST(
+        "paths/FlippedVectorTest1.wpilib.json",
+        "paths/FlippedVectorTest2.wpilib.json"); // change according to what path you want to test
+
+    private String paths[];
+
+    private Auton() {
+      paths = null;
+    }
+
+    private Auton(String... paths) {
+      this.paths = paths;
+    }
+
+    public String[] getPaths() {
+      return this.paths;
+    }
+  }
 
   // Volts, constants for ramseteCommand
   public static final double ksVolts = 0.2358; // Ks

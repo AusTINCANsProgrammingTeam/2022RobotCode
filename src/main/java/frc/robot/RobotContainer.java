@@ -281,9 +281,9 @@ public class RobotContainer {
     }
   }
 
-  public Command getAutonomousCommand(String pathname) {
+  public Command getAutonomousCommand(Constants.Auton a) {
     if (autonModes != null) {
-      chosenAutonMode = autonModes.getChosenCommand(pathname);
+      chosenAutonMode = autonModes.getChosenCommand(a);
       return chosenAutonMode;
     }
     return null;
