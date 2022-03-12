@@ -165,10 +165,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
         .getPIDCtrl()
         .setD(Constants.driveRightPID[2]);
 
-    m_motorControllers[Constants.driveLeftFrontIndex].getPIDCtrl().setP(Constants.driveLeftPID[0]);
-    m_motorControllers[Constants.driveLeftFrontIndex].getPIDCtrl().setI(Constants.driveLeftPID[1]);
-    m_motorControllers[Constants.driveLeftFrontIndex].getPIDCtrl().setD(Constants.driveLeftPID[2]);
-
     // rear motor pid controllers should follow
   }
 
@@ -212,9 +208,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
     // updates pid values of leaders only not the followers
     m_motorControllers[Constants.driveLeftFrontIndex].updateSmartDashboard();
     m_motorControllers[Constants.driveRightFrontIndex].updateSmartDashboard();
-
-    // acceptWheelSpeeds(2, 0);
-
   }
 
   public void setArcadedrivespeed(double input) {
@@ -315,30 +308,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
     getRightMotor().set(right);
   }
 
-  // toggles inversion of motors
-  public void setReverse() {
-    // isReverse = true;
-    // if (m_motorControllers[Constants.driveLeftFront].getInverted() == true) {
-    //   m_motorControllers[Constants.driveRightFront].setInverted(true);
-    //   m_motorControllers[Constants.driveRightRear].setInverted(true);
-    //   m_motorControllers[Constants.driveLeftFront].setInverted(false);
-    //   m_motorControllers[Constants.driveLeftRear].setInverted(false);
-    // } else {
-    //   m_motorControllers[Constants.driveRightFront].setInverted(false);
-    //   m_motorControllers[Constants.driveRightRear].setInverted(false);
-    //   m_motorControllers[Constants.driveLeftFront].setInverted(true);
-    //   m_motorControllers[Constants.driveLeftRear].setInverted(true);
-    // }
-  }
-
   // for trajectory (ramseteCommand)
   public void acceptWheelSpeeds(double leftSpeed, double rightSpeed) {
-    // if(isReverse == true) {
-    //   double temp = leftSpeed;
-    //   leftSpeed = -rightSpeed;
-    //   rightSpeed = -temp;
-    // }
-
     // leftSpeed and rightSpeed in m/s, need to convert it to rpm
 
     leftSpeed =
