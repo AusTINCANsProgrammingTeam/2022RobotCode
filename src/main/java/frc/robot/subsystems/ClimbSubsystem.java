@@ -38,15 +38,15 @@ public class ClimbSubsystem extends SubsystemBase {
   private NetworkTableEntry sbclimbspeedTwo;
   private NetworkTableEntry sbclimbheightTwo;
   private NetworkTableEntry sbclimbHeightTwo;
-  private NetworkTableEntry sbclimbSpeedInput;
-  private NetworkTableEntry sbclimbMode;
-  private NetworkTableEntry sbClimbEnabbled;
   private NetworkTableEntry sbClimbOneP;
   private NetworkTableEntry sbClimbOneI;
   private NetworkTableEntry sbClimbOneD;
   private NetworkTableEntry sbClimbTwoP;
   private NetworkTableEntry sbClimbTwoI;
   private NetworkTableEntry sbClimbTwoD;
+  private NetworkTableEntry sbclimbSpeedInput;
+  private NetworkTableEntry sbclimbMode;
+  private NetworkTableEntry sbClimbEnabbled;
 
   public ClimbSubsystem(Joystick joystick) {
     m_climbJoystick = joystick;
@@ -284,8 +284,6 @@ public class ClimbSubsystem extends SubsystemBase {
   public boolean getLimitSwitchVal() {
     return m_limitSwitch.get();
   }
-
-  public void winchCorrection() {}
 
   // TODO: might add other getter methods depending on how many limit switches
 }
