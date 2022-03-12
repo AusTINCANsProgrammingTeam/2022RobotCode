@@ -101,9 +101,9 @@
               ]
             }
           },
-          "2,0": {
+          "3,0": {
             "size": [
-              12,
+              11,
               11
             ],
             "content": {
@@ -112,10 +112,6 @@
               "Layout/Label position": "BOTTOM",
               "_children": [
                 {
-                  "_type": "Text View",
-                  "_title": "Aim Mode"
-                },
-                {
                   "_type": "Grid Layout",
                   "_title": " ",
                   "Layout/Number of columns": 2,
@@ -123,6 +119,16 @@
                   "Layout/Label position": "BOTTOM",
                   "_children": {
                     "0,0": {
+                      "_type": "Text View",
+                      "_title": "Aim Mode"
+                    },
+                    "1,0": {
+                      "_type": "Boolean Box",
+                      "_title": "Flywheel Ready",
+                      "Colors/Color when true": "#7CFC00FF",
+                      "Colors/Color when false": "#8B0000FF"
+                    },
+                    "0,1": {
                       "_type": "Simple Dial",
                       "_title": "RPM",
                       "Range/Min": 0.0,
@@ -130,18 +136,6 @@
                       "Visuals/Show value": true
                     },
                     "1,1": {
-                      "_type": "Boolean Box",
-                      "_title": "Cargo Ready",
-                      "Colors/Color when true": "#7CFC00FF",
-                      "Colors/Color when false": "#8B0000FF"
-                    },
-                    "0,1": {
-                      "_type": "Boolean Box",
-                      "_title": "Flywheel Ready",
-                      "Colors/Color when true": "#7CFC00FF",
-                      "Colors/Color when false": "#8B0000FF"
-                    },
-                    "1,0": {
                       "_type": "Grid Layout",
                       "_title": "T-RPM",
                       "Layout/Number of columns": 2,
@@ -197,29 +191,14 @@
           },
           "13,0": {
             "size": [
-              6,
-              13
+              5,
+              5
             ],
             "content": {
-              "_type": "Grid Layout",
-              "_title": "Shooter Info",
-              "Layout/Number of columns": 1,
-              "Layout/Number of rows": 2,
-              "Layout/Label position": "BOTTOM",
-              "_children": {
-                "0,0": {
-                  "_type": "Boolean Box",
-                  "_title": "Flywheel Ready",
-                  "Colors/Color when true": "#7CFC00FF",
-                  "Colors/Color when false": "#8B0000FF"
-                },
-                "0,1": {
-                  "_type": "Boolean Box",
-                  "_title": "Cargo Running",
-                  "Colors/Color when true": "#7CFC00FF",
-                  "Colors/Color when false": "#8B0000FF"
-                }
-              }
+              "_type": "Boolean Box",
+              "_title": "Flywheel Ready",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
             }
           }
         }
