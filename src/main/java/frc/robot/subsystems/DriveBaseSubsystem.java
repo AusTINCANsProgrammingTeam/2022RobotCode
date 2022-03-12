@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Encoder;
@@ -20,6 +21,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
@@ -31,6 +34,9 @@ import frc.robot.Robot;
 import frc.robot.common.hardware.MotorController;
 
 public class DriveBaseSubsystem extends SubsystemBase {
+  private ShuffleboardTab driverTab = Shuffleboard.getTab("Driver Teleop tab");
+  private NetworkTableEntry teleopSpeed =
+      driverTab.add("Speed percentage", 100).withPosition(0, 1).getEntry();
 
   private final Joystick m_driverJoystick;
   private final MotorController[] m_motorControllers;
@@ -58,6 +64,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private boolean isReverse = false;
 
   public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {
+
     m_driverJoystick = joystick;
 
     m_motorControllers = new MotorController[4];
@@ -118,7 +125,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
       m_gyro1 = new AnalogGyro(1);
       m_gyroSim = new AnalogGyroSim(m_gyro1);
       if (usingExternal == true) {
-        // m_leftEncoderSim = new EncoderSim(m_leftEncoder);   // no "Encoder" object anymore
+        // m_leftEncoderSim = new EncoderSim(m_leftEncoder); // no "Encoder" object
+        // anymore
         // m_rightEncoderSim = new EncoderSim(m_rightEncoder);
       } else {
         m_leftEncoderSim = new EncoderSim(m_LEncoderForSim);
@@ -138,7 +146,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
               VecBuilder.fill(
                   0.001, 0.001, 0.001, 0.1, 0.1, 0.005,
                   0.005)); // standard deviations for measurement noise: x and y: 0.001m heading:
-      // 0.001 rad  l and r velocity: 0.1m/s  l and r position: 0.005m
+      // 0.001 rad l and r velocity: 0.1m/s l and r position: 0.005m
     }
 
     resetEncoders(); // reset encoders to reset position and velocity values
@@ -182,7 +190,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
       // calculate circumference then convert to meters
       // wheel radius in inches, want to convert meters
-      // divide by gear ratio to get in terms of motor rotations when multiplied to number of motor
+      // divide by gear ratio to get in terms of motor rotations when multiplied to
+      // number of motor
       // rotations
       m_leftEncoder.setPositionConversionFactor(
           2 * Math.PI * Constants.wheelRadius / Constants.inchesInMeter / Constants.gearRatio);
@@ -208,12 +217,16 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   }
 
+  public void setArcadedrivespeed(double input) {
+    teleopSpeed.setDouble(input);
+  }
+
   // Normal Arcade Drive
   public void arcadeDrive() {
     // Note: -0.85 to accomodate comfort of driver (sensitivity)
     m_differentialDrive.arcadeDrive(
-        -0.85 * m_driverJoystick.getRawAxis(Constants.leftJoystickY),
-        m_driverJoystick.getRawAxis(Constants.rightJoystickX),
+        m_driverJoystick.getRawAxis(Constants.leftJoystickY) * (teleopSpeed.getDouble(100) / 100),
+        -0.85 * m_driverJoystick.getRawAxis(Constants.rightJoystickX),
         true);
     // joystick has y-axis flipped so up is negative why down is positive
   }

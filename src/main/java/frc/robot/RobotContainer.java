@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.ClimbEnable;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.LimelightAlign;
@@ -60,6 +61,7 @@ public class RobotContainer {
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
+  private ClimbEnable ClimbEnabling;
 
   // auton
   private AutonModes autonModes;
@@ -172,6 +174,9 @@ public class RobotContainer {
     if (climbSubsystem != null) {
       climbSubsystem.setDefaultCommand(climbCommand);
     }
+    if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
+      ClimbEnabling = new ClimbEnable(climbSubsystem, driveBaseSubsystem);
+    }
   }
 
   // Use this method to define your button->command mappings. Buttons can be
@@ -231,8 +236,7 @@ public class RobotContainer {
     } else {
 
       if (climbSubsystem != null) {
-        buttons2[Constants.startButton].whenPressed(
-            new InstantCommand(climbSubsystem::climbEnabbledEnable, climbSubsystem));
+        buttons2[Constants.startButton].whenPressed(ClimbEnabling);
       }
 
       if (outtakeCommand != null && CDSForwardCommand != null) {
