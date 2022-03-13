@@ -40,73 +40,77 @@ public class CDSBallManagementCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (msCurrent >= runInterval) {
-      int lastBallCount = CDSSubsystem.getBallCount();
-      boolean[] sensorStatus = CDSSubsystem.getSensorStatus();
+    // Only run if all sensors are online. If not, don't run ball management
+    if (CDSSubsystem.sensorsOnline()) {
 
-      SmartDashboard.putBoolean("Front sensor status", sensorStatus[2]);
-      SmartDashboard.putBoolean("Middle Sensor Status", sensorStatus[1]);
-      SmartDashboard.putBoolean("Back Sensor Status", sensorStatus[0]);
+      if (msCurrent >= runInterval) {
+        int lastBallCount = CDSSubsystem.getBallCount();
+        boolean[] sensorStatus = CDSSubsystem.getSensorStatus();
 
-      // Calls Auto Eject
-      if (!ejectRunning) {
-        // Checks if conditions for ejection are met:
-        // A ball count of over 2 OR ball color is wrong and test mode is off (meaning ball color
-        // shouldn't be disregarded)
-        // TODO This is somehow ejecting any ball regardless of color
+        SmartDashboard.putBoolean("Front sensor status", sensorStatus[2]);
+        SmartDashboard.putBoolean("Middle Sensor Status", sensorStatus[1]);
+        SmartDashboard.putBoolean("Back Sensor Status", sensorStatus[0]);
 
-        // Uncomment Once Done
-        
-        if ((lastBallCount > 2)
-            || (sensorStatus[2]
-                && CDSSubsystem.getAllianceColor() != CDSSubsystem.senseColor())) {
-          System.out.printf("Eject: %d %b %s %s\n", lastBallCount, sensorStatus[2], CDSSubsystem.getAllianceColor(), CDSSubsystem.senseColor());
-          intakeSubsystem.toggleIntake(true);
-          CDSSubsystem.CDSWheelToggle(true);
-          ejectRunning = true;
-          SmartDashboard.putBoolean("Eject Running", ejectRunning);
-        }
-      } else {
-        if (msCurrent >= msDelay) {
-          CDSSubsystem.stopCDS();
-          intakeSubsystem.stopIntake();
-          ejectRunning = false;
-          msCurrent = 0;
+        // Calls Auto Eject
+        if (!ejectRunning) {
+          // Checks if conditions for ejection are met:
+          // A ball count of over 2 OR ball color is wrong and test mode is off (meaning ball color
+          // shouldn't be disregarded)
+          // TODO This is somehow ejecting any ball regardless of color
+
+          // Uncomment Once Done
+          
+          if ((lastBallCount > 2)
+              || (sensorStatus[2]
+                  && CDSSubsystem.getAllianceColor() != CDSSubsystem.senseColor())) {
+            System.out.printf("Eject: %d %b %s %s\n", lastBallCount, sensorStatus[2], CDSSubsystem.getAllianceColor(), CDSSubsystem.senseColor());
+            intakeSubsystem.toggleIntake(true);
+            CDSSubsystem.CDSWheelToggle(true);
+            ejectRunning = true;
+            SmartDashboard.putBoolean("Eject Running", ejectRunning);
+          }
         } else {
-          msCurrent += 20;
+          if (msCurrent >= msDelay) {
+            CDSSubsystem.stopCDS();
+            intakeSubsystem.stopIntake();
+            ejectRunning = false;
+            msCurrent = 0;
+          } else {
+            msCurrent += 20;
+          }
         }
-      }
 
-      // Only run auto advance if auto ject is not running
-      if (!ejectRunning) {
-        SmartDashboard.putBoolean("CDS Running", runningCDS);
-        if (!runningCDS) {
-          // Send ball to sensor
-          SmartDashboard.putBooleanArray("Sensor Statuses", sensorStatus);
-          if (sensorStatus[2]) {
-            int nextOpenSensor = CDSSubsystem.getNextOpenSensor(sensorStatus);
-            SmartDashboard.putNumber("Open Sensor Index", nextOpenSensor);
-            if (nextOpenSensor != -1) {
-              // There is an open sensor avaliable, run CDS
-              runningCDS = true;
-              sensorIndex = nextOpenSensor;
-              CDSSubsystem.CDSBeltToggle(false);
-              CDSSubsystem.setReady(false);
+        // Only run auto advance if auto ject is not running
+        if (!ejectRunning) {
+          SmartDashboard.putBoolean("CDS Running", runningCDS);
+          if (!runningCDS) {
+            // Send ball to sensor
+            SmartDashboard.putBooleanArray("Sensor Statuses", sensorStatus);
+            if (sensorStatus[2]) {
+              int nextOpenSensor = CDSSubsystem.getNextOpenSensor(sensorStatus);
+              SmartDashboard.putNumber("Open Sensor Index", nextOpenSensor);
+              if (nextOpenSensor != -1) {
+                // There is an open sensor avaliable, run CDS
+                runningCDS = true;
+                sensorIndex = nextOpenSensor;
+                CDSSubsystem.CDSBeltToggle(false);
+                CDSSubsystem.setReady(false);
+              }
+            }
+          } else {
+            // Check if ball has reached sensor, stop if it has
+            SmartDashboard.putNumber("Open Sensor Index", sensorIndex);
+            if (sensorStatus[sensorIndex]) {
+              CDSSubsystem.stopCDS();
+              runningCDS = false;
+              sensorIndex = -1;
+              CDSSubsystem.setReady(true);
             }
           }
-        } else {
-          // Check if ball has reached sensor, stop if it has
-          SmartDashboard.putNumber("Open Sensor Index", sensorIndex);
-          if (sensorStatus[sensorIndex]) {
-            CDSSubsystem.stopCDS();
-            runningCDS = false;
-            sensorIndex = -1;
-            CDSSubsystem.setReady(true);
-          }
         }
+      } else {
+        msCurrent += 20;
       }
-    } else {
-      msCurrent += 20;
     }
   }
 

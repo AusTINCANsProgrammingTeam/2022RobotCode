@@ -182,9 +182,14 @@ public class CDSSubsystem extends SubsystemBase {
     }
   }
 
-  /*public boolean managementEnabled() {
-    return SmartDashboard.getBoolean("Ball Management Enabled", true);
-  }*/
+  public boolean sensorsOnline() {
+    for (int prox : colorSensors.getProximities()) {
+      if (prox == 0) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   public String getAllianceColor() {
     return allianceColor;
