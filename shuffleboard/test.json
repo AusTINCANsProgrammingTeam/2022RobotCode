@@ -118,10 +118,6 @@
                   "Layout/Number of rows": 2,
                   "Layout/Label position": "BOTTOM",
                   "_children": {
-                    "0,0": {
-                      "_type": "Text View",
-                      "_title": "Aim Mode"
-                    },
                     "1,0": {
                       "_type": "Boolean Box",
                       "_title": "Flywheel Ready",
@@ -155,6 +151,16 @@
                   }
                 }
               ]
+            }
+          },
+          "0,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_title": "Aim Mode"
             }
           }
         }
