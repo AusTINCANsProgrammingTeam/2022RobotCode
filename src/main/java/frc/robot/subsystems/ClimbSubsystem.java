@@ -76,7 +76,7 @@ public class ClimbSubsystem extends SubsystemBase {
     // m_limitSwitch = new DigitalInput(Constants.LimitSwitchChannel);
   }
 
-  public void climbEnabbledEnable() {
+  public void climbEnable() {
     climbEnabbled = !climbEnabbled;
     sbClimbEnabbled.setBoolean(climbEnabbled);
   }

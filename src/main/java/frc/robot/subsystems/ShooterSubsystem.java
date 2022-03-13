@@ -33,7 +33,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private double smoothRPM;
 
   private ShuffleboardTab driverTab = Shuffleboard.getTab("Driver View");
-  private NetworkTableEntry BCargoRunning = driverTab.add("Flywheel Ready", true).getEntry();
+  private NetworkTableEntry BCargoRunning = driverTab.add("Flywheel Ready", true).withPosition(4, 1).getEntry();
 
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
   private NetworkTableEntry DTRPM = operatorTab.add("T-RPM", 0).getEntry();
@@ -186,7 +186,9 @@ public class ShooterSubsystem extends SubsystemBase {
     // hood correspondingly
     if (BOverride.getBoolean(false)) {
       windFlywheel(DTRPM.getDouble(0));
+      SAimMode.setString("OVERRIDE");
     } else {
+      SAimMode.setString(aimMode.toString());
       switch (aimMode) {
         case EJECT: // aimMode used to eject unwanted balls from the shooter
         case LOW: // aimMode used to dump into the low goal from ~1ft

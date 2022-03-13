@@ -234,11 +234,6 @@ public class CDSSubsystem extends SubsystemBase {
 
   private void instantiateDebugTab() {
     CDSTab = Shuffleboard.getTab("CDS Tab");
-    CDSWheelControllerDirection =
-        CDSTab.add("CDS Wheel Direction", "Not Running")
-            .withPosition(1, 0)
-            .withWidget(BuiltInWidgets.kToggleSwitch)
-            .getEntry();
     CDSBeltControllerDirection =
         CDSTab.add("CDS Belt Direction", "Not Running")
             .withPosition(2, 0)
