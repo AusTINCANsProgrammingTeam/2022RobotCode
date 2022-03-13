@@ -27,7 +27,7 @@ public final class Constants {
     },
     EJECT(2500.0, 0.0),
     LAUNCH(0.0, 0.0),
-    TARMAC(2650.0, 0.0),
+    TARMAC(2600.0, 0.0),
     TEST {
       @Override
       public AimModes next() {
@@ -118,7 +118,7 @@ public final class Constants {
     // spotless: off
     TAXI("Taxi", "paths/TaxiOut.wpilib.json"),
     ONEBALL("Taxi", "paths/TaxiOutFromFender.wpilib.json"),
-    TWOBALL("TwoBall", "paths/TaxiOutToGrabBall.wpilib.json", "paths/GoBackIntoFender.wpilib.json"),
+    TWOBALL("TwoBall", "paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json"),
     THREEBALL(
         "ThreeBall", "paths/GrabTwoBalls.wpilib.json", "paths/GoBackWithTwoBalls.wpilib.json"),
     FOURBALL,
@@ -187,6 +187,8 @@ public final class Constants {
   public static final int finalBallSensorChannel = 2;
 
   // CDS Constants
+  public static final boolean ballManagementEnabled = false;
+
   public static final int CDSBeltID = 3;
   public static final int CDSWheelControllerOneID = 2;
   public static final int CDSWheelControllerTwoID = 9;
@@ -197,6 +199,8 @@ public final class Constants {
   public static final int backSensorActivation = 600;
 
   public static final boolean testMode = false; // if false CDS will eject balls of wrong color
+
+  public static final double stopperWheelSpeed = -0.10;
 
   // spotless:off
   // Controller Constants {
@@ -264,12 +268,12 @@ public final class Constants {
 
     // PID settings
     public static final double kPIDFArray[] = {2.5e-8, 5.5e-8, 0};
-    public static final double kF = 1.9e-4;
+    public static final double kF = 2.0e-4;
     public static final double kMaxIAccum = 0.9;
     public static final int kMaxISlot = 0;
     public static final double kMaxOutput = 1.0;
     public static final double kMinOutput = 0;
-    public static final double kA = 0.25;
+    public static final double kA = 0.35;
   }
 
   // Climb Constants

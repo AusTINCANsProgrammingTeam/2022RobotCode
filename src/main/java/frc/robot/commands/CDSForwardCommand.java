@@ -5,17 +5,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.CDSSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 public class CDSForwardCommand extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
   private final CDSSubsystem mCDSSubsystem;
 
-  public CDSForwardCommand(CDSSubsystem CDSSubsystem) {
+  private final ShooterSubsystem mShooterSubsystem;
+
+  public CDSForwardCommand(CDSSubsystem CDSSubsystem, ShooterSubsystem shooterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(CDSSubsystem);
-
+    addRequirements(shooterSubsystem);
     mCDSSubsystem = CDSSubsystem;
+    mShooterSubsystem = shooterSubsystem;
   }
 
   // Called when the command is initially scheduled.
@@ -23,6 +28,7 @@ public class CDSForwardCommand extends CommandBase {
   public void initialize() {
     mCDSSubsystem.CDSWheelToggle(false);
     mCDSSubsystem.CDSBeltToggle(false);
+    mShooterSubsystem.runCargo(Constants.stopperWheelSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -33,6 +39,7 @@ public class CDSForwardCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     mCDSSubsystem.stopCDS();
+    mShooterSubsystem.runCargo(0.0);
   }
 
   // Returns true when the command should end.

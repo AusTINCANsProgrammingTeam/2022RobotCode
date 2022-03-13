@@ -8,25 +8,27 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class IntakeForwardCommand extends CommandBase {
-  /** Creates a new IntakeForwardCommand. */
-  private final IntakeSubsystem mIntakeSubsystem;
+public class CombinedIntakeCDSForwardCommand extends CommandBase {
+  /** Creates a new OuttakeCommand. */
+  private final CDSSubsystem CDSSubsystem;
 
-  private final CDSSubsystem mCdsSubsystem;
+  private final IntakeSubsystem intakeSubsystem;
 
-  public IntakeForwardCommand(IntakeSubsystem intakeSubsystem, CDSSubsystem cdsSubsystem) {
+  public CombinedIntakeCDSForwardCommand(
+      IntakeSubsystem mIntakeSubsystem, CDSSubsystem mCDSSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intakeSubsystem);
-    addRequirements(cdsSubsystem);
-    mIntakeSubsystem = intakeSubsystem;
-    mCdsSubsystem = cdsSubsystem;
+    addRequirements(mIntakeSubsystem);
+    addRequirements(mCDSSubsystem);
+    intakeSubsystem = mIntakeSubsystem;
+    CDSSubsystem = mCDSSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mIntakeSubsystem.toggleIntake(false);
-    mCdsSubsystem.CDSWheelToggle(false);
+    CDSSubsystem.CDSBeltToggle(false);
+    CDSSubsystem.CDSWheelToggle(false);
+    intakeSubsystem.toggleIntake(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -36,8 +38,8 @@ public class IntakeForwardCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    mIntakeSubsystem.stopIntake();
-    mCdsSubsystem.stopCDSWheel(); // remove if stuff doesn't work well
+    CDSSubsystem.stopCDS();
+    intakeSubsystem.stopIntake();
   }
 
   // Returns true when the command should end.
