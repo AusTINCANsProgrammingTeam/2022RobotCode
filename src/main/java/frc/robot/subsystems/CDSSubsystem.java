@@ -56,7 +56,7 @@ public class CDSSubsystem extends SubsystemBase {
 
     colorSensors = new ColorSensorMuxed(2, 1, 0); // front to back color sensor ports on new robotn
 
-    String allianceColor = DriverStation.getAlliance().toString();
+    allianceColor = DriverStation.getAlliance().toString();
     SmartDashboard.putString("Alliance Color", allianceColor);
   }
 

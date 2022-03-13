@@ -54,13 +54,17 @@ public class CDSBallManagementCommand extends CommandBase {
         // A ball count of over 2 OR ball color is wrong and test mode is off (meaning ball color
         // shouldn't be disregarded)
         // TODO This is somehow ejecting any ball regardless of color
+
+        // Uncomment Once Done
+        
         if ((lastBallCount > 2)
             || (sensorStatus[2]
-                && CDSSubsystem.getAllianceColor() != CDSSubsystem.senseColor()
-                && !Constants.testMode)) {
+                && CDSSubsystem.getAllianceColor() != CDSSubsystem.senseColor())) {
+          System.out.printf("Eject: %d %b %s %s\n", lastBallCount, sensorStatus[2], CDSSubsystem.getAllianceColor(), CDSSubsystem.senseColor());
           intakeSubsystem.toggleIntake(true);
           CDSSubsystem.CDSWheelToggle(true);
           ejectRunning = true;
+          SmartDashboard.putBoolean("Eject Running", ejectRunning);
         }
       } else {
         if (msCurrent >= msDelay) {
