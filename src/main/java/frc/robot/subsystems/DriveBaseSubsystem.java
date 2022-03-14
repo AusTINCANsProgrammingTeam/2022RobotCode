@@ -241,7 +241,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     // Note: -0.85 to accomodate comfort of driver (sensitivity)
     m_differentialDrive.arcadeDrive(
         m_driverJoystick.getRawAxis(Constants.leftJoystickY) * -driveBaseSpeed,
-        m_driverJoystick.getRawAxis(Constants.rightJoystickX) * -Constants.driveBaseTurnRate,
+        m_driverJoystick.getRawAxis(Constants.rightJoystickX) * Constants.driveBaseTurnRate,
         true);
     // joystick has y-axis flipped so up is negative why down is positive
   }
