@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Encoder;
@@ -34,6 +33,7 @@ import frc.robot.Robot;
 import frc.robot.common.hardware.MotorController;
 
 public class DriveBaseSubsystem extends SubsystemBase {
+  private double driveBaseSpeed;
   private ShuffleboardTab driverTab = Shuffleboard.getTab("Driver Teleop tab");
   private final Joystick m_driverJoystick;
   private final MotorController[] m_motorControllers;
@@ -61,7 +61,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private boolean isReverse = false;
 
   public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {
-
+    driveBaseSpeed = 1;
     m_driverJoystick = joystick;
 
     m_motorControllers = new MotorController[4];
@@ -103,23 +103,29 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.driveLeftFrontIndex].setInverted(true);
     m_motorControllers[Constants.driveLeftRearIndex].setInverted(true);
 
-    m_motorControllers[Constants.driveLeftRearIndex].setOpenLoopRampRate(Constants.openLoopRampRate); 
-    m_motorControllers[Constants.driveLeftFrontIndex].setOpenLoopRampRate(Constants.openLoopRampRate); 
-    m_motorControllers[Constants.driveRightRearIndex].setOpenLoopRampRate(Constants.openLoopRampRate); 
-    m_motorControllers[Constants.driveRightFrontIndex].setOpenLoopRampRate(Constants.openLoopRampRate); 
+    m_motorControllers[Constants.driveLeftRearIndex].setOpenLoopRampRate(
+        Constants.openLoopRampRate);
+    m_motorControllers[Constants.driveLeftFrontIndex].setOpenLoopRampRate(
+        Constants.openLoopRampRate);
+    m_motorControllers[Constants.driveRightRearIndex].setOpenLoopRampRate(
+        Constants.openLoopRampRate);
+    m_motorControllers[Constants.driveRightFrontIndex].setOpenLoopRampRate(
+        Constants.openLoopRampRate);
 
-    m_motorControllers[Constants.driveLeftRearIndex].setSmartCurrentLimit(Constants.driveBaseCurrentLimit); 
-    m_motorControllers[Constants.driveLeftFrontIndex].setSmartCurrentLimit(Constants.driveBaseCurrentLimit); 
-    m_motorControllers[Constants.driveRightRearIndex].setSmartCurrentLimit(Constants.driveBaseCurrentLimit); 
-    m_motorControllers[Constants.driveRightFrontIndex].setSmartCurrentLimit(Constants.driveBaseCurrentLimit); 
+    m_motorControllers[Constants.driveLeftRearIndex].setSmartCurrentLimit(
+        Constants.driveBaseCurrentLimit);
+    m_motorControllers[Constants.driveLeftFrontIndex].setSmartCurrentLimit(
+        Constants.driveBaseCurrentLimit);
+    m_motorControllers[Constants.driveRightRearIndex].setSmartCurrentLimit(
+        Constants.driveBaseCurrentLimit);
+    m_motorControllers[Constants.driveRightFrontIndex].setSmartCurrentLimit(
+        Constants.driveBaseCurrentLimit);
 
     // Forces rear motors of each side to follow the first
     m_motorControllers[Constants.driveLeftRearIndex].follow(
         m_motorControllers[Constants.driveLeftFrontIndex]);
     m_motorControllers[Constants.driveRightRearIndex].follow(
         m_motorControllers[Constants.driveRightFrontIndex]);
-
-        
 
     // differential drive
     m_differentialDrive =
@@ -226,11 +232,15 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   }
 
+  public void setDriveBaseSpeed(double driveBaseSpeed) {
+    this.driveBaseSpeed = driveBaseSpeed;
+  }
+
   // Normal Arcade Drive
   public void arcadeDrive() {
     // Note: -0.85 to accomodate comfort of driver (sensitivity)
     m_differentialDrive.arcadeDrive(
-        m_driverJoystick.getRawAxis(Constants.leftJoystickY),
+        m_driverJoystick.getRawAxis(Constants.leftJoystickY) * -driveBaseSpeed,
         m_driverJoystick.getRawAxis(Constants.rightJoystickX) * -Constants.driveBaseTurnRate,
         true);
     // joystick has y-axis flipped so up is negative why down is positive

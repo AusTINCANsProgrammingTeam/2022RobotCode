@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
@@ -227,7 +226,6 @@ public class RobotContainer {
       buttons2[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
       buttons2[Constants.RBumper].whileHeld(outtakeCommand);
     }
-    
   }
 
   public Command getAutonomousCommand(Constants.Auton a) {
