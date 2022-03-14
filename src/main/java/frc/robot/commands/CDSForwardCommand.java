@@ -28,7 +28,7 @@ public class CDSForwardCommand extends CommandBase {
   public void initialize() {
     mCDSSubsystem.CDSWheelToggle(false);
     mCDSSubsystem.CDSBeltToggle(false);
-    mShooterSubsystem.runCargo(Constants.stopperWheelSpeed);
+    mShooterSubsystem.runCargo(Constants.Shooter.cargoReverse);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
