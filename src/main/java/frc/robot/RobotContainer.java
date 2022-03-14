@@ -157,7 +157,8 @@ public class RobotContainer {
         ballManagementCommand = new CDSBallManagementCommand(cdsSubsystem, intakeSubsystem);
         cdsSubsystem.setDefaultCommand(ballManagementCommand);
       } else {
-        combinedIntakeCDS = new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem,shooterSubsystem);
+        combinedIntakeCDS =
+            new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem);
       }
     }
 
