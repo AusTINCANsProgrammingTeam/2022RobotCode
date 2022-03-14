@@ -95,7 +95,7 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public boolean getclimbingmode() {
-    return sbClimbingMode.getBoolean(false);
+    return climbEnabbled;
   }
 
   public void runManual() {
