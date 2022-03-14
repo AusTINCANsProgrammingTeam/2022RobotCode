@@ -224,7 +224,7 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void periodic() {
-
+/*
     SmartDashboard.putNumber(
         "Climb motor 1 Applied Output", m_climbMotorControllerOne.getAppliedOutput());
     SmartDashboard.putNumber(
@@ -271,6 +271,7 @@ public class ClimbSubsystem extends SubsystemBase {
       m_climbMotorControllerOne.getPIDCtrl().setI(sbClimbOneI.getDouble(0));
       m_climbMotorControllerOne.getPIDCtrl().setD(sbClimbOneD.getDouble(0));
     }
+    */
   }
 
   public boolean getLimitSwitchVal() {
