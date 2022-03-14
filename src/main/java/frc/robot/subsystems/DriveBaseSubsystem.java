@@ -240,7 +240,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public void arcadeDrive() {
     // Note: -0.85 to accomodate comfort of driver (sensitivity)
     m_differentialDrive.arcadeDrive(
-        m_driverJoystick.getRawAxis(Constants.leftJoystickY) * -driveBaseSpeed,
+        m_driverJoystick.getRawAxis(Constants.leftJoystickY) * driveBaseSpeed,
         m_driverJoystick.getRawAxis(Constants.rightJoystickX) * -Constants.driveBaseTurnRate,
         true);
     // joystick has y-axis flipped so up is negative why down is positive
@@ -248,7 +248,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   // Arcade Drive where you can only move forwards and backwards for testing
   public void arcadeDrive(double rotation) {
-    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.leftJoystickY), rotation);
+  m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.leftJoystickY) * driveBaseSpeed, rotation);
   }
 
   // TODO: Make a command to switch modes (extra)
