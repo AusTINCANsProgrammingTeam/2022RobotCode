@@ -135,10 +135,8 @@ public class RobotContainer {
 
     limelightSubsystem = new LimelightSubsystem();
 
-    if (axisCount1 > 0 && buttonCount1 > 0) {
-      climbSubsystem = new ClimbSubsystem(operatorJoystick);
-      climbCommand = new ClimbCommand(climbSubsystem);
-    }
+    climbSubsystem = new ClimbSubsystem(operatorJoystick);
+    climbCommand = new ClimbCommand(climbSubsystem);
   }
 
   private void initCommands() {
@@ -221,39 +219,15 @@ public class RobotContainer {
               shooterSubsystem));
     }
 
-    if (axisCount1 == 0 && buttonCount1 == 0) {
-
-      // Shooter
-      if (shooterSubsystem != null && shooterHeldAuto != null) {
-        buttons[Constants.backButton].whenPressed(shooterHeldAuto);
-        buttons[Constants.LJoystickButton].whenPressed(
-            new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
-        buttons[Constants.RJoystickButton].whenPressed(
-            new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
-      }
-
-      // Limelight
-      if (limelightAlign != null) {
-        buttons[Constants.startButton].whenPressed(limelightAlign);
-      }
-
-      // ClimbSubysystem has no binding because there are not enuf axises
-      if (climbSubsystem != null) {}
-
-      System.out.printf("Using Testing One-controller button mappings");
-    } else {
-
-      if (climbSubsystem != null) {
-        buttons2[Constants.startButton].whenPressed(ClimbEnabling);
-      }
-
-      if (outtakeCommand != null && intakeForwardCommand != null) {
-        buttons2[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
-        buttons2[Constants.RBumper].whileHeld(outtakeCommand);
-      }
-
-      System.out.printf("Using Competition Two-controller button mappings");
+    if (climbSubsystem != null) {
+      buttons2[Constants.startButton].whenPressed(ClimbEnabling);
     }
+
+    if (outtakeCommand != null && intakeForwardCommand != null) {
+      buttons2[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
+      buttons2[Constants.RBumper].whileHeld(outtakeCommand);
+    }
+    
   }
 
   public Command getAutonomousCommand(Constants.Auton a) {
