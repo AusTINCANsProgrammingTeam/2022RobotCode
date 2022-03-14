@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
@@ -95,7 +94,7 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public boolean getclimbingmode() {
-    return sbClimbingMode.getBoolean(false);
+    return climbEnabbled;
   }
 
   public void runManual() {
@@ -159,46 +158,23 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void periodic() {
-    if (Constants.DebugMode) {
-      SmartDashboard.putNumber(
-          "Climb motor 1 Applied Output", m_climbMotorControllerOne.getAppliedOutput());
-      SmartDashboard.putNumber(
-          "Climb motor 2 Applied Output", m_climbMotorControllerTwo.getAppliedOutput());
-      SmartDashboard.putNumber(
-          "Climb Hight One", m_climbMotorControllerOne.getEncoder().getPosition());
-      if (sbclimbHeightOne.getDouble(0) != climbHeightOne) {
-        climbHeightOne = sbclimbHeightOne.getDouble(0);
-      } else {
-        sbclimberheightOne.setDouble(climbHeightOne);
-      }
-      sbclimberspeedOne.setDouble(m_climbMotorControllerOne.getEncoder().getVelocity());
-      sbclimberpositionOne.setDouble(m_climbMotorControllerOne.getEncoder().getPosition());
-
-      m_climbMotorControllerOne.updateSmartDashboard();
-      SmartDashboard.putNumber(
-          "Climb IAccum One", m_climbMotorControllerOne.getPIDCtrl().getIAccum());
-
-      SmartDashboard.putNumber(
-          "Climb Hight Two", m_climbMotorControllerTwo.getEncoder().getPosition());
-      if (sbclimbHeightTwo.getDouble(0) != climbHeightTwo) {
-        climbHeightTwo = sbclimbHeightTwo.getDouble(0);
-      } else {
-        sbclimberheightTwo.setDouble(climbHeightTwo);
-      }
-      sbclimberspeedTwo.setDouble(m_climbMotorControllerTwo.getEncoder().getVelocity());
-      sbclimberpositionTwo.setDouble(m_climbMotorControllerTwo.getEncoder().getPosition());
-
-      m_climbMotorControllerTwo.updateSmartDashboard();
-      SmartDashboard.putNumber(
-          "Climb IAccum Two", m_climbMotorControllerTwo.getPIDCtrl().getIAccum());
+    /*
+    SmartDashboard.putNumber(
+        "Climb motor 1 Applied Output", m_climbMotorControllerOne.getAppliedOutput());
+    SmartDashboard.putNumber(
+        "Climb motor 2 Applied Output", m_climbMotorControllerTwo.getAppliedOutput());
+    SmartDashboard.putNumber(
+        "Climb Hight One", m_climbMotorControllerOne.getEncoder().getPosition());
+    if (sbclimbHeightOne.getDouble(0) != climbHeightOne) {
+      climbHeightOne = sbclimbHeightOne.getDouble(0);
+    } else {
+      BClimbEnabled.setBoolean(false);
     }
-
+    */
     if (climbEnabbled) {
       BClimbEnabled.setBoolean(true);
       DClimbHeight1.setDouble(m_climbMotorControllerOne.getEncoder().getPosition());
       DClimbHeight2.setDouble(m_climbMotorControllerOne.getEncoder().getPosition());
-    } else {
-      BClimbEnabled.setBoolean(false);
     }
   }
 

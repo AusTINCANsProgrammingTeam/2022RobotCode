@@ -27,10 +27,10 @@ public class ClimbEnable extends CommandBase {
     m_subsystem.climbEnable();
     // m_subsystem.resetTargetedHeight();
 
-    if (m_subsystem.getclimbingmode()) {
-      m_drivesubsystem.setArcadedrivespeed(40);
+    if (m_subsystem.getclimbingmode() == true) {
+      m_drivesubsystem.setDriveBaseSpeed(0.40);
     } else {
-      m_drivesubsystem.setArcadedrivespeed(100);
+      m_drivesubsystem.setDriveBaseSpeed(1);
     }
   }
 
