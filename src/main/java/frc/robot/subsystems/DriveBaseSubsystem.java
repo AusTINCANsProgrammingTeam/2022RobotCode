@@ -106,11 +106,18 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.driveLeftFrontIndex].setInverted(true);
     m_motorControllers[Constants.driveLeftRearIndex].setInverted(true);
 
+    m_motorControllers[Constants.driveLeftRearIndex].setOpenLoopRampRate(Constants.openLoopRampRate); 
+    m_motorControllers[Constants.driveLeftFrontIndex].setOpenLoopRampRate(Constants.openLoopRampRate); 
+    m_motorControllers[Constants.driveRightRearIndex].setOpenLoopRampRate(Constants.openLoopRampRate); 
+    m_motorControllers[Constants.driveRightFrontIndex].setOpenLoopRampRate(Constants.openLoopRampRate); 
+
     // Forces rear motors of each side to follow the first
     m_motorControllers[Constants.driveLeftRearIndex].follow(
         m_motorControllers[Constants.driveLeftFrontIndex]);
     m_motorControllers[Constants.driveRightRearIndex].follow(
         m_motorControllers[Constants.driveRightFrontIndex]);
+
+        
 
     // differential drive
     m_differentialDrive =
