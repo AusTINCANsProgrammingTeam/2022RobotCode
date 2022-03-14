@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 // import edu.wpi.first.wpilibj2.*;
@@ -19,7 +20,7 @@ public class IntakeSubsystem extends SubsystemBase {
   // here. Call these from Commands.
 
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
-  private NetworkTableEntry DIntakeSpeed = operatorTab.add("Intake Speed", 0).getEntry();
+  private NetworkTableEntry DIntakeSpeed = operatorTab.add("Intake Speed", 0).withWidget(BuiltInWidgets.kNumberBar).withPosition(3, 0).withSize(2,1).getEntry();
 
   private MotorController intakeMotorControllerOne;
 

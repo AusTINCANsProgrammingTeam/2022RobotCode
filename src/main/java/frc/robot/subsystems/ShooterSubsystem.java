@@ -9,6 +9,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,15 +33,12 @@ public class ShooterSubsystem extends SubsystemBase {
   private double currentRPM;
   private double smoothRPM;
 
-  private ShuffleboardTab driverTab = Shuffleboard.getTab("Driver View");
-  private NetworkTableEntry BCargoRunning = driverTab.add("Flywheel Ready", true).withPosition(4, 1).getEntry();
-
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
-  private NetworkTableEntry DTRPM = operatorTab.add("T-RPM", 0).getEntry();
-  private NetworkTableEntry DRPM = operatorTab.add("RPM", 0).getEntry();
-  private NetworkTableEntry BCargoRunning2 = operatorTab.add("Flywheel Ready", true).getEntry();
-  private NetworkTableEntry SAimMode = operatorTab.add("Aim Mode", "TEST").getEntry();
-  private NetworkTableEntry BOverride = operatorTab.add("Override", true).getEntry();
+  private NetworkTableEntry DTRPM = operatorTab.add("T-RPM", 0).withPosition(0, 2).getEntry();
+  private NetworkTableEntry DRPM = operatorTab.add("RPM", 0).withWidget(BuiltInWidgets.kDial).withSize(2,2).getEntry();
+  private NetworkTableEntry BCargoRunning = operatorTab.add("Flywheel Ready", false).withPosition(2, 0).getEntry();
+  private NetworkTableEntry SAimMode = operatorTab.add("Aim Mode", "TEST").withPosition(2, 1).getEntry();
+  private NetworkTableEntry BOverride = operatorTab.add("Override", false).withPosition(1, 2).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
 
   private ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter Tab");
   private NetworkTableEntry PID_P;
@@ -140,7 +138,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setCargoBoolean(boolean a) {
     BCargoRunning.setBoolean(a);
-    BCargoRunning2.setBoolean(a);
   }
 
   public void runCargo(double speed) {

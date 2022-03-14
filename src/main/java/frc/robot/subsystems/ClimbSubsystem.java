@@ -43,9 +43,9 @@ public class ClimbSubsystem extends SubsystemBase {
   private NetworkTableEntry sbClimbEnabbled;
 
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
-  private NetworkTableEntry DClimbHeight1 = operatorTab.add("Climb Height 1", 0).getEntry();
-  private NetworkTableEntry DClimbHeight2 = operatorTab.add("Climb Height 2", 0).getEntry();
-  private NetworkTableEntry BClimbEnabled = operatorTab.add("Climb Enabled", 0).getEntry();
+  private NetworkTableEntry DClimbHeight1 = operatorTab.add("Climb Height 1", 0).withWidget(BuiltInWidgets.kNumberBar).withSize(2,1).withPosition(6, 0).getEntry();
+  private NetworkTableEntry DClimbHeight2 = operatorTab.add("Climb Height 2", 0).withWidget(BuiltInWidgets.kNumberBar).withSize(2,1).withPosition(6, 1).getEntry();
+  private NetworkTableEntry BClimbEnabled = operatorTab.add("Climb Enabled", 0).withPosition(5, 1).getEntry();
 
   public ClimbSubsystem(Joystick joystick) {
     if (Constants.DebugMode) {
