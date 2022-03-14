@@ -105,7 +105,8 @@ public final class Constants {
   public static final int driveRightFrontIndex = 2;
   public static final int driveRightRearIndex = 3;
 
-  public static final int driveBaseCurrentLimit = 60;
+  public static final int driveBaseCurrentLimit = 50;
+  public static final double driveBaseTurnRate = 0.85;
 
   // drive base pid values
   // TODO: need to tune for real robot

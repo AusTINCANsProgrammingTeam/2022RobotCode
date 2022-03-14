@@ -35,9 +35,6 @@ import frc.robot.common.hardware.MotorController;
 
 public class DriveBaseSubsystem extends SubsystemBase {
   private ShuffleboardTab driverTab = Shuffleboard.getTab("Driver Teleop tab");
-  private NetworkTableEntry teleopSpeed =
-      driverTab.add("Speed percentage", 100).withPosition(0, 1).getEntry();
-
   private final Joystick m_driverJoystick;
   private final MotorController[] m_motorControllers;
   private final DifferentialDrive m_differentialDrive;
@@ -111,10 +108,10 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.driveRightRearIndex].setOpenLoopRampRate(Constants.openLoopRampRate); 
     m_motorControllers[Constants.driveRightFrontIndex].setOpenLoopRampRate(Constants.openLoopRampRate); 
 
-    m_motorControllers[Constants.driveLeftRearIndex].setSmartCurrentLimit(50); 
-    m_motorControllers[Constants.driveLeftFrontIndex].setSmartCurrentLimit(50); 
-    m_motorControllers[Constants.driveRightRearIndex].setSmartCurrentLimit(50); 
-    m_motorControllers[Constants.driveRightFrontIndex].setSmartCurrentLimit(50); 
+    m_motorControllers[Constants.driveLeftRearIndex].setSmartCurrentLimit(Constants.driveBaseCurrentLimit); 
+    m_motorControllers[Constants.driveLeftFrontIndex].setSmartCurrentLimit(Constants.driveBaseCurrentLimit); 
+    m_motorControllers[Constants.driveRightRearIndex].setSmartCurrentLimit(Constants.driveBaseCurrentLimit); 
+    m_motorControllers[Constants.driveRightFrontIndex].setSmartCurrentLimit(Constants.driveBaseCurrentLimit); 
 
     // Forces rear motors of each side to follow the first
     m_motorControllers[Constants.driveLeftRearIndex].follow(
@@ -229,24 +226,19 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   }
 
-  public void setArcadedrivespeed(double input) {
-    teleopSpeed.setDouble(input);
-  }
-
   // Normal Arcade Drive
   public void arcadeDrive() {
     // Note: -0.85 to accomodate comfort of driver (sensitivity)
     m_differentialDrive.arcadeDrive(
-        m_driverJoystick.getRawAxis(Constants.leftJoystickY) * -(teleopSpeed.getDouble(100) / 100),
-        m_driverJoystick.getRawAxis(Constants.rightJoystickX),
+        m_driverJoystick.getRawAxis(Constants.leftJoystickY),
+        m_driverJoystick.getRawAxis(Constants.rightJoystickX) * -Constants.driveBaseTurnRate,
         true);
     // joystick has y-axis flipped so up is negative why down is positive
   }
 
   // Arcade Drive where you can only move forwards and backwards for testing
   public void arcadeDrive(double rotation) {
-    m_differentialDrive.arcadeDrive(
-        -0.85 * m_driverJoystick.getRawAxis(Constants.leftJoystickY), rotation);
+    m_differentialDrive.arcadeDrive(m_driverJoystick.getRawAxis(Constants.leftJoystickY), rotation);
   }
 
   // TODO: Make a command to switch modes (extra)
