@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,6 +23,7 @@ public class Robot extends TimedRobot {
   private SendableChooser<Constants.Auton> chooser = new SendableChooser<>();
   private RobotContainer robotContainer;
   private TabContainer tabContainer;
+  public UsbCamera usbCamera;
 
   // This function is run when the robot is first started up and should be used
   // for any
@@ -31,6 +34,9 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     // TODO: Put commands here
+
+    usbCamera = CameraServer.startAutomaticCapture();
+    usbCamera.setResolution(240, 320);
 
     robotContainer = new RobotContainer();
 
