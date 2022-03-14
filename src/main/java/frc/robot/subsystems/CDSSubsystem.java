@@ -28,7 +28,6 @@ public class CDSSubsystem extends SubsystemBase {
 
   private boolean isReady = true; // Variable for whether CDS is ready for shooter action
   private int ballCount = 0;
-  private static int sensorReadDelay = 0; // Delay in reading sensors in number of 20ms loops
 
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
   private NetworkTableEntry DCDSSpeed = operatorTab.add("CDS Speed", 0).withWidget(BuiltInWidgets.kNumberBar).withSize(2,1).withPosition(3, 1).getEntry();
@@ -36,19 +35,15 @@ public class CDSSubsystem extends SubsystemBase {
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry CDSWheelControllerDirection =
-      CDSTab.add("CDS Wheel Direction", "Not Running")
-          .withPosition(1, 0)
-          .withWidget(BuiltInWidgets.kToggleSwitch)
-          .getEntry();
+      CDSTab.add("CDS Wheel Direction", "Not Running").withPosition(1, 0).getEntry();
   private NetworkTableEntry CDSBeltControllerDirection =
-      CDSTab.add("CDS Belt Direction", "Not Running")
-          .withPosition(2, 0)
-          .withWidget(BuiltInWidgets.kToggleSwitch)
-          .getEntry();
+      CDSTab.add("CDS Belt Direction", "Not Running").withPosition(2, 0).getEntry();
   private NetworkTableEntry CDSWheelControllerSpeed =
       CDSTab.add("CDS Wheel speed", 0).withPosition(3, 0).getEntry();
   private NetworkTableEntry CDSBeltControllerSpeed =
       CDSTab.add("CDS Belt speed", 0).withPosition(4, 0).getEntry();
+  private NetworkTableEntry ballManagementEnabled =
+      CDSTab.add("Ball Management Enabled", true).withPosition(5, 0).getEntry();
 
   public CDSSubsystem() {
     //BManualCDS.setBoolean(Constants.); TODO: setup when manual cds toggle is merged
@@ -68,7 +63,7 @@ public class CDSSubsystem extends SubsystemBase {
     CDSBeltController.setIdleMode(IdleMode.kBrake);
     CDSWheelControllerOne.setIdleMode(IdleMode.kCoast);
 
-    colorSensors = new ColorSensorMuxed(0, 1, 2);
+    colorSensors = new ColorSensorMuxed(2, 1, 0); // front to back color sensor ports on new robotn
 
     String allianceColor = DriverStation.getAlliance().toString();
     SmartDashboard.putString("Alliance Color", allianceColor);
@@ -163,6 +158,14 @@ public class CDSSubsystem extends SubsystemBase {
     }
   }
 
+  /*public boolean sensorsOnline() {
+    boolean sensor0Online = picoSensors.isSensor0Connected();
+    boolean sensor1Online = picoSensors.isSensor1Connected();
+    boolean sensor2Online = picoSensors.isSensor2Connected();
+
+    return sensor0Online && sensor1Online && sensor2Online;
+  }*/
+
   public boolean[] getSensorStatus() {
     int[] sensorStatuses = colorSensors.getProximities();
     if (Constants.DebugMode) {
@@ -214,6 +217,10 @@ public class CDSSubsystem extends SubsystemBase {
       return "Blue";
     }
   }
+
+  /*public boolean managementEnabled() {
+    return SmartDashboard.getBoolean("Ball Management Enabled", true);
+  }*/
 
   public String getAllianceColor() {
     return allianceColor;

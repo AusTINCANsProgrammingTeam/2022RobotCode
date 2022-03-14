@@ -30,6 +30,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void toggleIntake(boolean reverse) {
+    // only runs intake if ball count isn't too high (addresses #140)
     if (reverse) {
       intakeMotorControllerOne.set(-Constants.intakeMotorSpeed);
       if (Constants.DebugMode) {
