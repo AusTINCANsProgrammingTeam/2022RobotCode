@@ -111,6 +111,11 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.driveRightRearIndex].setOpenLoopRampRate(Constants.openLoopRampRate); 
     m_motorControllers[Constants.driveRightFrontIndex].setOpenLoopRampRate(Constants.openLoopRampRate); 
 
+    m_motorControllers[Constants.driveLeftRearIndex].setSmartCurrentLimit(50); 
+    m_motorControllers[Constants.driveLeftFrontIndex].setSmartCurrentLimit(50); 
+    m_motorControllers[Constants.driveRightRearIndex].setSmartCurrentLimit(50); 
+    m_motorControllers[Constants.driveRightFrontIndex].setSmartCurrentLimit(50); 
+
     // Forces rear motors of each side to follow the first
     m_motorControllers[Constants.driveLeftRearIndex].follow(
         m_motorControllers[Constants.driveLeftFrontIndex]);
