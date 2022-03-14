@@ -93,6 +93,11 @@ public class ClimbSubsystem extends SubsystemBase {
     sbClimbEnabbled.setBoolean(climbEnabbled);
   }
 
+  public void resetTargetedHeight() {
+    climbHeightOne = m_climbMotorControllerOne.getEncoder().getPosition();
+    climbHeightTwo = m_climbMotorControllerTwo.getEncoder().getPosition();
+  }
+
   public boolean getclimbingmode() {
     return climbEnabbled;
   }
