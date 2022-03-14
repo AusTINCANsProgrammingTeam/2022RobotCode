@@ -20,7 +20,13 @@ public class IntakeSubsystem extends SubsystemBase {
   // here. Call these from Commands.
 
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
-  private NetworkTableEntry DIntakeSpeed = operatorTab.add("Intake Speed", 0).withWidget(BuiltInWidgets.kNumberBar).withPosition(3, 0).withSize(2,1).getEntry();
+  private NetworkTableEntry DIntakeSpeed =
+      operatorTab
+          .add("Intake Speed", 0)
+          .withWidget(BuiltInWidgets.kNumberBar)
+          .withPosition(3, 0)
+          .withSize(2, 1)
+          .getEntry();
 
   private MotorController intakeMotorControllerOne;
 

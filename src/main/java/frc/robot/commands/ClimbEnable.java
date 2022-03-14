@@ -25,7 +25,7 @@ public class ClimbEnable extends CommandBase {
   @Override
   public void initialize() {
     m_subsystem.climbEnable();
-    //m_subsystem.resetTargetedHeight();
+    // m_subsystem.resetTargetedHeight();
 
     if (m_subsystem.getclimbingmode()) {
       m_drivesubsystem.setArcadedrivespeed(40);

@@ -30,8 +30,15 @@ public class CDSSubsystem extends SubsystemBase {
   private int ballCount = 0;
 
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
-  private NetworkTableEntry DCDSSpeed = operatorTab.add("CDS Speed", 0).withWidget(BuiltInWidgets.kNumberBar).withSize(2,1).withPosition(3, 1).getEntry();
-  private NetworkTableEntry BManualCDS = operatorTab.add("Manual CDS", 0).withPosition(5, 1).getEntry();
+  private NetworkTableEntry DCDSSpeed =
+      operatorTab
+          .add("CDS Speed", 0)
+          .withWidget(BuiltInWidgets.kNumberBar)
+          .withSize(2, 1)
+          .withPosition(3, 1)
+          .getEntry();
+  private NetworkTableEntry BManualCDS =
+      operatorTab.add("Manual CDS", 0).withPosition(5, 1).getEntry();
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry CDSWheelControllerDirection =
@@ -46,7 +53,7 @@ public class CDSSubsystem extends SubsystemBase {
       CDSTab.add("Ball Management Enabled", true).withPosition(5, 0).getEntry();
 
   public CDSSubsystem() {
-    //BManualCDS.setBoolean(Constants.); TODO: setup when manual cds toggle is merged
+    // BManualCDS.setBoolean(Constants.); TODO: setup when manual cds toggle is merged
     if (Constants.DebugMode) {
       instantiateDebugTab();
     }
