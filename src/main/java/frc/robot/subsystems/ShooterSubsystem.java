@@ -223,7 +223,7 @@ public class ShooterSubsystem extends SubsystemBase {
     PID_I = shooterTab.add("PID I", Constants.Shooter.kPIDFArray[1]).withPosition(0, 2).getEntry();
     PID_D = shooterTab.add("PID D", Constants.Shooter.kPIDFArray[2]).withPosition(0, 3).getEntry();
     PID_F = shooterTab.add("PID F", Constants.Shooter.kF).withPosition(0, 4).getEntry();
-    SShootingMode = shooterTab.add("Shooting Mode", "TEST").withPosition(1, 5).getEntry();
+    // SShootingMode = shooterTab.add("Shooting Mode", "TEST").withPosition(1, 5).getEntry();
     DDistance = shooterTab.add("Distance to goal", 0.0).withPosition(2, 0).getEntry();
     DShooterRPM = shooterTab.add("Shooter RPM", 0.0).withPosition(2, 1).getEntry();
     DCargoRunning = shooterTab.add("Is the CDS Running", 0.0).withPosition(2, 2).getEntry();

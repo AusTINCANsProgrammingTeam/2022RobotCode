@@ -162,6 +162,11 @@ public class ClimbSubsystem extends SubsystemBase {
     return sbClimbEnabbled.getBoolean(false);
   }
 
+  public void motorOnLow() {
+    climbHeightOne = 0;
+    climbHeightTwo = 0;
+  }
+
   public void runManual() {
     if (climbEnabbled
     /** && !m_limitSwitch.get() */

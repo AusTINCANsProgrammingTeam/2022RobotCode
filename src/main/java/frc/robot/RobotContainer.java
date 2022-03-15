@@ -16,6 +16,7 @@ import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.ClimbEnable;
+import frc.robot.commands.ClimbKeepDown;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.LimelightAlign;
@@ -61,7 +62,8 @@ public class RobotContainer {
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
-  private ClimbEnable ClimbEnabling;
+  private ClimbEnable climbEnabling;
+  private ClimbKeepDown climbKeepDown;
 
   // auton
   private AutonModes autonModes;
@@ -172,10 +174,10 @@ public class RobotContainer {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
     }
     if (climbSubsystem != null) {
-      climbSubsystem.setDefaultCommand(climbCommand);
+      climbSubsystem.setDefaultCommand(climbKeepDown);
     }
     if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
-      ClimbEnabling = new ClimbEnable(climbSubsystem, driveBaseSubsystem);
+      climbEnabling = new ClimbEnable(climbSubsystem, driveBaseSubsystem);
     }
   }
 
@@ -236,7 +238,7 @@ public class RobotContainer {
     } else {
 
       if (climbSubsystem != null) {
-        buttons2[Constants.startButton].whenPressed(ClimbEnabling);
+        buttons2[Constants.startButton].whenPressed(climbEnabling);
       }
 
       if (outtakeCommand != null && CDSForwardCommand != null) {
