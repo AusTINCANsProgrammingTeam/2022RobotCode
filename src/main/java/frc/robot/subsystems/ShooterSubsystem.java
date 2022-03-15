@@ -34,30 +34,23 @@ public class ShooterSubsystem extends SubsystemBase {
   private double smoothRPM;
 
   private ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter Tab");
-  // TODO: Fine for now, but we really need to fix this tab when we have shuffleboard decided
-  private NetworkTableEntry PID_P =
-      shooterTab.add("PID P", Constants.Shooter.kPIDFArray[0]).withPosition(0, 1).getEntry();
-  private NetworkTableEntry PID_I =
-      shooterTab.add("PID I", Constants.Shooter.kPIDFArray[1]).withPosition(0, 2).getEntry();
-  private NetworkTableEntry PID_D =
-      shooterTab.add("PID D", Constants.Shooter.kPIDFArray[2]).withPosition(0, 3).getEntry();
-  private NetworkTableEntry PID_F =
-      shooterTab.add("PID F", Constants.Shooter.kF).withPosition(0, 4).getEntry();
-  private NetworkTableEntry SShootingMode =
-      shooterTab.add("Shooting Mode", "TEST").withPosition(1, 5).getEntry();
-  private NetworkTableEntry DDistance =
-      shooterTab.add("Distance to goal", 0.0).withPosition(2, 0).getEntry();
-  private NetworkTableEntry DShooterRPM =
-      shooterTab.add("Shooter RPM", 0.0).withPosition(2, 1).getEntry();
-  private NetworkTableEntry DCargoRunning =
-      shooterTab.add("Is the CDS Running", 0.0).withPosition(2, 2).getEntry();
-  private NetworkTableEntry DShooterRPMInput =
-      shooterTab.add("Shooter RPM Input", 3550).withPosition(2, 3).getEntry();
-  private NetworkTableEntry DSmoothRPM = shooterTab.add("Smooth RPM", 0.0).getEntry();
+  private NetworkTableEntry PID_P;
+  private NetworkTableEntry PID_I;
+  private NetworkTableEntry PID_D;
+  private NetworkTableEntry PID_F;
+  private NetworkTableEntry DDistance;
+  private NetworkTableEntry DShooterRPM;
+  private NetworkTableEntry DCargoRunning;
+  private NetworkTableEntry DShooterRPMInput;
+  private NetworkTableEntry DSmoothRPM;
 
   private ShooterConfig[] DistanceArray;
 
   public ShooterSubsystem() {
+    if (Constants.DebugMode) {
+      makeShooterShuffleBoard();
+    }
+
     smoothRPM = 0;
     aimMode = AimModes.TEST;
     // Initializes the SparkMAX for the flywheel motors
@@ -152,7 +145,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setAimMode(AimModes a) {
     aimMode = a;
-    SShootingMode.setString(aimMode.toString());
   }
 
   public AimModes getAimMode() {
@@ -161,12 +153,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void cycleAimModeNext() {
     aimMode.next();
-    SShootingMode.setString(aimMode.toString());
   }
 
   public void cycleAimModePrevious() {
     aimMode.previous();
-    SShootingMode.setString(aimMode.toString());
   }
 
   public double getTY() {
@@ -206,29 +196,38 @@ public class ShooterSubsystem extends SubsystemBase {
     }
   }
 
-  public void updateSmartDashboard() {
-    SmartDashboard.putString("AimMode", "");
-    SmartDashboard.putNumber("IAccum", flywheelPID.getIAccum());
-    SmartDashboard.putNumber("Distance", getDistance());
-    SmartDashboard.putNumber("RPM", flywheelEncoder.getVelocity());
-  }
-
   @Override
   public void periodic() {
     currentRPM = flywheelEncoder.getVelocity();
     smoothRPM = Constants.Shooter.kA * currentRPM + smoothRPM * (1 - Constants.Shooter.kA);
     // This method will be called once per scheduler run
-    DShooterRPM.setDouble(currentRPM);
-    DSmoothRPM.setDouble(smoothRPM);
-    DDistance.setDouble(getDistance());
-    if ((flywheelPID.getP() != PID_P.getDouble(0))
-        || (flywheelPID.getI() != PID_I.getDouble(0))
-        || (flywheelPID.getD() != PID_D.getDouble(0))
-        || (flywheelPID.getFF() != PID_F.getDouble(0))) {
-      updatePID();
+    if (Constants.DebugMode) {
+      DShooterRPM.setDouble(currentRPM);
+      DSmoothRPM.setDouble(smoothRPM);
+      DDistance.setDouble(getDistance());
+      if ((flywheelPID.getP() != PID_P.getDouble(0))
+          || (flywheelPID.getI() != PID_I.getDouble(0))
+          || (flywheelPID.getD() != PID_D.getDouble(0))
+          || (flywheelPID.getFF() != PID_F.getDouble(0))) {
+        updatePID();
+      }
     }
     /*   if (DShootingMode.getDouble(0) != aimMode.ordinal()) {
     setAimMode((int) DShootingMode.getDouble(0)); */
     // }
+  }
+
+  private void makeShooterShuffleBoard() {
+    shooterTab = Shuffleboard.getTab("Shooter Tab");
+    PID_P = shooterTab.add("PID P", Constants.Shooter.kPIDFArray[0]).withPosition(0, 1).getEntry();
+    PID_I = shooterTab.add("PID I", Constants.Shooter.kPIDFArray[1]).withPosition(0, 2).getEntry();
+    PID_D = shooterTab.add("PID D", Constants.Shooter.kPIDFArray[2]).withPosition(0, 3).getEntry();
+    PID_F = shooterTab.add("PID F", Constants.Shooter.kF).withPosition(0, 4).getEntry();
+    SShootingMode = shooterTab.add("Shooting Mode", "TEST").withPosition(1, 5).getEntry();
+    DDistance = shooterTab.add("Distance to goal", 0.0).withPosition(2, 0).getEntry();
+    DShooterRPM = shooterTab.add("Shooter RPM", 0.0).withPosition(2, 1).getEntry();
+    DCargoRunning = shooterTab.add("Is the CDS Running", 0.0).withPosition(2, 2).getEntry();
+    DShooterRPMInput = shooterTab.add("Shooter RPM Input", 3550).withPosition(2, 3).getEntry();
+    DSmoothRPM = shooterTab.add("Smooth RPM", 0.0).getEntry();
   }
 }
