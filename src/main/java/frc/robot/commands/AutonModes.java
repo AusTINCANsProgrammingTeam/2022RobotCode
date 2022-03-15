@@ -196,7 +196,6 @@ public class AutonModes {
               new WaitCommand(initialWaitTime),
               twoBallParallel,
               twoBallRamseteCommands[1].andThen(() -> driveBaseSubsystem.stopDriveMotors()),
-              new WaitCommand(Constants.delayshot),
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
 
       threeBallParallel =

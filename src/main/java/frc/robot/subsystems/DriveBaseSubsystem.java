@@ -167,20 +167,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
     resetEncoders(); // reset encoders to reset position and velocity values
 
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
-
-    // TODO: Tune PID values
-    // set PID values
-    m_motorControllers[Constants.driveRightFrontIndex]
-        .getPIDCtrl()
-        .setP(Constants.driveRightPID[0]);
-    m_motorControllers[Constants.driveRightFrontIndex]
-        .getPIDCtrl()
-        .setI(Constants.driveRightPID[1]);
-    m_motorControllers[Constants.driveRightFrontIndex]
-        .getPIDCtrl()
-        .setD(Constants.driveRightPID[2]);
-
-    // rear motor pid controllers should follow
   }
 
   private void initializeEncoders() {
@@ -356,11 +342,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
     m_motorControllers[Constants.driveRightFrontIndex]
         .getPIDCtrl()
         .setReference(rightSpeed, CANSparkMax.ControlType.kVelocity, 0, Constants.arbFeedForward);
-
-    // m_motorControllers[Constants.driveLeftFrontIndex].getPIDController().setReference(leftSpeed,
-    // CANSparkMax.ControlType.kVelocity);
-    // m_motorControllers[Constants.driveRightFrontIndex].getPIDController().setReference(rightSpeed,
-    // CANSparkMax.ControlType.kVelocity);
 
     m_differentialDrive.feed();
   }
