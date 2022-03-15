@@ -160,7 +160,7 @@ public class RobotContainer {
         ballManagementCommand = new CDSBallManagementCommand(cdsSubsystem, intakeSubsystem);
         cdsSubsystem.setDefaultCommand(ballManagementCommand);
       } else {
-        combinedIntakeCDS = new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem);
+        combinedIntakeCDS = new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem);
       }
     }
 
@@ -200,9 +200,9 @@ public class RobotContainer {
 
     if (combinedIntakeCDS != null) {
       buttons[Constants.RTriggerButton].whileHeld(combinedIntakeCDS);
-    } else {
+    } /*else {
       buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
-    }
+    }*/
 
     if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
       // Auto Aim Shot
