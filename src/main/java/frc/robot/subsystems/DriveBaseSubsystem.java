@@ -58,7 +58,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private SimpleMotorFeedforward m_sMotorFeedforward;
 
   private boolean usingExternal;
-  private boolean isReverse = false;
 
   public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {
     driveBaseSpeed = 1;

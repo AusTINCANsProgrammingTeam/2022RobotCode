@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.CDSSubsystem;
@@ -19,7 +20,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class AutonModes {
+public class AutonModes extends SubsystemBase {
 
   // subsystems
   private DriveBaseSubsystem driveBaseSubsystem;
@@ -183,7 +184,7 @@ public class AutonModes {
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
               new WaitCommand(Constants.delaytaxi),
               oneBallRamseteCommand.andThen(() -> driveBaseSubsystem.stopDriveMotors()));
-
+      // -------------------------------------------
       twoBallParallel =
           new ParallelDeadlineGroup(
               twoBallRamseteCommands[0].andThen(
@@ -197,7 +198,7 @@ public class AutonModes {
               twoBallParallel,
               twoBallRamseteCommands[1].andThen(() -> driveBaseSubsystem.stopDriveMotors()),
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
-
+      // -------------------------------------------
       threeBallParallel =
           new ParallelDeadlineGroup(
               threeBallRamseteCommands[0].andThen(

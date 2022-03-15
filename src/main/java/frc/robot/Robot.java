@@ -6,12 +6,17 @@ package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AutonModes;
 import frc.robot.subsystems.Tabs.TabContainer;
+import java.util.Map;
 
 // The VM is configured to automatically run this class, and to call the functions corresponding to
 // each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -20,7 +25,18 @@ import frc.robot.subsystems.Tabs.TabContainer;
 
 public class Robot extends TimedRobot {
   private Command autonomousCommand;
+
+  // Shuffleboard
+  private ShuffleboardTab configTab =
+      Shuffleboard.getTab("Config"); // all auton settings located here
+  private NetworkTableEntry waitTimeSlider =
+      configTab
+          .add("Wait Time", 1)
+          .withWidget(BuiltInWidgets.kNumberSlider)
+          .withProperties(Map.of("Min", 1, "Max", 10))
+          .getEntry();
   private SendableChooser<Constants.Auton> chooser = new SendableChooser<>();
+
   private RobotContainer robotContainer;
   private TabContainer tabContainer;
   public UsbCamera usbCamera;
@@ -50,9 +66,7 @@ public class Robot extends TimedRobot {
     chooser.addOption("Five Ball", Constants.Auton.FIVEBALL);
     chooser.addOption("Test Mode", Constants.Auton.TEST);
 
-    SmartDashboard.putData(
-        "Auto Mode",
-        chooser); //  TODO: find a way to put it into desired specific named tabs such as "Auton"
+    configTab.add("Auton mode", chooser).withPosition(0, 1).withSize(2, 2);
 
     if (RobotContainer.getDriveBase() != null) {
       tabContainer = new TabContainer(RobotContainer.getDriveBase());
@@ -92,6 +106,7 @@ public class Robot extends TimedRobot {
   // This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    AutonModes.setWaitTime(waitTimeSlider.getDouble(1));
     robotContainer.initAuton(chooser.getSelected());
     autonomousCommand = robotContainer.getAutonomousCommand(chooser.getSelected());
 
