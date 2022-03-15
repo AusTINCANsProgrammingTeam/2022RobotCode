@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -162,11 +163,6 @@ public class ClimbSubsystem extends SubsystemBase {
     return sbClimbEnabbled.getBoolean(false);
   }
 
-  public void motorOnLow() {
-    climbHeightOne = 0;
-    climbHeightTwo = 0;
-  }
-
   public void runManual() {
     if (climbEnabbled
     /** && !m_limitSwitch.get() */
@@ -229,6 +225,9 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void periodic() {
+    if (DriverStation.isDisabled() && climbEnabbled) {
+      climbEnable();
+    }
 
     SmartDashboard.putNumber(
         "Climb motor 1 Applied Output", m_climbMotorControllerOne.getAppliedOutput());

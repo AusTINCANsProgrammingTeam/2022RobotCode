@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.ClimbKeepDown;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.Tabs.TabContainer;
 
 // The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -18,7 +21,8 @@ import frc.robot.subsystems.Tabs.TabContainer;
 
 public class Robot extends TimedRobot {
   private Command autonomousCommand;
-  private SendableChooser<String> chooser = new SendableChooser<>();
+  private ClimbKeepDown ClimbKeepDown;
+  private SendableChooser<String> chooser = new SendableChooser<>()
   private RobotContainer robotContainer;
   private TabContainer tabContainer;
 
@@ -94,6 +98,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    ClimbKeepDown.schedule();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
