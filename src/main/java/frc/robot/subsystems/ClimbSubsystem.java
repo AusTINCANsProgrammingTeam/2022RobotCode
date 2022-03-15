@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
@@ -224,7 +223,7 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void periodic() {
-
+    /*
     SmartDashboard.putNumber(
         "Climb motor 1 Applied Output", m_climbMotorControllerOne.getAppliedOutput());
     SmartDashboard.putNumber(
@@ -271,6 +270,7 @@ public class ClimbSubsystem extends SubsystemBase {
       m_climbMotorControllerOne.getPIDCtrl().setI(sbClimbOneI.getDouble(0));
       m_climbMotorControllerOne.getPIDCtrl().setD(sbClimbOneD.getDouble(0));
     }
+    */
   }
 
   public boolean getLimitSwitchVal() {

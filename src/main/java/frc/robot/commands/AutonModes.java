@@ -91,6 +91,7 @@ public class AutonModes {
 
     this.driveBaseSubsystem = d;
     this.shooterSubsystem = s;
+    this.shooterSubsystem.setAimMode(Constants.AimModes.TARMAC);
     this.limelightSubsystem = l;
     this.cdsSubsystem = c;
     this.intakeSubsystem = i;
@@ -187,8 +188,7 @@ public class AutonModes {
           new ParallelDeadlineGroup(
               twoBallRamseteCommands[0].andThen(
                   () -> driveBaseSubsystem.stopDriveMotors()), // travel to get ball
-              new IntakeForwardCommand(intakeSubsystem),
-              new CDSForwardCommand(cdsSubsystem));
+              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
 
       twoBallCommand =
           new SequentialCommandGroup(
@@ -203,8 +203,7 @@ public class AutonModes {
           new ParallelDeadlineGroup(
               threeBallRamseteCommands[0].andThen(
                   () -> driveBaseSubsystem.stopDriveMotors()), // travel to get the two balls
-              new IntakeForwardCommand(intakeSubsystem),
-              new CDSForwardCommand(cdsSubsystem));
+              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
 
       threeBallCommand =
           new SequentialCommandGroup(
