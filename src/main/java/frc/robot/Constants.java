@@ -121,7 +121,7 @@ public final class Constants {
     ONEBALL("Taxi", "paths/TaxiOutFromFender.wpilib.json"),
     TWOBALL("TwoBall", "paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json"),
     THREEBALL("ThreeBall", "paths/GrabTwoBalls.wpilib.json", "paths/GoBackWithTwoBalls.wpilib.json"),
-    FOURBALL,
+    FOURBALL("FourBall", "paths/Grab2Of4Balls", "paths/Grab4Of4Balls"),
     FIVEBALL,
     TEST("Test", "paths/FlippedVectorTest1.wpilib.json", "paths/FlippedVectorTest2.wpilib.json");
     // change according to what path you want to test

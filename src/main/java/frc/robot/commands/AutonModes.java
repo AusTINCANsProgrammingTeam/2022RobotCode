@@ -51,7 +51,10 @@ public class AutonModes extends SubsystemBase {
   private Command threeBallParallel;
   private Command threeBallCommand;
   // -------------------------------
+  private Command fourBallParallel1;
+  private Command fourBallParallel2;
   private Command fourBallCommand;
+  // ------------------------------
   private Command fiveBallCommand;
 
   private Command testCommand; // for testing miscellaneous: for example single ramsete commands
@@ -164,8 +167,10 @@ public class AutonModes extends SubsystemBase {
       threeBallRamseteCommands =
           getRamseteCommands(getTrajectories(Constants.Auton.THREEBALL.getPaths()));
 
-      // fourBallRamseteCommand
-      // fiveBallRamseteCommand
+      fourBallRamseteCommands =
+          getRamseteCommands(getTrajectories(Constants.Auton.FOURBALL.getPaths()));
+      fiveBallRamseteCommands =
+          getRamseteCommands(getTrajectories(Constants.Auton.FIVEBALL.getPaths()));
     }
   }
 
@@ -218,9 +223,28 @@ public class AutonModes extends SubsystemBase {
                   limelightSubsystem,
                   cdsSubsystem,
                   false)); // shoot the two acquired balls
-
-      // fourBallCommand
-      // fiveBallCommand
+      // --------------------------------------------
+      fourBallParallel1 =
+          new ParallelDeadlineGroup(
+              fourBallRamseteCommands[0].andThen(
+                  () -> driveBaseSubsystem.stopDriveMotors()), // travel to get closest two balls
+              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+      ;
+      fourBallParallel2 =
+          new ParallelDeadlineGroup(
+              twoBallRamseteCommands[1].andThen(
+                  () -> driveBaseSubsystem.stopDriveMotors()), // travel to get ball
+              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+      ;
+      fourBallCommand =
+          new SequentialCommandGroup(
+              new DeployIntake(intakeSubsystem, cdsSubsystem),
+              fourBallParallel1,
+              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true),
+              fourBallParallel2,
+              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true));
+      // ---------------------------------------
+      fiveBallCommand = null;
 
     }
   }
