@@ -20,7 +20,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class AutonModes extends SubsystemBase {
+public class AutonModes {
 
   // subsystems
   private DriveBaseSubsystem driveBaseSubsystem;
@@ -193,7 +193,7 @@ public class AutonModes extends SubsystemBase {
 
       twoBallCommand =
           new SequentialCommandGroup(
-              new DeployIntake(intakeSubsystem, cdsSubsystem),
+              // new DeployIntake(intakeSubsystem, cdsSubsystem),
               new WaitCommand(initialWaitTime),
               twoBallParallel,
               twoBallRamseteCommands[1].andThen(() -> driveBaseSubsystem.stopDriveMotors()),
