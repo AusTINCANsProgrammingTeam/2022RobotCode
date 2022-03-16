@@ -138,9 +138,9 @@ public class CDSSubsystem extends SubsystemBase {
   }*/
 
   public boolean[] getSensorStatus() {
-    SmartDashboard.putNumber("Front Sensor Proximity", sensorStatuses[2]);
-    SmartDashboard.putNumber("Middle Sensor Proximity", sensorStatuses[1]);
-    SmartDashboard.putNumber("Back Sensor Proximity", sensorStatuses[0]);
+    SmartDashboard.putNumber("Front Proximity", sensorStatuses[2]);
+    SmartDashboard.putNumber("Middle Proximity", sensorStatuses[1]);
+    SmartDashboard.putNumber("Back Proximity", sensorStatuses[0]);
 
     boolean backStatus = sensorStatuses[0] > Constants.backSensorActivation;
     boolean middleStatus = sensorStatuses[1] > Constants.middleSensorActivation;
@@ -163,6 +163,7 @@ public class CDSSubsystem extends SubsystemBase {
     boolean[] activationArray = getSensorStatus();
     for (int i = 0; i < activationArray.length - 1; i++) {
       if (!activationArray[i]) {
+        SmartDashboard.putNumber("next open sensor i ", i);
         return i;
       }
     }

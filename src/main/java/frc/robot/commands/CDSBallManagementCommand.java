@@ -24,6 +24,8 @@ public class CDSBallManagementCommand extends CommandBase {
   private int runInterval = 40; // how often to call color sensors (in ms)
   private int msDelay = 750;
 
+  private boolean runEject = false;
+  private String reason = "";
   private int colorEject = 0;
   private int extraBalls = 0;
 
@@ -58,9 +60,6 @@ public class CDSBallManagementCommand extends CommandBase {
         // Checks if conditions for ejection are met:
         // A ball count of over 2 OR ball color is wrong and test mode is off (meaning ball color
         // shouldn't be disregarded)
-
-        boolean runEject = false;
-        String reason = "";
         
         if (lastBallCount > 2) {
           runEject = true;
@@ -84,7 +83,7 @@ public class CDSBallManagementCommand extends CommandBase {
         }
 
       } else {
-        if (msCurrent >= msDelay && !sensorStatus[2]) {
+        if (msCurrent >= msDelay || !sensorStatus[2]) {
           CDSSubsystem.stopCDS();
           intakeSubsystem.stopIntake();
           ejectRunning = false;
