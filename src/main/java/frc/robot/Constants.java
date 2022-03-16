@@ -194,7 +194,7 @@ public final class Constants {
   public static final int CDSWheelControllerOneID = 2;
   public static final int CDSWheelControllerTwoID = 9;
   public static final double CDSBeltSpeed = 0.40;
-  public static final double CDSWheelControllerSpeed = 0.65;
+  public static final double CDSWheelControllerSpeed = 0.80;
   public static final int frontSensorActivation = 200;
   public static final int middleSensorActivation = 450;
   public static final int backSensorActivation = 600;
