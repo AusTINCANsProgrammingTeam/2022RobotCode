@@ -223,7 +223,7 @@ public class RobotContainer {
     }
 
     if (climbSubsystem != null) {
-      buttons2[Constants.startButton].whenPressed(ClimbEnabling);
+      buttons2[Constants.startButton].whenPressed(climbEnabling);
     }
 
     if (outtakeCommand != null && intakeForwardCommand != null) {
