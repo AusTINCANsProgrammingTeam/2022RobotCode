@@ -59,11 +59,12 @@ public class CDSBallManagementCommand extends CommandBase {
           // TODO This is somehow ejecting any ball regardless of color
 
           // Uncomment Once Done
-          
+
           if ((lastBallCount > 2)
               || (sensorStatus[2]
                   && CDSSubsystem.getAllianceColor() != CDSSubsystem.senseColor())) {
-            //System.out.printf("Eject: %d %b %s %s\n", lastBallCount, sensorStatus[2], CDSSubsystem.getAllianceColor(), CDSSubsystem.senseColor());
+            // System.out.printf("Eject: %d %b %s %s\n", lastBallCount, sensorStatus[2],
+            // CDSSubsystem.getAllianceColor(), CDSSubsystem.senseColor());
             intakeSubsystem.toggleIntake(true);
             CDSSubsystem.CDSWheelToggle(true);
             ejectRunning = true;
@@ -124,11 +125,10 @@ public class CDSBallManagementCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (CDSSubsystem.getSensorDown() >= Constants.sensorsDownLimit){
+    if (CDSSubsystem.getSensorDown() >= Constants.sensorsDownLimit) {
       return true;
     } else {
       return false;
-
     }
   }
 }

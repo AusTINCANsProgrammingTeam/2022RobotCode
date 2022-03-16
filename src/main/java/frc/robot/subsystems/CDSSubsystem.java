@@ -31,7 +31,6 @@ public class CDSSubsystem extends SubsystemBase {
   private int[] sensorStatuses;
   private int sensorsDown = 0;
 
-
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry CDSWheelControllerDirection =
       CDSTab.add("CDS Wheel Direction", "Not Running").withPosition(1, 0).getEntry();
@@ -139,7 +138,7 @@ public class CDSSubsystem extends SubsystemBase {
   }*/
 
   public boolean[] getSensorStatus() {
-    //int[] sensorStatuses = colorSensors.getProximities();
+    // int[] sensorStatuses = colorSensors.getProximities();
     SmartDashboard.putNumber("Front Sensor Proximity", sensorStatuses[2]);
     SmartDashboard.putNumber("Middle Sensor Proximity", sensorStatuses[1]);
     SmartDashboard.putNumber("Back Sensor Proximity", sensorStatuses[0]);
@@ -186,7 +185,6 @@ public class CDSSubsystem extends SubsystemBase {
     }
   }
 
-
   public boolean sensorsOnline() {
     sensorStatuses = colorSensors.getProximities();
     for (int prox : sensorStatuses) {
@@ -199,7 +197,7 @@ public class CDSSubsystem extends SubsystemBase {
     return true;
   }
 
-  public int getSensorDown(){
+  public int getSensorDown() {
     return sensorsDown;
   }
 

@@ -13,11 +13,14 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class CombinedIntakeCDSForwardCommand extends CommandBase {
   /** Creates a new OuttakeCommand. */
   private final CDSSubsystem CDSSubsystem;
+
   private final ShooterSubsystem shooterSubsystem;
   private final IntakeSubsystem intakeSubsystem;
 
   public CombinedIntakeCDSForwardCommand(
-      IntakeSubsystem mIntakeSubsystem, CDSSubsystem mCDSSubsystem, ShooterSubsystem mShooterSubsystem) {
+      IntakeSubsystem mIntakeSubsystem,
+      CDSSubsystem mCDSSubsystem,
+      ShooterSubsystem mShooterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(mIntakeSubsystem);
     addRequirements(mCDSSubsystem);
