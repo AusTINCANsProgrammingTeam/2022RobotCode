@@ -33,7 +33,7 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
     CDSSubsystem.CDSBeltToggle(false);
     CDSSubsystem.CDSWheelToggle(false);
     intakeSubsystem.toggleIntake(false);
-    shooterSubsystem.runCargo(Constants.stopperWheelSpeed);
+    shooterSubsystem.runCargo(Constants.reverseStopperWheelSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

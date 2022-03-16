@@ -121,6 +121,13 @@ public class CDSBallManagementCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (CDSSubsystem.getSensorDown() >= Constants.sensorsDownLimit){
+      CDSSubsystem.stopCDS();
+      intakeSubsystem.stopIntake();
+      return true;
+    } else {
+      return false;
+
+    }
   }
 }
