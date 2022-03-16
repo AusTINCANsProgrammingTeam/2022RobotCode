@@ -98,7 +98,7 @@ public class ClimbSubsystem extends SubsystemBase {
     climbHeightTwo = m_climbMotorControllerTwo.getEncoder().getPosition();
   }
 
-  public boolean getclimbingmode() {
+  public boolean getclimbingenable() {
     return climbEnabbled;
   }
 
