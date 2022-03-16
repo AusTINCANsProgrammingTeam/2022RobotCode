@@ -57,7 +57,11 @@ public class ClimbSubsystem extends SubsystemBase {
           .withPosition(6, 1)
           .getEntry();
   private NetworkTableEntry BClimbEnabled =
-      operatorTab.add("Climb Enabled", false).withPosition(5, 0).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+      operatorTab
+          .add("Climb Enabled", false)
+          .withPosition(5, 0)
+          .withWidget(BuiltInWidgets.kBooleanBox)
+          .getEntry();
 
   public ClimbSubsystem(Joystick joystick) {
     if (Constants.DebugMode) {

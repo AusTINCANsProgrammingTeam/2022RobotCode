@@ -36,7 +36,9 @@ public class Robot extends TimedRobot {
     // TODO: Put commands here
 
     usbCamera = CameraServer.startAutomaticCapture();
-    if (isReal()){usbCamera.setResolution(240, 320);}
+    if (isReal()) {
+      usbCamera.setResolution(240, 320);
+    }
 
     robotContainer = new RobotContainer();
 

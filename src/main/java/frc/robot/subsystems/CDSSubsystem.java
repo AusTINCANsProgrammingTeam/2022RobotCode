@@ -38,7 +38,11 @@ public class CDSSubsystem extends SubsystemBase {
           .withPosition(3, 1)
           .getEntry();
   private NetworkTableEntry BManualCDS =
-      operatorTab.add("Manual CDS", 0).withPosition(5, 1).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+      operatorTab
+          .add("Manual CDS", 0)
+          .withPosition(5, 1)
+          .withWidget(BuiltInWidgets.kBooleanBox)
+          .getEntry();
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry CDSWheelControllerDirection =
