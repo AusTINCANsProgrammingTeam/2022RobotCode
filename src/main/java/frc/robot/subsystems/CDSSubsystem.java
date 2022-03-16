@@ -138,7 +138,6 @@ public class CDSSubsystem extends SubsystemBase {
   }*/
 
   public boolean[] getSensorStatus() {
-    // int[] sensorStatuses = colorSensors.getProximities();
     SmartDashboard.putNumber("Front Sensor Proximity", sensorStatuses[2]);
     SmartDashboard.putNumber("Middle Sensor Proximity", sensorStatuses[1]);
     SmartDashboard.putNumber("Back Sensor Proximity", sensorStatuses[0]);
@@ -159,10 +158,11 @@ public class CDSSubsystem extends SubsystemBase {
     return beamBreakArray;
   }
 
-  public int getNextOpenSensor(boolean[] sensorStatus) {
+  public int getNextOpenSensor() {
     // Starts at 0 and ends short of the centering wheel
-    for (int i = 0; i < sensorStatus.length - 1; i++) {
-      if (!sensorStatus[i]) {
+    boolean[] activationArray = getSensorStatus();
+    for (int i = 0; i < activationArray.length - 1; i++) {
+      if (!activationArray[i]) {
         return i;
       }
     }
