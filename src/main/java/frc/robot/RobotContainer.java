@@ -178,6 +178,7 @@ public class RobotContainer {
     }
     if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
       climbEnabling = new ClimbEnable(climbSubsystem, driveBaseSubsystem);
+      climbKeepDown = new ClimbKeepDown(climbSubsystem);
     }
   }
 
@@ -282,6 +283,13 @@ public class RobotContainer {
   public static DriveBaseSubsystem getDriveBase() {
     if (driveBaseSubsystem != null) {
       return driveBaseSubsystem;
+    }
+    return null;
+  }
+
+  public ClimbKeepDown getClimb() {
+    if (climbSubsystem != null) {
+      return climbKeepDown;
     }
     return null;
   }
