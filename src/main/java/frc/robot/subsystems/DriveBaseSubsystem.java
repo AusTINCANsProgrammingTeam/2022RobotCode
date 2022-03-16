@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Encoder;
@@ -34,10 +33,8 @@ import frc.robot.Robot;
 import frc.robot.common.hardware.MotorController;
 
 public class DriveBaseSubsystem extends SubsystemBase {
+  private double driveBaseSpeed;
   private ShuffleboardTab driverTab = Shuffleboard.getTab("Driver Teleop tab");
-  private NetworkTableEntry teleopSpeed =
-      driverTab.add("Speed percentage", 100).withPosition(0, 1).getEntry();
-
   private final Joystick m_driverJoystick;
   private final MotorController[] m_motorControllers;
   private final DifferentialDrive m_differentialDrive;
@@ -64,7 +61,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private boolean isReverse = false;
 
   public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {
-
+    driveBaseSpeed = 1;
     m_driverJoystick = joystick;
 
     m_motorControllers = new MotorController[4];
@@ -105,6 +102,24 @@ public class DriveBaseSubsystem extends SubsystemBase {
     // invert right side motors
     m_motorControllers[Constants.driveLeftFrontIndex].setInverted(true);
     m_motorControllers[Constants.driveLeftRearIndex].setInverted(true);
+
+    m_motorControllers[Constants.driveLeftRearIndex].setOpenLoopRampRate(
+        Constants.openLoopRampRate);
+    m_motorControllers[Constants.driveLeftFrontIndex].setOpenLoopRampRate(
+        Constants.openLoopRampRate);
+    m_motorControllers[Constants.driveRightRearIndex].setOpenLoopRampRate(
+        Constants.openLoopRampRate);
+    m_motorControllers[Constants.driveRightFrontIndex].setOpenLoopRampRate(
+        Constants.openLoopRampRate);
+
+    m_motorControllers[Constants.driveLeftRearIndex].setSmartCurrentLimit(
+        Constants.driveBaseCurrentLimit);
+    m_motorControllers[Constants.driveLeftFrontIndex].setSmartCurrentLimit(
+        Constants.driveBaseCurrentLimit);
+    m_motorControllers[Constants.driveRightRearIndex].setSmartCurrentLimit(
+        Constants.driveBaseCurrentLimit);
+    m_motorControllers[Constants.driveRightFrontIndex].setSmartCurrentLimit(
+        Constants.driveBaseCurrentLimit);
 
     // Forces rear motors of each side to follow the first
     m_motorControllers[Constants.driveLeftRearIndex].follow(
@@ -217,16 +232,16 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   }
 
-  public void setArcadedrivespeed(double input) {
-    teleopSpeed.setDouble(input);
+  public void setDriveBaseSpeed(double driveBaseSpeed) {
+    this.driveBaseSpeed = driveBaseSpeed;
   }
 
   // Normal Arcade Drive
   public void arcadeDrive() {
     // Note: -0.85 to accomodate comfort of driver (sensitivity)
     m_differentialDrive.arcadeDrive(
-        m_driverJoystick.getRawAxis(Constants.leftJoystickY) * (teleopSpeed.getDouble(100) / 100),
-        -0.85 * m_driverJoystick.getRawAxis(Constants.rightJoystickX),
+        m_driverJoystick.getRawAxis(Constants.leftJoystickY) * -driveBaseSpeed,
+        m_driverJoystick.getRawAxis(Constants.rightJoystickX) * Constants.driveBaseTurnRate,
         true);
     // joystick has y-axis flipped so up is negative why down is positive
   }
@@ -234,7 +249,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   // Arcade Drive where you can only move forwards and backwards for testing
   public void arcadeDrive(double rotation) {
     m_differentialDrive.arcadeDrive(
-        -0.85 * m_driverJoystick.getRawAxis(Constants.leftJoystickY), rotation);
+        m_driverJoystick.getRawAxis(Constants.leftJoystickY) * -driveBaseSpeed, rotation);
   }
 
   // TODO: Make a command to switch modes (extra)
@@ -318,17 +333,17 @@ public class DriveBaseSubsystem extends SubsystemBase {
   // toggles inversion of motors
   public void setReverse() {
     // isReverse = true;
-    if (m_motorControllers[Constants.driveLeftFront].getInverted() == true) {
-      m_motorControllers[Constants.driveRightFront].setInverted(true);
-      m_motorControllers[Constants.driveRightRear].setInverted(true);
-      m_motorControllers[Constants.driveLeftFront].setInverted(false);
-      m_motorControllers[Constants.driveLeftRear].setInverted(false);
-    } else {
-      m_motorControllers[Constants.driveRightFront].setInverted(false);
-      m_motorControllers[Constants.driveRightRear].setInverted(false);
-      m_motorControllers[Constants.driveLeftFront].setInverted(true);
-      m_motorControllers[Constants.driveLeftRear].setInverted(true);
-    }
+    // if (m_motorControllers[Constants.driveLeftFront].getInverted() == true) {
+    //   m_motorControllers[Constants.driveRightFront].setInverted(true);
+    //   m_motorControllers[Constants.driveRightRear].setInverted(true);
+    //   m_motorControllers[Constants.driveLeftFront].setInverted(false);
+    //   m_motorControllers[Constants.driveLeftRear].setInverted(false);
+    // } else {
+    //   m_motorControllers[Constants.driveRightFront].setInverted(false);
+    //   m_motorControllers[Constants.driveRightRear].setInverted(false);
+    //   m_motorControllers[Constants.driveLeftFront].setInverted(true);
+    //   m_motorControllers[Constants.driveLeftRear].setInverted(true);
+    // }
   }
 
   // for trajectory (ramseteCommand)
