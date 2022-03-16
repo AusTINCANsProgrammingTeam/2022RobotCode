@@ -24,7 +24,7 @@ public class ColorSensorMuxed {
   private double lastColorRead;
   private int[] proximities;
   private Color[] colors;
-  private final double sensorPeriodInSeconds = 0.001;
+  private final double sensorPeriodInSeconds = 0.1;
 
   public ColorSensorMuxed(int... ports) {
     i2cMux = new I2C(Port.kMXP, tca9548Addr);
