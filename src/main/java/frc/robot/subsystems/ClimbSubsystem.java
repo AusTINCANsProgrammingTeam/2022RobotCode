@@ -57,7 +57,7 @@ public class ClimbSubsystem extends SubsystemBase {
           .withPosition(6, 1)
           .getEntry();
   private NetworkTableEntry BClimbEnabled =
-      operatorTab.add("Climb Enabled", 0).withPosition(5, 1).getEntry();
+      operatorTab.add("Climb Enabled", false).withPosition(5, 0).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
 
   public ClimbSubsystem(Joystick joystick) {
     if (Constants.DebugMode) {
@@ -90,7 +90,6 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public void climbEnable() {
     climbEnabbled = !climbEnabbled;
-    sbClimbEnabbled.setBoolean(climbEnabbled);
   }
 
   public void resetTargetedHeight() {
@@ -151,12 +150,10 @@ public class ClimbSubsystem extends SubsystemBase {
       m_climbMotorControllerOne
           .getPIDCtrl()
           .setReference(climbHeightOne, CANSparkMax.ControlType.kPosition);
-      sbclimbHeightOne.setNumber(climbHeightOne);
 
       m_climbMotorControllerTwo
           .getPIDCtrl()
           .setReference(climbHeightTwo, CANSparkMax.ControlType.kPosition);
-      sbclimbHeightTwo.setNumber(climbHeightTwo);
     } else {
       // m_climbMotorControllerOne.getPID().setReference(0, CANSparkMax.ControlType.kVoltage);
     }
@@ -176,8 +173,8 @@ public class ClimbSubsystem extends SubsystemBase {
       BClimbEnabled.setBoolean(false);
     }
     */
+    BClimbEnabled.setBoolean(climbEnabbled);
     if (climbEnabbled) {
-      BClimbEnabled.setBoolean(true);
       DClimbHeight1.setDouble(m_climbMotorControllerOne.getEncoder().getPosition());
       DClimbHeight2.setDouble(m_climbMotorControllerOne.getEncoder().getPosition());
     }
