@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AutonModes;
-import frc.robot.subsystems.Tabs.TabContainer;
 import java.util.Map;
 
 // The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -26,7 +25,7 @@ import java.util.Map;
 public class Robot extends TimedRobot {
   private Command autonomousCommand;
 
-  // Shuffleboard
+  // Shuffleboard for auton config
   private ShuffleboardTab configTab =
       Shuffleboard.getTab("Config"); // all auton settings located here
   private NetworkTableEntry waitTimeSlider =
@@ -38,7 +37,6 @@ public class Robot extends TimedRobot {
   private SendableChooser<Constants.Auton> chooser = new SendableChooser<>();
 
   private RobotContainer robotContainer;
-  private TabContainer tabContainer;
   public UsbCamera usbCamera;
 
   // This function is run when the robot is first started up and should be used
@@ -67,10 +65,6 @@ public class Robot extends TimedRobot {
     chooser.addOption("Test Mode", Constants.Auton.TEST);
 
     configTab.add("Auton mode", chooser).withPosition(0, 1).withSize(2, 2);
-
-    if (RobotContainer.getDriveBase() != null) {
-      tabContainer = new TabContainer(RobotContainer.getDriveBase());
-    }
   }
 
   // This function is called every robot packet, no matter the mode. Use this for items like
@@ -81,9 +75,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    if (tabContainer != null) {
-      tabContainer.periodic();
-    }
 
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,

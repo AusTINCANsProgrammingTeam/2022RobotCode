@@ -123,7 +123,7 @@ public final class Constants {
     THREEBALL("ThreeBall", "paths/GrabTwoBalls.wpilib.json", "paths/GoBackWithTwoBalls.wpilib.json"),
     FOURBALL,
     FIVEBALL,
-    TEST("Test", "paths/FlippedVectorTest1.wpilib.json", "paths/FlippedVectorTest2.wpilib.json");
+    TEST("Test", "paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json");
     // change according to what path you want to test
     // spotless:on
 
