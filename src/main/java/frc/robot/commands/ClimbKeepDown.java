@@ -20,12 +20,14 @@ public class ClimbKeepDown extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_subsystem.resetTargetedHeight();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.resetTargetedHeight();
+    m_subsystem.climbKeepDownFunction();
   }
 
   // Called once the command ends or is interrupted.

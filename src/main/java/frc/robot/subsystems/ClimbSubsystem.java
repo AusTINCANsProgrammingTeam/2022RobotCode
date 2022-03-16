@@ -150,6 +150,18 @@ public class ClimbSubsystem extends SubsystemBase {
     climbHeightTwo = m_climbMotorControllerTwo.getEncoder().getPosition();
   }
 
+  public void climbKeepDownFunction() {
+    m_climbMotorControllerOne
+        .getPIDCtrl()
+        .setReference(climbHeightOne, CANSparkMax.ControlType.kPosition);
+    sbclimbHeightOne.setNumber(climbHeightOne);
+
+    m_climbMotorControllerTwo
+        .getPIDCtrl()
+        .setReference(climbHeightTwo, CANSparkMax.ControlType.kPosition);
+    sbclimbHeightTwo.setNumber(climbHeightTwo);
+  }
+
   public void climbEnable() {
     climbEnabbled = !climbEnabbled;
     sbClimbEnabbled.setBoolean(climbEnabbled);
