@@ -4,6 +4,10 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -23,6 +27,10 @@ public class CDSBallManagementCommand extends CommandBase {
   private int msCurrent = 0;
   private int runInterval = 40; // how often to call color sensors (in ms)
   private int msDelay = 750;
+
+  private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
+  private NetworkTableEntry autoEjectRunning = 
+      CDSTab.add("Auto Eject Running", ejectRunning).withPosition(0,2).getEntry();
 
   public CDSBallManagementCommand(CDSSubsystem mCDSSubsystem, IntakeSubsystem mIntakeSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.

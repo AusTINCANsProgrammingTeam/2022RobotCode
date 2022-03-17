@@ -32,16 +32,10 @@ public class CDSSubsystem extends SubsystemBase {
   private int sensorsDown = 0;
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
-  private NetworkTableEntry CDSWheelControllerDirection =
-      CDSTab.add("CDS Wheel Direction", "Not Running").withPosition(1, 0).getEntry();
-  private NetworkTableEntry CDSBeltControllerDirection =
-      CDSTab.add("CDS Belt Direction", "Not Running").withPosition(2, 0).getEntry();
-  private NetworkTableEntry CDSWheelControllerSpeed =
-      CDSTab.add("CDS Wheel speed", 0).withPosition(3, 0).getEntry();
-  private NetworkTableEntry CDSBeltControllerSpeed =
-      CDSTab.add("CDS Belt speed", 0).withPosition(4, 0).getEntry();
-  private NetworkTableEntry ballManagementEnabled =
-      CDSTab.add("Ball Management Enabled", true).withPosition(5, 0).getEntry();
+  private NetworkTableEntry ballColor =
+      CDSTab.add("Ball Color", senseColor()).withPosition(4, 0).getEntry();
+  private NetworkTableEntry CDSBallCount = 
+      CDSTab.add("Ball Count", getBallCount()).withPosition(5, 0).getEntry();
 
   public CDSSubsystem() {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID);
@@ -86,7 +80,7 @@ public class CDSSubsystem extends SubsystemBase {
   public void CDSWheelToggle(boolean reverse) {
     if (reverse) {
       CDSWheelControllerOne.set(-Constants.CDSWheelControllerSpeed);
-      CDSWheelControllerDirection.setString("Reverse");
+      SmartDashboard.putString("CDS Wheel Direction", "Reverse");
     } else {
       CDSWheelControllerOne.set(Constants.CDSWheelControllerSpeed);
       SmartDashboard.putString("CDS Wheel Direction", "Forward");
