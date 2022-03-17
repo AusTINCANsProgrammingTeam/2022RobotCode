@@ -8,10 +8,12 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
@@ -57,10 +59,10 @@ public class ClimbSubsystem extends SubsystemBase {
 
     m_climbMotorControllerOne =
         new MotorController("Climb Motor One", Constants.ClimbMotorOne, Constants.climbLeftPID);
-    m_climbMotorControllerOne.setSmartCurrentLimit(60);
+    m_climbMotorControllerOne.setSmartCurrentLimit(10);
     m_climbMotorControllerTwo =
         new MotorController("Climb Motor Two", Constants.ClimbMotorTwo, Constants.climbRightPID);
-    m_climbMotorControllerTwo.setSmartCurrentLimit(60);
+    m_climbMotorControllerTwo.setSmartCurrentLimit(10);
     m_climbMotorControllerTwo.setInverted(true);
     m_climbMotorControllerOne.getEncoder().setPosition(0);
     m_climbMotorControllerTwo.getEncoder().setPosition(0);
@@ -148,9 +150,28 @@ public class ClimbSubsystem extends SubsystemBase {
     climbHeightTwo = m_climbMotorControllerTwo.getEncoder().getPosition();
   }
 
+  public void climbKeepDownFunction() {
+    m_climbMotorControllerOne
+        .getPIDCtrl()
+        .setReference(climbHeightOne, CANSparkMax.ControlType.kPosition);
+    sbclimbHeightOne.setNumber(climbHeightOne);
+
+    m_climbMotorControllerTwo
+        .getPIDCtrl()
+        .setReference(climbHeightTwo, CANSparkMax.ControlType.kPosition);
+    sbclimbHeightTwo.setNumber(climbHeightTwo);
+  }
+
   public void climbEnable() {
     climbEnabbled = !climbEnabbled;
     sbClimbEnabbled.setBoolean(climbEnabbled);
+    if (climbEnabbled) {
+      m_climbMotorControllerOne.setSmartCurrentLimit(60);
+      m_climbMotorControllerTwo.setSmartCurrentLimit(60);
+    } else {
+      m_climbMotorControllerOne.setSmartCurrentLimit(10);
+      m_climbMotorControllerTwo.setSmartCurrentLimit(10);
+    }
   }
 
   public boolean getclimbingmode() {
@@ -223,7 +244,10 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void periodic() {
-    /*
+    if (DriverStation.isDisabled() && climbEnabbled) {
+      climbEnable();
+    }
+
     SmartDashboard.putNumber(
         "Climb motor 1 Applied Output", m_climbMotorControllerOne.getAppliedOutput());
     SmartDashboard.putNumber(
@@ -270,7 +294,6 @@ public class ClimbSubsystem extends SubsystemBase {
       m_climbMotorControllerOne.getPIDCtrl().setI(sbClimbOneI.getDouble(0));
       m_climbMotorControllerOne.getPIDCtrl().setD(sbClimbOneD.getDouble(0));
     }
-    */
   }
 
   public boolean getLimitSwitchVal() {
