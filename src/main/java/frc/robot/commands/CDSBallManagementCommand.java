@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -30,7 +31,9 @@ public class CDSBallManagementCommand extends CommandBase {
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry autoEjectRunning = 
-      CDSTab.add("Auto Eject Running", ejectRunning).withPosition(0,2).getEntry();
+      CDSTab.add("Auto Eject Running", false).getEntry();
+  private NetworkTableEntry autoIntakeRunning = 
+      CDSTab.add("Auto Intake Running", false).getEntry();
 
   public CDSBallManagementCommand(CDSSubsystem mCDSSubsystem, IntakeSubsystem mIntakeSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -76,7 +79,7 @@ public class CDSBallManagementCommand extends CommandBase {
             intakeSubsystem.toggleIntake(true);
             CDSSubsystem.CDSWheelToggle(true);
             ejectRunning = true;
-            SmartDashboard.putBoolean("Eject Running", ejectRunning);
+            autoEjectRunning.setBoolean(ejectRunning);
           }
         } else {
           if (msCurrent >= msDelay) {
@@ -84,6 +87,7 @@ public class CDSBallManagementCommand extends CommandBase {
             intakeSubsystem.stopIntake();
             ejectRunning = false;
             msCurrent = 0;
+            autoEjectRunning.setBoolean(ejectRunning);
           } else {
             msCurrent += 20;
           }
@@ -91,7 +95,7 @@ public class CDSBallManagementCommand extends CommandBase {
 
         // Only run auto advance if auto ject is not running
         if (!ejectRunning) {
-          SmartDashboard.putBoolean("CDS Running", runningCDS);
+          autoIntakeRunning.setBoolean(runningCDS);
           if (!runningCDS) {
             // Send ball to sensor
             SmartDashboard.putBooleanArray("Sensor Statuses", sensorStatus);
@@ -104,6 +108,7 @@ public class CDSBallManagementCommand extends CommandBase {
                 sensorIndex = nextOpenSensor;
                 CDSSubsystem.CDSBeltToggle(false);
                 CDSSubsystem.setReady(false);
+                autoIntakeRunning.setBoolean(runningCDS);
               }
             }
           } else {

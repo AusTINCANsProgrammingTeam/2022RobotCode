@@ -32,10 +32,10 @@ public class CDSSubsystem extends SubsystemBase {
   private int sensorsDown = 0;
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
-  private NetworkTableEntry ballColor =
-      CDSTab.add("Ball Color", senseColor()).withPosition(4, 0).getEntry();
+  private NetworkTableEntry ballColor = 
+      CDSTab.add("Ball Color", "blue").getEntry();
   private NetworkTableEntry CDSBallCount = 
-      CDSTab.add("Ball Count", getBallCount()).withPosition(5, 0).getEntry();
+      CDSTab.add("Ball Count", 0).withPosition(5, 0).getEntry();
 
   public CDSSubsystem() {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID);
@@ -148,7 +148,7 @@ public class CDSSubsystem extends SubsystemBase {
         ballCount++;
       }
     }
-    SmartDashboard.putNumber("Ball Count", ballCount);
+    CDSBallCount.setNumber(ballCount);
 
     return beamBreakArray;
   }
@@ -165,16 +165,15 @@ public class CDSSubsystem extends SubsystemBase {
 
   public String senseColor() {
     Color[] colors = colorSensors.getColors();
-
     // Only sensing colors for first sensor so that we can handle it when it's coming in and not
     // dealing with any other complexities
     double redAmount = colors[2].red;
     double blueAmount = colors[2].blue;
     if (redAmount > blueAmount) {
-      SmartDashboard.putString("Ball Color", "Red");
+      ballColor.setString("red");
       return "Red";
     } else {
-      SmartDashboard.putString("Ball Color", "Blue");
+      ballColor.setString("blue");
       return "Blue";
     }
   }
