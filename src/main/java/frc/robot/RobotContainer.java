@@ -295,11 +295,4 @@ public class RobotContainer {
     }
     return null;
   }
-
-  public ClimbKeepDown getClimb() {
-    if (climbSubsystem != null) {
-      return climbKeepDown;
-    }
-    return null;
-  }
 }
