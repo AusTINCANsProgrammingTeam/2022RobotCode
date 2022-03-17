@@ -239,6 +239,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
     // updates pid values of leaders, followers not needed
     motorControllers[Constants.driveLeftFrontIndex].updateSmartDashboard();
     motorControllers[Constants.driveRightFrontIndex].updateSmartDashboard();
+
+    // for tuning pid on each wheel, TODO: remove when done
+    // acceptWheelSpeeds(10, 0);
   }
 
   public void setDriveBaseSpeed(double driveBaseSpeed) {
