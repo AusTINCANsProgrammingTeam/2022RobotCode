@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,6 +29,15 @@ public class CDSSubsystem extends SubsystemBase {
   private boolean isReady = true; // Variable for whether CDS is ready for shooter action
   private int ballCount = 0;
 
+  private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
+  private NetworkTableEntry DCDSSpeed =
+      operatorTab
+          .add("CDS Speed", 0)
+          .withWidget(BuiltInWidgets.kNumberBar)
+          .withSize(2, 1)
+          .withPosition(3, 1)
+          .getEntry();
+
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry CDSWheelControllerDirection =
       CDSTab.add("CDS Wheel Direction", "Not Running").withPosition(1, 0).getEntry();
@@ -41,6 +51,10 @@ public class CDSSubsystem extends SubsystemBase {
       CDSTab.add("Ball Management Enabled", true).withPosition(5, 0).getEntry();
 
   public CDSSubsystem() {
+    // BManualCDS.setBoolean(Constants.); TODO: setup when manual cds toggle is merged
+    if (Constants.DebugMode) {
+      instantiateDebugTab();
+    }
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID);
     CDSBeltController.setInverted(true);
     CDSWheelControllerOne =
@@ -63,20 +77,30 @@ public class CDSSubsystem extends SubsystemBase {
   public void CDSToggleAll(boolean reverse) {
     if (reverse) {
       CDSWheelControllerOne.set(-Constants.CDSWheelControllerSpeed);
-      SmartDashboard.putString("CDS Wheel Direction", "Reverse");
-      SmartDashboard.putNumber("CDS Wheel Speed", -Constants.CDSWheelControllerSpeed);
+      DCDSSpeed.setDouble(-1);
+      if (Constants.DebugMode) {
+        SmartDashboard.putString("CDS Wheel Direction", "Reverse");
+        SmartDashboard.putNumber("CDS Wheel Speed", -Constants.CDSWheelControllerSpeed);
+      }
 
       CDSBeltController.set(-Constants.CDSBeltSpeed);
-      SmartDashboard.putString("CDS Belt Direction", "Reverse");
-      SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
+      if (Constants.DebugMode) {
+        SmartDashboard.putString("CDS Belt Direction", "Reverse");
+        SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
+      }
     } else {
+      DCDSSpeed.setDouble(1);
       CDSWheelControllerOne.set(Constants.CDSWheelControllerSpeed);
-      SmartDashboard.putString("CDS Wheel Direction", "Forward");
-      SmartDashboard.putNumber("CDS Wheel Speed", Constants.CDSWheelControllerSpeed);
+      if (Constants.DebugMode) {
+        SmartDashboard.putString("CDS Wheel Direction", "Forward");
+        SmartDashboard.putNumber("CDS Wheel Speed", Constants.CDSWheelControllerSpeed);
+      }
 
       CDSBeltController.set(Constants.CDSBeltSpeed);
-      SmartDashboard.putString("CDS Belt Direction", "Forward");
-      SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
+      if (Constants.DebugMode) {
+        SmartDashboard.putString("CDS Belt Direction", "Forward");
+        SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
+      }
     }
   }
 
@@ -86,21 +110,29 @@ public class CDSSubsystem extends SubsystemBase {
       CDSWheelControllerDirection.setString("Reverse");
     } else {
       CDSWheelControllerOne.set(Constants.CDSWheelControllerSpeed);
-      SmartDashboard.putString("CDS Wheel Direction", "Forward");
-      SmartDashboard.putNumber("CDS Wheel Speed", Constants.CDSWheelControllerSpeed);
+      if (Constants.DebugMode) {
+        SmartDashboard.putString("CDS Wheel Direction", "Forward");
+        SmartDashboard.putNumber("CDS Wheel Speed", Constants.CDSWheelControllerSpeed);
+      }
     }
   }
 
   public void CDSBeltToggle(boolean reverse) {
+    DCDSSpeed.setDouble(-1);
     if (reverse) {
       CDSBeltController.set(-Constants.CDSBeltSpeed);
-      SmartDashboard.putString("CDS Belt Direction", "Reverse");
-      SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
+      if (Constants.DebugMode) {
+        SmartDashboard.putString("CDS Belt Direction", "Reverse");
+        SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
+      }
 
     } else {
+      DCDSSpeed.setDouble(1);
       CDSBeltController.set(Constants.CDSBeltSpeed);
-      SmartDashboard.putString("CDS Belt Direction", "Forward");
-      SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
+      if (Constants.DebugMode) {
+        SmartDashboard.putString("CDS Belt Direction", "Forward");
+        SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
+      }
     }
   }
 
@@ -113,17 +145,22 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public void stopCDS() {
+    DCDSSpeed.setDouble(0);
     // stops all motors in the CDS
     CDSWheelControllerOne.set(0.0);
     CDSBeltController.set(0.0);
-    SmartDashboard.putNumber("CDS Wheel Speed", 0.0);
-    SmartDashboard.putNumber("CDS Belt Speed", 0.0);
+    if (Constants.DebugMode) {
+      SmartDashboard.putNumber("CDS Wheel Speed", 0.0);
+      SmartDashboard.putNumber("CDS Belt Speed", 0.0);
+    }
   }
 
   public void stopCDSWheel() {
     // Stops only the centering wheels
     CDSWheelControllerOne.set(0.0);
-    SmartDashboard.putNumber("CDS Wheel Speed", 0.0);
+    if (Constants.DebugMode) {
+      SmartDashboard.putNumber("CDS Wheel Speed", 0.0);
+    }
   }
 
   /*public boolean sensorsOnline() {
@@ -136,9 +173,11 @@ public class CDSSubsystem extends SubsystemBase {
 
   public boolean[] getSensorStatus() {
     int[] sensorStatuses = colorSensors.getProximities();
-    SmartDashboard.putNumber("Front Sensor Proximity", sensorStatuses[2]);
-    SmartDashboard.putNumber("Middle Sensor Proximity", sensorStatuses[1]);
-    SmartDashboard.putNumber("Back Sensor Proximity", sensorStatuses[0]);
+    if (Constants.DebugMode) {
+      SmartDashboard.putNumber("Front Sensor Proximity", sensorStatuses[2]);
+      SmartDashboard.putNumber("Middle Sensor Proximity", sensorStatuses[1]);
+      SmartDashboard.putNumber("Back Sensor Proximity", sensorStatuses[0]);
+    }
 
     boolean backStatus = sensorStatuses[0] > Constants.backSensorActivation;
     boolean middleStatus = sensorStatuses[1] > Constants.middleSensorActivation;
@@ -151,7 +190,9 @@ public class CDSSubsystem extends SubsystemBase {
         ballCount++;
       }
     }
-    SmartDashboard.putNumber("Ball Count", ballCount);
+    if (Constants.DebugMode) {
+      SmartDashboard.putNumber("Ball Count", ballCount);
+    }
 
     return beamBreakArray;
   }
@@ -203,4 +244,15 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public void periodic() {}
+
+  private void instantiateDebugTab() {
+    CDSTab = Shuffleboard.getTab("CDS Tab");
+    CDSBeltControllerDirection =
+        CDSTab.add("CDS Belt Direction", "Not Running")
+            .withPosition(2, 0)
+            .withWidget(BuiltInWidgets.kToggleSwitch)
+            .getEntry();
+    CDSWheelControllerSpeed = CDSTab.add("CDS Wheel speed", 0).withPosition(3, 0).getEntry();
+    CDSBeltControllerSpeed = CDSTab.add("CDS Belt speed", 0).withPosition(4, 0).getEntry();
+  }
 }
