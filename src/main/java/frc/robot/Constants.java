@@ -79,6 +79,8 @@ public final class Constants {
     }
   }
 
+  public static final boolean DebugMode = false;
+
   // motor controller constants
   public static final int defaultCurrentLimit = 40;
 
