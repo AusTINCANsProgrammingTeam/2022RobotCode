@@ -22,6 +22,7 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
       CDSSubsystem mCDSSubsystem,
       ShooterSubsystem mShooterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(mShooterSubsystem);
     addRequirements(mIntakeSubsystem);
     addRequirements(mCDSSubsystem);
     addRequirements(mShooterSubsystem);

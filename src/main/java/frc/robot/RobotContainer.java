@@ -10,13 +10,13 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.ClimbEnable;
+import frc.robot.commands.ClimbKeepDown;
 import frc.robot.commands.CombinedIntakeCDSForwardCommand;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
@@ -67,7 +67,8 @@ public class RobotContainer {
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
-  private ClimbEnable ClimbEnabling;
+  private ClimbEnable climbEnabling;
+  private ClimbKeepDown climbKeepDown;
 
   // auton
   private AutonModes autonModes;
@@ -135,10 +136,8 @@ public class RobotContainer {
 
     limelightSubsystem = new LimelightSubsystem();
 
-    if (axisCount1 > 0 && buttonCount1 > 0) {
-      climbSubsystem = new ClimbSubsystem(operatorJoystick);
-      climbCommand = new ClimbCommand(climbSubsystem);
-    }
+    climbSubsystem = new ClimbSubsystem(operatorJoystick);
+    climbCommand = new ClimbCommand(climbSubsystem);
   }
 
   private void initCommands() {
@@ -175,11 +174,11 @@ public class RobotContainer {
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
     }
-    if (climbSubsystem != null) {
-      climbSubsystem.setDefaultCommand(climbCommand);
-    }
+
     if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
-      ClimbEnabling = new ClimbEnable(climbSubsystem, driveBaseSubsystem);
+      climbEnabling = new ClimbEnable(climbSubsystem, driveBaseSubsystem);
+      climbKeepDown = new ClimbKeepDown(climbSubsystem);
+      climbSubsystem.setDefaultCommand(climbKeepDown);
     }
   }
 
@@ -221,38 +220,13 @@ public class RobotContainer {
               shooterSubsystem));
     }
 
-    if (axisCount1 == 0 && buttonCount1 == 0) {
+    if (climbSubsystem != null) {
+      buttons2[Constants.startButton].whenPressed(climbEnabling);
+    }
 
-      // Shooter
-      if (shooterSubsystem != null && shooterHeldAuto != null) {
-        buttons[Constants.backButton].whenPressed(shooterHeldAuto);
-        buttons[Constants.LJoystickButton].whenPressed(
-            new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
-        buttons[Constants.RJoystickButton].whenPressed(
-            new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
-      }
-
-      // Limelight
-      if (limelightAlign != null) {
-        buttons[Constants.startButton].whenPressed(limelightAlign);
-      }
-
-      // ClimbSubysystem has no binding because there are not enuf axises
-      if (climbSubsystem != null) {}
-
-      System.out.printf("Using Testing One-controller button mappings");
-    } else {
-
-      if (climbSubsystem != null) {
-        buttons2[Constants.startButton].whenPressed(ClimbEnabling);
-      }
-
-      if (outtakeCommand != null && intakeForwardCommand != null) {
-        buttons2[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
-        buttons2[Constants.RBumper].whileHeld(outtakeCommand);
-      }
-
-      System.out.printf("Using Competition Two-controller button mappings");
+    if (outtakeCommand != null && intakeForwardCommand != null) {
+      buttons2[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
+      buttons2[Constants.RBumper].whileHeld(outtakeCommand);
     }
   }
 
