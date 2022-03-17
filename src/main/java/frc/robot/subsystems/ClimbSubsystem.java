@@ -103,17 +103,14 @@ public class ClimbSubsystem extends SubsystemBase {
     m_climbMotorControllerOne
         .getPIDCtrl()
         .setReference(climbHeightOne, CANSparkMax.ControlType.kPosition);
-    sbclimbHeightOne.setNumber(climbHeightOne);
 
     m_climbMotorControllerTwo
         .getPIDCtrl()
         .setReference(climbHeightTwo, CANSparkMax.ControlType.kPosition);
-    sbclimbHeightTwo.setNumber(climbHeightTwo);
   }
 
   public void climbEnable() {
     climbEnabbled = !climbEnabbled;
-    sbClimbEnabbled.setBoolean(climbEnabbled);
     if (climbEnabbled) {
       m_climbMotorControllerOne.setSmartCurrentLimit(60);
       m_climbMotorControllerTwo.setSmartCurrentLimit(60);
