@@ -35,7 +35,13 @@ public class CDSSubsystem extends SubsystemBase {
   private NetworkTableEntry ballColor = 
       CDSTab.add("Ball Color", "blue").getEntry();
   private NetworkTableEntry CDSBallCount = 
-      CDSTab.add("Ball Count", 0).withPosition(5, 0).getEntry();
+      CDSTab.add("Ball Count", 0).getEntry();
+  private NetworkTableEntry frontSensorProx = 
+      CDSTab.add("Front Proximity", 0).getEntry();
+  private NetworkTableEntry middleSensorProx = 
+      CDSTab.add("Middle Proximity", 0).getEntry();
+  private NetworkTableEntry backSensorProx = 
+      CDSTab.add("Back Proximity", 0).getEntry();
 
   public CDSSubsystem() {
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID);
@@ -132,10 +138,10 @@ public class CDSSubsystem extends SubsystemBase {
   }*/
 
   public boolean[] getSensorStatus() {
-    // int[] sensorStatuses = colorSensors.getProximities();
-    SmartDashboard.putNumber("Front Sensor Proximity", sensorStatuses[2]);
-    SmartDashboard.putNumber("Middle Sensor Proximity", sensorStatuses[1]);
-    SmartDashboard.putNumber("Back Sensor Proximity", sensorStatuses[0]);
+
+    frontSensorProx.setNumber(sensorStatuses[2]);
+    middleSensorProx.setNumber(sensorStatuses[1]);
+    backSensorProx.setNumber(sensorStatuses[0]);
 
     boolean backStatus = sensorStatuses[0] > Constants.backSensorActivation;
     boolean middleStatus = sensorStatuses[1] > Constants.middleSensorActivation;
