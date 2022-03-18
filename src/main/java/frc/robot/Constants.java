@@ -16,28 +16,6 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
 
-  public enum Subsystems {
-    // Change booleans to disable a subsystem in RobotContainer
-    // spotless:off
-    DriveBaseSubsystem(true),
-    CDSSubsystem      (true),
-    IntakeSubsystem   (true),
-    ShooterSubsystem  (true),
-    LimelightSubsystem(true),
-    ClimbSubsystem    (true);
-    // spotless:on
-
-    private final Boolean enabled;
-
-    Subsystems(Boolean b) {
-      this.enabled = b;
-    }
-
-    public final Boolean isEnabled() {
-      return this.enabled;
-    }
-  }
-
   public enum AimModes {
     AUTO,
     // TODO: Plug real values in for these aimModes
@@ -49,7 +27,7 @@ public final class Constants {
     },
     EJECT(2500.0, 0.0),
     LAUNCH(0.0, 0.0),
-    TARMAC(2650.0, 0.0),
+    TARMAC(2550.0, 0.0),
     TEST {
       @Override
       public AimModes next() {
@@ -101,6 +79,8 @@ public final class Constants {
     }
   }
 
+  public static final boolean DebugMode = false;
+
   // motor controller constants
   public static final int defaultCurrentLimit = 40;
 
@@ -108,8 +88,8 @@ public final class Constants {
 
   // Constants for wheel motors
   public static final double wheelRadius = 2; // radius of wheel, use for calculating angular values
-  public static final double openLoopRampRate =
-      0.2; // Rate at which the motors reach maximum speed; TODO: tune for optimal performance
+  // Rate at which the motors reach maximum speed; TODO: tune for optimal performance
+  public static final double openLoopRampRate = 0.2;
   public static final double gearRatio = 6.2; // 10.75 : 1 gear ratio <--- kitbot
   // 10.75 motor rotations : 1 wheel rotation
   public static final double inchesInMeter = 39.3701;
@@ -127,32 +107,59 @@ public final class Constants {
   public static final int driveRightFrontIndex = 2;
   public static final int driveRightRearIndex = 3;
 
-  public static final int driveBaseCurrentLimit = 60;
+  public static final int driveBaseCurrentLimit = 50;
+  public static final double driveBaseTurnRate = 0.85;
 
   // drive base pid values
-  public static final double[] driveRightPID = {
-    0.00035, 0.0000008, 0
-  }; // TODO: need to tune for real robot
-  public static final double[] driveLeftPID = {0.000005, 0.0000008, 0};
+  // TODO: need to tune for real robot
+  public static final double[] driveRightPID = {0.00035, 0.00000085, 0};
+  public static final double[] driveLeftPID = {0.00035, 0.00000092, 0};
 
   // AUTONOMOUS Constants
 
-  // Path json files
-  public static final String taxiPath = "paths/TaxiOut.wpilib.json";
-  public static final String oneBallPath = "paths/TaxiOutFromFender.wpilib.json";
-  public static final String twoBallPath = "paths/TaxiOutToGrabBall.wpilib.json";
+  public enum Auton {
+    // spotless:off
+    TAXI("Taxi", "paths/TaxiOut.wpilib.json"),
+    ONEBALL("Taxi", "paths/TaxiOutFromFender.wpilib.json"),
+    TWOBALL("TwoBall", "paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json"),
+    THREEBALL("ThreeBall", "paths/GrabTwoBalls.wpilib.json", "paths/GoBackWithTwoBalls.wpilib.json"),
+    FOURBALL,
+    FIVEBALL,
+    TEST("Test", "paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json");
+    // change according to what path you want to test
+    // spotless:on
+
+    private String paths[];
+    private String name;
+
+    private Auton() {
+      paths = null;
+    }
+
+    private Auton(String name, String... paths) {
+      this.name = name;
+      this.paths = paths;
+    }
+
+    public String getName() {
+      return this.name;
+    }
+
+    public String[] getPaths() {
+      return this.paths;
+    }
+  }
 
   // Volts, constants for ramseteCommand
-  public static final double ksVolts = 0.28665; // Ks
-  public static final double kvVoltSecondsPerMeter = 1.4563; // Kv, Velocity
-  public static final double kaVoltSecondsSquaredPerMeter = 0.21703; // Ka, Accelleration
+  public static final double ksVolts = 0.2358; // Ks
+  public static final double kvVoltSecondsPerMeter = 0.81588; // Kv, Velocity
+  public static final double kaVoltSecondsSquaredPerMeter = 0.129; // Ka, Accelleration
 
   public static final double arbFeedForward =
-      0.00046254; // voltage applied to the motor after the result of the specified control mode
+      1.9829E-07; // voltage applied to the motor after the result of the specified control mode
   public static final double trackWidth = 0.559; // track width of kitbot
   public static final DifferentialDriveKinematics driveKinematics =
       new DifferentialDriveKinematics(trackWidth);
-  public static final double unitsPerRotation = 0.4787787204;
 
   // Pathweaver constants, baselind values, units: meters per second
   public static final double ramseteB = 2; // Convergence, larger values are more aggressive
@@ -160,8 +167,6 @@ public final class Constants {
 
   public static final double delaytaxi = 1.0; // 1 second wait time
   public static final double delayshot = 0.5; // 0.5 second wait time
-
-  // TODO: Replace 0.69 with actual track width in meters and run characterization on real robot
 
   // Encoder constants
 
@@ -181,6 +186,8 @@ public final class Constants {
   public static final int finalBallSensorChannel = 2;
 
   // CDS Constants
+  public static final boolean ballManagementEnabled = false;
+
   public static final int CDSBeltID = 3;
   public static final int CDSWheelControllerOneID = 2;
   public static final int CDSWheelControllerTwoID = 9;
@@ -191,6 +198,8 @@ public final class Constants {
   public static final int backSensorActivation = 600;
 
   public static final boolean testMode = false; // if false CDS will eject balls of wrong color
+
+  public static final double stopperWheelSpeed = -0.10;
 
   // spotless:off
   // Controller Constants {
@@ -259,12 +268,13 @@ public final class Constants {
     // PID settings
     // 2.5e-4, 2.5e-7, 2e-6, 1e-4
     //public static final double kPIDFArray[] = {8.0383e-8, 0, 0};
-    public static final double kPIDFArray[] = {0, 0, 0};
+    public static final double kPIDFArray[] = {2.5e-8, 5.5e-8, 0};
+    public static final double kF = 2.0e-4;
     public static final double kMaxIAccum = 0.9;
     public static final int kMaxISlot = 0;
     public static final double kMaxOutput = 1.0;
     public static final double kMinOutput = 0;
-    public static final double kA = 0.15; // Smoothing alpha, do not cofuse with kAg
+    public static final double kA = 0.35; // Smoothing alpha, do not cofuse with kAg
     // PID FF gains
     public static final double kSg = 0.035516;
     public static final double kVg = 0.14324;

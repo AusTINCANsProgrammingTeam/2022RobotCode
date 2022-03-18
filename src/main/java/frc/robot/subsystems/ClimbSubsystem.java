@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -42,7 +43,32 @@ public class ClimbSubsystem extends SubsystemBase {
   private NetworkTableEntry sbClimbingMode;
   private NetworkTableEntry sbClimbEnabbled;
 
+  private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
+  private NetworkTableEntry DClimbHeight1 =
+      operatorTab
+          .add("Climb Height 1", 0)
+          .withWidget(BuiltInWidgets.kNumberBar)
+          .withSize(2, 1)
+          .withPosition(6, 0)
+          .getEntry();
+  private NetworkTableEntry DClimbHeight2 =
+      operatorTab
+          .add("Climb Height 2", 0)
+          .withWidget(BuiltInWidgets.kNumberBar)
+          .withSize(2, 1)
+          .withPosition(6, 1)
+          .getEntry();
+  private NetworkTableEntry BClimbEnabled =
+      operatorTab
+          .add("Climb Enabled", false)
+          .withPosition(5, 0)
+          .withWidget(BuiltInWidgets.kBooleanBox)
+          .getEntry();
+
   public ClimbSubsystem(Joystick joystick) {
+    if (Constants.DebugMode) {
+      instantiateDebugTab();
+    }
     m_climbJoystick = joystick;
     climbEnabbled = false;
     climbHeightOne = 0;
@@ -52,10 +78,10 @@ public class ClimbSubsystem extends SubsystemBase {
 
     m_climbMotorControllerOne =
         new MotorController("Climb Motor One", Constants.ClimbMotorOne, Constants.climbLeftPID);
-    m_climbMotorControllerOne.setSmartCurrentLimit(60);
+    m_climbMotorControllerOne.setSmartCurrentLimit(10);
     m_climbMotorControllerTwo =
         new MotorController("Climb Motor Two", Constants.ClimbMotorTwo, Constants.climbRightPID);
-    m_climbMotorControllerTwo.setSmartCurrentLimit(60);
+    m_climbMotorControllerTwo.setSmartCurrentLimit(10);
     m_climbMotorControllerTwo.setInverted(true);
     // m_climbMotorControllerTwo.getPID().setOutputRange(-.4, .4);
     // m_climbMotorControllerOne.getPID().setOutputRange(-.4, .4);
@@ -66,7 +92,128 @@ public class ClimbSubsystem extends SubsystemBase {
     m_climbMotorControllerTwo.setIdleMode(IdleMode.kBrake);
 
     // m_limitSwitch = new DigitalInput(Constants.LimitSwitchChannel);
+  }
 
+  public void resetTargetedHeight() {
+    climbHeightOne = m_climbMotorControllerOne.getEncoder().getPosition();
+    climbHeightTwo = m_climbMotorControllerTwo.getEncoder().getPosition();
+  }
+
+  public void climbKeepDownFunction() {
+    m_climbMotorControllerOne
+        .getPIDCtrl()
+        .setReference(climbHeightOne, CANSparkMax.ControlType.kPosition);
+
+    m_climbMotorControllerTwo
+        .getPIDCtrl()
+        .setReference(climbHeightTwo, CANSparkMax.ControlType.kPosition);
+  }
+
+  public void climbEnable() {
+    climbEnabbled = !climbEnabbled;
+    if (climbEnabbled) {
+      m_climbMotorControllerOne.setSmartCurrentLimit(60);
+      m_climbMotorControllerTwo.setSmartCurrentLimit(60);
+    } else {
+      m_climbMotorControllerOne.setSmartCurrentLimit(10);
+      m_climbMotorControllerTwo.setSmartCurrentLimit(10);
+    }
+  }
+
+  public boolean getclimbingenable() {
+    return climbEnabbled;
+  }
+
+  public void runManual() {
+    if (climbEnabbled
+    /** && !m_limitSwitch.get() */
+    ) {
+
+      joystickAxis = -m_climbJoystick.getRawAxis(Constants.leftJoystickY);
+      if (joystickAxis > 0.1 || joystickAxis < -0.1) {
+        if (joystickAxis > 0) {
+          m_climbMotorControllerOne.set(sbclimbSpeedInput.getDouble(0));
+          m_climbMotorControllerTwo.set(sbclimbSpeedInput.getDouble(0));
+        }
+        if (joystickAxis < 0) {
+          m_climbMotorControllerOne.set(-sbclimbSpeedInput.getDouble(0));
+          m_climbMotorControllerTwo.set(-sbclimbSpeedInput.getDouble(0));
+        }
+      } else {
+        m_climbMotorControllerOne.set(0);
+        m_climbMotorControllerTwo.set(0);
+      }
+    }
+  }
+
+  public void enableClimb() {
+    if (climbEnabbled
+    /** && !m_limitSwitch.get() */
+    ) {
+
+      joystickAxis = -m_climbJoystick.getRawAxis(Constants.leftJoystickY);
+      if (joystickAxis > 0.1 || joystickAxis < -0.1) {
+        if (joystickAxis > 0) {
+          if (climbHeightOne <= Constants.climbHeightMax) {
+            climbHeightOne = climbHeightOne + (joystickAxis / 10 * 8);
+          }
+          if (climbHeightTwo <= Constants.climbHeightMax) {
+            climbHeightTwo = climbHeightTwo + (joystickAxis / 10 * 8);
+          }
+        }
+        if (joystickAxis < 0) {
+          if (climbHeightOne >= 0) {
+            climbHeightOne = climbHeightOne + (joystickAxis / 10 * 6);
+          }
+          if (climbHeightTwo >= 0) {
+            climbHeightTwo = climbHeightTwo + (joystickAxis / 10 * 6);
+          }
+        }
+      }
+      m_climbMotorControllerOne
+          .getPIDCtrl()
+          .setReference(climbHeightOne, CANSparkMax.ControlType.kPosition);
+
+      m_climbMotorControllerTwo
+          .getPIDCtrl()
+          .setReference(climbHeightTwo, CANSparkMax.ControlType.kPosition);
+    } else {
+      // m_climbMotorControllerOne.getPID().setReference(0, CANSparkMax.ControlType.kVoltage);
+    }
+  }
+
+  public void periodic() {
+    if (DriverStation.isDisabled() && climbEnabbled) {
+      climbEnable();
+    }
+
+    SmartDashboard.putNumber(
+        "Climb motor 1 Applied Output", m_climbMotorControllerOne.getAppliedOutput());
+    SmartDashboard.putNumber(
+        "Climb motor 2 Applied Output", m_climbMotorControllerTwo.getAppliedOutput());
+    SmartDashboard.putNumber(
+        "Climb Hight One", m_climbMotorControllerOne.getEncoder().getPosition());
+    if (Constants.DebugMode) {
+      if (sbclimbHeightOne.getDouble(0) != climbHeightOne) {
+        climbHeightOne = sbclimbHeightOne.getDouble(0);
+      } else {
+        BClimbEnabled.setBoolean(false);
+      }
+    }
+
+    BClimbEnabled.setBoolean(climbEnabbled);
+    if (climbEnabbled) {
+      DClimbHeight1.setDouble(m_climbMotorControllerOne.getEncoder().getPosition());
+      DClimbHeight2.setDouble(m_climbMotorControllerOne.getEncoder().getPosition());
+    }
+  }
+
+  public boolean getLimitSwitchVal() {
+    return m_limitSwitch.get();
+  }
+  // TODO: might add other getter methods depending on how many limit switches
+
+  public void instantiateDebugTab() {
     climberTab = Shuffleboard.getTab("ClimbBase");
     sbClimbingMode =
         climberTab
@@ -108,113 +255,4 @@ public class ClimbSubsystem extends SubsystemBase {
     sbclimberpositionTwo =
         climberTab.add("Climber position 2", 0).withSize(2, 2).withPosition(2, 4).getEntry();
   }
-
-  public void climbEnabbledEnable() {
-    climbEnabbled = !climbEnabbled;
-    sbClimbEnabbled.setBoolean(climbEnabbled);
-  }
-
-  public boolean getclimbingmode() {
-    return sbClimbingMode.getBoolean(false);
-  }
-
-  public void runManual() {
-    if (climbEnabbled
-    /** && !m_limitSwitch.get() */
-    ) {
-
-      joystickAxis = -m_climbJoystick.getRawAxis(Constants.leftJoystickY);
-      if (joystickAxis > 0.1 || joystickAxis < -0.1) {
-        if (joystickAxis > 0) {
-          m_climbMotorControllerOne.set(sbclimbSpeedInput.getDouble(0));
-          m_climbMotorControllerTwo.set(sbclimbSpeedInput.getDouble(0));
-        }
-        if (joystickAxis < 0) {
-          m_climbMotorControllerOne.set(-sbclimbSpeedInput.getDouble(0));
-          m_climbMotorControllerTwo.set(-sbclimbSpeedInput.getDouble(0));
-        }
-      } else {
-        m_climbMotorControllerOne.set(0);
-        m_climbMotorControllerTwo.set(0);
-      }
-    }
-  }
-
-  public void enableClimb() {
-    if (climbEnabbled
-    /** && !m_limitSwitch.get() */
-    ) {
-
-      joystickAxis = -m_climbJoystick.getRawAxis(Constants.leftJoystickY);
-      if (joystickAxis > 0.1 || joystickAxis < -0.1) {
-        if (joystickAxis > 0) {
-          if (climbHeightOne <= Constants.climbHeightMax) {
-            climbHeightOne = climbHeightOne + (joystickAxis / 10 * 4);
-          }
-          if (climbHeightTwo <= Constants.climbHeightMax) {
-            climbHeightTwo = climbHeightTwo + (joystickAxis / 10 * 4);
-          }
-        }
-        if (joystickAxis < 0) {
-          if (climbHeightOne >= 0) {
-            climbHeightOne = climbHeightOne + (joystickAxis / 10 * 4);
-          }
-          if (climbHeightTwo >= 0) {
-            climbHeightTwo = climbHeightTwo + (joystickAxis / 10 * 4);
-          }
-        }
-      }
-      m_climbMotorControllerOne
-          .getPIDCtrl()
-          .setReference(climbHeightOne, CANSparkMax.ControlType.kPosition);
-      sbclimbHeightOne.setNumber(climbHeightOne);
-
-      m_climbMotorControllerTwo
-          .getPIDCtrl()
-          .setReference(climbHeightTwo, CANSparkMax.ControlType.kPosition);
-      sbclimbHeightTwo.setNumber(climbHeightTwo);
-    } else {
-      // m_climbMotorControllerOne.getPID().setReference(0, CANSparkMax.ControlType.kVoltage);
-    }
-  }
-
-  public void periodic() {
-
-    SmartDashboard.putNumber(
-        "Climb motor 1 Applied Output", m_climbMotorControllerOne.getAppliedOutput());
-    SmartDashboard.putNumber(
-        "Climb motor 2 Applied Output", m_climbMotorControllerTwo.getAppliedOutput());
-    SmartDashboard.putNumber(
-        "Climb Hight One", m_climbMotorControllerOne.getEncoder().getPosition());
-    if (sbclimbHeightOne.getDouble(0) != climbHeightOne) {
-      climbHeightOne = sbclimbHeightOne.getDouble(0);
-    } else {
-      sbclimberheightOne.setDouble(climbHeightOne);
-    }
-    sbclimberspeedOne.setDouble(m_climbMotorControllerOne.getEncoder().getVelocity());
-    sbclimberpositionOne.setDouble(m_climbMotorControllerOne.getEncoder().getPosition());
-
-    m_climbMotorControllerOne.updateSmartDashboard();
-    SmartDashboard.putNumber(
-        "Climb IAccum One", m_climbMotorControllerOne.getPIDCtrl().getIAccum());
-
-    SmartDashboard.putNumber(
-        "Climb Hight Two", m_climbMotorControllerTwo.getEncoder().getPosition());
-    if (sbclimbHeightTwo.getDouble(0) != climbHeightTwo) {
-      climbHeightTwo = sbclimbHeightTwo.getDouble(0);
-    } else {
-      sbclimberheightTwo.setDouble(climbHeightTwo);
-    }
-    sbclimberspeedTwo.setDouble(m_climbMotorControllerTwo.getEncoder().getVelocity());
-    sbclimberpositionTwo.setDouble(m_climbMotorControllerTwo.getEncoder().getPosition());
-
-    m_climbMotorControllerTwo.updateSmartDashboard();
-    SmartDashboard.putNumber(
-        "Climb IAccum Two", m_climbMotorControllerTwo.getPIDCtrl().getIAccum());
-  }
-
-  public boolean getLimitSwitchVal() {
-    return m_limitSwitch.get();
-  }
-  // TODO: might add other getter methods depending on how many limit switches
 }

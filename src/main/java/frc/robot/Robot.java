@@ -4,12 +4,18 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Tabs.TabContainer;
+import frc.robot.commands.AutonModes;
+import java.util.Map;
 
 // The VM is configured to automatically run this class, and to call the functions corresponding to
 // each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -18,9 +24,20 @@ import frc.robot.subsystems.Tabs.TabContainer;
 
 public class Robot extends TimedRobot {
   private Command autonomousCommand;
-  private SendableChooser<String> chooser = new SendableChooser<>();
+
+  // Shuffleboard for auton config
+  private ShuffleboardTab configTab =
+      Shuffleboard.getTab("Config"); // all auton settings located here
+  private NetworkTableEntry waitTimeSlider =
+      configTab
+          .add("Wait Time", 1)
+          .withWidget(BuiltInWidgets.kNumberSlider)
+          .withProperties(Map.of("Min", 1, "Max", 10))
+          .getEntry();
+  private SendableChooser<Constants.Auton> chooser = new SendableChooser<>();
+
   private RobotContainer robotContainer;
-  private TabContainer tabContainer;
+  public UsbCamera usbCamera;
 
   // This function is run when the robot is first started up and should be used
   // for any
@@ -32,19 +49,24 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     // TODO: Put commands here
 
+    usbCamera = CameraServer.startAutomaticCapture();
+    if (isReal()) {
+      usbCamera.setResolution(240, 320);
+    }
+
     robotContainer = new RobotContainer();
 
-    // TODO: change to correct paths
-    chooser.setDefaultOption("Taxi", "taxi");
-    chooser.addOption("One Ball", "oneball");
-    chooser.addOption("Two Ball", "twoball");
-    chooser.addOption("Three Ball", "threeball");
-    chooser.addOption("Four Ball", "fourball");
-    SmartDashboard.putData("Auto Mode", chooser);
+    chooser.setDefaultOption("Taxi", Constants.Auton.TAXI); // default is taxi mode
 
-    if (RobotContainer.getDriveBase() != null) {
-      tabContainer = new TabContainer(RobotContainer.getDriveBase());
-    }
+    chooser.addOption("Taxi", Constants.Auton.TAXI);
+    chooser.addOption("One Ball", Constants.Auton.ONEBALL);
+    chooser.addOption("Two Ball", Constants.Auton.TWOBALL);
+    chooser.addOption("Three Ball", Constants.Auton.THREEBALL);
+    chooser.addOption("Four Ball", Constants.Auton.FOURBALL);
+    chooser.addOption("Five Ball", Constants.Auton.FIVEBALL);
+    chooser.addOption("Test Mode", Constants.Auton.TEST);
+
+    configTab.add("Auton mode", chooser).withPosition(0, 1).withSize(2, 2);
   }
 
   // This function is called every robot packet, no matter the mode. Use this for items like
@@ -55,9 +77,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    if (tabContainer != null) {
-      tabContainer.periodic();
-    }
 
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
@@ -80,6 +99,8 @@ public class Robot extends TimedRobot {
   // This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    AutonModes.setWaitTime(waitTimeSlider.getDouble(1));
+    robotContainer.initAuton(chooser.getSelected());
     autonomousCommand = robotContainer.getAutonomousCommand(chooser.getSelected());
 
     // schedule the autonomous command (example)

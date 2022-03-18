@@ -8,13 +8,16 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class IntakeForwardCommand extends CommandBase {
+public class DeployIntake extends CommandBase {
   /** Creates a new IntakeForwardCommand. */
   private final IntakeSubsystem mIntakeSubsystem;
 
   private final CDSSubsystem mCdsSubsystem;
 
-  public IntakeForwardCommand(IntakeSubsystem intakeSubsystem, CDSSubsystem cdsSubsystem) {
+  private int msCurrent = 0;
+  private final int runTime = 1300; // how long to run intake for
+
+  public DeployIntake(IntakeSubsystem intakeSubsystem, CDSSubsystem cdsSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intakeSubsystem);
     addRequirements(cdsSubsystem);
@@ -27,22 +30,25 @@ public class IntakeForwardCommand extends CommandBase {
   public void initialize() {
     mIntakeSubsystem.toggleIntake(false);
     mCdsSubsystem.CDSWheelToggle(false);
+    msCurrent = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    msCurrent += 20;
+  }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     mIntakeSubsystem.stopIntake();
-    mCdsSubsystem.stopCDSWheel(); // remove if stuff doesn't work well
+    mCdsSubsystem.stopCDS();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return msCurrent >= runTime;
   }
 }

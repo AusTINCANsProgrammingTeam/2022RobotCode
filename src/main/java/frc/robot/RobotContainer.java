@@ -10,11 +10,14 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutonModes;
+import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.ClimbEnable;
+import frc.robot.commands.ClimbKeepDown;
+import frc.robot.commands.CombinedIntakeCDSForwardCommand;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
@@ -47,7 +50,7 @@ public class RobotContainer {
   // subsystems
   private static ClimbSubsystem climbSubsystem;
   private static DriveBaseSubsystem driveBaseSubsystem;
-  private static CDSSubsystem CDSSubsystem;
+  private static CDSSubsystem cdsSubsystem;
   private static IntakeSubsystem intakeSubsystem;
   private static ShooterSubsystem shooterSubsystem;
   private static LimelightSubsystem limelightSubsystem;
@@ -56,12 +59,16 @@ public class RobotContainer {
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
   private IntakeForwardCommand intakeForwardCommand;
   private IntakeReverseCommand intakeReverseCommand;
+  private CDSBallManagementCommand ballManagementCommand;
+  private CombinedIntakeCDSForwardCommand combinedIntakeCDS;
   private ClimbCommand climbCommand;
 
   private ShooterHeld shooterHeldLow, shooterHeldAuto;
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
+  private ClimbEnable climbEnabling;
+  private ClimbKeepDown climbKeepDown;
 
   // auton
   private AutonModes autonModes;
@@ -97,8 +104,6 @@ public class RobotContainer {
       buttons2[i] = new JoystickButton(operatorJoystick, i);
     }
     configureButtonBindings();
-
-    initAuton();
   }
 
   private void controllerCheck() {
@@ -118,57 +123,21 @@ public class RobotContainer {
   }
 
   private void initSubsystems() {
-
     // subsystems
-    for (Constants.Subsystems sub : Constants.Subsystems.values()) {
-      if (sub.isEnabled()) {
+    controllerCheck();
 
-        controllerCheck();
+    driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, Constants.usingExternal);
 
-        // System.out.println((String) k + " " + subSysEnables.get((String) k));
-        switch (sub.toString()) {
-          case "DriveBaseSubsystem":
-            {
-              System.out.println("Drivebase enabled");
-              driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, Constants.usingExternal);
-              break;
-            }
-          case "CDSSubsystem":
-            {
-              System.out.println("CDS enabled");
-              CDSSubsystem = new CDSSubsystem();
-              break;
-            }
-          case "IntakeSubsystem":
-            {
-              System.out.println("Intake enabled");
-              intakeSubsystem = new IntakeSubsystem();
-              break;
-            }
-          case "ShooterSubsystem":
-            {
-              System.out.println("Shooter enabled");
-              shooterSubsystem = new ShooterSubsystem();
-              break;
-            }
-          case "LimelightSubsystem":
-            {
-              System.out.println("Limelight enabled");
-              limelightSubsystem = new LimelightSubsystem();
-              break;
-            }
-          case "ClimbSubsystem":
-            {
-              if (axisCount1 > 0 && buttonCount1 > 0) {
-                climbSubsystem = new ClimbSubsystem(operatorJoystick);
-                climbCommand = new ClimbCommand(climbSubsystem);
-                System.out.println("Climb enabled");
-              }
-              break;
-            }
-        }
-      }
-    }
+    cdsSubsystem = new CDSSubsystem();
+
+    intakeSubsystem = new IntakeSubsystem();
+
+    shooterSubsystem = new ShooterSubsystem();
+
+    limelightSubsystem = new LimelightSubsystem();
+
+    climbSubsystem = new ClimbSubsystem(operatorJoystick);
+    climbCommand = new ClimbCommand(climbSubsystem);
   }
 
   private void initCommands() {
@@ -177,37 +146,40 @@ public class RobotContainer {
       driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
     }
-    if (CDSSubsystem != null && shooterSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
+    if (cdsSubsystem != null && shooterSubsystem != null) {
+      CDSForwardCommand = new CDSForwardCommand(cdsSubsystem, shooterSubsystem);
     }
-    // CDS
-    if (CDSSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem);
-      // CDSSubsystem.setDefaultCommand(new CDSAutoAdvanceCommand(CDSSubsystem));
-      // CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, shooterSubsystem);
-      // CDSSubsystem.senseColor();
+    if (intakeSubsystem != null && cdsSubsystem != null) {
+      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
+      intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, cdsSubsystem);
+      outtakeCommand = new OuttakeCommand(intakeSubsystem, cdsSubsystem);
+
+      if (Constants.ballManagementEnabled) {
+        intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
+        ballManagementCommand = new CDSBallManagementCommand(cdsSubsystem, intakeSubsystem);
+        cdsSubsystem.setDefaultCommand(ballManagementCommand);
+      } else {
+        combinedIntakeCDS =
+            new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem);
+      }
     }
 
-    if (intakeSubsystem != null && CDSSubsystem != null) {
-      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, CDSSubsystem);
-      intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, CDSSubsystem);
-      outtakeCommand = new OuttakeCommand(intakeSubsystem, CDSSubsystem);
-      // CDSSubsystem.setDefaultCommand(new CDSBallManagementCommand(CDSSubsystem,
-      // intakeSubsystem));
-    }
-    if (shooterSubsystem != null && CDSSubsystem != null) {
+    if (shooterSubsystem != null && cdsSubsystem != null) {
       shooterHeldAuto =
           new ShooterHeld(
-              shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
+              shooterSubsystem, limelightSubsystem, cdsSubsystem, (limelightSubsystem != null));
       shooterHeldLow =
           new ShooterHeld(
-              shooterSubsystem, limelightSubsystem, CDSSubsystem, (limelightSubsystem != null));
+              shooterSubsystem, limelightSubsystem, cdsSubsystem, (limelightSubsystem != null));
     }
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
     }
-    if (climbSubsystem != null) {
-      climbSubsystem.setDefaultCommand(climbCommand);
+
+    if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
+      climbEnabling = new ClimbEnable(climbSubsystem, driveBaseSubsystem);
+      climbKeepDown = new ClimbKeepDown(climbSubsystem);
+      climbSubsystem.setDefaultCommand(climbKeepDown);
     }
   }
 
@@ -221,11 +193,15 @@ public class RobotContainer {
     controllerCheck();
 
     // Intake / CDS
-    if (intakeForwardCommand != null && outtakeCommand != null) {
-      // takes ball in
-      buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
+    if (outtakeCommand != null) {
       // spits ball out
       buttons[Constants.RBumper].whileHeld(outtakeCommand);
+    }
+
+    if (combinedIntakeCDS != null) {
+      buttons[Constants.RTriggerButton].whileHeld(combinedIntakeCDS);
+    } else {
+      buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
     }
 
     if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
@@ -245,72 +221,68 @@ public class RobotContainer {
               shooterSubsystem));
     }
 
-    if (axisCount1 == 0 && buttonCount1 == 0) {
+    if (climbSubsystem != null) {
+      buttons2[Constants.startButton].whenPressed(climbEnabling);
+    }
 
-      // Shooter
-      if (shooterSubsystem != null && shooterHeldAuto != null) {
-        buttons[Constants.backButton].whenPressed(shooterHeldAuto);
-        buttons[Constants.LJoystickButton].whenPressed(
-            new InstantCommand(shooterSubsystem::cycleAimModeNext, shooterSubsystem));
-        buttons[Constants.RJoystickButton].whenPressed(
-            new InstantCommand(shooterSubsystem::cycleAimModePrevious, shooterSubsystem));
-      }
-
-      // Limelight
-      if (limelightAlign != null) {
-        buttons[Constants.startButton].whenPressed(limelightAlign);
-      }
-
-      // ClimbSubysystem has no binding because there are not enuf axises
-      if (climbSubsystem != null) {}
-
-      System.out.printf("Using Testing One-controller button mappings");
-    } else {
-
-      if (climbSubsystem != null) {
-        buttons2[Constants.startButton].whenPressed(
-            new InstantCommand(climbSubsystem::climbEnabbledEnable, climbSubsystem));
-      }
-
-      if (outtakeCommand != null && CDSForwardCommand != null) {
-        buttons2[Constants.RTriggerButton].whileHeld(CDSForwardCommand);
-        buttons2[Constants.RBumper].whileHeld(outtakeCommand);
-      }
-
-      System.out.printf("Using Competition Two-controller button mappings");
+    if (outtakeCommand != null && intakeForwardCommand != null) {
+      buttons2[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
+      buttons2[Constants.RBumper].whileHeld(outtakeCommand);
     }
   }
 
-  public Command getAutonomousCommand(String pathname) {
+  public Command getAutonomousCommand(Constants.Auton a) {
     if (autonModes != null) {
-      chosenAutonMode = autonModes.getChosenCommand(pathname);
+      chosenAutonMode = autonModes.getChosenCommand(a);
       return chosenAutonMode;
     }
     return null;
   }
 
-  private void initAuton() {
-    if (driveBaseSubsystem != null) {
-      if (shooterSubsystem != null
-          && limelightSubsystem != null
-          && CDSSubsystem != null
-          && intakeSubsystem != null) {
-        autonModes =
-            new AutonModes(
-                driveBaseSubsystem,
-                shooterSubsystem,
-                limelightSubsystem,
-                CDSSubsystem,
-                intakeSubsystem);
-
-      } else {
-        autonModes =
-            new AutonModes(
-                driveBaseSubsystem); // default constructor, if other subsystems are disabled only
-        // use drivebase for taxi
-      }
-    } else {
-      autonModes = null;
+  public void initAuton(Constants.Auton mode) {
+    // switch for readibility
+    boolean success = true;
+    switch (mode) {
+      case TEST:
+        if (driveBaseSubsystem != null) {
+          autonModes = new AutonModes(driveBaseSubsystem);
+        } else {
+          success = false;
+        }
+        break;
+      case TAXI:
+        if (driveBaseSubsystem != null && intakeSubsystem != null && cdsSubsystem != null) {
+          autonModes = new AutonModes(driveBaseSubsystem, intakeSubsystem, cdsSubsystem);
+        } else {
+          success = false;
+        }
+        break;
+      case ONEBALL: // all of these modes go down to the FIVEBALL case
+      case TWOBALL:
+      case THREEBALL:
+      case FOURBALL:
+      case FIVEBALL:
+        if (shooterSubsystem != null
+            && driveBaseSubsystem != null
+            && intakeSubsystem != null
+            && cdsSubsystem != null) {
+          autonModes =
+              new AutonModes(
+                  driveBaseSubsystem,
+                  shooterSubsystem,
+                  limelightSubsystem,
+                  cdsSubsystem,
+                  intakeSubsystem);
+        } else {
+          success = false;
+        }
+        break;
+      default:
+        System.out.println("No mode selected");
+        break;
+    }
+    if (success == false) {
+      System.out.println(mode.getName() + " mode unable to be created.");
     }
   }
 

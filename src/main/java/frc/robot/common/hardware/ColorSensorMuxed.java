@@ -8,6 +8,7 @@ import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Robot;
 import java.util.ArrayList;
@@ -19,19 +20,28 @@ public class ColorSensorMuxed {
   private I2C i2cMux;
   private final int tca9548Addr = 0x70;
   private ArrayList<Integer> i2cPorts;
+  private double lastProxRead;
+  private double lastColorRead;
+  private int[] proximities;
+  private Color[] colors;
+  private final double sensorPeriodInSeconds = 0.1;
 
   public ColorSensorMuxed(int... ports) {
     i2cMux = new I2C(Port.kMXP, tca9548Addr);
     i2cPorts = new ArrayList<Integer>();
     for (int p : ports) {
+      i2cPorts.add(p);
       if (setI2cPort(p)) {
-        i2cPorts.add(p);
         // Initialize each device, only need to keep last object
         sensors = new ColorSensorV3(Port.kMXP);
       } else {
         DriverStation.reportError("Could not initialize color sensor on I2C port " + p, false);
       }
     }
+    proximities = new int[i2cPorts.size()];
+    colors = new Color[i2cPorts.size()];
+    lastProxRead = 0;
+    lastColorRead = 0;
   }
 
   // @returns true if successful
@@ -52,31 +62,35 @@ public class ColorSensorMuxed {
   }
 
   public Color[] getColors() {
-    Color[] colors = new Color[i2cPorts.size()];
-    int i = 0;
-    for (int p : i2cPorts) {
-      if (setI2cPort(p)) {
-        colors[i] = sensors.getColor();
-      } else {
-        DriverStation.reportError("Failed to get color from sensor on I2C port " + p, false);
-        colors[i] = new Color(0, 0, 0);
+    if (Timer.getFPGATimestamp() - lastColorRead > sensorPeriodInSeconds) {
+      int i = 0;
+      for (int p : i2cPorts) {
+        if (setI2cPort(p)) {
+          colors[i] = sensors.getColor();
+        } else {
+          DriverStation.reportError("Failed to get color from sensor on I2C port " + p, false);
+          colors[i] = new Color(0, 0, 0);
+        }
+        i++;
       }
-      i++;
+      lastColorRead = Timer.getFPGATimestamp();
     }
     return colors;
   }
 
   public int[] getProximities() {
-    int[] proximities = new int[i2cPorts.size()];
-    int i = 0;
-    for (int p : i2cPorts) {
-      if (setI2cPort(p)) {
-        proximities[i] = sensors.getProximity();
-      } else {
-        DriverStation.reportError("Failed to get proximity from sensor on I2C port " + p, false);
-        proximities[i] = 0;
+    if (Timer.getFPGATimestamp() - lastProxRead > sensorPeriodInSeconds) {
+      int i = 0;
+      for (int p : i2cPorts) {
+        if (setI2cPort(p)) {
+          proximities[i] = sensors.getProximity();
+        } else {
+          DriverStation.reportError("Failed to get proximity from sensor on I2C port " + p, false);
+          proximities[i] = 0;
+        }
+        i++;
       }
-      i++;
+      lastProxRead = Timer.getFPGATimestamp();
     }
     return proximities;
   }
