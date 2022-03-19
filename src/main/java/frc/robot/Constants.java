@@ -27,7 +27,7 @@ public final class Constants {
     },
     EJECT(2500.0, 0.0),
     LAUNCH(0.0, 0.0),
-    TARMAC(2550.0, 0.0),
+    TARMAC(2505.0, 0.0),
     TEST {
       @Override
       public AimModes next() {
@@ -191,7 +191,7 @@ public final class Constants {
   public static final int CDSBeltID = 3;
   public static final int CDSWheelControllerOneID = 2;
   public static final int CDSWheelControllerTwoID = 9;
-  public static final double CDSBeltSpeed = 0.40;
+  public static final double CDSBeltSpeed = 1.0;
   public static final double CDSWheelControllerSpeed = 0.65;
   public static final int frontSensorActivation = 200;
   public static final int middleSensorActivation = 450;
