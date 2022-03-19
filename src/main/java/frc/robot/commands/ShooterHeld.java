@@ -33,7 +33,6 @@ public class ShooterHeld extends CommandBase {
     m_ShooterSubsystem = shooterSubsystem;
     m_LimelightSubsystem = limelightSubsystem;
     m_CDSSubsystem = CDSSubsystem;
-    SmartDashboard.putBoolean("wheelReady", false);
     LLEnabled = llEnabled;
   }
 
@@ -41,6 +40,7 @@ public class ShooterHeld extends CommandBase {
   @Override
   public void initialize() {
     i = 0;
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
