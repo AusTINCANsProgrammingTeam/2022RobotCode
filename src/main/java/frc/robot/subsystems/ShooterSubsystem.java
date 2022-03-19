@@ -144,7 +144,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void resetIAccum() {
-    if (flywheelEncoder.getVelocity() > 500){
+    if (flywheelEncoder.getVelocity() < 500){
     flywheelPID.setIAccum(0);
     }
   }
