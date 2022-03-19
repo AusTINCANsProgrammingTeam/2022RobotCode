@@ -65,9 +65,9 @@ public class ShooterHeld extends CommandBase {
         }*/
       }
     } else {
-      m_ShooterSubsystem.setCargoBoolean(false);
+      /*m_ShooterSubsystem.setCargoBoolean(false);
       m_CDSSubsystem.stopCDS();
-      m_ShooterSubsystem.runCargo(Constants.Shooter.cargoReverse);
+      m_ShooterSubsystem.runCargo(Constants.Shooter.cargoReverse);*/
     }
   }
 
