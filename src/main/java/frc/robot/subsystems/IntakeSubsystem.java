@@ -4,6 +4,10 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 // import edu.wpi.first.wpilibj2.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,6 +18,15 @@ import frc.robot.common.hardware.MotorController;
 public class IntakeSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
+
+  private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
+  private NetworkTableEntry DIntakeSpeed =
+      operatorTab
+          .add("Intake Speed", 0)
+          .withWidget(BuiltInWidgets.kNumberBar)
+          .withPosition(3, 0)
+          .withSize(2, 1)
+          .getEntry();
 
   private MotorController intakeMotorControllerOne;
 
@@ -26,18 +39,27 @@ public class IntakeSubsystem extends SubsystemBase {
     // only runs intake if ball count isn't too high (addresses #140)
     if (reverse) {
       intakeMotorControllerOne.set(-Constants.intakeMotorSpeed);
-      SmartDashboard.putString("Intake Motor Direction", "Reverse");
-      SmartDashboard.putNumber("Intake Motor Speed", -Constants.intakeMotorSpeed);
-    } else if (!reverse) {
+      if (Constants.DebugMode) {
+        SmartDashboard.putString("Intake Motor Direction", "Reverse");
+        SmartDashboard.putNumber("Intake Motor Speed", -Constants.intakeMotorSpeed);
+      }
+      DIntakeSpeed.setDouble(-1);
+    } else {
       intakeMotorControllerOne.set(Constants.intakeMotorSpeed);
-      SmartDashboard.putString("Intake Motor Direction", "Forward");
-      SmartDashboard.putNumber("Intake Motor Speed", Constants.intakeMotorSpeed);
+      if (Constants.DebugMode) {
+        SmartDashboard.putString("Intake Motor Direction", "Forward");
+        SmartDashboard.putNumber("Intake Motor Speed", Constants.intakeMotorSpeed);
+      }
+      DIntakeSpeed.setDouble(1);
     }
   }
 
   public void stopIntake() {
     intakeMotorControllerOne.set(0.0);
-    SmartDashboard.putNumber("Intake Motor Speed", 0.0);
+    DIntakeSpeed.setDouble(0);
+    if (Constants.DebugMode) {
+      SmartDashboard.putNumber("Intake Motor Speed", 0.0);
+    }
   }
 
   public void periodic() {}

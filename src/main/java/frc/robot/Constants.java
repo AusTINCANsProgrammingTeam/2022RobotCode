@@ -79,6 +79,8 @@ public final class Constants {
     }
   }
 
+  public static final boolean DebugMode = false;
+
   // motor controller constants
   public static final int defaultCurrentLimit = 40;
 
@@ -110,8 +112,8 @@ public final class Constants {
 
   // drive base pid values
   // TODO: need to tune for real robot
-  public static final double[] driveRightPID = {0.00035, 0.0000008, 0};
-  public static final double[] driveLeftPID = {0.000005, 0.0000008, 0};
+  public static final double[] driveRightPID = {0.00035, 0.00000085, 0};
+  public static final double[] driveLeftPID = {0.00035, 0.00000092, 0};
 
   // AUTONOMOUS Constants
 
@@ -124,7 +126,7 @@ public final class Constants {
     THREEBALL("ThreeBall", "paths/GrabTwoBalls.wpilib.json", "paths/GoBackWithTwoBalls.wpilib.json"),
     FOURBALL("FourBall", "paths/Grab2Of4Balls", "paths/Grab4Of4Balls"),
     FIVEBALL,
-    TEST("Test", "paths/FlippedVectorTest1.wpilib.json", "paths/FlippedVectorTest2.wpilib.json");
+    TEST("Test", "paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json");
     // change according to what path you want to test
     // spotless:on
 
