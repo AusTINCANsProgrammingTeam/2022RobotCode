@@ -274,8 +274,10 @@ public class AutonModes {
       case TEST:
         System.out.println("Auton: Test mode selected.");
         return testCommand;
+      case PUSHTAXI:
+        System.out.println("Auton: Push Taxi mode selected.");
       case INTAKETAXI:
-        System.out.println("Auton: Taxi mode selected.");
+        System.out.println("Auton: Intake Taxi mode selected.");
         return intakeTaxiCommand;
       case ONEBALL:
         System.out.println("Auton: One Ball mode selected.");
