@@ -14,6 +14,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.AimModes;
@@ -144,6 +145,7 @@ public class ShooterSubsystem extends SubsystemBase {
     } else {
       DTRPM.setDouble(rpm);
       targetRPM = rpm;
+      flywheelController.setVoltage(flywheelFF.calculate(rpm/60));
       flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
     }
   }
@@ -219,7 +221,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    flywheelController.setVoltage(flywheelFF.calculate(2650)); //TODO: convert to rps, not rpm
+    SmartDashboard.putNumber("ff", flywheelFF.calculate(2600/60));
     // This method will be called once per scheduler run
     currentRPM = flywheelEncoder.getVelocity();
     smoothRPM = Constants.Shooter.kA * currentRPM + smoothRPM * (1 - Constants.Shooter.kA);
