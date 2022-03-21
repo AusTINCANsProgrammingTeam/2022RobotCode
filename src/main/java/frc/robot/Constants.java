@@ -117,7 +117,8 @@ public final class Constants {
 
   public enum Auton {
     // spotless:off
-    TAXI("Taxi", "paths/TaxiOut.wpilib.json"),
+    PUSHTAXI("PushTaxi", "paths/TaxiOutPushBall.wpilib.json"),
+    INTAKETAXI("IntakeTaxi", "paths/TaxiOutGrabBall.wpilib.json"),
     ONEBALL("Taxi", "paths/TaxiOutFromFender.wpilib.json"),
     TWOBALL("TwoBall", "paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json"),
     THREEBALL("ThreeBall", "paths/GrabTwoBalls.wpilib.json", "paths/GoBackWithTwoBalls.wpilib.json"),

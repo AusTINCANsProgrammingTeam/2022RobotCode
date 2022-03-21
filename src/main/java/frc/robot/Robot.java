@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
       configTab
           .add("Wait Time", 1)
           .withWidget(BuiltInWidgets.kNumberSlider)
-          .withProperties(Map.of("Min", 1, "Max", 10))
+          .withProperties(Map.of("Min", 0, "Max", 10))
           .getEntry();
   private SendableChooser<Constants.Auton> chooser = new SendableChooser<>();
 
@@ -56,9 +56,9 @@ public class Robot extends TimedRobot {
 
     robotContainer = new RobotContainer();
 
-    chooser.setDefaultOption("Taxi", Constants.Auton.TAXI); // default is taxi mode
+    chooser.setDefaultOption("Two Ball", Constants.Auton.TWOBALL); // default is two ball mode
 
-    chooser.addOption("Taxi", Constants.Auton.TAXI);
+    chooser.addOption("Taxi", Constants.Auton.INTAKETAXI);
     chooser.addOption("One Ball", Constants.Auton.ONEBALL);
     chooser.addOption("Two Ball", Constants.Auton.TWOBALL);
     chooser.addOption("Three Ball", Constants.Auton.THREEBALL);
@@ -106,7 +106,7 @@ public class Robot extends TimedRobot {
   // This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    AutonModes.setWaitTime(waitTimeSlider.getDouble(1));
+    AutonModes.setWaitTime(waitTimeSlider.getDouble(0));
     robotContainer.initAuton(chooser.getSelected());
     autonomousCommand = robotContainer.getAutonomousCommand(chooser.getSelected());
 

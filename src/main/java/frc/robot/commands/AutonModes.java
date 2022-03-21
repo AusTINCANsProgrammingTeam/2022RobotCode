@@ -32,7 +32,8 @@ public class AutonModes extends SubsystemBase {
   private boolean shooterEnabled;
 
   // Ramsete Commands, commands for following paths from pathweaver
-  private Command taxiRamseteCommand;
+  private Command pushTaxiRamseteCommand;
+  private Command intakeTaxiRamseteCommand;
   private Command oneBallRamseteCommand;
   private Command[] twoBallRamseteCommands;
   private Command[] threeBallRamseteCommands;
@@ -42,25 +43,18 @@ public class AutonModes extends SubsystemBase {
   private Command[] testRamseteCommands; // for testing
 
   // command groups
-  private Command taxiCommand;
+  private Command pushTaxiCommand;
+  private Command intakeTaxiCommand;
   private Command oneBallCommand;
-  // --------------------------
   private Command twoBallCommand;
-  private Command twoBallParallel;
-  // -----------------------------
-  private Command threeBallParallel;
   private Command threeBallCommand;
-  // -------------------------------
-  private Command fourBallParallel1;
-  private Command fourBallParallel2;
   private Command fourBallCommand;
-  // ------------------------------
   private Command fiveBallCommand;
 
   private Command testCommand; // for testing miscellaneous: for example single ramsete commands
 
-  // amount of time in seconds before starting auton
-  public static double initialWaitTime = 1;
+  // amount of time in seconds before starting auton, default is 0
+  public static double initialWaitTime = 0;
 
   // constructor used when only need to use driveBase, for example when testing testCommand
   public AutonModes(DriveBaseSubsystem d) {
@@ -70,7 +64,7 @@ public class AutonModes extends SubsystemBase {
     initializeTest(); // initializes both ramsete and the command group
   }
 
-  // constructor that doesn't use shooter
+  // constructor that doesn't use shooter (for taxi auton)
   public AutonModes(DriveBaseSubsystem d, IntakeSubsystem i, CDSSubsystem c) {
     this.driveBaseSubsystem = d;
     this.intakeSubsystem = i;
@@ -147,15 +141,20 @@ public class AutonModes extends SubsystemBase {
       } else {
         ramseteCommands[i] = r;
       }
+      ramseteCommands[i] =
+          ramseteCommands[i].andThen(
+              () -> driveBaseSubsystem.stopDriveMotors()); // stop drive motors after each ramsete
     }
 
     return ramseteCommands;
   }
 
   private void initializeRamseteCommands() {
-    taxiRamseteCommand =
-        getRamseteCommands(getTrajectories(Constants.Auton.TAXI.getPaths()))[
-            0]; // only has one trajectory so only one ramsete command (first element of array)
+    // only has one trajectory so only one ramsete command (first element of array)
+    pushTaxiRamseteCommand =
+        getRamseteCommands(getTrajectories(Constants.Auton.PUSHTAXI.getPaths()))[0];
+    intakeTaxiRamseteCommand =
+        getRamseteCommands(getTrajectories(Constants.Auton.INTAKETAXI.getPaths()))[0];
 
     if (shooterEnabled) {
       oneBallRamseteCommand =
@@ -175,25 +174,37 @@ public class AutonModes extends SubsystemBase {
   }
 
   private void initializeCommandGroups() {
-    taxiCommand =
-        new SequentialCommandGroup(
-            new DeployIntake(intakeSubsystem, cdsSubsystem), // deploy/extend the intake
-            new WaitCommand(initialWaitTime), // wait before starting, units in seconds
-            taxiRamseteCommand.andThen(() -> driveBaseSubsystem.stopDriveMotors()));
+
+    pushTaxiCommand =
+        new SequentialCommandGroup(new WaitCommand(initialWaitTime), pushTaxiRamseteCommand);
+
+    // ---------------------------------------------
+
+    ParallelDeadlineGroup intakeTaxiParallel =
+        new ParallelDeadlineGroup(
+            intakeTaxiRamseteCommand,
+            new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+
+    intakeTaxiCommand =
+        new SequentialCommandGroup(new WaitCommand(initialWaitTime), intakeTaxiParallel);
+
+    // --------------------------------------
 
     if (shooterEnabled) {
+
       oneBallCommand =
           new SequentialCommandGroup(
               new DeployIntake(intakeSubsystem, cdsSubsystem),
               new WaitCommand(initialWaitTime),
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
               new WaitCommand(Constants.delaytaxi),
-              oneBallRamseteCommand.andThen(() -> driveBaseSubsystem.stopDriveMotors()));
+              oneBallRamseteCommand);
+
       // -------------------------------------------
-      twoBallParallel =
+
+      ParallelDeadlineGroup twoBallParallel =
           new ParallelDeadlineGroup(
-              twoBallRamseteCommands[0].andThen(
-                  () -> driveBaseSubsystem.stopDriveMotors()), // travel to get ball
+              twoBallRamseteCommands[0], // travel to get ball
               new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
 
       twoBallCommand =
@@ -201,13 +212,13 @@ public class AutonModes extends SubsystemBase {
               new DeployIntake(intakeSubsystem, cdsSubsystem),
               new WaitCommand(initialWaitTime),
               twoBallParallel,
-              twoBallRamseteCommands[1].andThen(() -> driveBaseSubsystem.stopDriveMotors()),
-              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
+              twoBallRamseteCommands[1]);
+
       // -------------------------------------------
-      threeBallParallel =
+
+      ParallelDeadlineGroup threeBallParallel =
           new ParallelDeadlineGroup(
-              threeBallRamseteCommands[0].andThen(
-                  () -> driveBaseSubsystem.stopDriveMotors()), // travel to get the two balls
+              threeBallRamseteCommands[0], // travel to get the two balls
               new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
 
       threeBallCommand =
@@ -217,25 +228,25 @@ public class AutonModes extends SubsystemBase {
               new ShooterPressed(
                   shooterSubsystem, limelightSubsystem, cdsSubsystem, false), // shoot preloaded
               threeBallParallel,
-              threeBallRamseteCommands[1].andThen(() -> driveBaseSubsystem.stopDriveMotors()),
+              threeBallRamseteCommands[1],
               new ShooterPressed(
                   shooterSubsystem,
                   limelightSubsystem,
                   cdsSubsystem,
                   false)); // shoot the two acquired balls
+
       // --------------------------------------------
-      fourBallParallel1 =
+
+      ParallelDeadlineGroup fourBallParallel1 =
           new ParallelDeadlineGroup(
-              fourBallRamseteCommands[0].andThen(
-                  () -> driveBaseSubsystem.stopDriveMotors()), // travel to get closest two balls
+              fourBallRamseteCommands[0], // travel to get closest two balls
               new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
-      ;
-      fourBallParallel2 =
+
+      ParallelDeadlineGroup fourBallParallel2 =
           new ParallelDeadlineGroup(
-              twoBallRamseteCommands[1].andThen(
-                  () -> driveBaseSubsystem.stopDriveMotors()), // travel to get ball
+              twoBallRamseteCommands[1], // travel to get ball
               new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
-      ;
+
       fourBallCommand =
           new SequentialCommandGroup(
               new DeployIntake(intakeSubsystem, cdsSubsystem),
@@ -243,9 +254,10 @@ public class AutonModes extends SubsystemBase {
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true),
               fourBallParallel2,
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true));
-      // ---------------------------------------
-      fiveBallCommand = null;
 
+      // ---------------------------------------
+
+      fiveBallCommand = null;
     }
   }
 
@@ -263,9 +275,9 @@ public class AutonModes extends SubsystemBase {
       case TEST:
         System.out.println("Auton: Test mode selected.");
         return testCommand;
-      case TAXI:
+      case INTAKETAXI:
         System.out.println("Auton: Taxi mode selected.");
-        return taxiCommand;
+        return intakeTaxiCommand;
       case ONEBALL:
         System.out.println("Auton: One Ball mode selected.");
         return oneBallCommand;
