@@ -280,8 +280,11 @@ public final class Constants {
   }
 
   // Climb Constants
-  public static final int ClimbMotorOne = 5;
-  public static final int ClimbMotorTwo = 12;
+  public static final int MidClimbMotorOne = 5;
+  public static final int MidClimbMotorTwo = 12;
+  public static final int HighArmMotor = 777777;
+  public static final int TraversalClimbMotorOne = 888888;
+  public static final int TraversalClimbMotorTwo = 999999;
   public static final int climbHeightMax = 65;
   public static final double[] climbRightPID = {0.25, 0.005, 1.0};
   public static final double[] climbLeftPID = {0.25, 0.005, 1.0};
