@@ -209,9 +209,7 @@ public class AutonModes {
       twoBallCommand =
           new SequentialCommandGroup(
               // new DeployIntake(intakeSubsystem, cdsSubsystem),
-              new WaitCommand(initialWaitTime),
-              twoBallParallel,
-              twoBallRamseteCommands[1]);
+              new WaitCommand(initialWaitTime), twoBallParallel, twoBallRamseteCommands[1]);
 
       // -------------------------------------------
 

@@ -111,7 +111,6 @@ public final class Constants {
   public static final double driveBaseTurnRate = 0.85;
 
   // drive base pid values
-  // TODO: need to tune for real robot
   public static final double[] driveRightPID = {0.00035, 0.00000085, 0};
   public static final double[] driveLeftPID = {0.00035, 0.00000092, 0};
 
@@ -124,9 +123,9 @@ public final class Constants {
     ONEBALL("Taxi", "paths/TaxiOutFromFender.wpilib.json"),
     TWOBALL("TwoBall", "paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json"),
     THREEBALL("ThreeBall", "paths/GrabTwoBalls.wpilib.json", "paths/GoBackWithTwoBalls.wpilib.json"),
-    FOURBALL("FourBall", "paths/Grab2Of4Balls", "paths/Grab4Of4Balls"),
+    FOURBALL("FourBall", "paths/FourBall1.wpilib.json", "paths/FourBall2.wpilib.json"),
     FIVEBALL,
-    TEST("Test", "paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json");
+    TEST("Test", "paths/GrabTwoBalls.wpilib.json", "paths/GoBackWithTwoBalls.wpilib.json");
     // change according to what path you want to test
     // spotless:on
 
