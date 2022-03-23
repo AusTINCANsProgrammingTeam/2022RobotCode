@@ -17,9 +17,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class CDSBallManagementCommand extends CommandBase {
-  
-  // TODO: Add a ADVANCE state 
-  public enum ManagementState {
+    public enum ManagementState {
     IDLE,
     EJECT,
     ADVANCE,
@@ -33,8 +31,8 @@ public class CDSBallManagementCommand extends CommandBase {
   private String allianceColor;
 
   private int msCurrent = 0;
-  private int ejectRuntime = 750; // amount of time auto eject will run intake backwards for in ms
-  private int nextOpenSensor = -1; // placeholder 
+  private int ejectRuntime = 750;
+  private int nextOpenSensor = -1; 
   private boolean[] sensorStatus;
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
