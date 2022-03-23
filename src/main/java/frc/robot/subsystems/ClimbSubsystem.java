@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -68,13 +69,52 @@ public class ClimbSubsystem extends SubsystemBase {
 
   // Other
   private NetworkTableEntry sbClimbSpeedInput;
-  private NetworkTableEntry sbClimbEnabbled;
 
   private boolean Organization;
   private boolean AmIBeautifull;
 
+  private double climbHeightOne;
+  private double climbHeightTwo;
+  private double joystickAxis;
+  private ShuffleboardTab climberTab;
+  private NetworkTableEntry sbclimberpositionOne;
+  private NetworkTableEntry sbclimberspeedOne;
+  private NetworkTableEntry sbclimberheightOne;
+  private NetworkTableEntry sbclimbHeightOne;
+  private NetworkTableEntry sbclimberpositionTwo;
+  private NetworkTableEntry sbclimberspeedTwo;
+  private NetworkTableEntry sbclimberheightTwo;
+  private NetworkTableEntry sbclimbHeightTwo;
+  private NetworkTableEntry sbclimbSpeedInput;
+  private NetworkTableEntry sbClimbingMode;
+  private NetworkTableEntry sbClimbEnabbled;
+
+  private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
+  private NetworkTableEntry DClimbHeight1 =
+      operatorTab
+          .add("Climb Height 1", 0)
+          .withWidget(BuiltInWidgets.kNumberBar)
+          .withSize(2, 1)
+          .withPosition(6, 0)
+          .getEntry();
+  private NetworkTableEntry DClimbHeight2 =
+      operatorTab
+          .add("Climb Height 2", 0)
+          .withWidget(BuiltInWidgets.kNumberBar)
+          .withSize(2, 1)
+          .withPosition(6, 1)
+          .getEntry();
+  private NetworkTableEntry BClimbEnabled =
+      operatorTab
+          .add("Climb Enabled", false)
+          .withPosition(5, 0)
+          .withWidget(BuiltInWidgets.kBooleanBox)
+          .getEntry();
+
   public ClimbSubsystem(Joystick joystick) {
-    AmIBeautifull = true;
+    if (Constants.DebugMode) {
+      instantiateDebugTab();
+    }
     m_climbJoystick = joystick;
     Organization = true;
     climbEnabbled = false;
@@ -85,18 +125,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     // Mid Climb Arms
     // One is left, two is right
-    m_McMotorControllerOne =
-        new MotorController("Mid Climb Motor One", Constants.McMotorOne, Constants.McLeftPID);
-    m_McMotorControllerOne.setSmartCurrentLimit(10);
-    m_McMotorControllerTwo =
-        new MotorController("Mid Climb Motor Two", Constants.McMotorTwo, Constants.McRightPID);
-    m_McMotorControllerTwo.setSmartCurrentLimit(10);
-    m_McMotorControllerTwo.setInverted(true);
-    m_McMotorControllerOne.getEncoder().setPosition(0);
-    m_McMotorControllerTwo.getEncoder().setPosition(0);
-
-    m_McMotorControllerOne.setIdleMode(IdleMode.kBrake);
-    m_McMotorControllerTwo.setIdleMode(IdleMode.kBrake);
+    
 
     // Heigh  Arms
     m_HaOne = new MotorController("Traversal Climb Motor One", Constants.HaMotorOne);
@@ -215,6 +244,22 @@ public class ClimbSubsystem extends SubsystemBase {
       sbClimbEnabbled =
           climbTab.add("Climb Enabled", false).withSize(3, 2).withPosition(2, 0).getEntry();
     }
+    m_McMotorControllerOne =
+        new MotorController("Climb Motor One", Constants.McMotorOne, Constants.McLeftPID);
+    m_McMotorControllerOne.setSmartCurrentLimit(10);
+    m_McMotorControllerTwo =
+        new MotorController("Climb Motor Two", Constants.McMotorTwo, Constants.McRightPID);
+    m_McMotorControllerTwo.setSmartCurrentLimit(10);
+    m_McMotorControllerTwo.setInverted(true);
+    // m_climbMotorControllerTwo.getPID().setOutputRange(-.4, .4);
+    // m_climbMotorControllerOne.getPID().setOutputRange(-.4, .4);
+    m_McMotorControllerOne.getEncoder().setPosition(0);
+    m_McMotorControllerTwo.getEncoder().setPosition(0);
+
+    m_McMotorControllerOne.setIdleMode(IdleMode.kBrake);
+    m_McMotorControllerTwo.setIdleMode(IdleMode.kBrake);
+
+    // m_limitSwitch = new DigitalInput(Constants.LimitSwitchChannel);
   }
 
   public void resetTargetedHeight() {
@@ -244,7 +289,6 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public void climbEnable() {
     climbEnabbled = !climbEnabbled;
-    sbClimbEnabbled.setBoolean(climbEnabbled);
     if (climbEnabbled) {
       m_McMotorControllerOne.setSmartCurrentLimit(60);
       m_McMotorControllerTwo.setSmartCurrentLimit(60);
@@ -259,7 +303,7 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public boolean getclimbingenable() {
-    return sbClimbEnabbled.getBoolean(false);
+    return climbEnabbled;
   }
 
   public void runManual() {
@@ -404,5 +448,50 @@ public class ClimbSubsystem extends SubsystemBase {
       m_McMotorControllerOne.getPIDCtrl().setD(sbMcOneD.getDouble(0));
     }
     
+  }
+
+  // TODO: might add other getter methods depending on how many limit switches
+
+  public void instantiateDebugTab() {
+    climberTab = Shuffleboard.getTab("ClimbBase");
+    sbClimbingMode =
+        climberTab
+            .add("Manual Mode Enable", false)
+            .withSize(2, 2)
+            .withPosition(5, 1)
+            .withWidget(BuiltInWidgets.kToggleSwitch)
+            .getEntry();
+
+    sbclimbSpeedInput =
+        climberTab.add("Climber Speed input", 0.1).withSize(2, 2).withPosition(5, 0).getEntry();
+
+    sbClimbEnabbled =
+        climberTab.add("Climb Eanbled", false).withSize(2, 2).withPosition(0, 0).getEntry();
+    sbclimberpositionOne =
+        climberTab.add("Climber position", 0).withSize(2, 2).withPosition(2, 0).getEntry();
+    sbclimberspeedOne =
+        climberTab.add("Climber Current Speed 1", 0).withSize(2, 2).withPosition(4, 0).getEntry();
+    sbclimberheightOne =
+        climberTab
+            .add("Climber targetted height 1", 0)
+            .withSize(2, 2)
+            .withPosition(6, 0)
+            .getEntry();
+    sbclimbHeightOne =
+        climberTab.add("Climb Hight 1", 0).withSize(2, 2).withPosition(8, 0).getEntry();
+    sbclimbHeightTwo =
+        climberTab.add("Climb Hight 2", 0).withSize(2, 2).withPosition(8, 0).getEntry();
+
+    sbclimberheightTwo =
+        climberTab
+            .add("Climber targetted height 2", 0)
+            .withSize(2, 2)
+            .withPosition(8, 0)
+            .getEntry();
+    sbclimberspeedTwo =
+        climberTab.add("Climber Current Speed 2", 0).withSize(2, 2).withPosition(0, 2).getEntry();
+
+    sbclimberpositionTwo =
+        climberTab.add("Climber position 2", 0).withSize(2, 2).withPosition(2, 4).getEntry();
   }
 }
