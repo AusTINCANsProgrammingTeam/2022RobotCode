@@ -48,6 +48,21 @@ public class ClimbSubsystem extends SubsystemBase {
 
   private NetworkTableEntry sbclimbSpeedInput;
   private NetworkTableEntry sbClimbEnabbled;
+  
+  private NetworkTableEntry sbhighArmOne;
+  private NetworkTableEntry sbhighArmTwo;
+  private NetworkTableEntry sbhighArmSpeedOne;
+  private NetworkTableEntry sbhighArmSpeedTwo;
+  private NetworkTableEntry sbhighArmTargettedHeightOne;
+  private NetworkTableEntry sbhighArmTargettedHeightTwo;
+
+  private NetworkTableEntry sbhighArmOneP;
+  private NetworkTableEntry sbhighArmOneI;
+  private NetworkTableEntry sbhighArmOneD;
+  private NetworkTableEntry sbhighArmTwoP;
+  private NetworkTableEntry sbhighArmTwoI;
+  private NetworkTableEntry sbhighArmTwoD;
+  
 
   public ClimbSubsystem(Joystick joystick) {
     m_climbJoystick = joystick;
@@ -75,14 +90,18 @@ public class ClimbSubsystem extends SubsystemBase {
     //Heigh  Arms
     m_HeighArmsOne =
         new MotorController("Traversal Climb Motor One", Constants.TraversalClimbMotorOne);
+    m_HeighArmsOne.setSmartCurrentLimit(10);
+
     m_HeighArmsTwo =
         new MotorController("Traversal Climb Motor Two", Constants.TraversalClimbMotorTwo);
+    m_HeighArmsTwo.setSmartCurrentLimit(10);
+    m_HeighArmsTwo.setInverted(true);
 
     // Shuffle Board Widgets
     climbTab = Shuffleboard.getTab("ClimbBase");
 
     // Climb Arm 1
-        climbTab.add("Climb Hight 1", 0).withSize(2, 1).withPosition(0, 1).getEntry();
+        climbTab.add("Climb Height 1", 0).withSize(2, 1).withPosition(0, 1).getEntry();
     sbClimbOneP =
         climbTab
             .add("climb One P", Constants.climbRightPID[0])
@@ -108,7 +127,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     // Climb Arm 2
     sbclimbHeightTwo =
-        climbTab.add("Climb Hight 2", 0).withSize(2, 1).withPosition(8, 1).getEntry();
+        climbTab.add("Climb Height 2", 0).withSize(2, 1).withPosition(8, 1).getEntry();
     sbClimbTwoP =
         climbTab
             .add("climb Two P", Constants.climbLeftPID[0])
@@ -137,6 +156,7 @@ public class ClimbSubsystem extends SubsystemBase {
         climbTab.add("Climb Eanbled", false).withSize(3, 2).withPosition(2, 0).getEntry();
     sbclimbSpeedInput =
         climbTab.add("Climb Speed input", 0.1).withSize(2, 3).withPosition(4, 2).getEntry();
+    sbHandPosition = climbTab.add("Traversal Hand position",0).withSize(5, 4).getEntry();
   }
 
   public void resetTargetedHeight() {
@@ -162,9 +182,13 @@ public class ClimbSubsystem extends SubsystemBase {
     if (climbEnabbled) {
       m_midClimbMotorControllerOne.setSmartCurrentLimit(60);
       m_midClimbMotorControllerTwo.setSmartCurrentLimit(60);
+      m_HeighArmsOne.setSmartCurrentLimit(60);
+      m_HeighArmsTwo.setSmartCurrentLimit(60);
     } else {
       m_midClimbMotorControllerOne.setSmartCurrentLimit(10);
       m_midClimbMotorControllerTwo.setSmartCurrentLimit(10);
+      m_HeighArmsOne.setSmartCurrentLimit(10);
+      m_HeighArmsTwo.setSmartCurrentLimit(10);
     }
   }
 
