@@ -92,7 +92,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // Initializes Additional PID for the shooter
     flywheelPID.setIMaxAccum(Constants.Shooter.kMaxIAccum, Constants.Shooter.kMaxISlot);
     flywheelPID.setOutputRange(Constants.Shooter.kMinOutput, Constants.Shooter.kMaxOutput);
-    flywheelPID.setFF(Constants.Shooter.kF);
+    //flywheelPID.setFF(Constants.Shooter.kF);
 
     DistanceArray = new ShooterConfig[3];
     DistanceArray[0] = new ShooterConfig(5, 64, 2263);
@@ -146,7 +146,7 @@ public class ShooterSubsystem extends SubsystemBase {
       DTRPM.setDouble(rpm);
       targetRPM = rpm;
       flywheelController.setVoltage(flywheelFF.calculate(rpm/60));
-      flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
+      //flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
     }
   }
 

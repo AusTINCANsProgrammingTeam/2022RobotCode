@@ -267,8 +267,8 @@ public final class Constants {
 
     // PID settings
     // 2.5e-4, 2.5e-7, 2e-6, 1e-4
-    //public static final double kPIDFArray[] = {8.0383e-8, 0, 0};
-    public static final double kPIDFArray[] = {2.5e-8, 5.5e-8, 0};
+    public static final double kPIDFArray[] = {8.0383e-8, 0, 0};
+    //public static final double kPIDFArray[] = {2.5e-8, 5.5e-8, 0};
     public static final double kF = 2.0e-4;
     public static final double kMaxIAccum = 0.9;
     public static final int kMaxISlot = 0;
