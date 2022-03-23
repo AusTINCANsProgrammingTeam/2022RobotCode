@@ -382,18 +382,23 @@ public class ClimbSubsystem extends SubsystemBase {
     if ((m_McMotorControllerOne.getPIDCtrl().getP() != sbMcOneP.getDouble(0))
         || (m_McMotorControllerOne.getPIDCtrl().getI() != sbMcOneI.getDouble(0))
         || (m_McMotorControllerOne.getPIDCtrl().getD() != sbMcOneD.getDouble(0)) 
-        || (m_HaOne.getPIDCtrl().getP() != sbMcOneD.getDouble(0))
-        || (m_HaOne.getPIDCtrl().getI() != sbMcOneD.getDouble(0))
+        || (m_HaOne.getPIDCtrl().getP() != sbMcOneP.getDouble(0))
+        || (m_HaOne.getPIDCtrl().getI() != sbMcOneI.getDouble(0))
         || (m_HaOne.getPIDCtrl().getD() != sbMcOneD.getDouble(0))){
       m_McMotorControllerOne.getPIDCtrl().setP(sbMcOneP.getDouble(0));
       m_McMotorControllerOne.getPIDCtrl().setI(sbMcOneI.getDouble(0));
       m_McMotorControllerOne.getPIDCtrl().setD(sbMcOneD.getDouble(0));
-      m_HaOne
+      m_HaOne.getPIDCtrl().setP(sbHaOneP.getDouble(0));
+      m_HaOne.getPIDCtrl().setI(sbHaOneI.getDouble(0));
+      m_HaOne.getPIDCtrl().setD(sbHaOneD.getDouble(0));
     }
 
     if ((m_McMotorControllerTwo.getPIDCtrl().getP() != sbMcTwoP.getDouble(0))
         || (m_McMotorControllerTwo.getPIDCtrl().getI() != sbMcTwoI.getDouble(0))
-        || (m_McMotorControllerTwo.getPIDCtrl().getD() != sbMcTwoD.getDouble(0))) {
+        || (m_McMotorControllerTwo.getPIDCtrl().getD() != sbMcTwoD.getDouble(0))
+        || (m_HaTwo.getPIDCtrl().getP() != sbMcOneD.getDouble(0))
+        || (m_HaTwo.getPIDCtrl().getI() != sbMcOneD.getDouble(0))
+        || (m_HaTwo.getPIDCtrl().getD() != sbMcOneD.getDouble(0))) {
       m_McMotorControllerOne.getPIDCtrl().setP(sbMcOneP.getDouble(0));
       m_McMotorControllerOne.getPIDCtrl().setI(sbMcOneI.getDouble(0));
       m_McMotorControllerOne.getPIDCtrl().setD(sbMcOneD.getDouble(0));
