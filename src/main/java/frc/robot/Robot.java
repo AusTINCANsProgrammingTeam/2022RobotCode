@@ -56,9 +56,11 @@ public class Robot extends TimedRobot {
 
     robotContainer = new RobotContainer();
 
-    chooser.setDefaultOption("Two Ball", Constants.Auton.TWOBALL); // default is two ball mode
+    // TODO: change to correct default
+    chooser.setDefaultOption("Test Mode", Constants.Auton.TEST); // default is two ball mode
 
-    chooser.addOption("Taxi", Constants.Auton.INTAKETAXI);
+    chooser.addOption("Intake Taxi", Constants.Auton.INTAKETAXI);
+    chooser.addOption("Push Taxi", Constants.Auton.PUSHTAXI);
     chooser.addOption("One Ball", Constants.Auton.ONEBALL);
     chooser.addOption("Two Ball", Constants.Auton.TWOBALL);
     chooser.addOption("Three Ball", Constants.Auton.THREEBALL);

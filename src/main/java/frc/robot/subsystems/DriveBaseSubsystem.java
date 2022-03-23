@@ -227,6 +227,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     // update odometryreset
     double leftPosition = leftEncoder.getPosition();
     double rightPosition = rightEncoder.getPosition();
+    
     odometry.update(gyro.getRotation2d(), leftPosition, rightPosition);
 
     // update shuffleboard
@@ -240,8 +241,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
     motorControllers[Constants.driveLeftFrontIndex].updateSmartDashboard();
     motorControllers[Constants.driveRightFrontIndex].updateSmartDashboard();
 
-    // for tuning pid on each wheel, TODO: remove when done
-    // acceptWheelSpeeds(10, 0);
   }
 
   public void setDriveBaseSpeed(double driveBaseSpeed) {
@@ -295,6 +294,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     odometry.update(
         gyro.getRotation2d(), leftEncoderSim.getDistance(), rightEncoderSim.getDistance());
+  
     m_field.setRobotPose(odometry.getPoseMeters());
   }
 

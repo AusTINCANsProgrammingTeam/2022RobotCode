@@ -165,10 +165,10 @@ public class AutonModes {
       threeBallRamseteCommands =
           getRamseteCommands(getTrajectories(Constants.Auton.THREEBALL.getPaths()));
 
-      fourBallRamseteCommands =
-          getRamseteCommands(getTrajectories(Constants.Auton.FOURBALL.getPaths()));
-      fiveBallRamseteCommands =
-          getRamseteCommands(getTrajectories(Constants.Auton.FIVEBALL.getPaths()));
+      // fourBallRamseteCommands =
+      //     getRamseteCommands(getTrajectories(Constants.Auton.FOURBALL.getPaths()));
+      // fiveBallRamseteCommands =
+      //     getRamseteCommands(getTrajectories(Constants.Auton.FIVEBALL.getPaths()));
     }
   }
 
@@ -234,23 +234,27 @@ public class AutonModes {
 
       // --------------------------------------------
 
-      ParallelDeadlineGroup fourBallParallel1 =
-          new ParallelDeadlineGroup(
-              fourBallRamseteCommands[0], // travel to get closest two balls
-              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+      fourBallCommand = null;
 
-      ParallelDeadlineGroup fourBallParallel2 =
-          new ParallelDeadlineGroup(
-              twoBallRamseteCommands[1], // travel to get ball
-              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+      // ParallelDeadlineGroup fourBallParallel1 =
+      //     new ParallelDeadlineGroup(
+      //         fourBallRamseteCommands[0], // travel to get closest two balls
+      //         new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem,
+      // shooterSubsystem));
 
-      fourBallCommand =
-          new SequentialCommandGroup(
-              new DeployIntake(intakeSubsystem, cdsSubsystem),
-              fourBallParallel1,
-              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true),
-              fourBallParallel2,
-              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true));
+      // ParallelDeadlineGroup fourBallParallel2 =
+      //     new ParallelDeadlineGroup(
+      //         twoBallRamseteCommands[1], // travel to get ball
+      //         new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem,
+      // shooterSubsystem));
+
+      // fourBallCommand =
+      //     new SequentialCommandGroup(
+      //         new DeployIntake(intakeSubsystem, cdsSubsystem),
+      //         fourBallParallel1,
+      //         new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true),
+      //         fourBallParallel2,
+      //         new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, true));
 
       // ---------------------------------------
 
@@ -261,10 +265,7 @@ public class AutonModes {
   private void initializeTest() {
     // REPLACE ME to test anything
     testRamseteCommands = getRamseteCommands(getTrajectories(Constants.Auton.TEST.getPaths()));
-    testCommand =
-        new SequentialCommandGroup(
-            testRamseteCommands[0].andThen(() -> driveBaseSubsystem.stopDriveMotors()),
-            testRamseteCommands[1].andThen(() -> driveBaseSubsystem.stopDriveMotors()));
+    testCommand = new SequentialCommandGroup(testRamseteCommands[0], testRamseteCommands[1]);
   }
 
   public Command getChosenCommand(Constants.Auton mode) {
@@ -274,6 +275,7 @@ public class AutonModes {
         return testCommand;
       case PUSHTAXI:
         System.out.println("Auton: Push Taxi mode selected.");
+        return pushTaxiCommand;
       case INTAKETAXI:
         System.out.println("Auton: Intake Taxi mode selected.");
         return intakeTaxiCommand;
