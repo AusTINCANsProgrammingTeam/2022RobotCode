@@ -280,13 +280,15 @@ public final class Constants {
   }
 
   // Climb Constants
-  public static final int MidClimbMotorOne = 5;
-  public static final int MidClimbMotorTwo = 12;
-  public static final int HighArmMotor = 777777;
-  public static final int TraversalClimbMotorOne = 888888;
-  public static final int TraversalClimbMotorTwo = 999999;
-  public static final int climbHeightMax = 65;
-  public static final double[] climbRightPID = {0.25, 0.005, 1.0};
-  public static final double[] climbLeftPID = {0.25, 0.005, 1.0};
-  // public static final int LimitSwitchChannel = 12; // Check what number this needs to be
+  public static final int McMotorOne = 5;
+  public static final int McMotorTwo = 12;
+  public static final int McHeightMax = 65;
+  public static final double[] McRightPID = {0.25, 0.005, 1.0};
+  public static final double[] McLeftPID = {0.25, 0.005, 1.0};
+
+  public static final int HaMotorOne = 888888;
+  public static final int HaMotorTwo = 999999;
+  public static final int HaHeightMax = 777777;
+  public static final double[] HaRightPID = {0.25, 0.005, 1.0};
+  public static final double[] HaLeftPID = {0.25, 0.005, 1.0};
 }
