@@ -7,10 +7,8 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,32 +23,30 @@ public class ClimbSubsystem extends SubsystemBase {
   private Joystick m_climbJoystick;
   private MotorController m_midClimbMotorControllerOne;
   private MotorController m_midClimbMotorControllerTwo;
-  private MotorController m_highPivitMotorController;
-  private MotorController m_traversalMotorControllerOne;
-  private MotorController m_traversalMotorControllerTwo;
-  private DigitalInput m_limitSwitch;
+  private MotorController m_HeighArmsOne;
+  private MotorController m_HeighArmsTwo;
   private boolean climbEnabbled;
   private double climbHeightOne;
   private double climbHeightTwo;
   private double joystickAxis;
 
   private ShuffleboardTab climbTab;
-  private NetworkTableEntry sbclimbpositionOne;
+
   private NetworkTableEntry sbclimbspeedOne;
-  private NetworkTableEntry sbclimbheightOne;
+  private NetworkTableEntry sbclimbTargettedHightOne;
   private NetworkTableEntry sbclimbHeightOne;
-  private NetworkTableEntry sbclimbpositionTwo;
-  private NetworkTableEntry sbclimbspeedTwo;
-  private NetworkTableEntry sbclimbheightTwo;
-  private NetworkTableEntry sbclimbHeightTwo;
   private NetworkTableEntry sbClimbOneP;
   private NetworkTableEntry sbClimbOneI;
   private NetworkTableEntry sbClimbOneD;
+
+  private NetworkTableEntry sbclimbspeedTwo;
+  private NetworkTableEntry sbclimbTargettedHighTwo;
+  private NetworkTableEntry sbclimbHeightTwo;
   private NetworkTableEntry sbClimbTwoP;
   private NetworkTableEntry sbClimbTwoI;
   private NetworkTableEntry sbClimbTwoD;
+
   private NetworkTableEntry sbclimbSpeedInput;
-  private NetworkTableEntry sbclimbMode;
   private NetworkTableEntry sbClimbEnabbled;
 
   public ClimbSubsystem(Joystick joystick) {
@@ -76,22 +72,16 @@ public class ClimbSubsystem extends SubsystemBase {
     m_midClimbMotorControllerOne.setIdleMode(IdleMode.kBrake);
     m_midClimbMotorControllerTwo.setIdleMode(IdleMode.kBrake);
 
-    // High Arm
-    m_highPivitMotorController = new MotorController("High Arm Motor", Constants.HighArmMotor);
-
-    // traversal Climb Arms
-    m_traversalMotorControllerOne =
+    //Heigh  Arms
+    m_HeighArmsOne =
         new MotorController("Traversal Climb Motor One", Constants.TraversalClimbMotorOne);
-    m_traversalMotorControllerTwo =
+    m_HeighArmsTwo =
         new MotorController("Traversal Climb Motor Two", Constants.TraversalClimbMotorTwo);
 
     // Shuffle Board Widgets
     climbTab = Shuffleboard.getTab("ClimbBase");
 
     // Climb Arm 1
-    sbclimbpositionOne =
-        climbTab.add("Climb position 1", 0).withSize(2, 1).withPosition(0, 0).getEntry();
-    sbclimbHeightOne =
         climbTab.add("Climb Hight 1", 0).withSize(2, 1).withPosition(0, 1).getEntry();
     sbClimbOneP =
         climbTab
@@ -111,14 +101,12 @@ public class ClimbSubsystem extends SubsystemBase {
             .withSize(2, 1)
             .withPosition(0, 4)
             .getEntry();
-    sbclimbheightOne =
+    sbclimbTargettedHightOne =
         climbTab.add("Climb targetted height 1", 0).withSize(2, 2).withPosition(2, 2).getEntry();
     sbclimbspeedOne =
         climbTab.add("Climb Current Speed 1", 0).withSize(2, 1).withPosition(2, 4).getEntry();
 
     // Climb Arm 2
-    sbclimbpositionTwo =
-        climbTab.add("climb position 2", 0).withSize(2, 1).withPosition(8, 0).getEntry();
     sbclimbHeightTwo =
         climbTab.add("Climb Hight 2", 0).withSize(2, 1).withPosition(8, 1).getEntry();
     sbClimbTwoP =
@@ -139,7 +127,7 @@ public class ClimbSubsystem extends SubsystemBase {
             .withSize(2, 1)
             .withPosition(8, 4)
             .getEntry();
-    sbclimbheightTwo =
+    sbclimbTargettedHighTwo =
         climbTab.add("Climb targetted height 2", 0).withSize(2, 2).withPosition(6, 2).getEntry();
     sbclimbspeedTwo =
         climbTab.add("climb Current Speed 2", 0).withSize(2, 1).withPosition(6, 4).getEntry();
@@ -147,13 +135,6 @@ public class ClimbSubsystem extends SubsystemBase {
     // Both Arms
     sbClimbEnabbled =
         climbTab.add("Climb Eanbled", false).withSize(3, 2).withPosition(2, 0).getEntry();
-    sbclimbMode =
-        climbTab
-            .add("Manual Mode Enable", false)
-            .withSize(3, 2)
-            .withPosition(5, 0)
-            .withWidget(BuiltInWidgets.kToggleSwitch)
-            .getEntry();
     sbclimbSpeedInput =
         climbTab.add("Climb Speed input", 0.1).withSize(2, 3).withPosition(4, 2).getEntry();
   }
@@ -185,10 +166,6 @@ public class ClimbSubsystem extends SubsystemBase {
       m_midClimbMotorControllerOne.setSmartCurrentLimit(10);
       m_midClimbMotorControllerTwo.setSmartCurrentLimit(10);
     }
-  }
-
-  public boolean getclimbingmode() {
-    return sbclimbMode.getBoolean(false);
   }
 
   public boolean getclimbingenable() {
@@ -266,10 +243,9 @@ public class ClimbSubsystem extends SubsystemBase {
     if (sbclimbHeightOne.getDouble(0) != climbHeightOne) {
       climbHeightOne = sbclimbHeightOne.getDouble(0);
     } else {
-      sbclimbheightOne.setDouble(climbHeightOne);
+      sbclimbTargettedHightOne.setDouble(climbHeightOne);
     }
     sbclimbspeedOne.setDouble(m_midClimbMotorControllerOne.getEncoder().getVelocity());
-    sbclimbpositionOne.setDouble(m_midClimbMotorControllerOne.getEncoder().getPosition());
 
     // m_climbMotorControllerOne.updateSmartDashboard();
     SmartDashboard.putNumber(
@@ -280,10 +256,9 @@ public class ClimbSubsystem extends SubsystemBase {
     if (sbclimbHeightTwo.getDouble(0) != climbHeightTwo) {
       climbHeightTwo = sbclimbHeightTwo.getDouble(0);
     } else {
-      sbclimbheightTwo.setDouble(climbHeightTwo);
+      sbclimbTargettedHighTwo.setDouble(climbHeightTwo);
     }
     sbclimbspeedTwo.setDouble(m_midClimbMotorControllerTwo.getEncoder().getVelocity());
-    sbclimbpositionTwo.setDouble(m_midClimbMotorControllerTwo.getEncoder().getPosition());
 
     // m_climbMotorControllerTwo.updateSmartDashboard();
     SmartDashboard.putNumber(

@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
-import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.ClimbEnable;
 import frc.robot.commands.ClimbKeepDown;
 import frc.robot.commands.CombinedIntakeCDSForwardCommand;
@@ -61,7 +60,6 @@ public class RobotContainer {
   private IntakeReverseCommand intakeReverseCommand;
   private CDSBallManagementCommand ballManagementCommand;
   private CombinedIntakeCDSForwardCommand combinedIntakeCDS;
-  private ClimbCommand climbCommand;
 
   private ShooterHeld shooterHeldLow, shooterHeldAuto;
   private CDSForwardCommand CDSForwardCommand;
@@ -137,7 +135,6 @@ public class RobotContainer {
     limelightSubsystem = new LimelightSubsystem();
 
     climbSubsystem = new ClimbSubsystem(operatorJoystick);
-    climbCommand = new ClimbCommand(climbSubsystem);
   }
 
   private void initCommands() {
