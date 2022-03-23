@@ -84,6 +84,8 @@ public class CDSBallManagementCommand extends CommandBase {
         } else {
           msCurrent += 20;
         }
+
+        break;
     }
 
   }
