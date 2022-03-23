@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
       Shuffleboard.getTab("Config"); // all auton settings located here
   private NetworkTableEntry waitTimeSlider =
       configTab
-          .add("Wait Time", 1)
+          .add("Wait Time", 0)
           .withWidget(BuiltInWidgets.kNumberSlider)
           .withProperties(Map.of("Min", 0, "Max", 10))
           .getEntry();

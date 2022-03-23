@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.common.hardware.MotorController;
+import edu.wpi.first.wpilibj.SPI;
 
 public class DriveBaseSubsystem extends SubsystemBase {
   private double driveBaseSpeed;
@@ -70,13 +71,15 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private NetworkTableEntry sbRightBiconsumerSpeed;
   private NetworkTableEntry sbLeftPosition;
   private NetworkTableEntry sbRightPosition;
+  private NetworkTableEntry sbGyroInfo;
 
   public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {
     driveBaseSpeed = 1;
     driverJoystick = joystick;
 
     motorControllers = new MotorController[4];
-    gyro = new AHRS(Port.kMXP);
+    gyro = new AHRS(SPI.Port.kMXP);
+    gyro.enableLogging(true);
     gyro.reset(); // resets the heading of the robot to 0
 
     this.usingExternal = usingExternal;
@@ -192,6 +195,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     sbRightBiconsumerSpeed =
         dtTab.add("Right Biconsumer Speed", 0).withSize(2, 2).withPosition(4, 2).getEntry();
 
+    sbGyroInfo = dtTab.add("Gyro angle", 0).withSize(2, 2).withPosition(2, 2).getEntry();
     dtTab.add(gyro).withPosition(2, 0); // adds a gyro compass indicator
 
     sbLeftPosition = dtTab.add("Left Position", 0).withSize(2, 1).withPosition(0, 4).getEntry();
@@ -227,6 +231,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
     // update odometryreset
     double leftPosition = leftEncoder.getPosition();
     double rightPosition = rightEncoder.getPosition();
+
+    sbGyroInfo.setDouble(gyro.getAngle());
     
     odometry.update(gyro.getRotation2d(), leftPosition, rightPosition);
 
@@ -322,6 +328,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
   }
 
   public Pose2d getPose() {
+    // Pose2d positionPose = odometry.getPoseMeters();
+    // return new Pose2d(positionPose.getX(), positionPose.getY(), gyro.getRotation2d());
     return odometry.getPoseMeters();
   }
 
