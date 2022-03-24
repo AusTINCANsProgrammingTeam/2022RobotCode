@@ -39,6 +39,7 @@ public class OuttakeCommand extends CommandBase {
   public void end(boolean interrupted) {
     CDSSubsystem.stopCDS();
     intakeSubsystem.stopIntake();
+    CDSSubsystem.setMissedSensor(false);
   }
 
   // Returns true when the command should end.

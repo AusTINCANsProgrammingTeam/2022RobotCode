@@ -27,6 +27,8 @@ public class CDSSubsystem extends SubsystemBase {
   private ColorSensorMuxed colorSensors;
 
   private boolean isReady = true; // Variable for whether CDS is ready for shooter action
+  private boolean missed = false; 
+  private boolean missedColor = false;
   private int ballCount = 0;
 
   private int[] sensorStatuses;
@@ -42,9 +44,9 @@ public class CDSSubsystem extends SubsystemBase {
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry ballColor = 
-      CDSTab.add("Ball Color", "blue").getEntry();
-  private NetworkTableEntry CDSBallCount = 
-      CDSTab.add("Ball Count", 0).getEntry();
+      CDSTab.add("Ball Color", "Blue").getEntry();
+ // private NetworkTableEntry CDSBallCount = 
+     // CDSTab.add("Ball Count", 0).getEntry();
   private NetworkTableEntry frontSensorProx = 
       CDSTab.add("Front Proximity", 0).getEntry();
   private NetworkTableEntry middleSensorProx = 
@@ -68,7 +70,7 @@ public class CDSSubsystem extends SubsystemBase {
     CDSWheelControllerOne.setIdleMode(IdleMode.kCoast);
 
     colorSensors = new ColorSensorMuxed(1, 2, 0); // front to back color sensor ports on new robotn
-
+    sensorStatuses = colorSensors.getProximities();
     allianceColor = DriverStation.getAlliance().toString();
     SmartDashboard.putString("Alliance Color", allianceColor);
   }
@@ -171,6 +173,7 @@ public class CDSSubsystem extends SubsystemBase {
   }*/
 
   public boolean[] getSensorStatus() {
+    sensorStatuses = colorSensors.getProximities();
     if (Constants.DebugMode){
       frontSensorProx.setNumber(sensorStatuses[2]);
       middleSensorProx.setNumber(sensorStatuses[1]);
@@ -189,7 +192,7 @@ public class CDSSubsystem extends SubsystemBase {
       }
     }
     if (Constants.DebugMode) {
-      CDSBallCount.setNumber(ballCount);
+      //CDSBallCount.setNumber(ballCount);
     }
 
     return beamBreakArray;
@@ -212,10 +215,10 @@ public class CDSSubsystem extends SubsystemBase {
     double redAmount = colors[2].red;
     double blueAmount = colors[2].blue;
     if (redAmount > blueAmount) {
-      ballColor.setString("red");
+      ballColor.setString("Red");
       return "Red";
     } else {
-      ballColor.setString("blue");
+      ballColor.setString("Blue");
       return "Blue";
     }
   }
@@ -252,5 +255,29 @@ public class CDSSubsystem extends SubsystemBase {
     isReady = status;
   }
 
-  public void periodic() {}
+  public boolean getMissedSensor(){
+    return missed;
+  }
+
+  public void setMissedSensor(boolean missedBall){
+    missed = missedBall;
+  }
+
+  public boolean getMissedColor(){
+    return missedColor;
+  }
+
+  public void setMissedColor(boolean colorMissed){
+    missedColor = colorMissed;
+  }
+
+  public void periodic() {
+    if (getSensorStatus()[2]){
+      missed = true;
+      if (senseColor() != allianceColor){
+        missedColor = true;
+      }
+    }
+
+  }
 }

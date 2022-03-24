@@ -22,7 +22,7 @@ public class CDSBallManagementCommand extends CommandBase {
   public enum ManagementState {
     IDLE,
     EJECT,
-    ADVANCE,
+    ADVANCE
   }
 
   /** Creates a new CDSBallManagementCommand. */
@@ -33,7 +33,7 @@ public class CDSBallManagementCommand extends CommandBase {
   private String allianceColor;
 
   private int msCurrent = 0;
-  private int ejectRuntime = 750; // amount of time auto eject will run intake backwards for in ms
+  private int ejectRuntime = 650; // amount of time auto eject will run intake backwards for in ms
   private int nextOpenSensor = -1; // placeholder 
   private boolean[] sensorStatus;
 
@@ -42,6 +42,10 @@ public class CDSBallManagementCommand extends CommandBase {
       CDSTab.add("Auto Eject Running", false).getEntry();
   private NetworkTableEntry autoIntakeRunning = 
       CDSTab.add("Auto Intake Running", false).getEntry();
+  private NetworkTableEntry ballcountEntry = 
+      CDSTab.add("Ball Count", 0).getEntry();
+  private NetworkTableEntry CDSState = 
+      CDSTab.add("CDS State", "IDLE").getEntry();
 
   public CDSBallManagementCommand(CDSSubsystem mCDSSubsystem, IntakeSubsystem mIntakeSubsystem, ShooterSubsystem mShooterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -58,7 +62,9 @@ public class CDSBallManagementCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    state = ManagementState.IDLE;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -73,19 +79,23 @@ public class CDSBallManagementCommand extends CommandBase {
       case IDLE:
         CDSSubsystem.stopCDS();
         intakeSubsystem.stopIntake();
+        shooterSubsystem.runCargo(0.0);
         autoEjectRunning.setBoolean(false);
         autoIntakeRunning.setBoolean(false);
         
         msCurrent = 0;
         nextOpenSensor = -1;
 
-        if (ballCount > 2 || ballColor != allianceColor) {
+        if (ballCount > 2 || (CDSSubsystem.getMissedColor() && CDSSubsystem.getMissedSensor())) {
           state = ManagementState.EJECT;
+          break;
         }
 
-        if (ballCount < 2 && openSensor != -1) {
+        
+        if (ballCount < 3 && openSensor != -1 && CDSSubsystem.getMissedSensor()) {
           state = ManagementState.ADVANCE;
           nextOpenSensor = openSensor;
+          break;
         }
 
         break;
@@ -93,30 +103,37 @@ public class CDSBallManagementCommand extends CommandBase {
       case EJECT:
         intakeSubsystem.toggleIntake(true);
         CDSSubsystem.CDSWheelToggle(true);
-        autoEjectRunning.setBoolean(true);
+        autoEjectRunning.setString("true");
+        ballcountEntry.setNumber(ballCount);
         
         if (msCurrent >= ejectRuntime) {
           state = ManagementState.IDLE;
+          CDSSubsystem.setMissedSensor(false);
+          CDSSubsystem.setMissedColor(false);
         } else {
           msCurrent += 20;
         }
 
         break;
-
+      
       case ADVANCE:
         CDSSubsystem.CDSWheelToggle(false);
         CDSSubsystem.CDSBeltToggle(false);
         shooterSubsystem.runCargo(Constants.reverseStopperWheelSpeed);
         autoIntakeRunning.setBoolean(true);
-      
+        ballcountEntry.setNumber(ballCount);
+
         sensorStatus = CDSSubsystem.getSensorStatus();
 
         if (sensorStatus[nextOpenSensor]) {
           state = ManagementState.IDLE;
+          CDSSubsystem.setMissedSensor(false);
+          CDSSubsystem.setMissedColor(false);
         }
 
         break;
     }
+    CDSState.setString(state.toString());
   }
 
   // Called once the command ends or is interrupted.
