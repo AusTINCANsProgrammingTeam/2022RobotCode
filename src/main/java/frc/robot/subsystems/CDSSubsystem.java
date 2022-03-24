@@ -34,10 +34,10 @@ public class CDSSubsystem extends SubsystemBase {
   private MangementState state = MangementState.IDLE;
   private int nextOpenSensor = -1;
 
-  private boolean missed = false; 
+  private boolean missed = false;
   private boolean missedColor = false;
   private int msCurrent = 0;
-  private int ejectRuntime = 650; // amount of time auto eject will run intake backwards for in ms 
+  private int ejectRuntime = 650; // amount of time auto eject will run intake backwards for in ms
 
   private int ballCount = 0;
 
@@ -53,16 +53,12 @@ public class CDSSubsystem extends SubsystemBase {
           .getEntry();
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
-  private NetworkTableEntry ballColor = 
-      CDSTab.add("Ball Color", "Blue").getEntry();
- // private NetworkTableEntry CDSBallCount = 
-     // CDSTab.add("Ball Count", 0).getEntry();
-  private NetworkTableEntry frontSensorProx = 
-      CDSTab.add("Front Proximity", 0).getEntry();
-  private NetworkTableEntry middleSensorProx = 
-      CDSTab.add("Middle Proximity", 0).getEntry();
-  private NetworkTableEntry backSensorProx = 
-      CDSTab.add("Back Proximity", 0).getEntry();
+  private NetworkTableEntry ballColor = CDSTab.add("Ball Color", "Blue").getEntry();
+  // private NetworkTableEntry CDSBallCount =
+  // CDSTab.add("Ball Count", 0).getEntry();
+  private NetworkTableEntry frontSensorProx = CDSTab.add("Front Proximity", 0).getEntry();
+  private NetworkTableEntry middleSensorProx = CDSTab.add("Middle Proximity", 0).getEntry();
+  private NetworkTableEntry backSensorProx = CDSTab.add("Back Proximity", 0).getEntry();
 
   public CDSSubsystem() {
     // BManualCDS.setBoolean(Constants.); TODO: setup when manual cds toggle is merged
@@ -184,7 +180,7 @@ public class CDSSubsystem extends SubsystemBase {
 
   public boolean[] getSensorStatus() {
     sensorStatuses = colorSensors.getProximities();
-    if (Constants.DebugMode){
+    if (Constants.DebugMode) {
       frontSensorProx.setNumber(sensorStatuses[2]);
       middleSensorProx.setNumber(sensorStatuses[1]);
       backSensorProx.setNumber(sensorStatuses[0]);
@@ -202,7 +198,7 @@ public class CDSSubsystem extends SubsystemBase {
       }
     }
     if (Constants.DebugMode) {
-      //CDSBallCount.setNumber(ballCount);
+      // CDSBallCount.setNumber(ballCount);
     }
 
     return beamBreakArray;
@@ -234,7 +230,7 @@ public class CDSSubsystem extends SubsystemBase {
       return "Blue";
     }
   }
-  
+
   public boolean sensorsOnline() {
     sensorStatuses = colorSensors.getProximities();
     for (int prox : sensorStatuses) {
@@ -259,19 +255,19 @@ public class CDSSubsystem extends SubsystemBase {
     return ballCount;
   }
 
-  public boolean getMissedSensor(){
+  public boolean getMissedSensor() {
     return missed;
   }
 
-  public void setMissedSensor(boolean missedBall){
+  public void setMissedSensor(boolean missedBall) {
     missed = missedBall;
   }
 
-  public boolean getMissedColor(){
+  public boolean getMissedColor() {
     return missedColor;
   }
 
-  public void setMissedColor(boolean colorMissed){
+  public void setMissedColor(boolean colorMissed) {
     missedColor = colorMissed;
   }
 
@@ -284,7 +280,7 @@ public class CDSSubsystem extends SubsystemBase {
     String ballColor = senseColor();
 
     int currentOpenSensor = getNextOpenSensor();
-    
+
     switch (state) {
       case IDLE:
         nextOpenSensor = -1;
@@ -292,9 +288,9 @@ public class CDSSubsystem extends SubsystemBase {
 
         if (ballCount > 2 || (getMissedColor() && getMissedSensor())) {
           state = MangementState.EJECT;
-        } 
-        
-         if (ballCount < 3 && currentOpenSensor != -1 && getMissedSensor()) {
+        }
+
+        if (ballCount < 3 && currentOpenSensor != -1 && getMissedSensor()) {
           state = MangementState.ADVANCE;
           nextOpenSensor = currentOpenSensor;
         }
@@ -320,12 +316,11 @@ public class CDSSubsystem extends SubsystemBase {
         break;
     }
 
-    if (getSensorStatus()[2]){
+    if (getSensorStatus()[2]) {
       missed = true;
-      if (ballColor != allianceColor){
+      if (ballColor != allianceColor) {
         missedColor = true;
       }
     }
-
   }
 }

@@ -58,7 +58,7 @@ public class CDSBallManagementCommand extends CommandBase {
     int ballCount = CDSSubsystem.getBallCount();
 
     sensorStatus = CDSSubsystem.getSensorStatus();
-    String state = CDSSubsystem.getState(); 
+    String state = CDSSubsystem.getState();
 
     switch (state) {
       case "IDLE":
