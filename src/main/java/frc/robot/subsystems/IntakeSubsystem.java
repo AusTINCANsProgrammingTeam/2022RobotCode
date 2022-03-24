@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -29,10 +31,23 @@ public class IntakeSubsystem extends SubsystemBase {
           .getEntry();
 
   private MotorController intakeMotorControllerOne;
+  private MotorController IntakeDeployController;
 
   public IntakeSubsystem() {
     intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID);
+    IntakeDeployController =
+        new MotorController("Intake Deploy Motor Controller", Constants.intakeDeployMotorID);
+    IntakeDeployController.setIdleMode(IdleMode.kBrake);
+
     intakeMotorControllerOne.setInverted(true);
+  }
+
+  public void CDSDeployIntake(boolean deploy) {
+    if (deploy) {
+      IntakeDeployController.getPIDCtrl().setReference(10, CANSparkMax.ControlType.kPosition);
+    } else {
+      IntakeDeployController.getPIDCtrl().setReference(0, CANSparkMax.ControlType.kPosition);
+    }
   }
 
   public void toggleIntake(boolean reverse) {
