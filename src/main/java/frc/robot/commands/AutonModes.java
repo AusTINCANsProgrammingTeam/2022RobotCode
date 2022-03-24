@@ -236,23 +236,70 @@ public class AutonModes {
                   limelightSubsystem,
                   cdsSubsystem,
                   false), // shoot the two acquired balls
-              threeBallParallel2,
-              threeBallRamseteCommands[3],
+              threeBallParallel2, // grab last ball
+              threeBallRamseteCommands[3],  // come back to shoot
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
 
       // --------------------------------------------
 
-      fourBallCommand = null;
+      ParallelDeadlineGroup fourBallParallel1 =
+          new ParallelDeadlineGroup(
+              fourBallRamseteCommands[0],
+              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+
+      ParallelDeadlineGroup fourBallParallel2 =
+          new ParallelDeadlineGroup(
+              fourBallRamseteCommands[2],
+              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+
+      // similar path to threeball, now just getting the additional ball at terminal
+      fourBallCommand =
+          new SequentialCommandGroup(
+              new WaitCommand(initialWaitTime),
+              fourBallParallel1,
+              fourBallRamseteCommands[1],
+              new ShooterPressed(
+                  shooterSubsystem,
+                  limelightSubsystem,
+                  cdsSubsystem,
+                  false),
+              fourBallParallel2,
+              fourBallRamseteCommands[3],
+              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
+
       // ---------------------------------------
 
-      fiveBallCommand = null;
+      ParallelDeadlineGroup fiveBallParallel1 = 
+          new ParallelDeadlineGroup(fiveBallRamseteCommands[0], 
+          new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+
+      ParallelDeadlineGroup fiveBallParallel2 = 
+          new ParallelDeadlineGroup(fiveBallRamseteCommands[2], 
+          new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+
+      ParallelDeadlineGroup fiveBallParallel3 = 
+          new ParallelDeadlineGroup(fiveBallRamseteCommands[4], 
+          new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+
+      fiveBallCommand = 
+          new SequentialCommandGroup(
+              new WaitCommand(initialWaitTime),
+              fiveBallParallel1,
+              fiveBallRamseteCommands[1],
+              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
+              fiveBallParallel2,
+              fiveBallRamseteCommands[3],
+              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
+              fiveBallParallel3,
+              fiveBallRamseteCommands[5],
+              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
     }
   }
 
   private void initializeTest() {
     // REPLACE ME to test anything
     driveTestRamseteCommands = getRamseteCommands(getTrajectories(Constants.Auton.TEST.getPaths()));
-    driveTestCommand = new WaitCommand(1);
+    driveTestCommand = new WaitCommand(initialWaitTime);
     int i = 0;
     while (i < driveTestRamseteCommands.length) {
       driveTestCommand =
