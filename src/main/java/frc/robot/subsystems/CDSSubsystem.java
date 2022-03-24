@@ -33,7 +33,7 @@ public class CDSSubsystem extends SubsystemBase {
   private ColorSensorMuxed colorSensors;
   private MangementState state = MangementState.IDLE;
   private int nextOpenSensor = -1;
-  
+
   private boolean missed = false; 
   private boolean missedColor = false;
   private int msCurrent = 0;
@@ -234,33 +234,7 @@ public class CDSSubsystem extends SubsystemBase {
       return "Blue";
     }
   }
-  //Not completely sure about this code, never worked with color sensors, but it should be similar to the others just with different sensor IDs
-  public String colorSensing2ndSensor() {
-    Color[] colorSensor2 = colorSensors.getColors();
-    double redAmount = colorSensor2[1].red;
-    double blueAmount = colorSensor2[1].blue;
-    if (redAmount > blueAmount) {
-      ballColor.setString("Red");
-      return "Red";
-    } else {
-      ballColor.setString("Blue");
-      return "Blue";
-    }
-  }
-  //Not completely sure about this code, never worked with color sensors, but it should be similar to the others just with different sensor IDs
-  public String colorSensing3rdSensor() {
-    Color[] colorSensor3 = colorSensors.getColors();
-    double redAmount = colorSensor3[0].red;
-    double blueAmount = colorSensor3[0].blue;
-    if (redAmount > blueAmount) {
-      ballColor.setString("Red");
-      return "Red";
-    } else {
-      ballColor.setString("Blue");
-      return "Blue";
-    }
-  }
-
+  
   public boolean sensorsOnline() {
     sensorStatuses = colorSensors.getProximities();
     for (int prox : sensorStatuses) {
