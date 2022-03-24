@@ -113,11 +113,11 @@ public class ClimbSubsystem extends SubsystemBase {
     // Heigh  Arms
     m_HaOne = new MotorController("Ha1 MotorControllor", Constants.HaMotorOne);
     m_HaOne.setSmartCurrentLimit(10);
-    m_McOne.getEncoder().setPosition(0);
+    m_HaOne.getEncoder().setPosition(0);
 
     m_HaTwo = new MotorController("Ha2 MotorControllor", Constants.HaMotorTwo);
     m_HaTwo.setSmartCurrentLimit(10);
-    m_McTwo.getEncoder().setPosition(0);
+    m_HaTwo.getEncoder().setPosition(0);
     m_HaTwo.setInverted(true);
 
     m_McOne = new MotorController("Climb Motor One", Constants.McMotorOne, Constants.McLeftPID);
@@ -326,7 +326,6 @@ public class ClimbSubsystem extends SubsystemBase {
 
       if (Organization) {
         // Climb Arm 1
-        climbTab.add("Mc Height 1", 0).withSize(2, 1).withPosition(0, 1).getEntry();
         sbMcOneP =
             climbTab
                 .add("Mc1 P", Constants.McRightPID[0])
@@ -347,10 +346,10 @@ public class ClimbSubsystem extends SubsystemBase {
                 .getEntry();
         sbMcTargettedOne =
             climbTab.add("Mc1 targetted", 0).withSize(2, 2).withPosition(2, 2).getEntry();
+        sbMcHeightOne = climbTab.add("Mc Height 1", 0).withSize(2, 1).withPosition(0, 1).getEntry();
         sbMcSpeedOne = climbTab.add("Mc1 Current", 0).withSize(2, 1).withPosition(2, 4).getEntry();
 
         // Climb Arm 2
-        sbMcHeightTwo = climbTab.add("Mc2 Current", 0).withSize(2, 1).withPosition(8, 1).getEntry();
         sbMcTwoP =
             climbTab
                 .add("Mc2 P", Constants.McLeftPID[0])
@@ -371,7 +370,8 @@ public class ClimbSubsystem extends SubsystemBase {
                 .getEntry();
         sbMcTargettedTwo =
             climbTab.add("Mc2 targetted", 0).withSize(2, 2).withPosition(6, 2).getEntry();
-        sbMcSpeedTwo = climbTab.add("Mc2 Current", 0).withSize(2, 1).withPosition(6, 4).getEntry();
+       sbMcHeightTwo = climbTab.add("Mc2 Current", 0).withSize(2, 1).withPosition(8, 1).getEntry();
+       sbMcSpeedTwo = climbTab.add("Mc2 Current", 0).withSize(2, 1).withPosition(6, 4).getEntry();
       }
 
       if (Organization) {
@@ -396,7 +396,8 @@ public class ClimbSubsystem extends SubsystemBase {
                 .getEntry();
         sbHaTargettedOne =
             climbTab.add("Ha targetted 1", 0).withSize(2, 2).withPosition(6, 2).getEntry();
-        sbMcSpeedOne = climbTab.add("Ha Current 1", 0).withSize(2, 1).withPosition(6, 4).getEntry();
+        sbHaSpeedOne = climbTab.add("Ha2 Current", 0).withSize(2, 1).withPosition(6, 4).getEntry();
+        sbMcHeightTwo = climbTab.add("Ha2 Current", 0).withSize(2, 1).withPosition(8, 1).getEntry();
 
         // High Arm 2
         sbHaTwoP =
