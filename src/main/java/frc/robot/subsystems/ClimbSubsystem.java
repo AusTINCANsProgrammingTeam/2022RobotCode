@@ -102,10 +102,6 @@ public class ClimbSubsystem extends SubsystemBase {
     m_climbJoystick = joystick;
     Organization = true;
     climbEnabble = false;
-    McHeightOne = 0;
-    McHeightTwo = 0;
-    HaHeightOne = 0;
-    HaHeightTwo = 0;
 
     // Mid Climb Arms
     // One is left, two is right
@@ -131,6 +127,7 @@ public class ClimbSubsystem extends SubsystemBase {
     m_McTwo.getEncoder().setPosition(0);
     m_McTwo.setIdleMode(IdleMode.kBrake);
 
+    resetTargetedHeight();
     // m_climbMotorControllerTwo.getPID().setOutputRange(-.4, .4);
     // m_climbMotorControllerOne.getPID().setOutputRange(-.4, .4);
   }
@@ -371,7 +368,7 @@ public class ClimbSubsystem extends SubsystemBase {
         sbMcTargettedTwo =
             climbTab.add("Mc2 targetted", 0).withSize(2, 2).withPosition(6, 2).getEntry();
         sbMcHeightTwo = climbTab.add("Mc2 Current", 0).withSize(2, 1).withPosition(8, 1).getEntry();
-        sbMcSpeedTwo = climbTab.add("Mc2 Current", 0).withSize(2, 1).withPosition(6, 4).getEntry();
+        sbMcSpeedTwo = climbTab.add("Mc2 Speed", 0).withSize(2, 1).withPosition(6, 4).getEntry();
       }
 
       if (Organization) {
@@ -396,7 +393,7 @@ public class ClimbSubsystem extends SubsystemBase {
                 .getEntry();
         sbHaTargettedOne =
             climbTab.add("Ha1 targetted", 0).withSize(2, 2).withPosition(6, 2).getEntry();
-        sbHaSpeedOne = climbTab.add("Ha1 Current", 0).withSize(2, 1).withPosition(6, 4).getEntry();
+        sbHaSpeedOne = climbTab.add("Ha1 Speed", 0).withSize(2, 1).withPosition(6, 4).getEntry();
         sbHaHeightOne = climbTab.add("Ha1 Current", 0).withSize(2, 1).withPosition(8, 1).getEntry();
 
         // High Arm 2
@@ -420,19 +417,13 @@ public class ClimbSubsystem extends SubsystemBase {
                 .getEntry();
         sbHaTargettedTwo =
             climbTab.add("Ha2 targetted", 0).withSize(2, 2).withPosition(6, 2).getEntry();
-        sbMcSpeedTwo = climbTab.add("Ha2 Current", 0).withSize(2, 1).withPosition(6, 4).getEntry();
+        sbMcSpeedTwo = climbTab.add("Ha2 Speed", 0).withSize(2, 1).withPosition(6, 4).getEntry();
         sbHaHeightTwo = climbTab.add("Ha2 Current", 0).withSize(2, 1).withPosition(8, 1).getEntry();
       }
 
       // Other
       sbClimbEnabble =
           climbTab.add("Climb Enabled", false).withSize(3, 2).withPosition(2, 0).getEntry();
-
-      //sb Hights
-      McHeightOne = m_McOne.getEncoder().getPosition();
-      McHeightTwo = m_McTwo.getEncoder().getPosition();
-      HaHeightOne = m_HaOne.getEncoder().getPosition();
-      HaHeightTwo = m_HaTwo.getEncoder().getPosition();
     }
   }
 
