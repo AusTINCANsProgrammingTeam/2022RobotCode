@@ -112,23 +112,22 @@ public final class Constants {
 
   // drive base pid values
   // TODO: need to tune for real robot
-  public static final double[] driveRightPID = {0.00035, 0.0000008, 0};
-  public static final double[] driveLeftPID = {0.000005, 0.0000008, 0};
+  public static final double[] driveRightPID = {0.00035, 0.00000085, 0};
+  public static final double[] driveLeftPID = {0.00035, 0.00000092, 0};
 
   // AUTONOMOUS Constants
 
   public enum Auton {
-    // spotless: off
+    // spotless:off
     TAXI("Taxi", "paths/TaxiOut.wpilib.json"),
     ONEBALL("Taxi", "paths/TaxiOutFromFender.wpilib.json"),
     TWOBALL("TwoBall", "paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json"),
-    THREEBALL(
-        "ThreeBall", "paths/GrabTwoBalls.wpilib.json", "paths/GoBackWithTwoBalls.wpilib.json"),
+    THREEBALL("ThreeBall", "paths/GrabTwoBalls.wpilib.json", "paths/GoBackWithTwoBalls.wpilib.json"),
     FOURBALL,
     FIVEBALL,
-    TEST("Test", "paths/FlippedVectorTest1.wpilib.json", "paths/FlippedVectorTest2.wpilib.json");
+    TEST("Test", "paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json");
     // change according to what path you want to test
-    // spotless: on
+    // spotless:on
 
     private String paths[];
     private String name;
@@ -161,7 +160,6 @@ public final class Constants {
   public static final double trackWidth = 0.559; // track width of kitbot
   public static final DifferentialDriveKinematics driveKinematics =
       new DifferentialDriveKinematics(trackWidth);
-  public static final double unitsPerRotation = 0.4787787204;
 
   // Pathweaver constants, baselind values, units: meters per second
   public static final double ramseteB = 2; // Convergence, larger values are more aggressive
@@ -169,8 +167,6 @@ public final class Constants {
 
   public static final double delaytaxi = 1.0; // 1 second wait time
   public static final double delayshot = 0.5; // 0.5 second wait time
-
-  // TODO: Replace 0.69 with actual track width in meters and run characterization on real robot
 
   // Encoder constants
 
