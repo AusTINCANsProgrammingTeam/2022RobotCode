@@ -71,7 +71,7 @@ public class CDSBallManagementCommand extends CommandBase {
     String ballColor = CDSSubsystem.senseColor();
 
     sensorStatus = CDSSubsystem.getSensorStatus();
-    int openSensor = CDSSubsystem.getNextOpenSensor(sensorStatus);
+    int openSensor = CDSSubsystem.getNextOpenSensor();
   
     switch (state) {
       case IDLE:
