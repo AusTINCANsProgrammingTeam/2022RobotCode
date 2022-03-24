@@ -78,9 +78,9 @@ public class MotorController extends CANSparkMax {
     mPIDController.setD(mD);
 
     // add the values to smart dashboard
-    //SmartDashboard.putNumber(mName + " P value", mP);
-    //SmartDashboard.putNumber(mName + " I value", mI);
-    //SmartDashboard.putNumber(mName + " D value", mD);
+    // SmartDashboard.putNumber(mName + " P value", mP);
+    // SmartDashboard.putNumber(mName + " I value", mI);
+    // SmartDashboard.putNumber(mName + " D value", mD);
 
     updateSmartDashboard(); // post onto smart dashboard
   }
