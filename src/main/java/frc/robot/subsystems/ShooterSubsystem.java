@@ -96,7 +96,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // Initializes Additional PID for the shooter
     flywheelPID.setIMaxAccum(Constants.Shooter.kMaxIAccum, Constants.Shooter.kMaxISlot);
     flywheelPID.setOutputRange(Constants.Shooter.kMinOutput, Constants.Shooter.kMaxOutput);
-    flywheelPID.setFF(Constants.Shooter.kF);
+    //flywheelPID.setFF(Constants.Shooter.kF);
     flywheelWPID.setTolerance(56);
 
     DistanceArray = new ShooterConfig[3];
