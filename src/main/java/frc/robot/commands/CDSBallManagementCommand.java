@@ -17,9 +17,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class CDSBallManagementCommand extends CommandBase {
-  
-  // TODO: Add a ADVANCE state 
-  public enum ManagementState {
+    public enum ManagementState {
     IDLE,
     EJECT,
     ADVANCE
