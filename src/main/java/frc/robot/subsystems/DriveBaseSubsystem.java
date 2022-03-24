@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.SerialPort.Port;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -32,7 +32,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.common.hardware.MotorController;
-import edu.wpi.first.wpilibj.SPI;
 
 public class DriveBaseSubsystem extends SubsystemBase {
   private double driveBaseSpeed;
@@ -233,7 +232,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     double rightPosition = rightEncoder.getPosition();
 
     sbGyroInfo.setDouble(gyro.getAngle());
-    
+
     odometry.update(gyro.getRotation2d(), leftPosition, rightPosition);
 
     // update shuffleboard
@@ -246,7 +245,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
     // updates pid values of leaders, followers not needed
     motorControllers[Constants.driveLeftFrontIndex].updateSmartDashboard();
     motorControllers[Constants.driveRightFrontIndex].updateSmartDashboard();
-
   }
 
   public void setDriveBaseSpeed(double driveBaseSpeed) {
@@ -300,7 +298,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     odometry.update(
         gyro.getRotation2d(), leftEncoderSim.getDistance(), rightEncoderSim.getDistance());
-  
+
     m_field.setRobotPose(odometry.getPoseMeters());
   }
 

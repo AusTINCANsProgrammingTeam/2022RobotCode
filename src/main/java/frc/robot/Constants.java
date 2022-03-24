@@ -122,23 +122,24 @@ public final class Constants {
     INTAKETAXI("IntakeTaxi", "paths/TaxiOutGrabBall.wpilib.json"),
     ONEBALL("Taxi", "paths/TaxiOutFromFender.wpilib.json"),
     TWOBALL("TwoBall", "paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json"),
-    THREEBALL("ThreeBall", "paths/GrabTwoBalls.wpilib.json", "paths/GoBackWithTwoBalls.wpilib.json"),
-    FOURBALL("FourBall"),
-    FIVEBALL("FiveBall"),
-    TEST("Test", "paths/Five1.wpilib.json", "paths/Five2.wpilib.json", "paths/Five3.wpilib.json", "paths/Five4.wpilib.json", "paths/Five5.wpilib.json", "paths/Five6.wpilib.json");
-    // change according to what path you want to test
+    THREEBALL("ThreeBall", "paths/Three1.wpilib.json", "paths/Three2.wpilib.json", "paths/Three3.wpilib.json", "paths/Three4.wpilib.json"),
+    FOURBALL("FourBall", "paths/Four1.wpilib.json", "paths/Four2.wpilib.json", "paths/Four3.wpilib.json", "paths/Four4.wpilib.json"),
+    FIVEBALL("FiveBall", "paths/Five1.wpilib.json", "paths/Five2.wpilib.json", "paths/Five3.wpilib.json", "paths/Five4.wpilib.json", "paths/Five5.wpilib.json", "paths/Five6.wpilib.json"),
+    TEST("Test", FIVEBALL);
+    // change according to what mode you want to test
     // spotless:on
 
     private String paths[];
     private String name;
 
-    private Auton() {
-      paths = null;
-    }
-
     private Auton(String name, String... paths) {
       this.name = name;
       this.paths = paths;
+    }
+
+    // for the TEST constructor
+    private Auton(String name, Auton a) {
+      this.paths = a.getPaths();
     }
 
     public String getName() {
