@@ -139,6 +139,7 @@ public final class Constants {
 
     // for the TEST constructor
     private Auton(String name, Auton a) {
+      this.name = name;
       this.paths = a.getPaths();
     }
 

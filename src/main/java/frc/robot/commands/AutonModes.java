@@ -237,7 +237,7 @@ public class AutonModes {
                   cdsSubsystem,
                   false), // shoot the two acquired balls
               threeBallParallel2, // grab last ball
-              threeBallRamseteCommands[3],  // come back to shoot
+              threeBallRamseteCommands[3], // come back to shoot
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
 
       // --------------------------------------------
@@ -258,30 +258,29 @@ public class AutonModes {
               new WaitCommand(initialWaitTime),
               fourBallParallel1,
               fourBallRamseteCommands[1],
-              new ShooterPressed(
-                  shooterSubsystem,
-                  limelightSubsystem,
-                  cdsSubsystem,
-                  false),
+              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
               fourBallParallel2,
               fourBallRamseteCommands[3],
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
 
       // ---------------------------------------
 
-      ParallelDeadlineGroup fiveBallParallel1 = 
-          new ParallelDeadlineGroup(fiveBallRamseteCommands[0], 
-          new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+      ParallelDeadlineGroup fiveBallParallel1 =
+          new ParallelDeadlineGroup(
+              fiveBallRamseteCommands[0],
+              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
 
-      ParallelDeadlineGroup fiveBallParallel2 = 
-          new ParallelDeadlineGroup(fiveBallRamseteCommands[2], 
-          new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+      ParallelDeadlineGroup fiveBallParallel2 =
+          new ParallelDeadlineGroup(
+              fiveBallRamseteCommands[2],
+              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
 
-      ParallelDeadlineGroup fiveBallParallel3 = 
-          new ParallelDeadlineGroup(fiveBallRamseteCommands[4], 
-          new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+      ParallelDeadlineGroup fiveBallParallel3 =
+          new ParallelDeadlineGroup(
+              fiveBallRamseteCommands[4],
+              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
 
-      fiveBallCommand = 
+      fiveBallCommand =
           new SequentialCommandGroup(
               new WaitCommand(initialWaitTime),
               fiveBallParallel1,
