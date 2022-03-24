@@ -26,7 +26,7 @@ public class ClimbSubsystem extends SubsystemBase {
   private MotorController m_McTwo;
   private MotorController m_HaOne;
   private MotorController m_HaTwo;
-  private boolean climbEnabbled;
+  private boolean climbEnabble;
   private double McHeightOne;
   private double McHeightTwo;
   private double HaHeightOne;
@@ -53,16 +53,16 @@ public class ClimbSubsystem extends SubsystemBase {
   private NetworkTableEntry sbMcTwoD;
 
   // HA = High Arms
-  private NetworkTableEntry sbHaOneCurrent;
+  private NetworkTableEntry sbHaHeightOne;
   private NetworkTableEntry sbHaSpeedOne;
-  private NetworkTableEntry sbHaTargettedHeightOne;
+  private NetworkTableEntry sbHaTargettedOne;
   private NetworkTableEntry sbHaOneP;
   private NetworkTableEntry sbHaOneI;
   private NetworkTableEntry sbHaOneD;
 
-  private NetworkTableEntry sbHaCurrentTwo;
+  private NetworkTableEntry sbHaHeightTwo;
   private NetworkTableEntry sbHaSpeedTwo;
-  private NetworkTableEntry sbHaTargettedHeightTwo;
+  private NetworkTableEntry sbHaTargettedTwo;
   private NetworkTableEntry sbHaTwoP;
   private NetworkTableEntry sbHaTwoI;
   private NetworkTableEntry sbHaTwoD;
@@ -70,7 +70,7 @@ public class ClimbSubsystem extends SubsystemBase {
   // Other
   private boolean Organization;
   private NetworkTableEntry sbClimbSpeedInput;
-  private NetworkTableEntry sbClimbEnabbled;
+  private NetworkTableEntry sbClimbEnabble;
 
   // Operator Tab
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
@@ -101,7 +101,7 @@ public class ClimbSubsystem extends SubsystemBase {
     }
     m_climbJoystick = joystick;
     Organization = true;
-    climbEnabbled = false;
+    climbEnabble = false;
     McHeightOne = 0;
     McHeightTwo = 0;
     HaHeightOne = 0;
@@ -111,27 +111,28 @@ public class ClimbSubsystem extends SubsystemBase {
     // One is left, two is right
 
     // Heigh  Arms
-    m_HaOne = new MotorController("Traversal Climb Motor One", Constants.HaMotorOne);
+    m_HaOne = new MotorController("Ha1 MotorControllor", Constants.HaMotorOne);
     m_HaOne.setSmartCurrentLimit(10);
+    m_McOne.getEncoder().setPosition(0);
 
-    m_HaTwo = new MotorController("Traversal Climb Motor Two", Constants.HaMotorTwo);
+    m_HaTwo = new MotorController("Ha2 MotorControllor", Constants.HaMotorTwo);
     m_HaTwo.setSmartCurrentLimit(10);
+    m_McTwo.getEncoder().setPosition(0);
     m_HaTwo.setInverted(true);
 
-    m_McOne =
-        new MotorController("Climb Motor One", Constants.McMotorOne, Constants.McLeftPID);
+    m_McOne = new MotorController("Climb Motor One", Constants.McMotorOne, Constants.McLeftPID);
     m_McOne.setSmartCurrentLimit(10);
-    m_McTwo =
-        new MotorController("Climb Motor Two", Constants.McMotorTwo, Constants.McRightPID);
+    m_McOne.getEncoder().setPosition(0);
+    m_McOne.setIdleMode(IdleMode.kBrake);
+
+    m_McTwo = new MotorController("Climb Motor Two", Constants.McMotorTwo, Constants.McRightPID);
     m_McTwo.setSmartCurrentLimit(10);
     m_McTwo.setInverted(true);
+    m_McTwo.getEncoder().setPosition(0);
+    m_McTwo.setIdleMode(IdleMode.kBrake);
+
     // m_climbMotorControllerTwo.getPID().setOutputRange(-.4, .4);
     // m_climbMotorControllerOne.getPID().setOutputRange(-.4, .4);
-    m_McOne.getEncoder().setPosition(0);
-    m_McTwo.getEncoder().setPosition(0);
-
-    m_McOne.setIdleMode(IdleMode.kBrake);
-    m_McTwo.setIdleMode(IdleMode.kBrake);
   }
 
   public void resetTargetedHeight() {
@@ -143,14 +144,10 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void climbKeepDownFunction() {
-    m_McOne
-        .getPIDCtrl()
-        .setReference(McHeightOne, CANSparkMax.ControlType.kPosition);
+    m_McOne.getPIDCtrl().setReference(McHeightOne, CANSparkMax.ControlType.kPosition);
     sbMcHeightOne.setNumber(McHeightOne);
 
-    m_McTwo
-        .getPIDCtrl()
-        .setReference(McHeightTwo, CANSparkMax.ControlType.kPosition);
+    m_McTwo.getPIDCtrl().setReference(McHeightTwo, CANSparkMax.ControlType.kPosition);
     sbMcHeightTwo.setNumber(McHeightTwo);
 
     m_HaOne.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
@@ -160,8 +157,8 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void climbEnable() {
-    climbEnabbled = !climbEnabbled;
-    if (climbEnabbled) {
+    climbEnabble = !climbEnabble;
+    if (climbEnabble) {
       m_McOne.setSmartCurrentLimit(60);
       m_McTwo.setSmartCurrentLimit(60);
       m_HaOne.setSmartCurrentLimit(60);
@@ -175,32 +172,11 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public boolean getclimbingenable() {
-    return climbEnabbled;
+    return climbEnabble;
   }
 
-  public void runManual() {
-    if (climbEnabbled) {
-
-      McjoystickAxis = -m_climbJoystick.getRawAxis(Constants.leftJoystickY);
-      if (McjoystickAxis > 0.1 || McjoystickAxis < -0.1) {
-        if (McjoystickAxis > 0) {
-          m_McOne.set(sbClimbSpeedInput.getDouble(0));
-          m_McTwo.set(sbClimbSpeedInput.getDouble(0));
-        }
-        if (McjoystickAxis < 0) {
-          m_McOne.set(-sbClimbSpeedInput.getDouble(0));
-          m_McTwo.set(-sbClimbSpeedInput.getDouble(0));
-        }
-      } else {
-        m_McOne.set(0);
-        m_McTwo.set(0);
-      }
-    }
-  }
-
-  public void enableClimb() {
-    if (climbEnabbled) {
-
+  public void midClimb() {
+    if (climbEnabble) {
       McjoystickAxis = -m_climbJoystick.getRawAxis(Constants.leftJoystickY);
       if (McjoystickAxis > 0.1 || McjoystickAxis < -0.1) {
         if (McjoystickAxis > 0) {
@@ -220,7 +196,16 @@ public class ClimbSubsystem extends SubsystemBase {
           }
         }
       }
+      m_McOne.getPIDCtrl().setReference(McHeightOne, CANSparkMax.ControlType.kPosition);
+      sbMcHeightOne.setNumber(McHeightOne);
 
+      m_McTwo.getPIDCtrl().setReference(McHeightTwo, CANSparkMax.ControlType.kPosition);
+      sbMcHeightTwo.setNumber(McHeightTwo);
+    }
+  }
+
+  public void highArms() {
+    if (climbEnabble) {
       HajoystickAxis = -m_climbJoystick.getRawAxis(Constants.rightJoystickY);
       if (HajoystickAxis > 0.1 || HajoystickAxis < -0.1) {
         if (HajoystickAxis > 0) {
@@ -240,29 +225,16 @@ public class ClimbSubsystem extends SubsystemBase {
           }
         }
       }
-
-      m_McOne
-          .getPIDCtrl()
-          .setReference(McHeightOne, CANSparkMax.ControlType.kPosition);
-      sbMcHeightOne.setNumber(McHeightOne);
-
-      m_McTwo
-          .getPIDCtrl()
-          .setReference(McHeightTwo, CANSparkMax.ControlType.kPosition);
-      sbMcHeightTwo.setNumber(McHeightTwo);
-
       m_HaOne.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
+      sbHaHeightOne.setNumber(HaHeightOne);
+
       m_HaTwo.getPIDCtrl().setReference(HaHeightTwo, CANSparkMax.ControlType.kPosition);
-    } else {
-      // m_climbMotorControllerOne.getPID().setReference(0,
-      // CANSparkMax.ControlType.kVoltage);
-      // m_HaOne.getPIDCtrl().setReference(0,CANSparkMax.ControlType.kPosition);
-      // m_HaTwo.getPIDCtrl().setReference(0, CANSparkMax.ControlType.kPosition);
+      sbHaHeightTwo.setNumber(HaHeightTwo);
     }
   }
 
   public void periodic() {
-    if (DriverStation.isDisabled() && climbEnabbled) {
+    if (DriverStation.isDisabled() && climbEnabble) {
       climbEnable();
     }
     SmartDashboard.putNumber("Mc1 Applied Output", m_McOne.getAppliedOutput());
@@ -281,6 +253,7 @@ public class ClimbSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Ha2 Hight", m_HaTwo.getEncoder().getPosition());
     SmartDashboard.putNumber("Ha2 IAccum", m_HaTwo.getPIDCtrl().getIAccum());
 
+    // Mc
     if (sbMcHeightOne.getDouble(0) != McHeightOne) {
       McHeightOne = sbMcHeightOne.getDouble(0);
     } else {
@@ -295,10 +268,24 @@ public class ClimbSubsystem extends SubsystemBase {
     }
     sbMcSpeedTwo.setDouble(m_McTwo.getEncoder().getVelocity());
 
+    // Ha
+    if (sbHaHeightOne.getDouble(0) != HaHeightOne) {
+      HaHeightOne = sbHaHeightOne.getDouble(0);
+    } else {
+      sbHaTargettedOne.setDouble(HaHeightOne);
+    }
+    sbHaSpeedOne.setDouble(m_HaOne.getEncoder().getVelocity());
+
+    if (sbHaHeightTwo.getDouble(0) != HaHeightTwo) {
+      HaHeightTwo = sbHaHeightTwo.getDouble(0);
+    } else {
+      sbHaTargettedTwo.setDouble(HaHeightTwo);
+    }
+    sbHaSpeedTwo.setDouble(m_HaTwo.getEncoder().getVelocity());
+
     if ((m_McOne.getPIDCtrl().getP() != sbMcOneP.getDouble(0))
         || (m_McOne.getPIDCtrl().getI() != sbMcOneI.getDouble(0))
         || (m_McOne.getPIDCtrl().getD() != sbMcOneD.getDouble(0))
-
         || (m_HaOne.getPIDCtrl().getP() != sbMcOneP.getDouble(0))
         || (m_HaOne.getPIDCtrl().getI() != sbMcOneI.getDouble(0))
         || (m_HaOne.getPIDCtrl().getD() != sbMcOneD.getDouble(0))) {
@@ -315,7 +302,6 @@ public class ClimbSubsystem extends SubsystemBase {
     if ((m_McTwo.getPIDCtrl().getP() != sbMcTwoP.getDouble(0))
         || (m_McTwo.getPIDCtrl().getI() != sbMcTwoI.getDouble(0))
         || (m_McTwo.getPIDCtrl().getD() != sbMcTwoD.getDouble(0))
-
         || (m_HaTwo.getPIDCtrl().getP() != sbMcTwoP.getDouble(0))
         || (m_HaTwo.getPIDCtrl().getI() != sbMcTwoI.getDouble(0))
         || (m_HaTwo.getPIDCtrl().getD() != sbMcTwoD.getDouble(0))) {
@@ -328,9 +314,8 @@ public class ClimbSubsystem extends SubsystemBase {
       m_HaTwo.getPIDCtrl().setI(sbHaTwoI.getDouble(0));
       m_HaTwo.getPIDCtrl().setD(sbHaTwoD.getDouble(0));
     }
+    sbClimbEnabble.setBoolean(climbEnabble);
   }
-
-  // TODO: might add other getter methods depending on how many limit switches
 
   public void instantiateDebugTab() {
     climbTab = Shuffleboard.getTab("ClimbBase");
@@ -409,7 +394,7 @@ public class ClimbSubsystem extends SubsystemBase {
                 .withSize(2, 1)
                 .withPosition(0, 2)
                 .getEntry();
-        sbHaTargettedHeightOne =
+        sbHaTargettedOne =
             climbTab.add("Ha targetted 1", 0).withSize(2, 2).withPosition(6, 2).getEntry();
         sbMcSpeedOne = climbTab.add("Ha Current 1", 0).withSize(2, 1).withPosition(6, 4).getEntry();
 
@@ -432,14 +417,35 @@ public class ClimbSubsystem extends SubsystemBase {
                 .withSize(2, 1)
                 .withPosition(0, 2)
                 .getEntry();
-        sbHaTargettedHeightTwo =
+        sbHaTargettedTwo =
             climbTab.add("Ha targetted 2", 0).withSize(2, 2).withPosition(6, 2).getEntry();
         sbMcSpeedTwo = climbTab.add("Ha Current 2", 0).withSize(2, 1).withPosition(6, 4).getEntry();
       }
 
       // Other
-      sbClimbEnabbled =
+      sbClimbEnabble =
           climbTab.add("Climb Enabled", false).withSize(3, 2).withPosition(2, 0).getEntry();
+    }
+  }
+
+  @Deprecated
+  public void runManual() {
+    if (climbEnabble) {
+
+      McjoystickAxis = -m_climbJoystick.getRawAxis(Constants.leftJoystickY);
+      if (McjoystickAxis > 0.1 || McjoystickAxis < -0.1) {
+        if (McjoystickAxis > 0) {
+          m_McOne.set(sbClimbSpeedInput.getDouble(0));
+          m_McTwo.set(sbClimbSpeedInput.getDouble(0));
+        }
+        if (McjoystickAxis < 0) {
+          m_McOne.set(-sbClimbSpeedInput.getDouble(0));
+          m_McTwo.set(-sbClimbSpeedInput.getDouble(0));
+        }
+      } else {
+        m_McOne.set(0);
+        m_McTwo.set(0);
+      }
     }
   }
 }
