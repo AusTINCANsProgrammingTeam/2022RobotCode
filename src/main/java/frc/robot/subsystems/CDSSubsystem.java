@@ -18,6 +18,12 @@ import frc.robot.common.hardware.ColorSensorMuxed;
 import frc.robot.common.hardware.MotorController;
 
 public class CDSSubsystem extends SubsystemBase {
+  public enum MangementState {
+    IDLE,
+    EJECT,
+    ADVANCE
+  }
+
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private MotorController CDSBeltController;
@@ -25,10 +31,14 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSWheelControllerTwo;
   private String allianceColor;
   private ColorSensorMuxed colorSensors;
+  private MangementState state = MangementState.IDLE;
 
   private boolean isReady = true; // Variable for whether CDS is ready for shooter action
   private boolean missed = false; 
   private boolean missedColor = false;
+  private int msCurrent = 0;
+  private int ejectRuntime = 650; // amount of time auto eject will run intake backwards for in ms 
+
   private int ballCount = 0;
 
   private int[] sensorStatuses;
@@ -198,7 +208,9 @@ public class CDSSubsystem extends SubsystemBase {
     return beamBreakArray;
   }
 
-  public int getNextOpenSensor(boolean[] sensorStatus) {
+  public int getNextOpenSensor() {
+
+    boolean[] sensorStatus = getSensorStatus();
     // Starts at 0 and ends short of the centering wheel
     for (int i = 0; i < sensorStatus.length - 1; i++) {
       if (!sensorStatus[i]) {
@@ -272,6 +284,33 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public void periodic() {
+    int ballCount = getBallCount();
+    String ballColor = senseColor();
+
+    switch (state) {
+      case IDLE:
+        if (ballCount > 2 || (getMissedColor() && getMissedSensor())) {
+          state = state.EJECT;
+        } else if (ballCount < 3 && getNextOpenSensor() != -1 && getMissedSensor()) {
+          state = state.ADVANCE;
+        }
+
+        break;
+      case ADVANCE:
+
+        break;
+      case EJECT:
+        if (msCurrent >= ejectRuntime) {
+          state = state.IDLE;
+          setMissedSensor(false);
+          setMissedColor(false);
+        } else {
+          msCurrent += 20;
+        }
+
+        break;
+    }
+
     if (getSensorStatus()[2]){
       missed = true;
       if (senseColor() != allianceColor){
