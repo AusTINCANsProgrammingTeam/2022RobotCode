@@ -32,8 +32,8 @@ public class CDSSubsystem extends SubsystemBase {
   private String allianceColor;
   private ColorSensorMuxed colorSensors;
   private MangementState state = MangementState.IDLE;
-
-  private boolean isReady = true; // Variable for whether CDS is ready for shooter action
+  private int nextOpenSensor = -1;
+  
   private boolean missed = false; 
   private boolean missedColor = false;
   private int msCurrent = 0;
@@ -234,6 +234,32 @@ public class CDSSubsystem extends SubsystemBase {
       return "Blue";
     }
   }
+  //Not completely sure about this code, never worked with color sensors, but it should be similar to the others just with different sensor IDs
+  public String colorSensing2ndSensor() {
+    Color[] colorSensor2 = colorSensors.getColors();
+    double redAmount = colorSensor2[1].red;
+    double blueAmount = colorSensor2[1].blue;
+    if (redAmount > blueAmount) {
+      ballColor.setString("Red");
+      return "Red";
+    } else {
+      ballColor.setString("Blue");
+      return "Blue";
+    }
+  }
+  //Not completely sure about this code, never worked with color sensors, but it should be similar to the others just with different sensor IDs
+  public String colorSensing3rdSensor() {
+    Color[] colorSensor3 = colorSensors.getColors();
+    double redAmount = colorSensor3[0].red;
+    double blueAmount = colorSensor3[0].blue;
+    if (redAmount > blueAmount) {
+      ballColor.setString("Red");
+      return "Red";
+    } else {
+      ballColor.setString("Blue");
+      return "Blue";
+    }
+  }
 
   public boolean sensorsOnline() {
     sensorStatuses = colorSensors.getProximities();
@@ -259,14 +285,6 @@ public class CDSSubsystem extends SubsystemBase {
     return ballCount;
   }
 
-  public boolean getReady() {
-    return isReady;
-  }
-
-  public void setReady(boolean status) {
-    isReady = status;
-  }
-
   public boolean getMissedSensor(){
     return missed;
   }
@@ -283,30 +301,42 @@ public class CDSSubsystem extends SubsystemBase {
     missedColor = colorMissed;
   }
 
+  public String getState() {
+    return state.toString();
+  }
+
   public void periodic() {
     int ballCount = getBallCount();
     String ballColor = senseColor();
 
+    int currentOpenSensor = getNextOpenSensor();
+    
     switch (state) {
       case IDLE:
+        nextOpenSensor = -1;
+        msCurrent = 0;
+
         if (ballCount > 2 || (getMissedColor() && getMissedSensor())) {
-          state = state.EJECT;
-        } else if (ballCount < 3 && getNextOpenSensor() != -1 && getMissedSensor()) {
-          state = state.ADVANCE;
+          state = MangementState.EJECT;
+        } 
+        
+         if (ballCount < 3 && currentOpenSensor != -1 && getMissedSensor()) {
+          state = MangementState.ADVANCE;
+          nextOpenSensor = currentOpenSensor;
         }
 
         break;
       case ADVANCE:
-        if (getNextOpenSensor() == -1){
-          state = state.IDLE;
-          setMissedSensor(false);
+        if (getSensorStatus()[nextOpenSensor]) {
+          state = MangementState.IDLE;
           setMissedColor(false);
+          setMissedSensor(false);
         }
 
         break;
       case EJECT:
         if (msCurrent >= ejectRuntime) {
-          state = state.IDLE;
+          state = MangementState.IDLE;
           setMissedSensor(false);
           setMissedColor(false);
         } else {
@@ -318,7 +348,7 @@ public class CDSSubsystem extends SubsystemBase {
 
     if (getSensorStatus()[2]){
       missed = true;
-      if (senseColor() != allianceColor){
+      if (ballColor != allianceColor){
         missedColor = true;
       }
     }
