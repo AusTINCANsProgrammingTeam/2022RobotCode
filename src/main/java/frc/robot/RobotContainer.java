@@ -195,7 +195,7 @@ public class RobotContainer {
     // Intake / CDS
     if (outtakeCommand != null) {
       // spits ball out
-      buttons[Constants.AButton].whileHeld(outtakeCommand);
+      buttons[Constants.RBumper].whileHeld(outtakeCommand);
     }
 
     if (combinedIntakeCDS != null) {

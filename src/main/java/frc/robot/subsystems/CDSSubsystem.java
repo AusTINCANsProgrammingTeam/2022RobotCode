@@ -18,7 +18,7 @@ import frc.robot.common.hardware.ColorSensorMuxed;
 import frc.robot.common.hardware.MotorController;
 
 public class CDSSubsystem extends SubsystemBase {
-  public enum MangementState {
+  public enum ManagementState {
     IDLE,
     EJECT,
     ADVANCE
@@ -31,11 +31,9 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSWheelControllerTwo;
   private String allianceColor;
   private ColorSensorMuxed colorSensors;
-  private MangementState state = MangementState.IDLE;
+  private ManagementState state = ManagementState.IDLE;
   private int nextOpenSensor = -1;
 
-  private boolean missed = false;
-  private boolean missedColor = false;
   private int msCurrent = 0;
   private int ejectRuntime = 650; // amount of time auto eject will run intake backwards for in ms
 
@@ -59,6 +57,7 @@ public class CDSSubsystem extends SubsystemBase {
   private NetworkTableEntry frontSensorProx = CDSTab.add("Front Proximity", 0).getEntry();
   private NetworkTableEntry middleSensorProx = CDSTab.add("Middle Proximity", 0).getEntry();
   private NetworkTableEntry backSensorProx = CDSTab.add("Back Proximity", 0).getEntry();
+  private NetworkTableEntry CDSBallCount = CDSTab.add("Ball Count", 0).getEntry();
 
   public CDSSubsystem() {
     // BManualCDS.setBoolean(Constants.); TODO: setup when manual cds toggle is merged
@@ -170,14 +169,6 @@ public class CDSSubsystem extends SubsystemBase {
     }
   }
 
-  /*public boolean sensorsOnline() {
-    boolean sensor0Online = picoSensors.isSensor0Connected();
-    boolean sensor1Online = picoSensors.isSensor1Connected();
-    boolean sensor2Online = picoSensors.isSensor2Connected();
-
-    return sensor0Online && sensor1Online && sensor2Online;
-  }*/
-
   public boolean[] getSensorStatus() {
     sensorStatuses = colorSensors.getProximities();
     if (Constants.DebugMode) {
@@ -198,7 +189,7 @@ public class CDSSubsystem extends SubsystemBase {
       }
     }
     if (Constants.DebugMode) {
-      // CDSBallCount.setNumber(ballCount);
+      CDSBallCount.setNumber(ballCount);
     }
 
     return beamBreakArray;
@@ -255,72 +246,46 @@ public class CDSSubsystem extends SubsystemBase {
     return ballCount;
   }
 
-  public boolean getMissedSensor() {
-    return missed;
-  }
-
-  public void setMissedSensor(boolean missedBall) {
-    missed = missedBall;
-  }
-
-  public boolean getMissedColor() {
-    return missedColor;
-  }
-
-  public void setMissedColor(boolean colorMissed) {
-    missedColor = colorMissed;
-  }
-
-  public String getState() {
-    return state.toString();
+  public ManagementState getState() {
+    return state;
   }
 
   public void periodic() {
     int ballCount = getBallCount();
     String ballColor = senseColor();
-
     int currentOpenSensor = getNextOpenSensor();
+
+    boolean ballPresent = getSensorStatus()[2]; // whether or not there's a ball at the centering wheels
 
     switch (state) {
       case IDLE:
         nextOpenSensor = -1;
         msCurrent = 0;
 
-        if (ballCount > 2 || (getMissedColor() && getMissedSensor())) {
-          state = MangementState.EJECT;
+        if ((ballCount > 2 || ballColor != allianceColor) && ballPresent) {
+          state = ManagementState.EJECT;
         }
 
-        if (ballCount < 3 && currentOpenSensor != -1 && getMissedSensor()) {
-          state = MangementState.ADVANCE;
+        if (ballCount < 3 && currentOpenSensor != -1 && ballPresent) {
+          state = ManagementState.ADVANCE;
           nextOpenSensor = currentOpenSensor;
         }
 
         break;
       case ADVANCE:
         if (getSensorStatus()[nextOpenSensor]) {
-          state = MangementState.IDLE;
-          setMissedColor(false);
-          setMissedSensor(false);
+          state = ManagementState.IDLE;
         }
 
         break;
       case EJECT:
         if (msCurrent >= ejectRuntime) {
-          state = MangementState.IDLE;
-          setMissedSensor(false);
-          setMissedColor(false);
+          state = ManagementState.IDLE;
         } else {
           msCurrent += 20;
         }
 
         break;
-    }
-
-    if (getSensorStatus()[2]) {
-      missed = true;
-      if (ballColor != allianceColor) {
-        missedColor = true;
-      }
     }
   }
 }

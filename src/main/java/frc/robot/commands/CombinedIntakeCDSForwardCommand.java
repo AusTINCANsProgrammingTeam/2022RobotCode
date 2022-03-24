@@ -9,6 +9,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.commands.CDSBallManagementCommand;
 
 public class CombinedIntakeCDSForwardCommand extends CommandBase {
   /** Creates a new OuttakeCommand. */
@@ -16,6 +17,7 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
 
   private final ShooterSubsystem shooterSubsystem;
   private final IntakeSubsystem intakeSubsystem;
+  private final CDSBallManagementCommand ballManagement;
 
   public CombinedIntakeCDSForwardCommand(
       IntakeSubsystem mIntakeSubsystem,
@@ -29,20 +31,28 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
     intakeSubsystem = mIntakeSubsystem;
     CDSSubsystem = mCDSSubsystem;
     shooterSubsystem = mShooterSubsystem;
+
+    ballManagement = new CDSBallManagementCommand(CDSSubsystem, intakeSubsystem, shooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    CDSSubsystem.CDSBeltToggle(false);
-    CDSSubsystem.CDSWheelToggle(false);
-    intakeSubsystem.toggleIntake(false);
-    shooterSubsystem.runCargo(Constants.reverseStopperWheelSpeed);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if (CDSSubsystem.getState().toString() == "IDLE") {
+      // If mangement isn't doing anything, run button normally
+      CDSSubsystem.CDSBeltToggle(false);
+      CDSSubsystem.CDSWheelToggle(false);
+      intakeSubsystem.toggleIntake(false);
+      shooterSubsystem.runCargo(Constants.reverseStopperWheelSpeed);
+    } else {
+      // run ball management if it's in the middle of doing something
+      ballManagement.execute(); 
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
