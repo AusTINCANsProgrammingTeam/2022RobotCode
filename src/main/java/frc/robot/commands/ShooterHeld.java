@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -41,6 +43,7 @@ public class ShooterHeld extends CommandBase {
   @Override
   public void initialize() {
     i = 0;
+    Shuffleboard.addEventMarker("Reference set", EventImportance.kLow);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -53,6 +56,7 @@ public class ShooterHeld extends CommandBase {
       if (i > 0 || !LLEnabled || m_LimelightSubsystem.calculatePID() == 0.0) {
         if (i == 0) {
           m_CDSSubsystem.CDSBeltToggle(false);
+          Shuffleboard.addEventMarker("Wheel ready", EventImportance.kLow);
           m_ShooterSubsystem.runCargo(Constants.Shooter.cargoForward);
           m_ShooterSubsystem.setCargoBoolean(true);
         }
@@ -65,9 +69,9 @@ public class ShooterHeld extends CommandBase {
         }*/
       }
     } else {
-      m_ShooterSubsystem.setCargoBoolean(false);
+      /*m_ShooterSubsystem.setCargoBoolean(false);
       m_CDSSubsystem.stopCDS();
-      m_ShooterSubsystem.runCargo(Constants.Shooter.cargoReverse);
+      m_ShooterSubsystem.runCargo(Constants.Shooter.cargoReverse);*/
     }
   }
 

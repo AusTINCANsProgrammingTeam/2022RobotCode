@@ -12,6 +12,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -76,7 +77,6 @@ public class ShooterSubsystem extends SubsystemBase {
         new SimpleMotorFeedforward(
             Constants.Shooter.kSg, Constants.Shooter.kVg, Constants.Shooter.kAg);
     flywheelPID = flywheelController.getPIDCtrl();
-    flywheelWPID = new PIDController(8.0383e-8, 0, 0);
     flywheelEncoder = flywheelController.getEncoder();
     flywheelController.enableVoltageCompensation(11);
     flywheel2Controller.enableVoltageCompensation(11);
@@ -96,8 +96,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // Initializes Additional PID for the shooter
     flywheelPID.setIMaxAccum(Constants.Shooter.kMaxIAccum, Constants.Shooter.kMaxISlot);
     flywheelPID.setOutputRange(Constants.Shooter.kMinOutput, Constants.Shooter.kMaxOutput);
-    //flywheelPID.setFF(Constants.Shooter.kF);
-    flywheelWPID.setTolerance(56);
+    // flywheelPID.setFF(Constants.Shooter.kF);
 
     DistanceArray = new ShooterConfig[3];
     DistanceArray[0] = new ShooterConfig(5, 64, 2263);
@@ -146,17 +145,16 @@ public class ShooterSubsystem extends SubsystemBase {
     // Winds Flywheel using PID control to passed rpm
     if (rpm == 0) {
       flywheelPID.setReference(0, CANSparkMax.ControlType.kVoltage);
+      //flywheelController.set(0.03);
       flywheelPID.setIAccum(0);
     } else {
       DTRPM.setDouble(rpm);
       targetRPM = rpm;
-      flywheelController.setVoltage(
-          flywheelFF.calculate(rpm / 60) + flywheelWPID.calculate(currentRPM, rpm));
       flywheelPID.setReference(
-          rpm,
-          CANSparkMax.ControlType.kVelocity,
-          Constants.Shooter.kMaxISlot,
-          flywheelFF.calculate(rpm / 60));
+      rpm,
+      CANSparkMax.ControlType.kVelocity,
+      Constants.Shooter.kMaxISlot,
+      flywheelFF.calculate(rpm / 62.0));
     }
   }
 
