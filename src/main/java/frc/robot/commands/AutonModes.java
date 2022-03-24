@@ -265,7 +265,7 @@ public class AutonModes {
   private void initializeTest() {
     // REPLACE ME to test anything
     testRamseteCommands = getRamseteCommands(getTrajectories(Constants.Auton.TEST.getPaths()));
-    testCommand = new SequentialCommandGroup(testRamseteCommands[0], testRamseteCommands[1]);
+    testCommand = new SequentialCommandGroup(new WaitCommand(1), testRamseteCommands[0], testRamseteCommands[1], testRamseteCommands[2], testRamseteCommands[3], testRamseteCommands[4], testRamseteCommands[5]);
   }
 
   public Command getChosenCommand(Constants.Auton mode) {

@@ -80,7 +80,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     motorControllers = new MotorController[4];
     gyro = new AHRS(SPI.Port.kMXP);
     gyro.enableLogging(true);
-    gyro.reset(); // resets the heading of the robot to 0
+    gyro.reset();
 
     this.usingExternal = usingExternal;
 
