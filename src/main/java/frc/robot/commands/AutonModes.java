@@ -183,7 +183,7 @@ public class AutonModes {
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
               new WaitCommand(Constants.delaytaxi),
               oneBallRamseteCommand.andThen(() -> driveBaseSubsystem.stopDriveMotors()));
-
+      // -------------------------------------------
       twoBallParallel =
           new ParallelDeadlineGroup(
               twoBallRamseteCommands[0].andThen(
@@ -192,13 +192,12 @@ public class AutonModes {
 
       twoBallCommand =
           new SequentialCommandGroup(
-              new DeployIntake(intakeSubsystem, cdsSubsystem),
+              // new DeployIntake(intakeSubsystem, cdsSubsystem),
               new WaitCommand(initialWaitTime),
               twoBallParallel,
               twoBallRamseteCommands[1].andThen(() -> driveBaseSubsystem.stopDriveMotors()),
-              new WaitCommand(Constants.delayshot),
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
-
+      // -------------------------------------------
       threeBallParallel =
           new ParallelDeadlineGroup(
               threeBallRamseteCommands[0].andThen(
