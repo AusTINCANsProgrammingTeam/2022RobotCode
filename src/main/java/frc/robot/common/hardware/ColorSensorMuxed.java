@@ -5,6 +5,11 @@
 package frc.robot.common.hardware;
 
 import com.revrobotics.ColorSensorV3;
+import com.revrobotics.ColorSensorV3.ColorSensorMeasurementRate;
+import com.revrobotics.ColorSensorV3.ColorSensorResolution;
+import com.revrobotics.ColorSensorV3.GainFactor;
+import com.revrobotics.ColorSensorV3.ProximitySensorMeasurementRate;
+import com.revrobotics.ColorSensorV3.ProximitySensorResolution;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
@@ -24,7 +29,20 @@ public class ColorSensorMuxed {
   private double lastColorRead;
   private int[] proximities;
   private Color[] colors;
-  private final double sensorPeriodInSeconds = 0.1;
+  private double sensorPeriodInSeconds = MeasurementRate.kRate10Hz.period;
+
+  public enum MeasurementRate {
+    kRate40Hz(.025),
+    kRate20Hz(.05),
+    kRate10Hz(.1),
+    kRate5Hz(.2);
+
+    public final double period;
+
+    MeasurementRate(double i) {
+      period = i;
+    }
+  }
 
   public ColorSensorMuxed(int... ports) {
     i2cMux = new I2C(Port.kMXP, tca9548Addr);
@@ -42,6 +60,46 @@ public class ColorSensorMuxed {
     colors = new Color[i2cPorts.size()];
     lastProxRead = 0;
     lastColorRead = 0;
+  }
+
+  public boolean configureMeasurementRates(MeasurementRate rate) {
+
+    ColorSensorMeasurementRate colorRate;
+    ProximitySensorMeasurementRate proxRate;
+    sensorPeriodInSeconds = rate.period;
+    boolean ret = true;
+
+    switch (rate) {
+      case kRate40Hz:
+        colorRate = ColorSensorMeasurementRate.kColorRate25ms;
+        proxRate = ProximitySensorMeasurementRate.kProxRate25ms;
+        break;
+      case kRate20Hz:
+        colorRate = ColorSensorMeasurementRate.kColorRate50ms;
+        proxRate = ProximitySensorMeasurementRate.kProxRate50ms;
+        break;
+      case kRate5Hz:
+        colorRate = ColorSensorMeasurementRate.kColorRate200ms;
+        proxRate = ProximitySensorMeasurementRate.kProxRate200ms;
+        break;
+      case kRate10Hz:
+      default:
+        colorRate = ColorSensorMeasurementRate.kColorRate100ms;
+        proxRate = ProximitySensorMeasurementRate.kProxRate100ms;
+        break;
+    }
+    for (int p : i2cPorts) {
+      if (setI2cPort(p)) {
+        sensors.configureProximitySensor(ProximitySensorResolution.kProxRes11bit, proxRate);
+        sensors.configureColorSensor(
+            ColorSensorResolution.kColorSensorRes20bit, colorRate, GainFactor.kGain3x);
+      } else {
+        DriverStation.reportError(
+            "Failed to configure sample rate of color sensor on I2C port " + p, false);
+        ret = false;
+      }
+    }
+    return ret;
   }
 
   // @returns true if successful
