@@ -297,6 +297,11 @@ public class CDSSubsystem extends SubsystemBase {
 
         break;
       case ADVANCE:
+        if (getNextOpenSensor() == -1){
+          state = state.IDLE;
+          setMissedSensor(false);
+          setMissedColor(false);
+        }
 
         break;
       case EJECT:
