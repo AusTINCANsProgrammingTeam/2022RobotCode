@@ -255,7 +255,8 @@ public class CDSSubsystem extends SubsystemBase {
     String ballColor = senseColor();
     int currentOpenSensor = getNextOpenSensor();
 
-    boolean ballPresent = getSensorStatus()[2]; // whether or not there's a ball at the centering wheels
+    boolean ballPresent =
+        getSensorStatus()[2]; // whether or not there's a ball at the centering wheels
 
     switch (state) {
       case IDLE:

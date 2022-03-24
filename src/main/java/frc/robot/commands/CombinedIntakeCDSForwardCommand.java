@@ -9,7 +9,6 @@ import frc.robot.Constants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.commands.CDSBallManagementCommand;
 
 public class CombinedIntakeCDSForwardCommand extends CommandBase {
   /** Creates a new OuttakeCommand. */
@@ -50,7 +49,7 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
       shooterSubsystem.runCargo(Constants.reverseStopperWheelSpeed);
     } else {
       // run ball management if it's in the middle of doing something
-      ballManagement.execute(); 
+      ballManagement.execute();
     }
   }
 
