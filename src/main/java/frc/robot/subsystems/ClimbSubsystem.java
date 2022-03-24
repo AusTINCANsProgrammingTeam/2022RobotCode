@@ -119,12 +119,12 @@ public class ClimbSubsystem extends SubsystemBase {
     m_HaOne = new MotorController("Ha1 MotorControllor", Constants.HaMotorOne, Constants.HaLeftPID);
     m_HaOne.setSmartCurrentLimit(10);
     m_HaOne.getEncoder().setPosition(0);
-    m_McTwo.setIdleMode(IdleMode.kBrake);
+    m_HaOne.setIdleMode(IdleMode.kBrake);
 
-    m_HaTwo =new MotorController("Ha2 MotorControllor", Constants.HaMotorTwo, Constants.HaRightPID);
+    m_HaTwo = new MotorController("Ha2 MotorControllor", Constants.HaMotorTwo, Constants.HaRightPID);
     m_HaTwo.setSmartCurrentLimit(10);
     m_HaTwo.getEncoder().setPosition(0);
-    m_McTwo.setIdleMode(IdleMode.kBrake);
+    m_HaTwo.setIdleMode(IdleMode.kBrake);
     m_HaTwo.setInverted(true);
 
 
@@ -329,7 +329,6 @@ public class ClimbSubsystem extends SubsystemBase {
     sbMcTargettedOne =
         climbTab.add("Mc1 targetted", 0).withSize(2, 2).withPosition(2, 2).getEntry();
     sbMcHeightOne = climbTab.add("Mc1 Height", 0).withSize(2, 1).withPosition(0, 1).getEntry();
-    System.out.println("Hight Value " + sbMcHeightOne + ";");
     sbMcSpeedOne = climbTab.add("Mc1 Current", 0).withSize(2, 1).withPosition(2, 4).getEntry();
 
     // Climb Arm 2
