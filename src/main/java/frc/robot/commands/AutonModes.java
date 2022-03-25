@@ -247,9 +247,19 @@ public class AutonModes {
               fourBallRamseteCommands[0],
               new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
 
-      ParallelDeadlineGroup fourBallParallel2 =
+      ParallelDeadlineGroup fourBallParallel2 = 
+          new ParallelDeadlineGroup(
+              fourBallRamseteCommands[1], 
+              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+
+      ParallelDeadlineGroup fourBallParallel3 =
           new ParallelDeadlineGroup(
               fourBallRamseteCommands[2],
+              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+
+      ParallelDeadlineGroup fourBallParallel4 = 
+          new ParallelDeadlineGroup(
+              fourBallRamseteCommands[3], 
               new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
 
       // similar path to threeball, now just getting the additional ball at terminal
@@ -257,10 +267,10 @@ public class AutonModes {
           new SequentialCommandGroup(
               new WaitCommand(initialWaitTime),
               fourBallParallel1,
-              fourBallRamseteCommands[1],
-              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
               fourBallParallel2,
-              fourBallRamseteCommands[3],
+              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
+              fourBallParallel3,
+              fourBallParallel4,
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
 
       // ---------------------------------------
