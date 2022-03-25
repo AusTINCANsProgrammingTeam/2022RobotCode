@@ -12,7 +12,6 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -149,10 +148,10 @@ public class ShooterSubsystem extends SubsystemBase {
       DTRPM.setDouble(rpm);
       targetRPM = rpm;
       flywheelPID.setReference(
-      rpm,
-      CANSparkMax.ControlType.kVelocity,
-      Constants.Shooter.kMaxISlot,
-      flywheelFF.calculate(rpm / 62.0));
+          rpm,
+          CANSparkMax.ControlType.kVelocity,
+          Constants.Shooter.kMaxISlot,
+          flywheelFF.calculate(rpm / 62.0));
     }
   }
 
