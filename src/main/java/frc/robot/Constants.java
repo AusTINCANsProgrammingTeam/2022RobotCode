@@ -112,7 +112,7 @@ public final class Constants {
 
   // drive base pid values
   public static final double[] driveRightPID = {0.00035, 0.00000085, 0};
-  public static final double[] driveLeftPID = {0.00035, 0.00000092, 0};
+  public static final double[] driveLeftPID = {0.00035, 0.000001, 0};
 
   // AUTONOMOUS Constants
 
@@ -125,7 +125,7 @@ public final class Constants {
     THREEBALL("ThreeBall", "paths/Three1.wpilib.json", "paths/Three2.wpilib.json", "paths/Three3.wpilib.json", "paths/Three4.wpilib.json"),
     FOURBALL("FourBall", "paths/Four1.wpilib.json", "paths/Four2.wpilib.json", "paths/Four3.wpilib.json", "paths/Four4.wpilib.json"),
     FIVEBALL("FiveBall", "paths/Five1.wpilib.json", "paths/Five2.wpilib.json", "paths/Five3.wpilib.json", "paths/Five4.wpilib.json", "paths/Five5.wpilib.json", "paths/Five6.wpilib.json"),
-    TEST("Test", FIVEBALL);
+    TEST("Test", THREEBALL);
     // change according to what mode you want to test
     // spotless:on
 
