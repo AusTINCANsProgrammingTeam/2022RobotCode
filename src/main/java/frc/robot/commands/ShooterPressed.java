@@ -38,6 +38,7 @@ public class ShooterPressed extends CommandBase {
   @Override
   public void initialize() {
     i = 0;
+    m_ShooterSubsystem.resetIAccum();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

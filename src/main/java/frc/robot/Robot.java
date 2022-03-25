@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
 
     robotContainer = new RobotContainer();
 
-    chooser.setDefaultOption("Taxi", Constants.Auton.TAXI); // default is taxi mode
+    chooser.setDefaultOption("Taxi", Constants.Auton.TWOBALL); // default is taxi mode
 
     chooser.addOption("Taxi", Constants.Auton.TAXI);
     chooser.addOption("One Ball", Constants.Auton.ONEBALL);

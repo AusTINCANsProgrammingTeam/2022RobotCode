@@ -145,8 +145,6 @@ public class ShooterSubsystem extends SubsystemBase {
     // Winds Flywheel using PID control to passed rpm
     if (rpm == 0) {
       flywheelPID.setReference(0, CANSparkMax.ControlType.kVoltage);
-      //flywheelController.set(0.03);
-      flywheelPID.setIAccum(0);
     } else {
       DTRPM.setDouble(rpm);
       targetRPM = rpm;
@@ -155,6 +153,12 @@ public class ShooterSubsystem extends SubsystemBase {
       CANSparkMax.ControlType.kVelocity,
       Constants.Shooter.kMaxISlot,
       flywheelFF.calculate(rpm / 62.0));
+    }
+  }
+
+  public void resetIAccum() {
+    if (flywheelEncoder.getVelocity() < 500) {
+      flywheelPID.setIAccum(0);
     }
   }
 
