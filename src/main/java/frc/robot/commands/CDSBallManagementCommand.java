@@ -21,8 +21,10 @@ public class CDSBallManagementCommand extends CommandBase {
   private final ShooterSubsystem shooterSubsystem;
 
   private static ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
-  private static NetworkTableEntry autoEjectRunning = CDSTab.add("Auto Eject Running", false).getEntry();
-  private static NetworkTableEntry autoIntakeRunning = CDSTab.add("Auto Intake Running", false).getEntry();
+  private static NetworkTableEntry autoEjectRunning =
+      CDSTab.add("Auto Eject Running", false).getEntry();
+  private static NetworkTableEntry autoIntakeRunning =
+      CDSTab.add("Auto Intake Running", false).getEntry();
   private static NetworkTableEntry CDSState = CDSTab.add("CDS State", "IDLE").getEntry();
 
   public CDSBallManagementCommand(
