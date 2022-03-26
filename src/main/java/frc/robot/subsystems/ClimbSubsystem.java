@@ -110,8 +110,6 @@ public class ClimbSubsystem extends SubsystemBase {
     m_climbJoystick = joystick;
     climbEnabble = false;
 
-    // One is left, two is right
-
     // Mid Climb Left MotorController
     m_McOne = new MotorController("Climb Motor One", Constants.McMotorOne, Constants.McLeftPID);
     m_McOne.setSmartCurrentLimit(10);
@@ -152,6 +150,7 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void climbKeepDownFunction() {
+    //Keeps Climb Down So That It Does Not Go Up
     m_McOne.getPIDCtrl().setReference(McHeightOne, CANSparkMax.ControlType.kPosition);
     if (Constants.DebugMode) {
       sbMcHeightOne.setNumber(McHeightOne);
