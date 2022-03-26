@@ -25,7 +25,7 @@ public class CDSBallManagementCommand extends CommandBase {
       CDSTab.add("Auto Eject Running", false).getEntry();
   private static NetworkTableEntry autoIntakeRunning =
       CDSTab.add("Auto Intake Running", false).getEntry();
-  private static NetworkTableEntry CDSState = CDSTab.add("CDS State", "IDLE").getEntry();
+  
 
   public CDSBallManagementCommand(
       CDSSubsystem mCDSSubsystem,
@@ -75,7 +75,6 @@ public class CDSBallManagementCommand extends CommandBase {
 
         break;
     }
-    CDSState.setString(state.toString());
   }
 
   // Called once the command ends or is interrupted.

@@ -20,6 +20,7 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.common.hardware.ColorSensorMuxed;
 import frc.robot.common.hardware.MotorController;
+import frc.robot.common.hardware.ColorSensorMuxed.MeasurementRate;
 
 public class CDSSubsystem extends SubsystemBase {
   public enum ManagementState {
@@ -54,7 +55,7 @@ public class CDSSubsystem extends SubsystemBase {
 
   private int currentProxCycle = 0;
   private int currentColorCycle = 0;
-  private int cycleWait = 5; // read interval for color sensors
+  private int cycleWait = 1; // read interval for color sensors
 
   private int sensorsDown = 0;
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
@@ -74,6 +75,7 @@ public class CDSSubsystem extends SubsystemBase {
   private NetworkTableEntry middleSensorProx = CDSTab.add("Middle Proximity", 0).getEntry();
   private NetworkTableEntry backSensorProx = CDSTab.add("Back Proximity", 0).getEntry();
   private NetworkTableEntry CDSBallCount = CDSTab.add("Ball Count", 0).getEntry();
+  private NetworkTableEntry CDSState = CDSTab.add("CDS State", "IDLE").getEntry();
 
   public CDSSubsystem() {
     // BManualCDS.setBoolean(Constants.); TODO: setup when manual cds toggle is merged
@@ -91,6 +93,7 @@ public class CDSSubsystem extends SubsystemBase {
     CDSWheelControllerOne.setIdleMode(IdleMode.kCoast);
 
     colorSensors = new ColorSensorMuxed(1, 2, 0); // front to back color sensor ports on new robotn
+    colorSensors.configureMeasurementRates(MeasurementRate.kRate40Hz);
     sensorStatuses = colorSensors.getProximities();
     allianceColor = DriverStation.getAlliance().toString();
     SmartDashboard.putString("Alliance Color", allianceColor);
@@ -238,6 +241,9 @@ public class CDSSubsystem extends SubsystemBase {
     if (currentColorCycle % cycleWait == 0) {
       currentColorCycle = 1;
       Color[] colors = colorSensors.getColors();
+      SmartDashboard.putNumber("Front Sense B", colors[2].blue);
+      SmartDashboard.putNumber("Front Sense R", colors[2].red);
+
       // Only sensing colors for first sensor so that we can handle it when it's coming in and not
       // dealing with any other complexities
       double redAmount = colors[2].red;
@@ -294,13 +300,8 @@ public class CDSSubsystem extends SubsystemBase {
     String sensedBallColor = senseColor();
     int currentOpenSensor = getNextOpenSensor();
 
-    if (count == 50) {
-      System.out.println(
-          "CDS Periodic method run count: " + runCount++ + ", State: " + state.toString());
-      count = 0;
-    } else {
-      count++;
-    }
+
+    
     boolean ballPresent =
         activationArray[2]; // whether or not there's a ball at the centering wheels
 
@@ -336,6 +337,8 @@ public class CDSSubsystem extends SubsystemBase {
 
         break;
     }
+    CDSState.setString(state.toString());
+
   }
 
   public void simulateColorSense() {
