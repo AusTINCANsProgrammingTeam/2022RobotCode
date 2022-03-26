@@ -22,7 +22,7 @@ public class ClimbSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  // 1 = left Side, 2 = Right Side
+  // 1 = Right Side, 2 = Left Side
   private Joystick m_climbJoystick;
   private MotorController m_McOne;
   private MotorController m_McTwo;
@@ -37,9 +37,9 @@ public class ClimbSubsystem extends SubsystemBase {
   private double McjoystickAxis;
   private double HajoystickAxis;
 
+  // 1 = Right Side, 2 = Left Side
   private ShuffleboardTab climbTab;
 
-  // 1 = left Side, 2 = Right Side
   // Mc = Mid Climb
   private NetworkTableEntry sbMcSpeedOne;
   private NetworkTableEntry sbMcTargettedOne;

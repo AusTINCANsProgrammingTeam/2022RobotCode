@@ -282,9 +282,9 @@ public final class Constants {
   public static final double[] McRightPID = {0.25, 0.005, 1.0};
   public static final double[] McLeftPID = {0.25, 0.005, 1.0};
 
-  public static final int HaMotorOne = 888888;
-  public static final int HaMotorTwo = 999999;
-  public static final int HaHeightMax = 777777;
-  public static final double[] HaRightPID = {0.25, 0.005, 1.0};
   public static final double[] HaLeftPID = {0.25, 0.005, 1.0};
+  public static final double[] HaRightPID = {0.25, 0.005, 1.0};
+  public static final int HaHeightMax = 65;
+  public static final int HaMotorTwo = 16;
+  public static final int HaMotorOne = 15;
 }
