@@ -281,8 +281,8 @@ public class CDSSubsystem extends SubsystemBase {
     boolean ballPresentUpper = sensorStatus[0];
 
     boolean bottomColorMismatch = bottomBallColor != allianceColor;
-    boolean topColorMismatch =
-        upperSensorsColor[1] != allianceColor || upperSensorsColor[0] != allianceColor;
+    boolean middleColorMismatch = upperSensorsColor[1] != allianceColor;
+    boolean topColorMismatch = upperSensorsColor[0] != allianceColor;
 
     switch (state) {
       case IDLE:
@@ -291,7 +291,7 @@ public class CDSSubsystem extends SubsystemBase {
 
         if ((ballCount > 2 || bottomColorMismatch) && ballPresentBottom) {
           state = ManagementState.EJECT;
-        } else if ((topColorMismatch && ballPresentMiddle)
+        } else if ((middleColorMismatch && ballPresentMiddle)
             || (topColorMismatch && ballPresentUpper)) {
           state = ManagementState.BELT_EJECT;
         }
