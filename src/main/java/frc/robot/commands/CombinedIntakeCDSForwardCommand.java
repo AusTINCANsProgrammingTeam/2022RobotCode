@@ -9,6 +9,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.CDSSubsystem.ManagementState;
 
 public class CombinedIntakeCDSForwardCommand extends CommandBase {
   /** Creates a new OuttakeCommand. */
@@ -41,7 +42,7 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (CDSSubsystem.getState().toString() == "IDLE") {
+    if (CDSSubsystem.getState() == ManagementState.IDLE) {
       // If mangement isn't doing anything, run button normally
       CDSSubsystem.CDSBeltToggle(false);
       CDSSubsystem.CDSWheelToggle(false);

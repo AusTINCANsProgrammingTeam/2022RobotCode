@@ -251,8 +251,8 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public void periodic() {
-    int ballCount = getBallCount();
-    String ballColor = senseColor();
+    ballCount = getBallCount();
+    String sensedBallColor = senseColor();
     int currentOpenSensor = getNextOpenSensor();
 
     boolean ballPresent =
@@ -263,7 +263,7 @@ public class CDSSubsystem extends SubsystemBase {
         nextOpenSensor = -1;
         msCurrent = 0;
 
-        if ((ballCount > 2 || ballColor != allianceColor) && ballPresent) {
+        if ((ballCount > 2 || sensedBallColor != allianceColor) && ballPresent) {
           state = ManagementState.EJECT;
         }
 
