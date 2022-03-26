@@ -35,7 +35,7 @@ public class CDSSubsystem extends SubsystemBase {
   private MotorController CDSWheelControllerTwo;
   private String allianceColor;
   private ColorSensorMuxed colorSensors;
-  private ManagementState state = ManagementState.IDLE;
+  private ManagementState state;
   private int nextOpenSensor = -1;
 
   private SimDeviceSim colorSenseSim;
@@ -49,7 +49,7 @@ public class CDSSubsystem extends SubsystemBase {
   private int ballCount = 0;
 
   private int[] sensorStatuses;
-  private boolean[] activationArray;
+  private boolean[] activationArray = new boolean[3];
   private String lastBallColor;
 
   private int currentProxCycle = 0;
@@ -94,7 +94,7 @@ public class CDSSubsystem extends SubsystemBase {
     sensorStatuses = colorSensors.getProximities();
     allianceColor = DriverStation.getAlliance().toString();
     SmartDashboard.putString("Alliance Color", allianceColor);
-
+    state = ManagementState.IDLE;
     if (Robot.isSimulation()) {
       colorSenseSim = new SimDeviceSim("REV Color Sensor V3", I2C.Port.kMXP.value, 82);
       m_simR = colorSenseSim.getDouble("Red");
@@ -195,13 +195,13 @@ public class CDSSubsystem extends SubsystemBase {
 
   public boolean[] getSensorStatus() {
     if (currentProxCycle % cycleWait == 0) {
-      currentProxCycle = 0;
+      currentProxCycle = 1;
       sensorStatuses = colorSensors.getProximities();
-      if (Constants.DebugMode) {
+      //if (Constants.DebugMode) {
         frontSensorProx.setNumber(sensorStatuses[2]);
         middleSensorProx.setNumber(sensorStatuses[1]);
         backSensorProx.setNumber(sensorStatuses[0]);
-      }
+      //}
 
       activationArray[0] = sensorStatuses[0] > Constants.backSensorActivation;
       activationArray[1] = sensorStatuses[1] > Constants.middleSensorActivation;
@@ -236,7 +236,7 @@ public class CDSSubsystem extends SubsystemBase {
 
   public String senseColor() {
     if (currentColorCycle % cycleWait == 0) {
-      currentColorCycle = 0;
+      currentColorCycle = 1;
       Color[] colors = colorSensors.getColors();
       // Only sensing colors for first sensor so that we can handle it when it's coming in and not
       // dealing with any other complexities
@@ -289,6 +289,7 @@ public class CDSSubsystem extends SubsystemBase {
   int runCount = 0;
 
   public void changeState() {
+    getSensorStatus();
     ballCount = getBallCount();
     String sensedBallColor = senseColor();
     int currentOpenSensor = getNextOpenSensor();
