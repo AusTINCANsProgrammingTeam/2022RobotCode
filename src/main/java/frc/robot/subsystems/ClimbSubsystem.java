@@ -78,6 +78,8 @@ public class ClimbSubsystem extends SubsystemBase {
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
   private NetworkTableEntry DmcHeight1;
   private NetworkTableEntry DmcHeight2;
+  private NetworkTableEntry DhaHeight1;
+  private NetworkTableEntry DhaHeight2;
   private NetworkTableEntry BClimbEnabled;
 
   public ClimbSubsystem(Joystick joystick) {
@@ -88,14 +90,28 @@ public class ClimbSubsystem extends SubsystemBase {
       // Compitition SuffleBoard for Oporator
       DmcHeight1 =
           operatorTab
-              .add("Climb Height 1", 0)
+              .add("Mc Height 1", 0)
               .withWidget(BuiltInWidgets.kNumberBar)
               .withSize(2, 1)
               .withPosition(6, 0)
               .getEntry();
       DmcHeight2 =
           operatorTab
-              .add("Climb Height 2", 0)
+              .add("Mc Height 2", 0)
+              .withWidget(BuiltInWidgets.kNumberBar)
+              .withSize(2, 1)
+              .withPosition(6, 1)
+              .getEntry();
+      DhaHeight1 =
+          operatorTab
+              .add("Ha Height 1", 0)
+              .withWidget(BuiltInWidgets.kNumberBar)
+              .withSize(2, 1)
+              .withPosition(6, 1)
+              .getEntry();
+      DhaHeight2 =
+          operatorTab
+              .add("Ha Height 2", 0)
               .withWidget(BuiltInWidgets.kNumberBar)
               .withSize(2, 1)
               .withPosition(6, 1)
@@ -150,7 +166,7 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void climbKeepDownFunction() {
-    //Keeps Climb Down So That It Does Not Go Up
+    // Keeps Climb Down So That It Does Not Go Up
     m_McOne.getPIDCtrl().setReference(McHeightOne, CANSparkMax.ControlType.kPosition);
     if (Constants.DebugMode) {
       sbMcHeightOne.setNumber(McHeightOne);
@@ -166,7 +182,11 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     m_HaOne.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
-    // Insert High Arm Shuffleboard after done
+    if (Constants.DebugMode) {
+      sbHaHeightOne.setNumber(HaHeightOne);
+    } else {
+      DhaHeight1.setNumber(HaHeightOne);
+    }
 
     m_HaTwo.getPIDCtrl().setReference(HaHeightTwo, CANSparkMax.ControlType.kPosition);
   }
