@@ -46,13 +46,13 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (CDSSubsystem.getState() == ManagementState.IDLE ) {
+    if (CDSSubsystem.getState() == ManagementState.IDLE) {
       if (lastState != ManagementState.IDLE) {
-      // If mangement isn't doing anything, run button normally
-      CDSSubsystem.CDSBeltToggle(false);
-      CDSSubsystem.CDSWheelToggle(false);
-      intakeSubsystem.toggleIntake(false);
-      shooterSubsystem.runCargo(Constants.reverseStopperWheelSpeed);
+        // If mangement isn't doing anything, run button normally
+        CDSSubsystem.CDSBeltToggle(false);
+        CDSSubsystem.CDSWheelToggle(false);
+        intakeSubsystem.toggleIntake(false);
+        shooterSubsystem.runCargo(Constants.reverseStopperWheelSpeed);
       }
     } else {
       // run ball management if it's in the middle of doing something

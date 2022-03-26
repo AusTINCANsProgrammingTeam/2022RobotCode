@@ -33,7 +33,9 @@ public class ColorSensorMuxed {
       i2cPorts.add(p);
       if (setI2cPort(p)) {
         // Initialize each device, only need to keep last object
-        sensors = new ColorSensorV3(Port.kMXP);
+        if (Robot.isReal() || sensors == null) {
+          sensors = new ColorSensorV3(Port.kMXP);
+        }
       } else {
         DriverStation.reportError("Could not initialize color sensor on I2C port " + p, false);
       }
