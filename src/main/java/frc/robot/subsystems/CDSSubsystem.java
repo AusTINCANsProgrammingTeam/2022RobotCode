@@ -21,6 +21,7 @@ public class CDSSubsystem extends SubsystemBase {
   public enum ManagementState {
     IDLE,
     EJECT,
+    BELT_EJECT,
     ADVANCE
   }
 
@@ -36,6 +37,7 @@ public class CDSSubsystem extends SubsystemBase {
 
   private int msCurrent = 0;
   private int ejectRuntime = 650; // amount of time auto eject will run intake backwards for in ms
+  private int beltEjectRuntime = 2000;
 
   private int ballCount = 0;
 
@@ -222,6 +224,20 @@ public class CDSSubsystem extends SubsystemBase {
     }
   }
 
+  // seperate method for getting the status of the upper 2 color sensors
+  public String[] senseTopSensors() {
+    Color[] colors = colorSensors.getColors();
+    String[] formattedColorArray = new String[2];
+    // Sense colors for back 2 sensors which are the first 2 values in the color array
+    for (int i = 0; i < colors.length - 1; i++) {
+      double redAmount = colors[i].red;
+      double blueAmount = colors[i].blue;
+
+      formattedColorArray[i] = redAmount > blueAmount ? "Red" : "Blue";
+    }
+    return formattedColorArray;
+  }
+
   public boolean sensorsOnline() {
     sensorStatuses = colorSensors.getProximities();
     for (int prox : sensorStatuses) {
@@ -252,40 +268,60 @@ public class CDSSubsystem extends SubsystemBase {
 
   public void periodic() {
     ballCount = getBallCount();
-    String sensedBallColor = senseColor();
-    int currentOpenSensor = getNextOpenSensor();
+    String bottomBallColor = senseColor();
+    String[] upperSensorsColor = senseTopSensors();
 
-    boolean ballPresent =
-        getSensorStatus()[2]; // whether or not there's a ball at the centering wheels
+    int currentOpenSensor = getNextOpenSensor();
+    boolean[] sensorStatus = getSensorStatus();
+
+    // seperate variables for balls being present in the lower and upper sensors
+    // because they should be treated differently
+    boolean ballPresentBottom = sensorStatus[2];
+    boolean ballPresentMiddle = sensorStatus[1];
+    boolean ballPresentUpper = sensorStatus[0];
+
+    boolean bottomColorMismatch = bottomBallColor != allianceColor;
+    boolean topColorMismatch =
+        upperSensorsColor[1] != allianceColor || upperSensorsColor[0] != allianceColor;
 
     switch (state) {
       case IDLE:
         nextOpenSensor = -1;
         msCurrent = 0;
 
-        if ((ballCount > 2 || sensedBallColor != allianceColor) && ballPresent) {
+        if ((ballCount > 2 || bottomColorMismatch) && ballPresentBottom) {
           state = ManagementState.EJECT;
+        } else if ((topColorMismatch && ballPresentMiddle)
+            || (topColorMismatch && ballPresentUpper)) {
+          state = ManagementState.BELT_EJECT;
         }
 
-        if (ballCount < 3 && currentOpenSensor != -1 && ballPresent) {
+        if (ballCount < 3 && currentOpenSensor != -1 && ballPresentBottom) {
           state = ManagementState.ADVANCE;
           nextOpenSensor = currentOpenSensor;
         }
-
         break;
+      
       case ADVANCE:
         if (getSensorStatus()[nextOpenSensor]) {
           state = ManagementState.IDLE;
         }
-
         break;
+
+      case BELT_EJECT:
+        if (msCurrent >= beltEjectRuntime) {
+          state = ManagementState.IDLE;
+        } else {
+          msCurrent += 20;
+        }
+        break;
+
       case EJECT:
         if (msCurrent >= ejectRuntime) {
           state = ManagementState.IDLE;
         } else {
           msCurrent += 20;
         }
-
         break;
     }
   }

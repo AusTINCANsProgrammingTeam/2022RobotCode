@@ -60,6 +60,14 @@ public class CDSBallManagementCommand extends CommandBase {
 
         break;
 
+      case BELT_EJECT:
+        intakeSubsystem.toggleIntake(true);
+        CDSSubsystem.CDSWheelToggle(true);
+        CDSSubsystem.CDSBeltToggle(true);
+        autoEjectRunning.setString("true");
+
+        break;
+
       case EJECT:
         intakeSubsystem.toggleIntake(true);
         CDSSubsystem.CDSWheelToggle(true);
