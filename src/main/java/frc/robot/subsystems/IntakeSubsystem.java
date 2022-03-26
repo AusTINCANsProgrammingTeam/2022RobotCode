@@ -5,6 +5,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -31,22 +34,26 @@ public class IntakeSubsystem extends SubsystemBase {
           .getEntry();
 
   private MotorController intakeMotorControllerOne;
-  private MotorController IntakeDeployController;
+  private MotorController deployController;
+  private SparkMaxPIDController deployPID;
+  private RelativeEncoder deployEncoder;
 
   public IntakeSubsystem() {
-    intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID);
-    IntakeDeployController =
-        new MotorController("Intake Deploy Motor Controller", Constants.intakeDeployMotorID);
-    IntakeDeployController.setIdleMode(IdleMode.kBrake);
+    deployEncoder.setPosition(0);
+    intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID, Constants.intakeDeployPID);
+    deployController =
+        new MotorController("Intake Deploy", Constants.intakeDeployMotorID);
+    deployPID = deployController.getPIDCtrl();
+    deployController.setIdleMode(IdleMode.kBrake);
 
     intakeMotorControllerOne.setInverted(true);
   }
 
   public void CDSDeployIntake(boolean deploy) {
     if (deploy) {
-      IntakeDeployController.getPIDCtrl().setReference(10, CANSparkMax.ControlType.kPosition);
+      deployPID.setReference(10, CANSparkMax.ControlType.kPosition);
     } else {
-      IntakeDeployController.getPIDCtrl().setReference(0, CANSparkMax.ControlType.kPosition);
+      deployPID.setReference(0, CANSparkMax.ControlType.kPosition);
     }
   }
 
