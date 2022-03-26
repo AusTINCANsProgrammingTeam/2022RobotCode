@@ -5,15 +5,19 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax.IdleMode;
+import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.common.hardware.ColorSensorMuxed;
 import frc.robot.common.hardware.MotorController;
 
@@ -33,6 +37,10 @@ public class CDSSubsystem extends SubsystemBase {
   private ColorSensorMuxed colorSensors;
   private ManagementState state = ManagementState.IDLE;
   private int nextOpenSensor = -1;
+
+  private SimDeviceSim colorSenseSim;
+  private SimDouble m_simR, m_simG, m_simB, m_simProx;
+  private int simCount = 0;
 
   private int msCurrent = 0;
   private int ejectRuntime = 650; // amount of time auto eject will run intake backwards for in ms
@@ -79,6 +87,14 @@ public class CDSSubsystem extends SubsystemBase {
     sensorStatuses = colorSensors.getProximities();
     allianceColor = DriverStation.getAlliance().toString();
     SmartDashboard.putString("Alliance Color", allianceColor);
+
+    if (Robot.isSimulation()) {
+      colorSenseSim = new SimDeviceSim("REV Color Sensor V3", I2C.Port.kMXP.value, 82);
+      m_simR = colorSenseSim.getDouble("Red");
+      m_simG = colorSenseSim.getDouble("Blue");
+      m_simB = colorSenseSim.getDouble("Green");
+      m_simProx = colorSenseSim.getDouble("Proximity");
+    }
   }
 
   public void CDSToggleAll(boolean reverse) {
@@ -300,6 +316,26 @@ public class CDSSubsystem extends SubsystemBase {
         }
 
         break;
+    }
+  }
+
+  public void simulateColorSense() {
+    if (Robot.isSimulation()) {
+      if (simCount == 500) {
+        m_simProx.set(Constants.frontSensorActivation + 1);
+        if (allianceColor == "Blue") {
+          m_simB.set(.9);
+        } else {
+          m_simR.set(.9);
+        }
+      } else if (simCount == 1000) {
+        m_simProx.set(50);
+        m_simB.set(0);
+        m_simR.set(0);
+
+        simCount = 0;
+      }
+      simCount++;
     }
   }
 }
