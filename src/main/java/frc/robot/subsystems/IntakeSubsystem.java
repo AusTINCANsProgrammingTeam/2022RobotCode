@@ -40,12 +40,13 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public IntakeSubsystem() {
     intakeDeployed = false;
-    deployEncoder.setPosition(0);
     intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID, Constants.intakeDeployPID);
     deployController =
         new MotorController("Intake Deploy", Constants.intakeDeployMotorID);
     deployPID = deployController.getPIDCtrl();
+    deployEncoder = deployController.getEncoder();
     deployController.setIdleMode(IdleMode.kBrake);
+    deployEncoder.setPosition(0);
 
     intakeMotorControllerOne.setInverted(true);
   }
