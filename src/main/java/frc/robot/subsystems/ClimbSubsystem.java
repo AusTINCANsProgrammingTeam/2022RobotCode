@@ -21,6 +21,8 @@ import frc.robot.common.hardware.MotorController;
 public class ClimbSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
+
+  // 1 = left Side, 2 = Right Side
   private Joystick m_climbJoystick;
   private MotorController m_McOne;
   private MotorController m_McTwo;
@@ -37,6 +39,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
   private ShuffleboardTab climbTab;
 
+  // 1 = left Side, 2 = Right Side
   // Mc = Mid Climb
   private NetworkTableEntry sbMcSpeedOne;
   private NetworkTableEntry sbMcTargettedOne;
@@ -73,52 +76,62 @@ public class ClimbSubsystem extends SubsystemBase {
 
   // Operator Tab
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
-  private NetworkTableEntry DmcHeight1 =
-      operatorTab
-          .add("Climb Height 1", 0)
-          .withWidget(BuiltInWidgets.kNumberBar)
-          .withSize(2, 1)
-          .withPosition(6, 0)
-          .getEntry();
-  private NetworkTableEntry DmcHeight2 =
-      operatorTab
-          .add("Climb Height 2", 0)
-          .withWidget(BuiltInWidgets.kNumberBar)
-          .withSize(2, 1)
-          .withPosition(6, 1)
-          .getEntry();
-  private NetworkTableEntry BClimbEnabled =
-      operatorTab
-          .add("Climb Enabled", false)
-          .withPosition(5, 0)
-          .withWidget(BuiltInWidgets.kBooleanBox)
-          .getEntry();
+  private NetworkTableEntry DmcHeight1;
+  private NetworkTableEntry DmcHeight2;
+  private NetworkTableEntry BClimbEnabled;
 
   public ClimbSubsystem(Joystick joystick) {
     if (Constants.DebugMode) {
+      // ShuffleBoard for Debuging
       instantiateDebugTab();
+    } else {
+      // Compitition SuffleBoard for Oporator
+      DmcHeight1 =
+          operatorTab
+              .add("Climb Height 1", 0)
+              .withWidget(BuiltInWidgets.kNumberBar)
+              .withSize(2, 1)
+              .withPosition(6, 0)
+              .getEntry();
+      DmcHeight2 =
+          operatorTab
+              .add("Climb Height 2", 0)
+              .withWidget(BuiltInWidgets.kNumberBar)
+              .withSize(2, 1)
+              .withPosition(6, 1)
+              .getEntry();
+      BClimbEnabled =
+          operatorTab
+              .add("Climb Enabled", false)
+              .withPosition(5, 0)
+              .withWidget(BuiltInWidgets.kBooleanBox)
+              .getEntry();
     }
     m_climbJoystick = joystick;
     climbEnabble = false;
 
     // One is left, two is right
 
+    // Mid Climb Left MotorController
     m_McOne = new MotorController("Climb Motor One", Constants.McMotorOne, Constants.McLeftPID);
     m_McOne.setSmartCurrentLimit(10);
     m_McOne.getEncoder().setPosition(0);
     m_McOne.setIdleMode(IdleMode.kBrake);
 
+    // Mid Climb Right MotorController
     m_McTwo = new MotorController("Climb Motor Two", Constants.McMotorTwo, Constants.McRightPID);
     m_McTwo.setSmartCurrentLimit(10);
     m_McTwo.getEncoder().setPosition(0);
     m_McTwo.setIdleMode(IdleMode.kBrake);
     m_McTwo.setInverted(true);
 
+    // High Arms Left MotorController
     m_HaOne = new MotorController("Ha1 MotorControllor", Constants.HaMotorOne, Constants.HaLeftPID);
     m_HaOne.setSmartCurrentLimit(10);
     m_HaOne.getEncoder().setPosition(0);
     m_HaOne.setIdleMode(IdleMode.kBrake);
 
+    // High Arms Right MotorController
     m_HaTwo =
         new MotorController("Ha2 MotorControllor", Constants.HaMotorTwo, Constants.HaRightPID);
     m_HaTwo.setSmartCurrentLimit(10);
@@ -126,9 +139,8 @@ public class ClimbSubsystem extends SubsystemBase {
     m_HaTwo.setIdleMode(IdleMode.kBrake);
     m_HaTwo.setInverted(true);
 
+    // Resets The Motor Values To Current Values
     resetTargetedHeight();
-    // m_climbMotorControllerTwo.getPID().setOutputRange(-.4, .4);
-    // m_climbMotorControllerOne.getPID().setOutputRange(-.4, .4);
   }
 
   public void resetTargetedHeight() {
@@ -148,7 +160,11 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     m_McTwo.getPIDCtrl().setReference(McHeightTwo, CANSparkMax.ControlType.kPosition);
-    sbMcHeightTwo.setNumber(McHeightTwo);
+    if (Constants.DebugMode) {
+      sbMcHeightTwo.setNumber(McHeightTwo);
+    } else {
+      DmcHeight2.setNumber(McHeightOne);
+    }
 
     m_HaOne.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
     // Insert High Arm Shuffleboard after done
@@ -204,7 +220,11 @@ public class ClimbSubsystem extends SubsystemBase {
       }
 
       m_McTwo.getPIDCtrl().setReference(McHeightTwo, CANSparkMax.ControlType.kPosition);
-      sbMcHeightTwo.setNumber(McHeightTwo);
+      if (Constants.DebugMode) {
+        sbMcHeightTwo.setNumber(McHeightTwo);
+      } else {
+        DmcHeight2.setNumber(McHeightTwo);
+      }
     }
   }
 
