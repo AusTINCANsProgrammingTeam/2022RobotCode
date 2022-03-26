@@ -151,7 +151,7 @@ public class ShooterSubsystem extends SubsystemBase {
           rpm,
           CANSparkMax.ControlType.kVelocity,
           Constants.Shooter.kMaxISlot,
-          flywheelFF.calculate(rpm / 62.0));
+          flywheelFF.calculate(rpm / 60.0));
     }
   }
 
@@ -232,7 +232,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("ff", flywheelFF.calculate(2600 / 60));
     // This method will be called once per scheduler run
     currentRPM = flywheelEncoder.getVelocity();
     smoothRPM = Constants.Shooter.kA * currentRPM + smoothRPM * (1 - Constants.Shooter.kA);
