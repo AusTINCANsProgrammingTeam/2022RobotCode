@@ -93,33 +93,31 @@ public class ClimbSubsystem extends SubsystemBase {
     climbEnabble = false;
 
     // Mid Climb Left MotorController
-    m_McOne = new MotorController("Climb Motor One", Constants.McMotorOne, Constants.McLeftPID);
+    m_McOne = new MotorController("Mc1 Motor", Constants.McMotorOne, Constants.McLeftPID);
     m_McOne.setSmartCurrentLimit(10);
     m_McOne.getEncoder().setPosition(0);
     m_McOne.setIdleMode(IdleMode.kBrake);
 
     // Mid Climb Right MotorController
-    m_McTwo = new MotorController("Climb Motor Two", Constants.McMotorTwo, Constants.McRightPID);
+    m_McTwo = new MotorController("Mc2 Motor", Constants.McMotorTwo, Constants.McRightPID);
     m_McTwo.setSmartCurrentLimit(10);
     m_McTwo.getEncoder().setPosition(0);
     m_McTwo.setIdleMode(IdleMode.kBrake);
     m_McTwo.setInverted(true);
 
     // High Arms Left MotorController
-    m_HaOne = new MotorController("Ha1 MotorControllor", Constants.HaMotorOne, Constants.HaLeftPID);
+    m_HaOne = new MotorController("Ha1 Motor", Constants.HaMotorOne, Constants.HaLeftPID);
     m_HaOne.setSmartCurrentLimit(10);
     m_HaOne.getEncoder().setPosition(0);
     m_HaOne.setIdleMode(IdleMode.kBrake);
 
     // High Arms Right MotorController
-    m_HaTwo =
-        new MotorController("Ha2 MotorControllor", Constants.HaMotorTwo, Constants.HaRightPID);
+    m_HaTwo = new MotorController("Ha2 Motor", Constants.HaMotorTwo, Constants.HaRightPID);
     m_HaTwo.setSmartCurrentLimit(10);
     m_HaTwo.getEncoder().setPosition(0);
     m_HaTwo.setIdleMode(IdleMode.kBrake);
     m_HaTwo.setInverted(true);
 
-    // Resets The Motor Values To Current Values
     resetTargetedHeight();
   }
 
@@ -132,7 +130,6 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void climbKeepDownFunction() {
-    // Keeps Climb Down So That It Does Not Go Up
     m_McOne.getPIDCtrl().setReference(McHeightOne, CANSparkMax.ControlType.kPosition);
     if (Constants.DebugMode) {
       sbMcHeightOne.setNumber(McHeightOne);
