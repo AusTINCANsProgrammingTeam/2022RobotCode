@@ -76,7 +76,7 @@ public class ShooterPressed extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (i >= 50) { // 1000 miliseconds delay TODO: Use a CDS method for this when possible
+    if (i >= 25) { // 1000 miliseconds delay TODO: Use a CDS method for this when possible
       return true;
     }
     return false;
