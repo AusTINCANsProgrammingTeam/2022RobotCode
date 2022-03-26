@@ -295,4 +295,11 @@ public class RobotContainer {
     }
     return null;
   }
+
+  public static CDSSubsystem getCDSSubsystem() {
+    if (cdsSubsystem != null) {
+      return cdsSubsystem;
+    }
+    return null;
+  }
 }

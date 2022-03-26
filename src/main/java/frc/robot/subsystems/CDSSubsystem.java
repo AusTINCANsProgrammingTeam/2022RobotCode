@@ -36,6 +36,7 @@ public class CDSSubsystem extends SubsystemBase {
 
   private int msCurrent = 0;
   private int ejectRuntime = 650; // amount of time auto eject will run intake backwards for in ms
+  private int advanceTimeout = 2000; // how long CDS should run before it times out
 
   private int ballCount = 0;
 
@@ -250,11 +251,21 @@ public class CDSSubsystem extends SubsystemBase {
     return state;
   }
 
-  public void periodic() {
+  int count = 0;
+  int runCount = 0;
+
+  public void changeState() {
     ballCount = getBallCount();
     String sensedBallColor = senseColor();
     int currentOpenSensor = getNextOpenSensor();
 
+    if (count == 50) {
+      System.out.println(
+          "CDS Periodic method run count: " + runCount++ + ", State: " + state.toString());
+      count = 0;
+    } else {
+      count++;
+    }
     boolean ballPresent =
         getSensorStatus()[2]; // whether or not there's a ball at the centering wheels
 
@@ -274,8 +285,10 @@ public class CDSSubsystem extends SubsystemBase {
 
         break;
       case ADVANCE:
-        if (getSensorStatus()[nextOpenSensor]) {
+        if (getSensorStatus()[nextOpenSensor] || msCurrent >= advanceTimeout) {
           state = ManagementState.IDLE;
+        } else {
+          msCurrent += 20;
         }
 
         break;
