@@ -50,6 +50,12 @@ public class CDSSubsystem extends SubsystemBase {
 
   private int[] sensorStatuses;
   private boolean[] activationArray;
+  private String lastBallColor;
+
+  private int currentProxCycle = 0;
+  private int currentColorCycle = 0;
+  private int cycleWait = 5; // read interval for color sensors
+
   private int sensorsDown = 0;
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
   private NetworkTableEntry DCDSSpeed =
@@ -188,28 +194,34 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public boolean[] getSensorStatus() {
-    sensorStatuses = colorSensors.getProximities();
-    if (Constants.DebugMode) {
-      frontSensorProx.setNumber(sensorStatuses[2]);
-      middleSensorProx.setNumber(sensorStatuses[1]);
-      backSensorProx.setNumber(sensorStatuses[0]);
-    }
-
-    activationArray[0] = sensorStatuses[0] > Constants.backSensorActivation;
-    activationArray[1] = sensorStatuses[1] > Constants.middleSensorActivation;
-    activationArray[2] = sensorStatuses[2] > Constants.frontSensorActivation;
-
-    ballCount = 0;
-    for (boolean status : activationArray) {
-      if (status) {
-        ballCount++;
+    if (currentProxCycle % cycleWait == 0) {
+      currentProxCycle = 0;
+      sensorStatuses = colorSensors.getProximities();
+      if (Constants.DebugMode) {
+        frontSensorProx.setNumber(sensorStatuses[2]);
+        middleSensorProx.setNumber(sensorStatuses[1]);
+        backSensorProx.setNumber(sensorStatuses[0]);
       }
-    }
-    if (Constants.DebugMode) {
-      CDSBallCount.setNumber(ballCount);
-    }
 
-    return activationArray;
+      activationArray[0] = sensorStatuses[0] > Constants.backSensorActivation;
+      activationArray[1] = sensorStatuses[1] > Constants.middleSensorActivation;
+      activationArray[2] = sensorStatuses[2] > Constants.frontSensorActivation;
+
+      ballCount = 0;
+      for (boolean status : activationArray) {
+        if (status) {
+          ballCount++;
+        }
+      }
+      if (Constants.DebugMode) {
+        CDSBallCount.setNumber(ballCount);
+      }
+
+      return activationArray;
+    } else {
+      currentProxCycle++;
+      return activationArray;
+    }
   }
 
   public int getNextOpenSensor() {
@@ -223,17 +235,25 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public String senseColor() {
-    Color[] colors = colorSensors.getColors();
-    // Only sensing colors for first sensor so that we can handle it when it's coming in and not
-    // dealing with any other complexities
-    double redAmount = colors[2].red;
-    double blueAmount = colors[2].blue;
-    if (redAmount > blueAmount) {
-      ballColor.setString("Red");
-      return "Red";
+    if (currentColorCycle % cycleWait == 0) {
+      currentColorCycle = 0;
+      Color[] colors = colorSensors.getColors();
+      // Only sensing colors for first sensor so that we can handle it when it's coming in and not
+      // dealing with any other complexities
+      double redAmount = colors[2].red;
+      double blueAmount = colors[2].blue;
+      if (redAmount > blueAmount) {
+        ballColor.setString("Red");
+        lastBallColor = "Red";
+        return "Red";
+      } else {
+        ballColor.setString("Blue");
+        lastBallColor = "Blue";
+        return "Blue";
+      }
     } else {
-      ballColor.setString("Blue");
-      return "Blue";
+      currentColorCycle++;
+      return lastBallColor;
     }
   }
 
@@ -280,7 +300,8 @@ public class CDSSubsystem extends SubsystemBase {
     } else {
       count++;
     }
-    boolean ballPresent = activationArray[2]; // whether or not there's a ball at the centering wheels
+    boolean ballPresent =
+        activationArray[2]; // whether or not there's a ball at the centering wheels
 
     switch (state) {
       case IDLE:
