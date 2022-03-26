@@ -196,6 +196,14 @@ public class CDSSubsystem extends SubsystemBase {
     }
   }
 
+  public void stopCDSBelt() {
+    // Stops only the belt
+    CDSBeltController.set(0.0);
+    if (Constants.DebugMode) {
+      SmartDashboard.putNumber("CDS Belt Speed", 0.0);
+    }
+  }
+
   public boolean[] getSensorStatus() {
     if (currentProxCycle % cycleWait == 0) {
       currentProxCycle = 1;

@@ -20,6 +20,9 @@ public class CDSBallManagementCommand extends CommandBase {
   private final IntakeSubsystem intakeSubsystem;
   private final ShooterSubsystem shooterSubsystem;
 
+  private int msBeltCurrent = 0;
+  private int beltEjectRuntime = 100;
+
   private static ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private static NetworkTableEntry autoEjectRunning =
       CDSTab.add("Auto Eject Running", false).getEntry();
@@ -61,6 +64,13 @@ public class CDSBallManagementCommand extends CommandBase {
         break;
 
       case EJECT:
+        if (msBeltCurrent <= beltEjectRuntime) {
+          CDSSubsystem.CDSBeltToggle(true);
+          msBeltCurrent += 20;
+        } else {
+          CDSSubsystem.stopCDSBelt();
+        }
+
         intakeSubsystem.toggleIntake(true);
         CDSSubsystem.CDSWheelToggle(true);
         autoEjectRunning.setString("true");
