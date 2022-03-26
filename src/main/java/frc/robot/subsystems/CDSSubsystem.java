@@ -53,7 +53,7 @@ public class CDSSubsystem extends SubsystemBase {
   public CDSSubsystem() {
     // BManualCDS.setBoolean(Constants.); TODO: setup when manual cds toggle is merged
     if (Constants.DebugMode) {
-      instantiateDebugTab();
+      //instantiateDebugTab();
     }
     CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID);
     CDSBeltController.setInverted(true);

@@ -256,11 +256,11 @@ public class AutonModes {
       fourBallCommand =
           new SequentialCommandGroup(
               new WaitCommand(initialWaitTime),
+              fourBallParallels[0],
               fourBallParallels[1],
-              fourBallParallels[2],
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
+              fourBallParallels[2],
               fourBallParallels[3],
-              fourBallParallels[4],
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
 
       // ---------------------------------------

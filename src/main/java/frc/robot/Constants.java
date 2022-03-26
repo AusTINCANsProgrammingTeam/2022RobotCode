@@ -27,7 +27,7 @@ public final class Constants {
     },
     EJECT(2500.0, 0.0),
     LAUNCH(0.0, 0.0),
-    TARMAC(2350.0, 0.0),
+    TARMAC(2500.0, 0.0),
     TEST {
       @Override
       public AimModes next() {
@@ -79,7 +79,8 @@ public final class Constants {
     }
   }
 
-  public static final boolean DebugMode = true; // TODO: change to false for competition time
+  // TODO: when true, shooter is over shooting
+  public static final boolean DebugMode = false; // TODO: change to false for competition time
 
   // motor controller constants
   public static final int defaultCurrentLimit = 40;
