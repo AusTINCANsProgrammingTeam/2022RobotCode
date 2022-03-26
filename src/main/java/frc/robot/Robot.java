@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
 
     // TODO: change to correct default
     chooser.setDefaultOption(
-        "Test Mode", Constants.Auton.TEST); // default is TEST mode for now, change later
+        "Four Ball", Constants.Auton.FOURBALL); // default is four ball mode for now
 
     chooser.addOption("Intake Taxi", Constants.Auton.INTAKETAXI);
     chooser.addOption("Push Taxi", Constants.Auton.PUSHTAXI);

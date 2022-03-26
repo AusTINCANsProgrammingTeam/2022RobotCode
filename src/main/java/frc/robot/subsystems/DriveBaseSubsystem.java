@@ -176,8 +176,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
     resetEncoders(); // reset encoders to reset position and velocity values
 
     odometry = new DifferentialDriveOdometry(gyro.getRotation2d());
-
-    initShuffleboard();
+    if(Constants.DebugMode == true) {
+      initShuffleboard();
+    }
   }
 
   private void initShuffleboard() {
@@ -194,7 +195,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
     sbRightBiconsumerSpeed =
         dtTab.add("Right Biconsumer Speed", 0).withSize(2, 2).withPosition(4, 2).getEntry();
 
-    sbGyroInfo = dtTab.add("Gyro angle", 0).withSize(2, 2).withPosition(2, 2).getEntry();
     dtTab.add(gyro).withPosition(2, 0); // adds a gyro compass indicator
 
     sbLeftPosition = dtTab.add("Left Position", 0).withSize(2, 1).withPosition(0, 4).getEntry();
@@ -231,15 +231,15 @@ public class DriveBaseSubsystem extends SubsystemBase {
     double leftPosition = leftEncoder.getPosition();
     double rightPosition = rightEncoder.getPosition();
 
-    sbGyroInfo.setDouble(gyro.getAngle());
-
     odometry.update(gyro.getRotation2d(), leftPosition, rightPosition);
 
-    // update shuffleboard
-    sbLeftEncoderSpeed.setDouble(leftEncoder.getVelocity());
-    sbRightEncoderSpeed.setDouble(rightEncoder.getVelocity());
-    sbLeftPosition.setDouble(leftEncoder.getPosition()); // in meters
-    sbRightPosition.setDouble(rightEncoder.getPosition());
+    if(Constants.DebugMode == true) {
+      // update shuffleboard
+      sbLeftEncoderSpeed.setDouble(leftEncoder.getVelocity());
+      sbRightEncoderSpeed.setDouble(rightEncoder.getVelocity());
+      sbLeftPosition.setDouble(leftEncoder.getPosition()); // in meters
+      sbRightPosition.setDouble(rightEncoder.getPosition());
+    }
 
     // Update the smart dashboard here
     // updates pid values of leaders, followers not needed
