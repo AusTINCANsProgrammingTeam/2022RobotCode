@@ -288,7 +288,7 @@ public final class Constants {
   public static final int McHeightMax = 65;
   public static final double[] McRightPID = {0.25, 0.005, 1.0};
   public static final double[] McLeftPID = {0.25, 0.005, 1.0};
-
+  // Ha = High Arms                          Mc = Mid Climb;
   public static final double[] HaLeftPID = {0.25, 0.005, 1.0};
   public static final double[] HaRightPID = {0.25, 0.005, 1.0};
   public static final int HaHeightMax = 65;
