@@ -242,35 +242,25 @@ public class AutonModes {
 
       // --------------------------------------------
 
-      ParallelDeadlineGroup fourBallParallel1 =
-          new ParallelDeadlineGroup(
-              fourBallRamseteCommands[0],
-              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
-
-      ParallelDeadlineGroup fourBallParallel2 = 
-          new ParallelDeadlineGroup(
-              fourBallRamseteCommands[1], 
-              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
-
-      ParallelDeadlineGroup fourBallParallel3 =
-          new ParallelDeadlineGroup(
-              fourBallRamseteCommands[2],
-              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
-
-      ParallelDeadlineGroup fourBallParallel4 = 
-          new ParallelDeadlineGroup(
-              fourBallRamseteCommands[3], 
-              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+      ParallelDeadlineGroup[] fourBallParallels =
+          new ParallelDeadlineGroup[fourBallRamseteCommands.length];
+      for (int i = 0; i < fourBallRamseteCommands.length; i++) {
+        fourBallParallels[i] =
+            new ParallelDeadlineGroup(
+                fourBallRamseteCommands[i],
+                new CombinedIntakeCDSForwardCommand(
+                    intakeSubsystem, cdsSubsystem, shooterSubsystem));
+      }
 
       // similar path to threeball, now just getting the additional ball at terminal
       fourBallCommand =
           new SequentialCommandGroup(
               new WaitCommand(initialWaitTime),
-              fourBallParallel1,
-              fourBallParallel2,
+              fourBallParallels[1],
+              fourBallParallels[2],
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
-              fourBallParallel3,
-              fourBallParallel4,
+              fourBallParallels[3],
+              fourBallParallels[4],
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
 
       // ---------------------------------------

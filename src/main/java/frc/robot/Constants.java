@@ -79,7 +79,7 @@ public final class Constants {
     }
   }
 
-  public static final boolean DebugMode = true;
+  public static final boolean DebugMode = true; // TODO: change to false for competition time
 
   // motor controller constants
   public static final int defaultCurrentLimit = 40;

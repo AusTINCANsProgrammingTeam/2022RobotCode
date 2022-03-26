@@ -176,7 +176,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     resetEncoders(); // reset encoders to reset position and velocity values
 
     odometry = new DifferentialDriveOdometry(gyro.getRotation2d());
-    if(Constants.DebugMode == true) {
+    if (Constants.DebugMode == true) {
       initShuffleboard();
     }
   }
@@ -233,7 +233,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     odometry.update(gyro.getRotation2d(), leftPosition, rightPosition);
 
-    if(Constants.DebugMode == true) {
+    if (Constants.DebugMode == true) {
       // update shuffleboard
       sbLeftEncoderSpeed.setDouble(leftEncoder.getVelocity());
       sbRightEncoderSpeed.setDouble(rightEncoder.getVelocity());
