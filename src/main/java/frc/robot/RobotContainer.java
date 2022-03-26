@@ -258,7 +258,8 @@ public class RobotContainer {
           success = false;
         }
         break;
-      case TAXI:
+      case PUSHTAXI: // the two taxis
+      case INTAKETAXI:
         if (driveBaseSubsystem != null && intakeSubsystem != null && cdsSubsystem != null) {
           autonModes = new AutonModes(driveBaseSubsystem, intakeSubsystem, cdsSubsystem);
         } else {

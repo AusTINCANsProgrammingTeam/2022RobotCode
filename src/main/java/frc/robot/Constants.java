@@ -27,7 +27,7 @@ public final class Constants {
     },
     EJECT(2500.0, 0.0),
     LAUNCH(0.0, 0.0),
-    TARMAC(2550.0, 0.0),
+    TARMAC(2530.0, 0.0),
     TEST {
       @Override
       public AimModes next() {
@@ -79,7 +79,8 @@ public final class Constants {
     }
   }
 
-  public static final boolean DebugMode = false;
+  // TODO: when true, shooter is over shooting
+  public static final boolean DebugMode = false; // TODO: change to false for competition time
 
   // motor controller constants
   public static final int defaultCurrentLimit = 40;
@@ -111,34 +112,36 @@ public final class Constants {
   public static final double driveBaseTurnRate = 0.85;
 
   // drive base pid values
-  // TODO: need to tune for real robot
   public static final double[] driveRightPID = {0.00035, 0.00000085, 0};
-  public static final double[] driveLeftPID = {0.00035, 0.00000092, 0};
+  public static final double[] driveLeftPID = {0.00035, 0.000001, 0};
 
   // AUTONOMOUS Constants
 
   public enum Auton {
     // spotless:off
-    TAXI("Taxi", "paths/TaxiOut.wpilib.json"),
+    PUSHTAXI("PushTaxi", "paths/TaxiOutPushBall.wpilib.json"),
+    INTAKETAXI("IntakeTaxi", "paths/TaxiOutGrabBall.wpilib.json"),
     ONEBALL("Taxi", "paths/TaxiOutFromFender.wpilib.json"),
     TWOBALL("TwoBall", "paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json"),
-    THREEBALL("ThreeBall", "paths/GrabTwoBalls.wpilib.json", "paths/GoBackWithTwoBalls.wpilib.json"),
-    FOURBALL,
-    FIVEBALL,
-    TEST("Test", "paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json");
-    // change according to what path you want to test
+    THREEBALL("ThreeBall", "paths/Three1.wpilib.json", "paths/Three2.wpilib.json", "paths/Three3.wpilib.json", "paths/Three4.wpilib.json"),
+    FOURBALL("FourBall", "paths/Four1.wpilib.json", "paths/Four2.wpilib.json", "paths/Four3.wpilib.json", "paths/Four4.wpilib.json"),
+    FIVEBALL("FiveBall", "paths/Five1.wpilib.json", "paths/Five2.wpilib.json", "paths/Five3.wpilib.json", "paths/Five4.wpilib.json", "paths/Five5.wpilib.json", "paths/Five6.wpilib.json"),
+    TEST("Test", THREEBALL);
+    // change according to what mode you want to test
     // spotless:on
 
     private String paths[];
     private String name;
 
-    private Auton() {
-      paths = null;
-    }
-
     private Auton(String name, String... paths) {
       this.name = name;
       this.paths = paths;
+    }
+
+    // for the TEST constructor
+    private Auton(String name, Auton a) {
+      this.name = name;
+      this.paths = a.getPaths();
     }
 
     public String getName() {
@@ -165,8 +168,7 @@ public final class Constants {
   public static final double ramseteB = 2; // Convergence, larger values are more aggressive
   public static final double ramseteZeta = 0.7; // Damping, larger values offer more damping
 
-  public static final double delaytaxi = 1.0; // 1 second wait time
-  public static final double delayshot = 0.5; // 0.5 second wait time
+  public static final double defaultInitialWaitTime = 0;
 
   // Encoder constants
 
@@ -194,7 +196,7 @@ public final class Constants {
   public static final int CDSBeltID = 3;
   public static final int CDSWheelControllerOneID = 2;
   public static final int CDSWheelControllerTwoID = 9;
-  public static final double CDSBeltSpeed = 0.40;
+  public static final double CDSBeltSpeed = 1.0;
   public static final double CDSWheelControllerSpeed = 0.65;
   public static final int frontSensorActivation = 200;
   public static final int middleSensorActivation = 450;
@@ -269,13 +271,18 @@ public final class Constants {
     public static final double cargoReverse = -0.4;
 
     // PID settings
-    public static final double kPIDFArray[] = {2.5e-8, 5.5e-8, 0};
-    public static final double kF = 2.0e-4;
+    // 2.5e-4, 2.5e-7, 2e-6, 1e-4
+    public static final double kPIDFArray[] = {8.0383e-8, 0, 0};
+    // public static final double kPIDFArray[] = {2.5e-8, 5.5e-8, 0};
     public static final double kMaxIAccum = 0.9;
     public static final int kMaxISlot = 0;
     public static final double kMaxOutput = 1.0;
     public static final double kMinOutput = 0;
-    public static final double kA = 0.35;
+    public static final double kA = 0.35; // Smoothing alpha, do not cofuse with kAg
+    // PID FF gains
+    public static final double kSg = 0.035516;
+    public static final double kVg = 0.14324;
+    public static final double kAg = 0.041994;
   }
 
   // Climb Constants

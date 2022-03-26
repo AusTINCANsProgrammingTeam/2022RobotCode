@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.CDSSubsystem;
@@ -33,7 +32,6 @@ public class ShooterHeld extends CommandBase {
     m_ShooterSubsystem = shooterSubsystem;
     m_LimelightSubsystem = limelightSubsystem;
     m_CDSSubsystem = CDSSubsystem;
-    SmartDashboard.putBoolean("wheelReady", false);
     LLEnabled = llEnabled;
   }
 
@@ -41,6 +39,7 @@ public class ShooterHeld extends CommandBase {
   @Override
   public void initialize() {
     i = 0;
+    m_ShooterSubsystem.resetIAccum();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -65,9 +64,9 @@ public class ShooterHeld extends CommandBase {
         }*/
       }
     } else {
-      m_ShooterSubsystem.setCargoBoolean(false);
+      /*m_ShooterSubsystem.setCargoBoolean(false);
       m_CDSSubsystem.stopCDS();
-      m_ShooterSubsystem.runCargo(Constants.Shooter.cargoReverse);
+      m_ShooterSubsystem.runCargo(Constants.Shooter.cargoReverse);*/
     }
   }
 
