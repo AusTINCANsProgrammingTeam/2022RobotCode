@@ -56,7 +56,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private NetworkTableEntry PID_P;
   private NetworkTableEntry PID_I;
   private NetworkTableEntry PID_D;
-  private NetworkTableEntry PID_F;
   private NetworkTableEntry DSmoothRPM;
 
   private ShooterConfig[] DistanceArray;
@@ -108,7 +107,6 @@ public class ShooterSubsystem extends SubsystemBase {
     PID_P = shooterTab.add("PID P", Constants.Shooter.kPIDFArray[0]).withPosition(0, 1).getEntry();
     PID_I = shooterTab.add("PID I", Constants.Shooter.kPIDFArray[1]).withPosition(0, 2).getEntry();
     PID_D = shooterTab.add("PID D", Constants.Shooter.kPIDFArray[2]).withPosition(0, 3).getEntry();
-    PID_F = shooterTab.add("PID F", Constants.Shooter.kF).withPosition(0, 4).getEntry();
     DSmoothRPM = shooterTab.add("Smooth RPM", 0.0).getEntry();
   }
 
@@ -117,7 +115,6 @@ public class ShooterSubsystem extends SubsystemBase {
       flywheelPID.setP(PID_P.getDouble(0));
       flywheelPID.setI(PID_I.getDouble(0));
       flywheelPID.setD(PID_D.getDouble(0));
-      flywheelPID.setFF(PID_F.getDouble(0));
     }
   }
 
@@ -240,8 +237,7 @@ public class ShooterSubsystem extends SubsystemBase {
     if (Constants.DebugMode) {
       if ((flywheelPID.getP() != PID_P.getDouble(0))
           || (flywheelPID.getI() != PID_I.getDouble(0))
-          || (flywheelPID.getD() != PID_D.getDouble(0))
-          || (flywheelPID.getFF() != PID_F.getDouble(0))) {
+          || (flywheelPID.getD() != PID_D.getDouble(0))) {
         updatePID();
       }
     }

@@ -30,9 +30,9 @@ public class Robot extends TimedRobot {
       Shuffleboard.getTab("Config"); // all auton settings located here
   private NetworkTableEntry waitTimeSlider =
       configTab
-          .add("Wait Time", 1)
+          .add("Wait Time", Constants.defaultInitialWaitTime)
           .withWidget(BuiltInWidgets.kNumberSlider)
-          .withProperties(Map.of("Min", 1, "Max", 10))
+          .withProperties(Map.of("Min", 0, "Max", 10))
           .getEntry();
   private SendableChooser<Constants.Auton> chooser = new SendableChooser<>();
 
@@ -49,22 +49,26 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     // TODO: Put commands here
 
-    usbCamera = CameraServer.startAutomaticCapture();
     if (isReal()) {
+      usbCamera = CameraServer.startAutomaticCapture();
       usbCamera.setResolution(240, 320);
     }
 
     robotContainer = new RobotContainer();
 
-    chooser.setDefaultOption("Taxi", Constants.Auton.TWOBALL); // default is taxi mode
+    // TODO: change to correct default
+    chooser.setDefaultOption(
+        "Four Ball", Constants.Auton.FOURBALL); // default is four ball mode for now
 
-    chooser.addOption("Taxi", Constants.Auton.TAXI);
+    chooser.addOption("Intake Taxi", Constants.Auton.INTAKETAXI);
+    chooser.addOption("Push Taxi", Constants.Auton.PUSHTAXI);
     chooser.addOption("One Ball", Constants.Auton.ONEBALL);
     chooser.addOption("Two Ball", Constants.Auton.TWOBALL);
     chooser.addOption("Three Ball", Constants.Auton.THREEBALL);
     chooser.addOption("Four Ball", Constants.Auton.FOURBALL);
     chooser.addOption("Five Ball", Constants.Auton.FIVEBALL);
-    chooser.addOption("Test Mode", Constants.Auton.TEST);
+    // chooser.addOption("Test Mode", Constants.Auton.TEST);      // don't need to show during
+    // competition
 
     configTab.add("Auton mode", chooser).withPosition(0, 1).withSize(2, 2);
   }
@@ -99,7 +103,7 @@ public class Robot extends TimedRobot {
   // This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    AutonModes.setWaitTime(waitTimeSlider.getDouble(1));
+    AutonModes.setWaitTime(waitTimeSlider.getDouble(Constants.defaultInitialWaitTime));
     robotContainer.initAuton(chooser.getSelected());
     autonomousCommand = robotContainer.getAutonomousCommand(chooser.getSelected());
 
