@@ -23,7 +23,7 @@ import frc.robot.common.hardware.MotorController;
 public class IntakeSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-
+  private boolean intakeDeployed;
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
   private NetworkTableEntry DIntakeSpeed =
       operatorTab
@@ -39,6 +39,7 @@ public class IntakeSubsystem extends SubsystemBase {
   private RelativeEncoder deployEncoder;
 
   public IntakeSubsystem() {
+    intakeDeployed = false;
     deployEncoder.setPosition(0);
     intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID, Constants.intakeDeployPID);
     deployController =
@@ -49,12 +50,18 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeMotorControllerOne.setInverted(true);
   }
 
-  public void CDSDeployIntake(boolean deploy) {
+  public void deployIntake(boolean deploy) {
     if (deploy) {
       deployPID.setReference(10, CANSparkMax.ControlType.kPosition);
+      intakeDeployed = true;
     } else {
       deployPID.setReference(0, CANSparkMax.ControlType.kPosition);
+      intakeDeployed = false;
     }
+  }
+
+  public boolean getIntakeDeployed(){
+    return intakeDeployed;
   }
 
   public void toggleIntake(boolean reverse) {
@@ -84,5 +91,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
   }
 
-  public void periodic() {}
+  public void periodic() {
+    deployController.updateSmartDashboard();
+  }
 }

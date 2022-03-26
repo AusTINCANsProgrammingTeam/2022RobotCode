@@ -18,6 +18,7 @@ import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.ClimbEnable;
 import frc.robot.commands.ClimbKeepDown;
 import frc.robot.commands.CombinedIntakeCDSForwardCommand;
+import frc.robot.commands.DeployIntake;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
@@ -57,6 +58,7 @@ public class RobotContainer {
 
   // commands
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
+  private DeployIntake deployIntake;
   private IntakeForwardCommand intakeForwardCommand;
   private IntakeReverseCommand intakeReverseCommand;
   private CDSBallManagementCommand ballManagementCommand;
@@ -152,7 +154,9 @@ public class RobotContainer {
     if (intakeSubsystem != null && cdsSubsystem != null) {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, cdsSubsystem);
+      deployIntake = new DeployIntake(intakeSubsystem);
       outtakeCommand = new OuttakeCommand(intakeSubsystem, cdsSubsystem);
+      
 
       if (Constants.ballManagementEnabled) {
         intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
@@ -196,6 +200,10 @@ public class RobotContainer {
     if (outtakeCommand != null) {
       // spits ball out
       buttons[Constants.RBumper].whileHeld(outtakeCommand);
+    }
+
+    if (deployIntake != null) {
+      buttons[Constants.BButton].whenPressed(deployIntake);
     }
 
     if (combinedIntakeCDS != null) {

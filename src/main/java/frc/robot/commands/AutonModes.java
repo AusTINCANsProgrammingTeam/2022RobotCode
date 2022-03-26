@@ -171,14 +171,14 @@ public class AutonModes {
   private void initializeCommandGroups() {
     taxiCommand =
         new SequentialCommandGroup(
-            new DeployIntake(intakeSubsystem, cdsSubsystem), // deploy/extend the intake
+            new DeployIntake(intakeSubsystem), // deploy/extend the intake
             new WaitCommand(initialWaitTime), // wait before starting, units in seconds
             taxiRamseteCommand.andThen(() -> driveBaseSubsystem.stopDriveMotors()));
 
     if (shooterEnabled) {
       oneBallCommand =
           new SequentialCommandGroup(
-              new DeployIntake(intakeSubsystem, cdsSubsystem),
+              new DeployIntake(intakeSubsystem),
               new WaitCommand(initialWaitTime),
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
               new WaitCommand(Constants.delaytaxi),
@@ -206,7 +206,7 @@ public class AutonModes {
 
       threeBallCommand =
           new SequentialCommandGroup(
-              new DeployIntake(intakeSubsystem, cdsSubsystem),
+              new DeployIntake(intakeSubsystem),
               new WaitCommand(initialWaitTime),
               new ShooterPressed(
                   shooterSubsystem, limelightSubsystem, cdsSubsystem, false), // shoot preloaded
