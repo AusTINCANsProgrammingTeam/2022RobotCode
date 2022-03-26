@@ -125,7 +125,6 @@ public class CDSSubsystem extends SubsystemBase {
         SmartDashboard.putString("CDS Belt Direction", "Reverse");
         SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
       }
-
     } else {
       DCDSSpeed.setDouble(1);
       CDSBeltController.set(Constants.CDSBeltSpeed);
