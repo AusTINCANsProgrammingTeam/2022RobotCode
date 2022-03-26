@@ -41,6 +41,7 @@ public class CDSSubsystem extends SubsystemBase {
   private int ballCount = 0;
 
   private int[] sensorStatuses;
+  private boolean[] activationArray;
   private int sensorsDown = 0;
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
   private NetworkTableEntry DCDSSpeed =
@@ -178,13 +179,12 @@ public class CDSSubsystem extends SubsystemBase {
       backSensorProx.setNumber(sensorStatuses[0]);
     }
 
-    boolean backStatus = sensorStatuses[0] > Constants.backSensorActivation;
-    boolean middleStatus = sensorStatuses[1] > Constants.middleSensorActivation;
-    boolean frontStatus = sensorStatuses[2] > Constants.frontSensorActivation;
-    boolean[] beamBreakArray = {backStatus, middleStatus, frontStatus};
+    activationArray[0] = sensorStatuses[0] > Constants.backSensorActivation;
+    activationArray[1] = sensorStatuses[1] > Constants.middleSensorActivation;
+    activationArray[2] = sensorStatuses[2] > Constants.frontSensorActivation;
 
     ballCount = 0;
-    for (boolean status : beamBreakArray) {
+    for (boolean status : activationArray) {
       if (status) {
         ballCount++;
       }
@@ -193,15 +193,13 @@ public class CDSSubsystem extends SubsystemBase {
       CDSBallCount.setNumber(ballCount);
     }
 
-    return beamBreakArray;
+    return activationArray;
   }
 
   public int getNextOpenSensor() {
-
-    boolean[] sensorStatus = getSensorStatus();
     // Starts at 0 and ends short of the centering wheel
-    for (int i = 0; i < sensorStatus.length - 1; i++) {
-      if (!sensorStatus[i]) {
+    for (int i = 0; i < activationArray.length - 1; i++) {
+      if (!activationArray[i]) {
         return i;
       }
     }
@@ -266,8 +264,7 @@ public class CDSSubsystem extends SubsystemBase {
     } else {
       count++;
     }
-    boolean ballPresent =
-        getSensorStatus()[2]; // whether or not there's a ball at the centering wheels
+    boolean ballPresent = activationArray[2]; // whether or not there's a ball at the centering wheels
 
     switch (state) {
       case IDLE:
@@ -285,7 +282,7 @@ public class CDSSubsystem extends SubsystemBase {
 
         break;
       case ADVANCE:
-        if (getSensorStatus()[nextOpenSensor] || msCurrent >= advanceTimeout) {
+        if (activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) {
           state = ManagementState.IDLE;
         } else {
           msCurrent += 20;
