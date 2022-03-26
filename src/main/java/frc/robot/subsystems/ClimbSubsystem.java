@@ -84,45 +84,11 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public ClimbSubsystem(Joystick joystick) {
     if (Constants.DebugMode) {
-      // ShuffleBoard for Debuging
       instantiateDebugTab();
     } else {
-      // Compitition SuffleBoard for Oporator
-      DmcHeight1 =
-          operatorTab
-              .add("Mc Height 1", 0)
-              .withWidget(BuiltInWidgets.kNumberBar)
-              .withSize(2, 1)
-              .withPosition(6, 0)
-              .getEntry();
-      DmcHeight2 =
-          operatorTab
-              .add("Mc Height 2", 0)
-              .withWidget(BuiltInWidgets.kNumberBar)
-              .withSize(2, 1)
-              .withPosition(6, 1)
-              .getEntry();
-      DhaHeight1 =
-          operatorTab
-              .add("Ha Height 1", 0)
-              .withWidget(BuiltInWidgets.kNumberBar)
-              .withSize(2, 1)
-              .withPosition(6, 1)
-              .getEntry();
-      DhaHeight2 =
-          operatorTab
-              .add("Ha Height 2", 0)
-              .withWidget(BuiltInWidgets.kNumberBar)
-              .withSize(2, 1)
-              .withPosition(6, 1)
-              .getEntry();
-      BClimbEnabled =
-          operatorTab
-              .add("Climb Enabled", false)
-              .withPosition(5, 0)
-              .withWidget(BuiltInWidgets.kBooleanBox)
-              .getEntry();
+      instantiateOporatorTab();
     }
+
     m_climbJoystick = joystick;
     climbEnabble = false;
 
@@ -189,6 +155,11 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     m_HaTwo.getPIDCtrl().setReference(HaHeightTwo, CANSparkMax.ControlType.kPosition);
+    if (Constants.DebugMode) {
+      sbHaHeightTwo.setNumber(HaHeightTwo);
+    } else {
+      DhaHeight2.setNumber(HaHeightTwo);
+    }
   }
 
   public void climbEnable() {
@@ -429,6 +400,43 @@ public class ClimbSubsystem extends SubsystemBase {
     // Other
     sbClimbEnabble =
         climbTab.add("Climb Enabled", false).withSize(10, 1).withPosition(0, 2).getEntry();
+  }
+
+  private void instantiateOporatorTab() {
+    DmcHeight1 =
+        operatorTab
+            .add("Mc Height 1", 0)
+            .withWidget(BuiltInWidgets.kNumberBar)
+            .withSize(2, 1)
+            .withPosition(6, 0)
+            .getEntry();
+    DmcHeight2 =
+        operatorTab
+            .add("Mc Height 2", 0)
+            .withWidget(BuiltInWidgets.kNumberBar)
+            .withSize(2, 1)
+            .withPosition(6, 1)
+            .getEntry();
+    DhaHeight1 =
+        operatorTab
+            .add("Ha Height 1", 0)
+            .withWidget(BuiltInWidgets.kNumberBar)
+            .withSize(2, 1)
+            .withPosition(6, 1)
+            .getEntry();
+    DhaHeight2 =
+        operatorTab
+            .add("Ha Height 2", 0)
+            .withWidget(BuiltInWidgets.kNumberBar)
+            .withSize(2, 1)
+            .withPosition(6, 1)
+            .getEntry();
+    BClimbEnabled =
+        operatorTab
+            .add("Climb Enabled", false)
+            .withPosition(5, 0)
+            .withWidget(BuiltInWidgets.kBooleanBox)
+            .getEntry();
   }
 
   @Deprecated
