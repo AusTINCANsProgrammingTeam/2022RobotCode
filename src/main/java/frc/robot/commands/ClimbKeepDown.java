@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.ClimbSubsystem;
 
 public class ClimbKeepDown extends CommandBase {
@@ -29,6 +30,12 @@ public class ClimbKeepDown extends CommandBase {
   @Override
   public void execute() {
     m_subsystem.midClimb();
+    m_subsystem.highArms();
+    if (Constants.DebugMode) {
+      m_subsystem.debugPeriodic();
+    } else {
+      m_subsystem.periodic();
+    }
   }
 
   // Called once the command ends or is interrupted.
