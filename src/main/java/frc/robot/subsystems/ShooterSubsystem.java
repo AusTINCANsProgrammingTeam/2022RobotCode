@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -21,7 +23,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private MotorController flywheelController;
   private MotorController flywheel2Controller;
+  private SimpleMotorFeedforward flywheelFF;
   private SparkMaxPIDController flywheelPID;
+  private PIDController flywheelWPID;
   private RelativeEncoder flywheelEncoder;
   private MotorController hoodController;
   private SparkMaxPIDController hoodPID;
@@ -67,6 +71,9 @@ public class ShooterSubsystem extends SubsystemBase {
     flywheelController =
         new MotorController("Flywheel", Constants.Shooter.shooterID, Constants.Shooter.kPIDFArray);
     flywheel2Controller = new MotorController("Flywheel 2", Constants.Shooter.shooter2ID);
+    flywheelFF =
+        new SimpleMotorFeedforward(
+            Constants.Shooter.kSg, Constants.Shooter.kVg, Constants.Shooter.kAg);
     flywheelPID = flywheelController.getPIDCtrl();
     flywheelEncoder = flywheelController.getEncoder();
     flywheelController.enableVoltageCompensation(11);
@@ -87,7 +94,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // Initializes Additional PID for the shooter
     flywheelPID.setIMaxAccum(Constants.Shooter.kMaxIAccum, Constants.Shooter.kMaxISlot);
     flywheelPID.setOutputRange(Constants.Shooter.kMinOutput, Constants.Shooter.kMaxOutput);
-    flywheelPID.setFF(Constants.Shooter.kF);
+    // flywheelPID.setFF(Constants.Shooter.kF);
 
     DistanceArray = new ShooterConfig[3];
     DistanceArray[0] = new ShooterConfig(5, 64, 2263);
@@ -139,7 +146,11 @@ public class ShooterSubsystem extends SubsystemBase {
     } else {
       DTRPM.setDouble(rpm);
       targetRPM = rpm;
-      flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
+      flywheelPID.setReference(
+          rpm,
+          CANSparkMax.ControlType.kVelocity,
+          Constants.Shooter.kMaxISlot,
+          flywheelFF.calculate(rpm / 60.0));
     }
   }
 
