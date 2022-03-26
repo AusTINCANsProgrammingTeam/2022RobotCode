@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
       Shuffleboard.getTab("Config"); // all auton settings located here
   private NetworkTableEntry waitTimeSlider =
       configTab
-          .add("Wait Time", 0)
+          .add("Wait Time", Constants.defaultInitialWaitTime)
           .withWidget(BuiltInWidgets.kNumberSlider)
           .withProperties(Map.of("Min", 0, "Max", 10))
           .getEntry();
@@ -67,7 +67,8 @@ public class Robot extends TimedRobot {
     chooser.addOption("Three Ball", Constants.Auton.THREEBALL);
     chooser.addOption("Four Ball", Constants.Auton.FOURBALL);
     chooser.addOption("Five Ball", Constants.Auton.FIVEBALL);
-    chooser.addOption("Test Mode", Constants.Auton.TEST);
+    // chooser.addOption("Test Mode", Constants.Auton.TEST);      // don't need to show during
+    // competition
 
     configTab.add("Auton mode", chooser).withPosition(0, 1).withSize(2, 2);
   }
@@ -102,7 +103,7 @@ public class Robot extends TimedRobot {
   // This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    AutonModes.setWaitTime(waitTimeSlider.getDouble(0));
+    AutonModes.setWaitTime(waitTimeSlider.getDouble(Constants.defaultInitialWaitTime));
     robotContainer.initAuton(chooser.getSelected());
     autonomousCommand = robotContainer.getAutonomousCommand(chooser.getSelected());
 

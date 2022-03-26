@@ -168,8 +168,7 @@ public final class Constants {
   public static final double ramseteB = 2; // Convergence, larger values are more aggressive
   public static final double ramseteZeta = 0.7; // Damping, larger values offer more damping
 
-  public static final double delaytaxi = 1.0; // 1 second wait time
-  public static final double delayshot = 0.5; // 0.5 second wait time
+  public static final double defaultInitialWaitTime = 0;
 
   // Encoder constants
 

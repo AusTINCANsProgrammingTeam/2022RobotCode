@@ -54,7 +54,7 @@ public class AutonModes {
       driveTestCommand; // for testing miscellaneous: for example single ramsete commands
 
   // amount of time in seconds before starting auton, default is 0
-  public static double initialWaitTime = 0;
+  public static double initialWaitTime = Constants.defaultInitialWaitTime;
 
   // constructor used when only need to use driveBase, for example when testing
   // driveTestCommand
@@ -199,7 +199,6 @@ public class AutonModes {
               new DeployIntake(intakeSubsystem, cdsSubsystem),
               new WaitCommand(initialWaitTime),
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
-              new WaitCommand(Constants.delaytaxi),
               oneBallRamseteCommand);
 
       // -------------------------------------------
