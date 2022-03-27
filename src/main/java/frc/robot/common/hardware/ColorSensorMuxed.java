@@ -72,7 +72,6 @@ public class ColorSensorMuxed {
     // it will run slower if the programmed rate is too fast for the 
     // resolution bits.
     ColorSensorResolution colorRes;
-    sensorPeriodInSeconds = rate.period;
     boolean ret = true;
 
     switch (rate) {
@@ -107,6 +106,9 @@ public class ColorSensorMuxed {
             "Failed to configure sample rate of color sensor on I2C port " + p, false);
         ret = false;
       }
+    }
+    if (ret) {
+      sensorPeriodInSeconds = rate.period;
     }
     return ret;
   }
