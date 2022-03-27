@@ -156,7 +156,6 @@ public class RobotContainer {
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, cdsSubsystem);
       deployIntake = new DeployIntake(intakeSubsystem);
       outtakeCommand = new OuttakeCommand(intakeSubsystem, cdsSubsystem);
-      
 
       if (Constants.ballManagementEnabled) {
         intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);

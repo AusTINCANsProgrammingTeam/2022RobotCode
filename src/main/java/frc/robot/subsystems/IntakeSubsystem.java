@@ -94,5 +94,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void periodic() {
     deployController.updateSmartDashboard();
+    SmartDashboard.putBoolean("Intake Out?", intakeDeployed);
+    SmartDashboard.putNumber("Deploy Encoder", deployEncoder.getPosition());
   }
 }
