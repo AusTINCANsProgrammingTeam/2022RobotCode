@@ -155,7 +155,6 @@ public class RobotContainer {
     if (intakeSubsystem != null) {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
-      Shuffleboard.addEventMarker("Reverse Intake Activated", EventImportance.kLow);
     }
     if (shooterSubsystem != null && CDSSubsystem != null) {
       shooterHeld =

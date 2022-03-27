@@ -124,6 +124,7 @@ public class CDSSubsystem extends SubsystemBase {
 
   public boolean[] getSensorStatus() {
     int[] sensorStatuses = colorSensors.getProximities();
+    Shuffleboard.addEventMarker("Sensors Activated", EventImportance.kCritical);
 
     boolean backStatus = sensorStatuses[2] > Constants.backSensorActivation;
     boolean middleStatus = sensorStatuses[1] > Constants.middleSensorActivation;
@@ -137,7 +138,6 @@ public class CDSSubsystem extends SubsystemBase {
       }
     }
     SmartDashboard.putNumber("Ball Count", ballCount);
-    Shuffleboard.addEventMarker("" + ballCount, EventImportance.kNormal);
 
     return beamBreakArray;
   }
