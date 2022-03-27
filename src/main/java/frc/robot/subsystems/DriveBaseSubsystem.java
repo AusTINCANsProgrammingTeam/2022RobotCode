@@ -359,7 +359,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
     rightSpeed = rightSpeed * Constants.gearRatio; // in wheel terms right now,
     // need to get into motor rotational terms to feed to internal pid
 
-    
     // sbLeftBiconsumerSpeed.setDouble(leftSpeed);
     // sbRightBiconsumerSpeed.setDouble(rightSpeed);
 
