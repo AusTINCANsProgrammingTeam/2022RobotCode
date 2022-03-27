@@ -68,24 +68,32 @@ public class ColorSensorMuxed {
 
     ColorSensorMeasurementRate colorRate;
     ProximitySensorMeasurementRate proxRate;
+    // Color measurement rate is dependant on its resolution. 
+    // it will run slower if the programmed rate is too fast for the 
+    // resolution bits.
+    ColorSensorResolution colorRes;
     sensorPeriodInSeconds = rate.period;
     boolean ret = true;
 
     switch (rate) {
       case kRate40Hz:
+        colorRes = ColorSensorResolution.kColorSensorRes16bit;
         colorRate = ColorSensorMeasurementRate.kColorRate25ms;
         proxRate = ProximitySensorMeasurementRate.kProxRate25ms;
         break;
       case kRate20Hz:
+        colorRes = ColorSensorResolution.kColorSensorRes17bit;
         colorRate = ColorSensorMeasurementRate.kColorRate50ms;
         proxRate = ProximitySensorMeasurementRate.kProxRate50ms;
         break;
       case kRate5Hz:
+        colorRes = ColorSensorResolution.kColorSensorRes19bit;
         colorRate = ColorSensorMeasurementRate.kColorRate200ms;
         proxRate = ProximitySensorMeasurementRate.kProxRate200ms;
         break;
       case kRate10Hz:
       default:
+        colorRes = ColorSensorResolution.kColorSensorRes18bit;
         colorRate = ColorSensorMeasurementRate.kColorRate100ms;
         proxRate = ProximitySensorMeasurementRate.kProxRate100ms;
         break;
@@ -93,8 +101,7 @@ public class ColorSensorMuxed {
     for (int p : i2cPorts) {
       if (setI2cPort(p)) {
         sensors.configureProximitySensor(ProximitySensorResolution.kProxRes11bit, proxRate);
-        sensors.configureColorSensor(
-            ColorSensorResolution.kColorSensorRes20bit, colorRate, GainFactor.kGain3x);
+        sensors.configureColorSensor(colorRes, colorRate, GainFactor.kGain3x);
       } else {
         DriverStation.reportError(
             "Failed to configure sample rate of color sensor on I2C port " + p, false);
