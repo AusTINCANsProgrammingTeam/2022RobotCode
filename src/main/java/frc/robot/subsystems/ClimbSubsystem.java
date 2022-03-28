@@ -100,7 +100,6 @@ public class ClimbSubsystem extends SubsystemBase {
     m_McTwo.getEncoder().setPosition(0);
     m_McTwo.setIdleMode(IdleMode.kBrake);
     m_McTwo.setInverted(true);
-
     // High Arms Left MotorController
     m_HaOne = new MotorController("Ha1 Motor", Constants.HaMotorOne, Constants.HaLeftPID);
     m_HaOne.setSmartCurrentLimit(10);
@@ -164,19 +163,19 @@ public class ClimbSubsystem extends SubsystemBase {
       McjoystickAxis = -m_climbJoystick.getRawAxis(Constants.leftJoystickY);
       if (McjoystickAxis > 0.1 || McjoystickAxis < -0.1) {
         if (McjoystickAxis > 0) {
-          if (McHeightOne + (McjoystickAxis / 10 * 8) <= Constants.McHeightMax) {
-            McHeightOne = McHeightOne + (McjoystickAxis / 10 * 15);
+          if (McHeightOne + (McjoystickAxis * -1.5) <= Constants.McHeightMin) {
+            McHeightOne = McHeightOne + (McjoystickAxis * -1.5);
           }
-          if (McHeightTwo + (McjoystickAxis / 10 * 8) <= Constants.McHeightMax) {
-            McHeightTwo = McHeightTwo + (McjoystickAxis / 10 * 15);
+          if (McHeightTwo + (McjoystickAxis * -1.5) <= Constants.McHeightMin) {
+            McHeightTwo = McHeightTwo + (McjoystickAxis * -1.5);
           }
         }
         if (McjoystickAxis < 0) {
-          if (McHeightOne + (McjoystickAxis / 10 * 6) >= 0) {
-            McHeightOne = McHeightOne + (McjoystickAxis / 10 * 6);
+          if (McHeightOne + (McjoystickAxis * -0.5) >= Constants.McHeightMax) {
+            McHeightOne = McHeightOne + (McjoystickAxis * -0.5);
           }
-          if (McHeightTwo + (McjoystickAxis / 10 * 6) >= 0) {
-            McHeightTwo = McHeightTwo + (McjoystickAxis / 10 * 6);
+          if (McHeightTwo + (McjoystickAxis * -0.5) >= Constants.McHeightMax) {
+            McHeightTwo = McHeightTwo + (McjoystickAxis * -0.5);
           }
         }
       }
@@ -195,18 +194,18 @@ public class ClimbSubsystem extends SubsystemBase {
       if (HajoystickAxis > 0.1 || HajoystickAxis < -0.1) {
         if (HajoystickAxis > 0) {
           if (HaHeightOne + (HajoystickAxis / 10 * 8) <= Constants.HaHeightMax) {
-            HaHeightOne = HaHeightOne + (HajoystickAxis / 10 * 15);
+            HaHeightOne = HaHeightOne + (HajoystickAxis * 1.5);
           }
           if (HaHeightTwo + (HajoystickAxis / 10 * 8) <= Constants.HaHeightMax) {
-            HaHeightTwo = HaHeightTwo + (HajoystickAxis / 10 * 15);
+            HaHeightTwo = HaHeightTwo + (HajoystickAxis * 1.5);
           }
         }
         if (HajoystickAxis < 0) {
-          if (HaHeightOne + (HajoystickAxis / 10 * 6) >= 0) {
-            HaHeightOne = HaHeightOne + (HajoystickAxis / 10 * 6);
+          if (HaHeightOne + (HajoystickAxis / 10 * 6) >= Constants.HaHeightMin) {
+            HaHeightOne = HaHeightOne + (HajoystickAxis * 1.5);
           }
-          if (HaHeightTwo + (HajoystickAxis / 10 * 6) >= 0) {
-            HaHeightTwo = HaHeightTwo + (HajoystickAxis / 10 * 6);
+          if (HaHeightTwo + (HajoystickAxis / 10 * 6) >= Constants.HaHeightMin) {
+            HaHeightTwo = HaHeightTwo + (HajoystickAxis * 1.5);
           }
         }
       }

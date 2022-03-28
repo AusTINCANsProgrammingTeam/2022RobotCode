@@ -285,13 +285,15 @@ public final class Constants {
   // Climb Constants
   public static final int McMotorOne = 5;
   public static final int McMotorTwo = 12;
-  public static final int McHeightMax = 65;
+  public static final int McHeightMax = 0;
+  public static final int McHeightMin = -135;
   public static final double[] McRightPID = {0.25, 0.005, 1.0};
   public static final double[] McLeftPID = {0.25, 0.005, 1.0};
   // Ha = High Arms                          Mc = Mid Climb;
   public static final double[] HaLeftPID = {0.25, 0.005, 1.0};
   public static final double[] HaRightPID = {0.25, 0.005, 1.0};
-  public static final int HaHeightMax = 65;
+  public static final int HaHeightMax = 30;
+  public static final int HaHeightMin = -30;
   public static final int HaMotorTwo = 16;
   public static final int HaMotorOne = 15;
 }
