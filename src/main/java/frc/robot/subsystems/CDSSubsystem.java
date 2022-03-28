@@ -268,17 +268,17 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public boolean sensorsOnline() {
-    boolean isDown = false;
+    boolean isOnline = true;
     sensorsDown = 0;
 
     sensorStatuses = colorSensors.getProximities();
     for (int prox : sensorStatuses) {
       if (prox == 0) {
         sensorsDown += 1;
-        isDown = true;
+        isOnline = false;
       }
     }
-    return isDown;
+    return isOnline;
   }
 
   public int getSensorDown() {
