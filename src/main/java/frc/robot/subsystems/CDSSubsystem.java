@@ -327,8 +327,7 @@ public class CDSSubsystem extends SubsystemBase {
         if (sensedBallColor != allianceColor && ballPresent) {
           state = ManagementState.EJECT;
           msCurrent = 0;
-        }
-        else if (activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) {
+        } else if (activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) {
           state = ManagementState.IDLE;
         } else {
           msCurrent += 20;
