@@ -68,8 +68,8 @@ public class ColorSensorMuxed {
 
     ColorSensorMeasurementRate colorRate;
     ProximitySensorMeasurementRate proxRate;
-    // Color measurement rate is dependant on its resolution. 
-    // it will run slower if the programmed rate is too fast for the 
+    // Color measurement rate is dependant on its resolution.
+    // it will run slower if the programmed rate is too fast for the
     // resolution bits.
     ColorSensorResolution colorRes;
     boolean ret = true;

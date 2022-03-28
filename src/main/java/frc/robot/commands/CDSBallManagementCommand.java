@@ -28,7 +28,6 @@ public class CDSBallManagementCommand extends CommandBase {
       CDSTab.add("Auto Eject Running", false).getEntry();
   private static NetworkTableEntry autoIntakeRunning =
       CDSTab.add("Auto Intake Running", false).getEntry();
-  
 
   public CDSBallManagementCommand(
       CDSSubsystem mCDSSubsystem,

@@ -19,8 +19,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.common.hardware.ColorSensorMuxed;
-import frc.robot.common.hardware.MotorController;
 import frc.robot.common.hardware.ColorSensorMuxed.MeasurementRate;
+import frc.robot.common.hardware.MotorController;
 
 public class CDSSubsystem extends SubsystemBase {
   public enum ManagementState {
@@ -208,11 +208,11 @@ public class CDSSubsystem extends SubsystemBase {
     if (currentProxCycle % cycleWait == 0) {
       currentProxCycle = 0;
       sensorStatuses = colorSensors.getProximities();
-      //if (Constants.DebugMode) {
-        frontSensorProx.setNumber(sensorStatuses[2]);
-        middleSensorProx.setNumber(sensorStatuses[1]);
-        backSensorProx.setNumber(sensorStatuses[0]);
-      //}
+      // if (Constants.DebugMode) {
+      frontSensorProx.setNumber(sensorStatuses[2]);
+      middleSensorProx.setNumber(sensorStatuses[1]);
+      backSensorProx.setNumber(sensorStatuses[0]);
+      // }
 
       activationArray[0] = sensorStatuses[0] > Constants.backSensorActivation;
       activationArray[1] = sensorStatuses[1] > Constants.middleSensorActivation;
@@ -227,11 +227,9 @@ public class CDSSubsystem extends SubsystemBase {
       if (Constants.DebugMode) {
         CDSBallCount.setNumber(ballCount);
       }
-
-    } 
+    }
     currentProxCycle++;
     return activationArray;
-
   }
 
   public int getNextOpenSensor() {
@@ -270,15 +268,17 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public boolean sensorsOnline() {
+    boolean isDown = false;
+    sensorsDown = 0;
+
     sensorStatuses = colorSensors.getProximities();
     for (int prox : sensorStatuses) {
       if (prox == 0) {
         sensorsDown += 1;
-        return false;
+        isDown = true;
       }
     }
-    sensorsDown = 0;
-    return true;
+    return isDown;
   }
 
   public int getSensorDown() {
@@ -306,8 +306,6 @@ public class CDSSubsystem extends SubsystemBase {
     String sensedBallColor = senseColor();
     int currentOpenSensor = getNextOpenSensor();
 
-
-    
     boolean ballPresent =
         activationArray[2]; // whether or not there's a ball at the centering wheels
 
@@ -344,7 +342,6 @@ public class CDSSubsystem extends SubsystemBase {
         break;
     }
     CDSState.setString(state.toString());
-
   }
 
   public void simulateColorSense() {
