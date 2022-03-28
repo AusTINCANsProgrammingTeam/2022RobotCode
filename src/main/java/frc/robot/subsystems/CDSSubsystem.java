@@ -228,11 +228,10 @@ public class CDSSubsystem extends SubsystemBase {
         CDSBallCount.setNumber(ballCount);
       }
 
-      return activationArray;
-    } else {
-      currentProxCycle++;
-      return activationArray;
-    }
+    } 
+    currentProxCycle++;
+    return activationArray;
+
   }
 
   public int getNextOpenSensor() {
