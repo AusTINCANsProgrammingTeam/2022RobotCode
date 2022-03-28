@@ -4,33 +4,43 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 public class CDSBallManagementCommand extends CommandBase {
   /** Creates a new CDSBallManagementCommand. */
   private final CDSSubsystem CDSSubsystem;
 
   private final IntakeSubsystem intakeSubsystem;
+  private final ShooterSubsystem shooterSubsystem;
 
-  private boolean runningCDS = false;
-  private boolean ejectRunning = false;
-  private int sensorIndex;
+  private int msBeltCurrent = 0;
+  private int beltEjectRuntime = 100;
 
-  private int msCurrent = 0;
-  private int runInterval = 40; // how often to call color sensors (in ms)
-  private int msDelay = 750;
+  private static ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
+  private static NetworkTableEntry autoEjectRunning =
+      CDSTab.add("Auto Eject Running", false).getEntry();
+  private static NetworkTableEntry autoIntakeRunning =
+      CDSTab.add("Auto Intake Running", false).getEntry();
 
-  public CDSBallManagementCommand(CDSSubsystem mCDSSubsystem, IntakeSubsystem mIntakeSubsystem) {
+  public CDSBallManagementCommand(
+      CDSSubsystem mCDSSubsystem,
+      IntakeSubsystem mIntakeSubsystem,
+      ShooterSubsystem mShooterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(mCDSSubsystem);
     addRequirements(mIntakeSubsystem);
+    addRequirements(mShooterSubsystem);
 
     CDSSubsystem = mCDSSubsystem;
     intakeSubsystem = mIntakeSubsystem;
+    shooterSubsystem = mShooterSubsystem;
   }
 
   // Called when the command is initially scheduled.
@@ -40,69 +50,39 @@ public class CDSBallManagementCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (msCurrent >= runInterval) {
-      int lastBallCount = CDSSubsystem.getBallCount();
-      boolean[] sensorStatus = CDSSubsystem.getSensorStatus();
+    CDSSubsystem.ManagementState state = CDSSubsystem.getState();
 
-      SmartDashboard.putBoolean("Front sensor status", sensorStatus[2]);
-      SmartDashboard.putBoolean("Middle Sensor Status", sensorStatus[1]);
-      SmartDashboard.putBoolean("Back Sensor Status", sensorStatus[0]);
+    switch (state) {
+      case IDLE:
+        CDSSubsystem.stopCDS();
+        intakeSubsystem.stopIntake();
+        shooterSubsystem.runCargo(0.0);
+        autoEjectRunning.setBoolean(false);
+        autoIntakeRunning.setBoolean(false);
 
-      // Calls Auto Eject
-      if (!ejectRunning) {
-        // Checks if conditions for ejection are met:
-        // A ball count of over 2 OR ball color is wrong and test mode is off (meaning ball color
-        // shouldn't be disregarded)
-        // TODO This is somehow ejecting any ball regardless of color
-        if ((lastBallCount > 2)
-            || (sensorStatus[2]
-                && CDSSubsystem.getAllianceColor() != CDSSubsystem.senseColor()
-                && !Constants.testMode)) {
-          intakeSubsystem.toggleIntake(true);
-          CDSSubsystem.CDSWheelToggle(true);
-          ejectRunning = true;
-        }
-      } else {
-        if (msCurrent >= msDelay) {
-          CDSSubsystem.stopCDS();
-          intakeSubsystem.stopIntake();
-          ejectRunning = false;
-          msCurrent = 0;
+        break;
+
+      case EJECT:
+        if (msBeltCurrent <= beltEjectRuntime) {
+          CDSSubsystem.CDSBeltToggle(true);
+          msBeltCurrent += 20;
         } else {
-          msCurrent += 20;
+          CDSSubsystem.stopCDSBelt();
         }
-      }
 
-      // Only run auto advance if auto ject is not running
-      if (!ejectRunning) {
-        SmartDashboard.putBoolean("CDS Running", runningCDS);
-        if (!runningCDS) {
-          // Send ball to sensor
-          SmartDashboard.putBooleanArray("Sensor Statuses", sensorStatus);
-          if (sensorStatus[2]) {
-            int nextOpenSensor = CDSSubsystem.getNextOpenSensor(sensorStatus);
-            SmartDashboard.putNumber("Open Sensor Index", nextOpenSensor);
-            if (nextOpenSensor != -1) {
-              // There is an open sensor avaliable, run CDS
-              runningCDS = true;
-              sensorIndex = nextOpenSensor;
-              CDSSubsystem.CDSBeltToggle(false);
-              CDSSubsystem.setReady(false);
-            }
-          }
-        } else {
-          // Check if ball has reached sensor, stop if it has
-          SmartDashboard.putNumber("Open Sensor Index", sensorIndex);
-          if (sensorStatus[sensorIndex]) {
-            CDSSubsystem.stopCDS();
-            runningCDS = false;
-            sensorIndex = -1;
-            CDSSubsystem.setReady(true);
-          }
-        }
-      }
-    } else {
-      msCurrent += 20;
+        intakeSubsystem.toggleIntake(true);
+        CDSSubsystem.CDSWheelToggle(true);
+        autoEjectRunning.setString("true");
+
+        break;
+
+      case ADVANCE:
+        CDSSubsystem.CDSWheelToggle(false);
+        CDSSubsystem.CDSBeltToggle(false);
+        shooterSubsystem.runCargo(Constants.reverseStopperWheelSpeed);
+        autoIntakeRunning.setBoolean(true);
+
+        break;
     }
   }
 

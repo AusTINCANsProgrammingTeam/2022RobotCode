@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutonModes;
@@ -156,9 +157,9 @@ public class RobotContainer {
 
       if (Constants.ballManagementEnabled) {
         intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
-        ballManagementCommand = new CDSBallManagementCommand(cdsSubsystem, intakeSubsystem);
+        ballManagementCommand =
+            new CDSBallManagementCommand(cdsSubsystem, intakeSubsystem, shooterSubsystem);
         cdsSubsystem.setDefaultCommand(ballManagementCommand);
-      } else {
         combinedIntakeCDS =
             new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem);
       }
@@ -200,9 +201,9 @@ public class RobotContainer {
 
     if (combinedIntakeCDS != null) {
       buttons[Constants.RTriggerButton].whileHeld(combinedIntakeCDS);
-    } else {
-      buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
-    }
+    } /*else {
+        buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
+      }*/
 
     if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
       // Auto Aim Shot
@@ -295,5 +296,21 @@ public class RobotContainer {
       return driveBaseSubsystem;
     }
     return null;
+  }
+
+  public static CDSSubsystem getCDSSubsystem() {
+    if (cdsSubsystem != null) {
+      return cdsSubsystem;
+    }
+    return null;
+  }
+
+  public void pushSmartDashData() {
+    SmartDashboard.putData(climbSubsystem);
+    SmartDashboard.putData(driveBaseSubsystem);
+    SmartDashboard.putData(cdsSubsystem);
+    SmartDashboard.putData(intakeSubsystem);
+    SmartDashboard.putData(shooterSubsystem);
+    SmartDashboard.putData(limelightSubsystem);
   }
 }
