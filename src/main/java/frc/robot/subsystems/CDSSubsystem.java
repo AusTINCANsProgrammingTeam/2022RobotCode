@@ -55,7 +55,7 @@ public class CDSSubsystem extends SubsystemBase {
 
   private int currentProxCycle = 0;
   private int currentColorCycle = 0;
-  private int cycleWait = 1; // read interval for color sensors
+  private int cycleWait = 1; // 1 means to read every cycle
 
   private int sensorsDown = 0;
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
@@ -237,6 +237,7 @@ public class CDSSubsystem extends SubsystemBase {
 
   public int getNextOpenSensor() {
     // Starts at 0 and ends short of the centering wheel
+    // length - 1 because the last index of the array is the first sensor, which isn't a valid point
     for (int i = 0; i < activationArray.length - 1; i++) {
       if (!activationArray[i]) {
         return i;
