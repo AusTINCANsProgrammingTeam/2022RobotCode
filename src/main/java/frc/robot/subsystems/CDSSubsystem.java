@@ -206,7 +206,7 @@ public class CDSSubsystem extends SubsystemBase {
 
   public boolean[] getSensorStatus() {
     if (currentProxCycle % cycleWait == 0) {
-      currentProxCycle = 1;
+      currentProxCycle = 0;
       sensorStatuses = colorSensors.getProximities();
       //if (Constants.DebugMode) {
         frontSensorProx.setNumber(sensorStatuses[2]);
@@ -247,7 +247,7 @@ public class CDSSubsystem extends SubsystemBase {
 
   public String senseColor() {
     if (currentColorCycle % cycleWait == 0) {
-      currentColorCycle = 1;
+      currentColorCycle = 0;
       Color[] colors = colorSensors.getColors();
       SmartDashboard.putNumber("Front Sense B", colors[2].blue);
       SmartDashboard.putNumber("Front Sense R", colors[2].red);
@@ -259,16 +259,14 @@ public class CDSSubsystem extends SubsystemBase {
       if (redAmount > blueAmount) {
         ballColor.setString("Red");
         lastBallColor = "Red";
-        return "Red";
       } else {
         ballColor.setString("Blue");
         lastBallColor = "Blue";
-        return "Blue";
       }
-    } else {
-      currentColorCycle++;
-      return lastBallColor;
     }
+
+    currentColorCycle++;
+    return lastBallColor;
   }
 
   public boolean sensorsOnline() {
