@@ -228,6 +228,21 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     sbClimbEnabble.setBoolean(climbEnabble);
+    SmartDashboard.putNumber("Mc1 Applied Output", m_McOne.getAppliedOutput());
+    SmartDashboard.putNumber("Mc1 Hight", m_McOne.getEncoder().getPosition());
+    SmartDashboard.putNumber("Mc1 IAccum", m_McOne.getPIDCtrl().getIAccum());
+
+    SmartDashboard.putNumber("Mc2 Applied Output", m_McTwo.getAppliedOutput());
+    SmartDashboard.putNumber("Mc2 Hight", m_McTwo.getEncoder().getPosition());
+    SmartDashboard.putNumber("Mc2 IAccum", m_McTwo.getPIDCtrl().getIAccum());
+
+    SmartDashboard.putNumber("Ha1 Applied Output", m_HaOne.getAppliedOutput());
+    SmartDashboard.putNumber("Ha1 Hight", m_HaOne.getEncoder().getPosition());
+    SmartDashboard.putNumber("Ha1 IAccum", m_HaOne.getPIDCtrl().getIAccum());
+
+    SmartDashboard.putNumber("Ha2 Applied Output", m_HaTwo.getAppliedOutput());
+    SmartDashboard.putNumber("Ha2 Hight", m_HaTwo.getEncoder().getPosition());
+    SmartDashboard.putNumber("Ha2 IAccum", m_HaTwo.getPIDCtrl().getIAccum());
   }
 
   public void debugPeriodic() {
