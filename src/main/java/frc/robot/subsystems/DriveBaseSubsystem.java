@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.SerialPort.Port;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -70,14 +70,16 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private NetworkTableEntry sbRightBiconsumerSpeed;
   private NetworkTableEntry sbLeftPosition;
   private NetworkTableEntry sbRightPosition;
+  private NetworkTableEntry sbGyroInfo;
 
   public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {
     driveBaseSpeed = 1;
     driverJoystick = joystick;
 
     motorControllers = new MotorController[4];
-    gyro = new AHRS(Port.kMXP);
-    gyro.reset(); // resets the heading of the robot to 0
+    gyro = new AHRS(SPI.Port.kMXP);
+    gyro.enableLogging(true);
+    gyro.reset();
 
     this.usingExternal = usingExternal;
 
@@ -174,8 +176,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
     resetEncoders(); // reset encoders to reset position and velocity values
 
     odometry = new DifferentialDriveOdometry(gyro.getRotation2d());
-
-    initShuffleboard();
+    if (Constants.DebugMode) {
+      initShuffleboard();
+    }
   }
 
   private void initShuffleboard() {
@@ -227,21 +230,20 @@ public class DriveBaseSubsystem extends SubsystemBase {
     // update odometryreset
     double leftPosition = leftEncoder.getPosition();
     double rightPosition = rightEncoder.getPosition();
+
     odometry.update(gyro.getRotation2d(), leftPosition, rightPosition);
 
-    // update shuffleboard
-    sbLeftEncoderSpeed.setDouble(leftEncoder.getVelocity());
-    sbRightEncoderSpeed.setDouble(rightEncoder.getVelocity());
-    sbLeftPosition.setDouble(leftEncoder.getPosition()); // in meters
-    sbRightPosition.setDouble(rightEncoder.getPosition());
+    if (Constants.DebugMode) {
+      sbLeftEncoderSpeed.setDouble(leftEncoder.getVelocity());
+      sbRightEncoderSpeed.setDouble(rightEncoder.getVelocity());
+      sbLeftPosition.setDouble(leftEncoder.getPosition()); // in meters
+      sbRightPosition.setDouble(rightEncoder.getPosition());
+    }
 
     // Update the smart dashboard here
     // updates pid values of leaders, followers not needed
     motorControllers[Constants.driveLeftFrontIndex].updateSmartDashboard();
     motorControllers[Constants.driveRightFrontIndex].updateSmartDashboard();
-
-    // for tuning pid on each wheel, TODO: remove when done
-    // acceptWheelSpeeds(10, 0);
   }
 
   public void setDriveBaseSpeed(double driveBaseSpeed) {
@@ -295,6 +297,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     odometry.update(
         gyro.getRotation2d(), leftEncoderSim.getDistance(), rightEncoderSim.getDistance());
+
     m_field.setRobotPose(odometry.getPoseMeters());
   }
 
@@ -322,6 +325,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
   }
 
   public Pose2d getPose() {
+    // Pose2d positionPose = odometry.getPoseMeters();
+    // return new Pose2d(positionPose.getX(), positionPose.getY(), gyro.getRotation2d());
     return odometry.getPoseMeters();
   }
 
@@ -354,8 +359,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
     rightSpeed = rightSpeed * Constants.gearRatio; // in wheel terms right now,
     // need to get into motor rotational terms to feed to internal pid
 
-    sbLeftBiconsumerSpeed.setDouble(leftSpeed);
-    sbRightBiconsumerSpeed.setDouble(rightSpeed);
+    // sbLeftBiconsumerSpeed.setDouble(leftSpeed);
+    // sbRightBiconsumerSpeed.setDouble(rightSpeed);
 
     getLeftMotor()
         .getPIDController()

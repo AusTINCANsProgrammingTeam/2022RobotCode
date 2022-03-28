@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -21,7 +23,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private MotorController flywheelController;
   private MotorController flywheel2Controller;
+  private SimpleMotorFeedforward flywheelFF;
   private SparkMaxPIDController flywheelPID;
+  private PIDController flywheelWPID;
   private RelativeEncoder flywheelEncoder;
   private MotorController hoodController;
   private SparkMaxPIDController hoodPID;
@@ -52,7 +56,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private NetworkTableEntry PID_P;
   private NetworkTableEntry PID_I;
   private NetworkTableEntry PID_D;
-  private NetworkTableEntry PID_F;
   private NetworkTableEntry DSmoothRPM;
 
   private ShooterConfig[] DistanceArray;
@@ -67,6 +70,9 @@ public class ShooterSubsystem extends SubsystemBase {
     flywheelController =
         new MotorController("Flywheel", Constants.Shooter.shooterID, Constants.Shooter.kPIDFArray);
     flywheel2Controller = new MotorController("Flywheel 2", Constants.Shooter.shooter2ID);
+    flywheelFF =
+        new SimpleMotorFeedforward(
+            Constants.Shooter.kSg, Constants.Shooter.kVg, Constants.Shooter.kAg);
     flywheelPID = flywheelController.getPIDCtrl();
     flywheelEncoder = flywheelController.getEncoder();
     flywheelController.enableVoltageCompensation(11);
@@ -87,7 +93,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // Initializes Additional PID for the shooter
     flywheelPID.setIMaxAccum(Constants.Shooter.kMaxIAccum, Constants.Shooter.kMaxISlot);
     flywheelPID.setOutputRange(Constants.Shooter.kMinOutput, Constants.Shooter.kMaxOutput);
-    flywheelPID.setFF(Constants.Shooter.kF);
+    // flywheelPID.setFF(Constants.Shooter.kF);
 
     DistanceArray = new ShooterConfig[3];
     DistanceArray[0] = new ShooterConfig(5, 64, 2263);
@@ -101,7 +107,6 @@ public class ShooterSubsystem extends SubsystemBase {
     PID_P = shooterTab.add("PID P", Constants.Shooter.kPIDFArray[0]).withPosition(0, 1).getEntry();
     PID_I = shooterTab.add("PID I", Constants.Shooter.kPIDFArray[1]).withPosition(0, 2).getEntry();
     PID_D = shooterTab.add("PID D", Constants.Shooter.kPIDFArray[2]).withPosition(0, 3).getEntry();
-    PID_F = shooterTab.add("PID F", Constants.Shooter.kF).withPosition(0, 4).getEntry();
     DSmoothRPM = shooterTab.add("Smooth RPM", 0.0).getEntry();
   }
 
@@ -110,7 +115,6 @@ public class ShooterSubsystem extends SubsystemBase {
       flywheelPID.setP(PID_P.getDouble(0));
       flywheelPID.setI(PID_I.getDouble(0));
       flywheelPID.setD(PID_D.getDouble(0));
-      flywheelPID.setFF(PID_F.getDouble(0));
     }
   }
 
@@ -136,11 +140,20 @@ public class ShooterSubsystem extends SubsystemBase {
     // Winds Flywheel using PID control to passed rpm
     if (rpm == 0) {
       flywheelPID.setReference(0, CANSparkMax.ControlType.kVoltage);
-      flywheelPID.setIAccum(0);
     } else {
       DTRPM.setDouble(rpm);
       targetRPM = rpm;
-      flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
+      flywheelPID.setReference(
+          rpm,
+          CANSparkMax.ControlType.kVelocity,
+          Constants.Shooter.kMaxISlot,
+          flywheelFF.calculate(rpm / 60.0));
+    }
+  }
+
+  public void resetIAccum() {
+    if (flywheelEncoder.getVelocity() < 500) {
+      flywheelPID.setIAccum(0);
     }
   }
 
@@ -224,8 +237,7 @@ public class ShooterSubsystem extends SubsystemBase {
     if (Constants.DebugMode) {
       if ((flywheelPID.getP() != PID_P.getDouble(0))
           || (flywheelPID.getI() != PID_I.getDouble(0))
-          || (flywheelPID.getD() != PID_D.getDouble(0))
-          || (flywheelPID.getFF() != PID_F.getDouble(0))) {
+          || (flywheelPID.getD() != PID_D.getDouble(0))) {
         updatePID();
       }
     }

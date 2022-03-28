@@ -38,6 +38,7 @@ public class ShooterPressed extends CommandBase {
   @Override
   public void initialize() {
     i = 0;
+    m_ShooterSubsystem.resetIAccum();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -75,7 +76,7 @@ public class ShooterPressed extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (i >= 50) { // 1000 miliseconds delay TODO: Use a CDS method for this when possible
+    if (i >= 15) { // 1000 miliseconds delay TODO: Use a CDS method for this when possible
       return true;
     }
     return false;
