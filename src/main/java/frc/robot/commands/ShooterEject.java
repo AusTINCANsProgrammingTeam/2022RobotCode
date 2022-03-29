@@ -36,17 +36,13 @@ public class ShooterEject extends CommandBase {
   @Override
   public void execute() {
     m_ShooterSubsystem.prime();
-    if (m_ShooterSubsystem.wheelReady()) {
+    if (m_ShooterSubsystem.wheelReady() || i > 0) {
       if (i == 0) {
         m_CDSSubsystem.CDSBeltToggle(false);
         m_ShooterSubsystem.runCargo(Constants.Shooter.cargoForward);
         m_ShooterSubsystem.setCargoBoolean(true);
       }
       i++;
-    } else {
-      m_CDSSubsystem.stopCDS();
-      m_ShooterSubsystem.runCargo(Constants.Shooter.cargoReverse);
-      m_ShooterSubsystem.setCargoBoolean(false);
     }
   }
 
