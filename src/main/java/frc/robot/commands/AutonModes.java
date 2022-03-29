@@ -175,6 +175,17 @@ public class AutonModes {
     }
   }
 
+  private ParallelDeadlineGroup[] getParallelCommands(Command... ramsetes) {
+    ParallelDeadlineGroup[] parallels = new ParallelDeadlineGroup[ramsetes.length];
+    for (int i = 0; i < ramsetes.length; i++) {
+      parallels[i] =
+          new ParallelDeadlineGroup(
+              ramsetes[i],
+              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+    }
+    return parallels;
+  }
+
   private void initializeCommandGroups() {
 
     pushTaxiCommand =
@@ -182,11 +193,7 @@ public class AutonModes {
 
     // ---------------------------------------------
 
-    ParallelDeadlineGroup intakeTaxiParallel =
-        new ParallelDeadlineGroup(
-            intakeTaxiRamseteCommand,
-            new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
-
+    ParallelDeadlineGroup intakeTaxiParallel = getParallelCommands(intakeTaxiRamseteCommand)[0];
     intakeTaxiCommand =
         new SequentialCommandGroup(new WaitCommand(initialWaitTime), intakeTaxiParallel);
 
@@ -202,28 +209,14 @@ public class AutonModes {
 
       // -------------------------------------------
 
-      ParallelDeadlineGroup twoBallParallel =
-          new ParallelDeadlineGroup(
-              twoBallRamseteCommands[0], // travel to get ball
-              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
-
+      ParallelDeadlineGroup[] twoBallParallels = getParallelCommands(twoBallRamseteCommands);
       twoBallCommand =
           new SequentialCommandGroup(
-              // new DeployIntake(intakeSubsystem, cdsSubsystem),
-              new WaitCommand(initialWaitTime), twoBallParallel, twoBallRamseteCommands[1]);
+              new WaitCommand(initialWaitTime), twoBallParallels[0], twoBallParallels[1]);
 
       // -------------------------------------------
 
-      ParallelDeadlineGroup[] threeBallParallels =
-          new ParallelDeadlineGroup[threeBallRamseteCommands.length];
-      for (int i = 0; i < threeBallRamseteCommands.length; i++) {
-        threeBallParallels[i] =
-            new ParallelDeadlineGroup(
-                threeBallRamseteCommands[i],
-                new CombinedIntakeCDSForwardCommand(
-                    intakeSubsystem, cdsSubsystem, shooterSubsystem));
-      }
-
+      ParallelDeadlineGroup[] threeBallParallels = getParallelCommands(threeBallRamseteCommands);
       threeBallCommand =
           new SequentialCommandGroup(
               new WaitCommand(initialWaitTime),
@@ -240,16 +233,7 @@ public class AutonModes {
 
       // --------------------------------------------
 
-      ParallelDeadlineGroup[] fourBallParallels =
-          new ParallelDeadlineGroup[fourBallRamseteCommands.length];
-      for (int i = 0; i < fourBallRamseteCommands.length; i++) {
-        fourBallParallels[i] =
-            new ParallelDeadlineGroup(
-                fourBallRamseteCommands[i],
-                new CombinedIntakeCDSForwardCommand(
-                    intakeSubsystem, cdsSubsystem, shooterSubsystem));
-      }
-
+      ParallelDeadlineGroup[] fourBallParallels = getParallelCommands(fourBallRamseteCommands);
       // similar path to threeball, now just getting the additional ball at terminal
       fourBallCommand =
           new SequentialCommandGroup(
@@ -262,32 +246,18 @@ public class AutonModes {
 
       // ---------------------------------------
 
-      ParallelDeadlineGroup fiveBallParallel1 =
-          new ParallelDeadlineGroup(
-              fiveBallRamseteCommands[0],
-              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
-
-      ParallelDeadlineGroup fiveBallParallel2 =
-          new ParallelDeadlineGroup(
-              fiveBallRamseteCommands[2],
-              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
-
-      ParallelDeadlineGroup fiveBallParallel3 =
-          new ParallelDeadlineGroup(
-              fiveBallRamseteCommands[4],
-              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
-
+      ParallelDeadlineGroup[] fiveBallParallels = getParallelCommands(fiveBallRamseteCommands);
       fiveBallCommand =
           new SequentialCommandGroup(
               new WaitCommand(initialWaitTime),
-              fiveBallParallel1,
-              fiveBallRamseteCommands[1],
+              fiveBallParallels[0],
+              fiveBallParallels[1],
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
-              fiveBallParallel2,
-              fiveBallRamseteCommands[3],
+              fiveBallParallels[2],
+              fiveBallParallels[3],
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
-              fiveBallParallel3,
-              fiveBallRamseteCommands[5],
+              fiveBallParallels[4],
+              fiveBallParallels[5],
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
     }
   }
