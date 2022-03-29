@@ -15,7 +15,7 @@ import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbEnable;
-import frc.robot.commands.ClimbKeepDown;
+import frc.robot.commands.ClimbPeriodic;
 import frc.robot.commands.CombinedIntakeCDSForwardCommand;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
@@ -66,7 +66,7 @@ public class RobotContainer {
   private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
   private ClimbEnable climbEnabling;
-  private ClimbKeepDown climbKeepDown;
+  private ClimbPeriodic ClimbPeriodic;
 
   // auton
   private AutonModes autonModes;
@@ -175,8 +175,8 @@ public class RobotContainer {
 
     if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
       climbEnabling = new ClimbEnable(climbSubsystem, driveBaseSubsystem);
-      climbKeepDown = new ClimbKeepDown(climbSubsystem);
-      climbSubsystem.setDefaultCommand(climbKeepDown);
+      ClimbPeriodic = new ClimbPeriodic(climbSubsystem);
+      climbSubsystem.setDefaultCommand(ClimbPeriodic);
     }
   }
 

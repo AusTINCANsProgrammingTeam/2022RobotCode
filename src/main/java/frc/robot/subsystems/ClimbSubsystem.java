@@ -127,31 +127,30 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public void climbKeepDownFunction() {
     m_McOne.getPIDCtrl().setReference(McHeightOne, CANSparkMax.ControlType.kPosition);
-      sbMcHeightOne.setNumber(McHeightOne);
+    sbMcHeightOne.setNumber(McHeightOne);
 
     m_McTwo.getPIDCtrl().setReference(McHeightTwo, CANSparkMax.ControlType.kPosition);
-      sbMcHeightTwo.setNumber(McHeightTwo);
+    sbMcHeightTwo.setNumber(McHeightTwo);
 
     m_HaOne.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
-      sbHaHeightOne.setNumber(HaHeightOne);
+    sbHaHeightOne.setNumber(HaHeightOne);
 
     m_HaTwo.getPIDCtrl().setReference(HaHeightTwo, CANSparkMax.ControlType.kPosition);
-      sbHaHeightTwo.setNumber(HaHeightTwo);
-
+    sbHaHeightTwo.setNumber(HaHeightTwo);
   }
 
   public void climbEnable() {
     climbEnabble = !climbEnabble;
     if (climbEnabble) {
-      m_McOne.setSmartCurrentLimit(60);
-      m_McTwo.setSmartCurrentLimit(60);
-      m_HaOne.setSmartCurrentLimit(60);
-      m_HaTwo.setSmartCurrentLimit(60);
+      m_McOne.setSmartCurrentLimit(Constants.ClimbHighCurrent);
+      m_McTwo.setSmartCurrentLimit(Constants.ClimbHighCurrent);
+      m_HaOne.setSmartCurrentLimit(Constants.ClimbHighCurrent);
+      m_HaTwo.setSmartCurrentLimit(Constants.ClimbHighCurrent);
     } else {
-      m_McOne.setSmartCurrentLimit(10);
-      m_McTwo.setSmartCurrentLimit(10);
-      m_HaOne.setSmartCurrentLimit(10);
-      m_HaTwo.setSmartCurrentLimit(10);
+      m_McOne.setSmartCurrentLimit(Constants.ClimbLowCurrent);
+      m_McTwo.setSmartCurrentLimit(Constants.ClimbLowCurrent);
+      m_HaOne.setSmartCurrentLimit(Constants.ClimbLowCurrent);
+      m_HaTwo.setSmartCurrentLimit(Constants.ClimbLowCurrent);
     }
   }
 
@@ -181,11 +180,10 @@ public class ClimbSubsystem extends SubsystemBase {
         }
       }
       m_McOne.getPIDCtrl().setReference(McHeightOne, CANSparkMax.ControlType.kPosition);
-        sbMcHeightOne.setNumber(McHeightOne);
-
+      sbMcHeightOne.setNumber(McHeightOne);
 
       m_McTwo.getPIDCtrl().setReference(McHeightTwo, CANSparkMax.ControlType.kPosition);
-        sbMcHeightTwo.setNumber(McHeightTwo);
+      sbMcHeightTwo.setNumber(McHeightTwo);
     }
   }
 
@@ -219,6 +217,10 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void periodic() {
+    if (DriverStation.isDisabled() && climbEnabble) {
+      climbEnable();
+    }
+
     if (sbMcHeightOne.getDouble(0) != McHeightOne) {
       McHeightOne = sbMcHeightOne.getDouble(0);
     }
