@@ -126,12 +126,12 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public void climbKeepDownFunction() {
     m_McOne.getPIDCtrl().setReference(McHeightOne, CANSparkMax.ControlType.kPosition);
-      m_McOne.getPIDCtrl().setIMaxAccum(0.45, 0);
-      sbMcHeightOne.setNumber(McHeightOne);
+    m_McOne.getPIDCtrl().setIMaxAccum(0.45, 0);
+    sbMcHeightOne.setNumber(McHeightOne);
 
     m_McTwo.getPIDCtrl().setReference(McHeightTwo, CANSparkMax.ControlType.kPosition);
-      sbMcHeightTwo.setNumber(McHeightTwo);
-      m_McTwo.getPIDCtrl().setIMaxAccum(0.45, 0);
+    sbMcHeightTwo.setNumber(McHeightTwo);
+    m_McTwo.getPIDCtrl().setIMaxAccum(0.45, 0);
 
     m_HaOne.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
     sbHaHeightOne.setNumber(HaHeightOne);
