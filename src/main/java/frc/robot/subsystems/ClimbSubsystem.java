@@ -126,10 +126,12 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public void climbKeepDownFunction() {
     m_McOne.getPIDCtrl().setReference(McHeightOne, CANSparkMax.ControlType.kPosition);
+      m_McOne.getPIDCtrl().setIMaxAccum(0.45, 0);
       sbMcHeightOne.setNumber(McHeightOne);
 
     m_McTwo.getPIDCtrl().setReference(McHeightTwo, CANSparkMax.ControlType.kPosition);
       sbMcHeightTwo.setNumber(McHeightTwo);
+      m_McTwo.getPIDCtrl().setIMaxAccum(0.45, 0);
 
     m_HaOne.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
       sbHaHeightOne.setNumber(HaHeightOne);
@@ -163,19 +165,19 @@ public class ClimbSubsystem extends SubsystemBase {
       McjoystickAxis = -m_climbJoystick.getRawAxis(Constants.leftJoystickY);
       if (McjoystickAxis > 0.1 || McjoystickAxis < -0.1) {
         if (McjoystickAxis > 0) {
-          if (McHeightOne + (McjoystickAxis * -1.5) <= Constants.McHeightMin) {
+          if (McHeightOne + (McjoystickAxis * -1.5) >= Constants.McHeightMin) {
             McHeightOne = McHeightOne + (McjoystickAxis * -1.5);
           }
-          if (McHeightTwo + (McjoystickAxis * -1.5) <= Constants.McHeightMin) {
+          if (McHeightTwo + (McjoystickAxis * -1.5) >= Constants.McHeightMin) {
             McHeightTwo = McHeightTwo + (McjoystickAxis * -1.5);
           }
         }
         if (McjoystickAxis < 0) {
-          if (McHeightOne + (McjoystickAxis * -0.5) >= Constants.McHeightMax) {
-            McHeightOne = McHeightOne + (McjoystickAxis * -0.5);
+          if (McHeightOne + (McjoystickAxis * -0.5) <= Constants.McHeightMax) {
+            McHeightOne = McHeightOne + (McjoystickAxis * -0.4);
           }
-          if (McHeightTwo + (McjoystickAxis * -0.5) >= Constants.McHeightMax) {
-            McHeightTwo = McHeightTwo + (McjoystickAxis * -0.5);
+          if (McHeightTwo + (McjoystickAxis * -0.5) <= Constants.McHeightMax) {
+            McHeightTwo = McHeightTwo + (McjoystickAxis * -0.4);
           }
         }
       }
@@ -183,8 +185,8 @@ public class ClimbSubsystem extends SubsystemBase {
         sbMcHeightOne.setNumber(McHeightOne);
 
 
-      m_McTwo.getPIDCtrl().setReference(McHeightTwo, CANSparkMax.ControlType.kPosition);
-        sbMcHeightTwo.setNumber(McHeightTwo);
+      m_McTwo.getPIDCtrl().setReference(McHeightOne, CANSparkMax.ControlType.kPosition);
+        sbMcHeightTwo.setNumber(McHeightOne);
     }
   }
 
@@ -194,26 +196,26 @@ public class ClimbSubsystem extends SubsystemBase {
       if (HajoystickAxis > 0.1 || HajoystickAxis < -0.1) {
         if (HajoystickAxis > 0) {
           if (HaHeightOne + (HajoystickAxis / 10 * 8) <= Constants.HaHeightMax) {
-            HaHeightOne = HaHeightOne + (HajoystickAxis * 1.5);
+            HaHeightOne = HaHeightOne + (HajoystickAxis * 0.5);
           }
           if (HaHeightTwo + (HajoystickAxis / 10 * 8) <= Constants.HaHeightMax) {
-            HaHeightTwo = HaHeightTwo + (HajoystickAxis * 1.5);
+            HaHeightTwo = HaHeightTwo + (HajoystickAxis * 0.5);
           }
         }
         if (HajoystickAxis < 0) {
           if (HaHeightOne + (HajoystickAxis / 10 * 6) >= Constants.HaHeightMin) {
-            HaHeightOne = HaHeightOne + (HajoystickAxis * 1.5);
+            HaHeightOne = HaHeightOne + (HajoystickAxis * 0.5);
           }
           if (HaHeightTwo + (HajoystickAxis / 10 * 6) >= Constants.HaHeightMin) {
-            HaHeightTwo = HaHeightTwo + (HajoystickAxis * 1.5);
+            HaHeightTwo = HaHeightTwo + (HajoystickAxis * 0.5);
           }
         }
       }
       m_HaOne.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
       sbHaHeightOne.setNumber(HaHeightOne);
 
-      m_HaTwo.getPIDCtrl().setReference(HaHeightTwo, CANSparkMax.ControlType.kPosition);
-      sbHaHeightTwo.setNumber(HaHeightTwo);
+      m_HaTwo.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
+      sbHaHeightTwo.setNumber(HaHeightOne);
     }
   }
 
