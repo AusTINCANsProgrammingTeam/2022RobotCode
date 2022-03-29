@@ -324,7 +324,10 @@ public class CDSSubsystem extends SubsystemBase {
 
         break;
       case ADVANCE:
-        if (activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) {
+        if (sensedBallColor != allianceColor && ballPresent) {
+          state = ManagementState.EJECT;
+          msCurrent = 0;
+        } else if (activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) {
           state = ManagementState.IDLE;
         } else {
           msCurrent += 20;
