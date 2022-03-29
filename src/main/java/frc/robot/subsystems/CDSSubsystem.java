@@ -26,6 +26,7 @@ public class CDSSubsystem extends SubsystemBase {
   public enum ManagementState {
     IDLE,
     EJECT,
+    SHOOTER_EJECT,
     ADVANCE
   }
 
@@ -46,11 +47,13 @@ public class CDSSubsystem extends SubsystemBase {
   private int msCurrent = 0;
   private int ejectRuntime = 650; // amount of time auto eject will run intake backwards for in ms
   private int advanceTimeout = 2000; // how long CDS should run before it times out
+  private int shooterEjectRuntime = 2500; // how long shooter eject will run before it stops
 
   private int ballCount = 0;
 
   private int[] sensorStatuses;
   private boolean[] activationArray = new boolean[3];
+  private Color[] colors = new Color[3];
   private String lastBallColor;
 
   private int currentProxCycle = 0;
@@ -76,6 +79,9 @@ public class CDSSubsystem extends SubsystemBase {
   private NetworkTableEntry backSensorProx = CDSTab.add("Back Proximity", 0).getEntry();
   private NetworkTableEntry CDSBallCount = CDSTab.add("Ball Count", 0).getEntry();
   private NetworkTableEntry CDSState = CDSTab.add("CDS State", "IDLE").getEntry();
+  private NetworkTableEntry managementOnOff = 
+      CDSTab.add("Run Auto Intake and Eject", true)
+      .withWidget(BuiltInWidgets.kToggleButton).getEntry();
 
   public CDSSubsystem() {
     // BManualCDS.setBoolean(Constants.); TODO: setup when manual cds toggle is merged
@@ -245,7 +251,7 @@ public class CDSSubsystem extends SubsystemBase {
   public String senseColor() {
     if (currentColorCycle % cycleWait == 0) {
       currentColorCycle = 0;
-      Color[] colors = colorSensors.getColors();
+      colors = colorSensors.getColors();
       SmartDashboard.putNumber("Front Sense B", colors[2].blue);
       SmartDashboard.putNumber("Front Sense R", colors[2].red);
 
@@ -312,12 +318,12 @@ public class CDSSubsystem extends SubsystemBase {
       case IDLE:
         nextOpenSensor = -1;
         msCurrent = 0;
-
-        if ((ballCount > 2 || sensedBallColor != allianceColor) && ballPresent) {
+        
+        if (ballCount == 1 && sensedBallColor != allianceColor && ballPresent) {
+          state = ManagementState.SHOOTER_EJECT;
+        } else if ((ballCount > 2 || sensedBallColor != allianceColor) && ballPresent) {
           state = ManagementState.EJECT;
-        }
-
-        if (ballCount < 3 && currentOpenSensor != -1 && ballPresent) {
+        } else if (ballCount < 3 && currentOpenSensor != -1 && ballPresent) {
           state = ManagementState.ADVANCE;
           nextOpenSensor = currentOpenSensor;
         }
@@ -334,6 +340,15 @@ public class CDSSubsystem extends SubsystemBase {
         }
 
         break;
+      case SHOOTER_EJECT:
+        if (msCurrent >= shooterEjectRuntime) {
+          state = ManagementState.IDLE;
+        } else {
+          msCurrent += 20;
+        }
+
+        break;
+
       case EJECT:
         if (msCurrent >= ejectRuntime) {
           state = ManagementState.IDLE;
@@ -342,6 +357,7 @@ public class CDSSubsystem extends SubsystemBase {
         }
 
         break;
+      
     }
     CDSState.setString(state.toString());
   }
@@ -365,4 +381,11 @@ public class CDSSubsystem extends SubsystemBase {
       simCount++;
     }
   }
+  
+  public boolean managementEnabled() {
+    return SmartDashboard.getBoolean("Run Auto Intake and Eject", true);
+  }
+
+  public void periodic() {
+  }  
 }

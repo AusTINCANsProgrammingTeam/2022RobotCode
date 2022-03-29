@@ -7,11 +7,13 @@ package frc.robot.commands;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.commands.ShooterEject;
 
 public class CDSBallManagementCommand extends CommandBase {
   /** Creates a new CDSBallManagementCommand. */
@@ -19,15 +21,21 @@ public class CDSBallManagementCommand extends CommandBase {
 
   private final IntakeSubsystem intakeSubsystem;
   private final ShooterSubsystem shooterSubsystem;
+  private final ShooterEject shooterEject; 
 
   private int msBeltCurrent = 0;
   private int beltEjectRuntime = 100;
+
+  private boolean firstRun = true;
 
   private static ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private static NetworkTableEntry autoEjectRunning =
       CDSTab.add("Auto Eject Running", false).getEntry();
   private static NetworkTableEntry autoIntakeRunning =
       CDSTab.add("Auto Intake Running", false).getEntry();
+  private static NetworkTableEntry managementOnOff = 
+      CDSTab.add("Run Auto Intake and Eject", true)
+      .withWidget(BuiltInWidgets.kToggleButton).getEntry();
 
   public CDSBallManagementCommand(
       CDSSubsystem mCDSSubsystem,
@@ -41,6 +49,7 @@ public class CDSBallManagementCommand extends CommandBase {
     CDSSubsystem = mCDSSubsystem;
     intakeSubsystem = mIntakeSubsystem;
     shooterSubsystem = mShooterSubsystem;
+    shooterEject = new ShooterEject(shooterSubsystem, CDSSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -50,39 +59,58 @@ public class CDSBallManagementCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    CDSSubsystem.ManagementState state = CDSSubsystem.getState();
+    if (CDSSubsystem.managementEnabled()) {
+      CDSSubsystem.ManagementState state = CDSSubsystem.getState();
 
-    switch (state) {
-      case IDLE:
-        CDSSubsystem.stopCDS();
-        intakeSubsystem.stopIntake();
-        shooterSubsystem.runCargo(0.0);
-        autoEjectRunning.setBoolean(false);
-        autoIntakeRunning.setBoolean(false);
+      switch (state) {
+        case IDLE:
+          CDSSubsystem.stopCDS();
+          intakeSubsystem.stopIntake();
+          shooterSubsystem.runCargo(0.0);
+          autoEjectRunning.setBoolean(false);
+          autoIntakeRunning.setBoolean(false);
+          shooterEject.end(true);
+          firstRun = true;
 
-        break;
+          break;
 
-      case EJECT:
-        if (msBeltCurrent <= beltEjectRuntime) {
-          CDSSubsystem.CDSBeltToggle(true);
-          msBeltCurrent += 20;
-        } else {
-          CDSSubsystem.stopCDSBelt();
-        }
+        case EJECT:
+          if (msBeltCurrent <= beltEjectRuntime) {
+            CDSSubsystem.CDSBeltToggle(true);
+            msBeltCurrent += 20;
+          } else {
+            CDSSubsystem.stopCDSBelt();
+          }
 
-        intakeSubsystem.toggleIntake(true);
-        CDSSubsystem.CDSWheelToggle(true);
-        autoEjectRunning.setString("true");
+          intakeSubsystem.toggleIntake(true);
+          CDSSubsystem.CDSWheelToggle(true);
+          autoEjectRunning.setString("true");
 
-        break;
+          break;
 
-      case ADVANCE:
-        CDSSubsystem.CDSWheelToggle(false);
-        CDSSubsystem.CDSBeltToggle(false);
-        shooterSubsystem.runCargo(Constants.reverseStopperWheelSpeed);
-        autoIntakeRunning.setBoolean(true);
+        case ADVANCE:
+          CDSSubsystem.CDSWheelToggle(false);
+          CDSSubsystem.CDSBeltToggle(false);
+          shooterSubsystem.runCargo(Constants.reverseStopperWheelSpeed);
+          autoIntakeRunning.setBoolean(true);
 
-        break;
+          break;
+
+        case SHOOTER_EJECT:
+          CDSSubsystem.CDSWheelToggle(false);
+          CDSSubsystem.CDSBeltToggle(false);
+          autoEjectRunning.setString("true");
+          shooterSubsystem.runCargo(Constants.Shooter.cargoForward);
+
+          if (firstRun) {
+            // only run initialize once per state run
+            shooterEject.initialize();
+            firstRun = false;
+          }
+          shooterEject.execute();
+
+          break;
+      }
     }
   }
 
