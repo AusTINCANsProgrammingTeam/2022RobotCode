@@ -196,7 +196,6 @@ public class AutonModes {
 
       oneBallCommand =
           new SequentialCommandGroup(
-              new DeployIntake(intakeSubsystem, cdsSubsystem),
               new WaitCommand(initialWaitTime),
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
               oneBallRamseteCommand);
@@ -215,28 +214,28 @@ public class AutonModes {
 
       // -------------------------------------------
 
-      ParallelDeadlineGroup threeBallParallel1 =
-          new ParallelDeadlineGroup(
-              threeBallRamseteCommands[0], // travel to get the two balls
-              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
-
-      ParallelDeadlineGroup threeBallParallel2 =
-          new ParallelDeadlineGroup(
-              threeBallRamseteCommands[2],
-              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+      ParallelDeadlineGroup[] threeBallParallels =
+          new ParallelDeadlineGroup[threeBallRamseteCommands.length];
+      for (int i = 0; i < threeBallRamseteCommands.length; i++) {
+        threeBallParallels[i] =
+            new ParallelDeadlineGroup(
+                threeBallRamseteCommands[i],
+                new CombinedIntakeCDSForwardCommand(
+                    intakeSubsystem, cdsSubsystem, shooterSubsystem));
+      }
 
       threeBallCommand =
           new SequentialCommandGroup(
               new WaitCommand(initialWaitTime),
-              threeBallParallel1,
-              threeBallRamseteCommands[1],
+              threeBallParallels[0],
+              threeBallParallels[1],
               new ShooterPressed(
                   shooterSubsystem,
                   limelightSubsystem,
                   cdsSubsystem,
                   false), // shoot the two acquired balls
-              threeBallParallel2, // grab last ball
-              threeBallRamseteCommands[3], // come back to shoot
+              threeBallParallels[2], // grab last ball
+              threeBallParallels[3], // come back to shoot
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
 
       // --------------------------------------------
@@ -254,7 +253,6 @@ public class AutonModes {
       // similar path to threeball, now just getting the additional ball at terminal
       fourBallCommand =
           new SequentialCommandGroup(
-              new WaitCommand(initialWaitTime),
               fourBallParallels[0],
               fourBallParallels[1],
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
