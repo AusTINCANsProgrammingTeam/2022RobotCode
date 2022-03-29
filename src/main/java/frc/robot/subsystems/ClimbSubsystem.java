@@ -217,6 +217,11 @@ public class ClimbSubsystem extends SubsystemBase {
     }
   }
 
+  public void deployHA() {
+    HaHeightOne = Constants.HaHeightMax;
+    HaHeightTwo = Constants.HaHeightMax;
+  }
+
   public void periodic() {
     if (DriverStation.isDisabled() && climbEnabble) {
       climbEnable();

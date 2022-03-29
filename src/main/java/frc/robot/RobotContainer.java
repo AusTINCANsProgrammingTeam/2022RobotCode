@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
@@ -67,6 +68,7 @@ public class RobotContainer {
   private LimelightAlign limelightAlign;
   private ClimbEnable climbEnabling;
   private ClimbPeriodic ClimbPeriodic;
+  private Command HaDeploy;
 
   // auton
   private AutonModes autonModes;
@@ -176,6 +178,7 @@ public class RobotContainer {
     if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
       climbEnabling = new ClimbEnable(climbSubsystem, driveBaseSubsystem);
       ClimbPeriodic = new ClimbPeriodic(climbSubsystem);
+      HaDeploy = new InstantCommand(climbSubsystem::deployHA, climbSubsystem);
       climbSubsystem.setDefaultCommand(ClimbPeriodic);
     }
   }
@@ -220,6 +223,7 @@ public class RobotContainer {
 
     if (climbSubsystem != null) {
       buttons2[Constants.startButton].whenPressed(climbEnabling);
+      buttons2[Constants.XButton].whenPressed(HaDeploy);
     }
 
     if (outtakeCommand != null && intakeForwardCommand != null) {
