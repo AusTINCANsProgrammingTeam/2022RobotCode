@@ -134,13 +134,12 @@ public class ClimbSubsystem extends SubsystemBase {
     m_McTwo.getPIDCtrl().setIMaxAccum(0.45, 0);
 
     m_HaOne.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
-      sbHaHeightOne.setNumber(HaHeightOne);
-      m_HaOne.getPIDCtrl().setIMaxAccum(0.25, 0);
+    sbHaHeightOne.setNumber(HaHeightOne);
+    m_HaOne.getPIDCtrl().setIMaxAccum(0.25, 0);
 
     m_HaTwo.getPIDCtrl().setReference(HaHeightTwo, CANSparkMax.ControlType.kPosition);
-      sbHaHeightTwo.setNumber(HaHeightTwo);
-      m_HaTwo.getPIDCtrl().setIMaxAccum(0.25, 0);
-
+    sbHaHeightTwo.setNumber(HaHeightTwo);
+    m_HaTwo.getPIDCtrl().setIMaxAccum(0.25, 0);
   }
 
   public void climbEnable() {
@@ -165,22 +164,22 @@ public class ClimbSubsystem extends SubsystemBase {
   public void midClimb() {
     if (climbEnabble) {
       McjoystickAxis = -m_climbJoystick.getRawAxis(Constants.leftJoystickY);
-      if (McjoystickAxis > 0.1 || McjoystickAxis < -0.1) {
+      if (McjoystickAxis > Constants.ControllerDeadZone || McjoystickAxis < -Constants.ControllerDeadZone) {
         if (McjoystickAxis > 0) {
-          
+
           if (McHeightOne + (McjoystickAxis * -1.5) >= Constants.McHeightMin) {
-            McHeightOne = McHeightOne + (McjoystickAxis * -0.75);
+            McHeightOne = McHeightOne + (McjoystickAxis * Constants.McUpSpeed);
           }
           if (McHeightTwo + (McjoystickAxis * -1.5) >= Constants.McHeightMin) {
-            McHeightTwo = McHeightTwo + (McjoystickAxis * -0.75);
+            McHeightTwo = McHeightTwo + (McjoystickAxis * Constants.McUpSpeed);
           }
         }
         if (McjoystickAxis < 0) {
           if (McHeightOne + (McjoystickAxis * -0.5) <= Constants.McHeightMax) {
-            McHeightOne = McHeightOne + (McjoystickAxis * -0.4);
+            McHeightOne = McHeightOne + (McjoystickAxis * Constants.McDownSpeed);
           }
           if (McHeightTwo + (McjoystickAxis * -0.5) <= Constants.McHeightMax) {
-            McHeightTwo = McHeightTwo + (McjoystickAxis * -0.4);
+            McHeightTwo = McHeightTwo + (McjoystickAxis * Constants.McDownSpeed);
           }
         }
       }
@@ -195,21 +194,21 @@ public class ClimbSubsystem extends SubsystemBase {
   public void highArms() {
     if (climbEnabble) {
       HajoystickAxis = -m_climbJoystick.getRawAxis(Constants.rightJoystickY);
-      if (HajoystickAxis > 0.1 || HajoystickAxis < -0.1) {
+      if (HajoystickAxis > Constants.ControllerDeadZone || HajoystickAxis < -Constants.ControllerDeadZone) {
         if (HajoystickAxis > 0) {
           if (HaHeightOne + (HajoystickAxis / 10 * 8) <= Constants.HaHeightMax) {
-            HaHeightOne = HaHeightOne + (HajoystickAxis * 0.5);
+            HaHeightOne = HaHeightOne + (HajoystickAxis * Constants.HaSpeed);
           }
           if (HaHeightTwo + (HajoystickAxis / 10 * 8) <= Constants.HaHeightMax) {
-            HaHeightTwo = HaHeightTwo + (HajoystickAxis * 0.5);
+            HaHeightTwo = HaHeightTwo + (HajoystickAxis * Constants.HaSpeed);
           }
         }
         if (HajoystickAxis < 0) {
           if (HaHeightOne + (HajoystickAxis / 10 * 6) >= Constants.HaHeightMin) {
-            HaHeightOne = HaHeightOne + (HajoystickAxis * 0.5);
+            HaHeightOne = HaHeightOne + (HajoystickAxis * Constants.HaSpeed);
           }
           if (HaHeightTwo + (HajoystickAxis / 10 * 6) >= Constants.HaHeightMin) {
-            HaHeightTwo = HaHeightTwo + (HajoystickAxis * 0.5);
+            HaHeightTwo = HaHeightTwo + (HajoystickAxis * Constants.HaSpeed);
           }
         }
       }
@@ -240,21 +239,6 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     sbClimbEnabble.setBoolean(climbEnabble);
-    SmartDashboard.putNumber("Mc1 Applied Output", m_McOne.getAppliedOutput());
-    SmartDashboard.putNumber("Mc1 Hight", m_McOne.getEncoder().getPosition());
-    SmartDashboard.putNumber("Mc1 IAccum", m_McOne.getPIDCtrl().getIAccum());
-
-    SmartDashboard.putNumber("Mc2 Applied Output", m_McTwo.getAppliedOutput());
-    SmartDashboard.putNumber("Mc2 Hight", m_McTwo.getEncoder().getPosition());
-    SmartDashboard.putNumber("Mc2 IAccum", m_McTwo.getPIDCtrl().getIAccum());
-
-    SmartDashboard.putNumber("Ha1 Applied Output", m_HaOne.getAppliedOutput());
-    SmartDashboard.putNumber("Ha1 Hight", m_HaOne.getEncoder().getPosition());
-    SmartDashboard.putNumber("Ha1 IAccum", m_HaOne.getPIDCtrl().getIAccum());
-
-    SmartDashboard.putNumber("Ha2 Applied Output", m_HaTwo.getAppliedOutput());
-    SmartDashboard.putNumber("Ha2 Hight", m_HaTwo.getEncoder().getPosition());
-    SmartDashboard.putNumber("Ha2 IAccum", m_HaTwo.getPIDCtrl().getIAccum());
   }
 
   public void debugPeriodic() {

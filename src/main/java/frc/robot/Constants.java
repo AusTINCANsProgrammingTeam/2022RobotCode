@@ -302,4 +302,11 @@ public final class Constants {
 
   public static final double DriveSpeedHigh = 1;
   public static final double DriveSpeedLow = 0.6;
+
+  public static final double ControllerDeadZone = 0.1;
+
+  public static final double McUpSpeed = -0.75;
+  public static final double McDownSpeed = -0.4;
+
+  public static final double HaSpeed = 0.5;
 }
