@@ -126,20 +126,20 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public void climbKeepDownFunction() {
     m_McOne.getPIDCtrl().setReference(McHeightOne, CANSparkMax.ControlType.kPosition);
-    m_McOne.getPIDCtrl().setIMaxAccum(0.45, 0);
+    m_McOne.getPIDCtrl().setIMaxAccum(Constants.McsetIMaxAccum, 0);
     sbMcHeightOne.setNumber(McHeightOne);
 
     m_McTwo.getPIDCtrl().setReference(McHeightTwo, CANSparkMax.ControlType.kPosition);
     sbMcHeightTwo.setNumber(McHeightTwo);
-    m_McTwo.getPIDCtrl().setIMaxAccum(0.45, 0);
+    m_McTwo.getPIDCtrl().setIMaxAccum(Constants.McsetIMaxAccum, 0);
 
     m_HaOne.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
     sbHaHeightOne.setNumber(HaHeightOne);
-    m_HaOne.getPIDCtrl().setIMaxAccum(0.25, 0);
+    m_HaOne.getPIDCtrl().setIMaxAccum(Constants.HasetIMaxAccum, 0);
 
     m_HaTwo.getPIDCtrl().setReference(HaHeightTwo, CANSparkMax.ControlType.kPosition);
     sbHaHeightTwo.setNumber(HaHeightTwo);
-    m_HaTwo.getPIDCtrl().setIMaxAccum(0.25, 0);
+    m_HaTwo.getPIDCtrl().setIMaxAccum(Constants.HasetIMaxAccum, 0);
   }
 
   public void climbEnable() {
@@ -168,18 +168,18 @@ public class ClimbSubsystem extends SubsystemBase {
           || McjoystickAxis < -Constants.ControllerDeadZone) {
         if (McjoystickAxis > 0) {
 
-          if (McHeightOne + (McjoystickAxis * -1.5) >= Constants.McHeightMin) {
+          if (McHeightOne + (McjoystickAxis * Constants.McUpSpeed) >= Constants.McHeightMin) {
             McHeightOne = McHeightOne + (McjoystickAxis * Constants.McUpSpeed);
           }
-          if (McHeightTwo + (McjoystickAxis * -1.5) >= Constants.McHeightMin) {
+          if (McHeightTwo + (McjoystickAxis * Constants.McUpSpeed) >= Constants.McHeightMin) {
             McHeightTwo = McHeightTwo + (McjoystickAxis * Constants.McUpSpeed);
           }
         }
         if (McjoystickAxis < 0) {
-          if (McHeightOne + (McjoystickAxis * -0.5) <= Constants.McHeightMax) {
+          if (McHeightOne + (McjoystickAxis * Constants.McDownSpeed) <= Constants.McHeightMax) {
             McHeightOne = McHeightOne + (McjoystickAxis * Constants.McDownSpeed);
           }
-          if (McHeightTwo + (McjoystickAxis * -0.5) <= Constants.McHeightMax) {
+          if (McHeightTwo + (McjoystickAxis * Constants.McDownSpeed) <= Constants.McHeightMax) {
             McHeightTwo = McHeightTwo + (McjoystickAxis * Constants.McDownSpeed);
           }
         }
@@ -198,18 +198,18 @@ public class ClimbSubsystem extends SubsystemBase {
       if (HajoystickAxis > Constants.ControllerDeadZone
           || HajoystickAxis < -Constants.ControllerDeadZone) {
         if (HajoystickAxis > 0) {
-          if (HaHeightOne + (HajoystickAxis / 10 * 8) <= Constants.HaHeightMax) {
+          if (HaHeightOne + (HajoystickAxis / Constants.HaSpeed) <= Constants.HaHeightMax) {
             HaHeightOne = HaHeightOne + (HajoystickAxis * Constants.HaSpeed);
           }
-          if (HaHeightTwo + (HajoystickAxis / 10 * 8) <= Constants.HaHeightMax) {
+          if (HaHeightTwo + (HajoystickAxis / Constants.HaSpeed) <= Constants.HaHeightMax) {
             HaHeightTwo = HaHeightTwo + (HajoystickAxis * Constants.HaSpeed);
           }
         }
         if (HajoystickAxis < 0) {
-          if (HaHeightOne + (HajoystickAxis / 10 * 6) >= Constants.HaHeightMin) {
+          if (HaHeightOne + (HajoystickAxis / Constants.HaSpeed) >= Constants.HaHeightMin) {
             HaHeightOne = HaHeightOne + (HajoystickAxis * Constants.HaSpeed);
           }
-          if (HaHeightTwo + (HajoystickAxis / 10 * 6) >= Constants.HaHeightMin) {
+          if (HaHeightTwo + (HajoystickAxis / Constants.HaSpeed) >= Constants.HaHeightMin) {
             HaHeightTwo = HaHeightTwo + (HajoystickAxis * Constants.HaSpeed);
           }
         }

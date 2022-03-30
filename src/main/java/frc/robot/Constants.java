@@ -310,4 +310,7 @@ public final class Constants {
   public static final double McDownSpeed = -0.4;
 
   public static final double HaSpeed = 0.5;
+
+  public static final double McsetIMaxAccum = 0.45;
+  public static final double HasetIMaxAccum = 0.25;
 }
