@@ -317,40 +317,44 @@ public class CDSSubsystem extends SubsystemBase {
     boolean ballPresent =
         activationArray[2]; // whether or not there's a ball at the centering wheels
 
-    switch (state) {
-      case IDLE:
-        nextOpenSensor = -1;
-        msCurrent = 0;
-
-        if ((ballCount > 2 || sensedBallColor != allianceColor) && ballPresent) {
-          state = ManagementState.EJECT;
-        }
-
-        if (ballCount < 3 && currentOpenSensor != -1 && ballPresent) {
-          state = ManagementState.ADVANCE;
-          nextOpenSensor = currentOpenSensor;
-        }
-
-        break;
-      case ADVANCE:
-        if (sensedBallColor != allianceColor && ballPresent) {
-          state = ManagementState.EJECT;
+    if (managementEnabled()){
+      switch (state) {
+        case IDLE:
+          nextOpenSensor = -1;
           msCurrent = 0;
-        } else if (activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) {
-          state = ManagementState.IDLE;
-        } else {
-          msCurrent += 20;
-        }
+          
+          if ((ballCount > 2 || sensedBallColor != allianceColor) && ballPresent) {
+            state = ManagementState.EJECT;
+          }
 
-        break;
-      case EJECT:
-        if (msCurrent >= ejectRuntime) {
-          state = ManagementState.IDLE;
-        } else {
-          msCurrent += 20;
-        }
+          if ((ballCount < 3 && currentOpenSensor != -1 && ballPresent)) {
+            state = ManagementState.ADVANCE;
+            nextOpenSensor = currentOpenSensor;
+          }
 
-        break;
+          break;
+        case ADVANCE:
+          if (sensedBallColor != allianceColor && ballPresent) {
+            state = ManagementState.EJECT;
+            msCurrent = 0;
+          } else if (activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) {
+            state = ManagementState.IDLE;
+          } else {
+            msCurrent += 20;
+          }
+
+          break;
+        case EJECT:
+          if (msCurrent >= ejectRuntime) {
+            state = ManagementState.IDLE;
+          } else {
+            msCurrent += 20;
+          }
+
+          break;
+      }
+    } else{
+      state = ManagementState.IDLE;
     }
     CDSState.setString(state.toString());
   }
