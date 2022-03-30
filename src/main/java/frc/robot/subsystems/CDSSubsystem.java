@@ -47,7 +47,7 @@ public class CDSSubsystem extends SubsystemBase {
   private int msCurrent = 0;
   private int ejectRuntime = 650; // amount of time auto eject will run intake backwards for in ms
   private int advanceTimeout = 2000; // how long CDS should run before it times out
-  private int shooterEjectRuntime = 4000; // how long shooter eject will run before it stops
+  private int shooterEjectRuntime = 2500; // how long shooter eject will run before it stops
 
   private int ballCount = 0;
 
