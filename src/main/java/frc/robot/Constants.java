@@ -122,7 +122,7 @@ public final class Constants {
     PUSHTAXI("PushTaxi", "paths/TaxiOutPushBall.wpilib.json"),
     INTAKETAXI("IntakeTaxi", "paths/TaxiOutGrabBall.wpilib.json"),
     ONEBALL("OneBall", "paths/OneBall.wpilib.json"),
-    TWOBALL("TwoBall", "paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json"),
+    TWOBALL("TwoBall", "paths/TwoBall1.wpilib.json", "paths/TwoBall2.wpilib.json"),
     THREEBALL("ThreeBall", "paths/Three1.wpilib.json", "paths/Three2.wpilib.json", "paths/Three3.wpilib.json", "paths/Three4.wpilib.json"),
     FOURBALL("FourBall", "paths/Four1.wpilib.json", "paths/Four2.wpilib.json", "paths/Four3.wpilib.json", "paths/Four4.wpilib.json"),
     FIVEBALL("FiveBall", "paths/Five1.wpilib.json", "paths/Five2.wpilib.json", "paths/Five3.wpilib.json", "paths/Five4.wpilib.json", "paths/Five5.wpilib.json", "paths/Five6.wpilib.json"),
