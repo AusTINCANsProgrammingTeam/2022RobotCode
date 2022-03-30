@@ -175,6 +175,17 @@ public class AutonModes {
     }
   }
 
+  private ParallelDeadlineGroup[] getParallelCommands(Command... ramsetes) {
+    ParallelDeadlineGroup[] parallels = new ParallelDeadlineGroup[ramsetes.length];
+    for (int i = 0; i < ramsetes.length; i++) {
+      parallels[i] =
+          new ParallelDeadlineGroup(
+              ramsetes[i],
+              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+    }
+    return parallels;
+  }
+
   private void initializeCommandGroups() {
 
     pushTaxiCommand =
@@ -182,11 +193,7 @@ public class AutonModes {
 
     // ---------------------------------------------
 
-    ParallelDeadlineGroup intakeTaxiParallel =
-        new ParallelDeadlineGroup(
-            intakeTaxiRamseteCommand,
-            new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
-
+    ParallelDeadlineGroup intakeTaxiParallel = getParallelCommands(intakeTaxiRamseteCommand)[0];
     intakeTaxiCommand =
         new SequentialCommandGroup(new WaitCommand(initialWaitTime), intakeTaxiParallel);
 
@@ -196,65 +203,40 @@ public class AutonModes {
 
       oneBallCommand =
           new SequentialCommandGroup(
-              new DeployIntake(intakeSubsystem, cdsSubsystem),
               new WaitCommand(initialWaitTime),
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
               oneBallRamseteCommand);
 
       // -------------------------------------------
 
-      ParallelDeadlineGroup twoBallParallel =
-          new ParallelDeadlineGroup(
-              twoBallRamseteCommands[0], // travel to get ball
-              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
-
+      ParallelDeadlineGroup[] twoBallParallels = getParallelCommands(twoBallRamseteCommands);
       twoBallCommand =
           new SequentialCommandGroup(
-              // new DeployIntake(intakeSubsystem, cdsSubsystem),
-              new WaitCommand(initialWaitTime), twoBallParallel, twoBallRamseteCommands[1]);
+              new WaitCommand(initialWaitTime), twoBallParallels[0], twoBallParallels[1]);
 
       // -------------------------------------------
 
-      ParallelDeadlineGroup threeBallParallel1 =
-          new ParallelDeadlineGroup(
-              threeBallRamseteCommands[0], // travel to get the two balls
-              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
-
-      ParallelDeadlineGroup threeBallParallel2 =
-          new ParallelDeadlineGroup(
-              threeBallRamseteCommands[2],
-              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
-
+      ParallelDeadlineGroup[] threeBallParallels = getParallelCommands(threeBallRamseteCommands);
       threeBallCommand =
           new SequentialCommandGroup(
               new WaitCommand(initialWaitTime),
-              threeBallParallel1,
-              threeBallRamseteCommands[1],
+              threeBallParallels[0],
+              threeBallParallels[1],
               new ShooterPressed(
                   shooterSubsystem,
                   limelightSubsystem,
                   cdsSubsystem,
                   false), // shoot the two acquired balls
-              threeBallParallel2, // grab last ball
-              threeBallRamseteCommands[3], // come back to shoot
+              threeBallParallels[2], // grab last ball
+              threeBallParallels[3], // come back to shoot
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
 
       // --------------------------------------------
 
-      ParallelDeadlineGroup[] fourBallParallels =
-          new ParallelDeadlineGroup[fourBallRamseteCommands.length];
-      for (int i = 0; i < fourBallRamseteCommands.length; i++) {
-        fourBallParallels[i] =
-            new ParallelDeadlineGroup(
-                fourBallRamseteCommands[i],
-                new CombinedIntakeCDSForwardCommand(
-                    intakeSubsystem, cdsSubsystem, shooterSubsystem));
-      }
-
+      ParallelDeadlineGroup[] fourBallParallels = getParallelCommands(fourBallRamseteCommands);
       // similar path to threeball, now just getting the additional ball at terminal
       fourBallCommand =
           new SequentialCommandGroup(
-              new WaitCommand(initialWaitTime),
               fourBallParallels[0],
               fourBallParallels[1],
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
@@ -264,32 +246,18 @@ public class AutonModes {
 
       // ---------------------------------------
 
-      ParallelDeadlineGroup fiveBallParallel1 =
-          new ParallelDeadlineGroup(
-              fiveBallRamseteCommands[0],
-              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
-
-      ParallelDeadlineGroup fiveBallParallel2 =
-          new ParallelDeadlineGroup(
-              fiveBallRamseteCommands[2],
-              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
-
-      ParallelDeadlineGroup fiveBallParallel3 =
-          new ParallelDeadlineGroup(
-              fiveBallRamseteCommands[4],
-              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
-
+      ParallelDeadlineGroup[] fiveBallParallels = getParallelCommands(fiveBallRamseteCommands);
       fiveBallCommand =
           new SequentialCommandGroup(
               new WaitCommand(initialWaitTime),
-              fiveBallParallel1,
-              fiveBallRamseteCommands[1],
+              fiveBallParallels[0],
+              fiveBallParallels[1],
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
-              fiveBallParallel2,
-              fiveBallRamseteCommands[3],
+              fiveBallParallels[2],
+              fiveBallParallels[3],
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
-              fiveBallParallel3,
-              fiveBallRamseteCommands[5],
+              fiveBallParallels[4],
+              fiveBallParallels[5],
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
     }
   }
