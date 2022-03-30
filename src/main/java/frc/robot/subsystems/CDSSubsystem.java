@@ -81,7 +81,7 @@ public class CDSSubsystem extends SubsystemBase {
   private NetworkTableEntry CDSState = CDSTab.add("CDS State", "IDLE").getEntry();
   private NetworkTableEntry managementOnOff = 
       CDSTab.add("Run Auto Intake and Eject", true)
-      .withWidget(BuiltInWidgets.kToggleButton).getEntry();
+      .withWidget(BuiltInWidgets.kToggleButton).withPosition(1, 2).getEntry();
 
   public CDSSubsystem() {
     // BManualCDS.setBoolean(Constants.); TODO: setup when manual cds toggle is merged
@@ -383,7 +383,7 @@ public class CDSSubsystem extends SubsystemBase {
   }
   
   public boolean managementEnabled() {
-    return SmartDashboard.getBoolean("Run Auto Intake and Eject", true);
+    return managementOnOff.getBoolean(true);
   }
 
   public void periodic() {

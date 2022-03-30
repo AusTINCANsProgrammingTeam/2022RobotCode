@@ -33,9 +33,6 @@ public class CDSBallManagementCommand extends CommandBase {
       CDSTab.add("Auto Eject Running", false).getEntry();
   private static NetworkTableEntry autoIntakeRunning =
       CDSTab.add("Auto Intake Running", false).getEntry();
-  private static NetworkTableEntry managementOnOff = 
-      CDSTab.add("Run Auto Intake and Eject", true)
-      .withWidget(BuiltInWidgets.kToggleButton).getEntry();
 
   public CDSBallManagementCommand(
       CDSSubsystem mCDSSubsystem,
@@ -50,6 +47,7 @@ public class CDSBallManagementCommand extends CommandBase {
     intakeSubsystem = mIntakeSubsystem;
     shooterSubsystem = mShooterSubsystem;
     shooterEject = new ShooterEject(shooterSubsystem, CDSSubsystem);
+    shooterEject.initialize();
   }
 
   // Called when the command is initially scheduled.
@@ -69,7 +67,7 @@ public class CDSBallManagementCommand extends CommandBase {
           shooterSubsystem.runCargo(0.0);
           autoEjectRunning.setBoolean(false);
           autoIntakeRunning.setBoolean(false);
-          shooterEject.end(true);
+          shooterEject.end(false);
           firstRun = true;
 
           break;
