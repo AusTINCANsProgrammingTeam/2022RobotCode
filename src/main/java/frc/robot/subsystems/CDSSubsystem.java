@@ -48,6 +48,7 @@ public class CDSSubsystem extends SubsystemBase {
   private int advanceTimeout = 2000; // how long CDS should run before it times out
 
   private int ballCount = 0;
+  private Color[] colors = new Color[3];
 
   private int[] sensorStatuses;
   private boolean[] activationArray = new boolean[3];
@@ -76,6 +77,11 @@ public class CDSSubsystem extends SubsystemBase {
   private NetworkTableEntry backSensorProx = CDSTab.add("Back Proximity", 0).getEntry();
   private NetworkTableEntry CDSBallCount = CDSTab.add("Ball Count", 0).getEntry();
   private NetworkTableEntry CDSState = CDSTab.add("CDS State", "IDLE").getEntry();
+  private NetworkTableEntry managementOnOff =
+      CDSTab.add("Run Auto Intake and Eject", true)
+          .withWidget(BuiltInWidgets.kToggleButton)
+          .withPosition(1, 2)
+          .getEntry();
 
   public CDSSubsystem() {
     // BManualCDS.setBoolean(Constants.); TODO: setup when manual cds toggle is merged
@@ -245,7 +251,7 @@ public class CDSSubsystem extends SubsystemBase {
   public String senseColor() {
     if (currentColorCycle % cycleWait == 0) {
       currentColorCycle = 0;
-      Color[] colors = colorSensors.getColors();
+      colors = colorSensors.getColors();
       SmartDashboard.putNumber("Front Sense B", colors[2].blue);
       SmartDashboard.putNumber("Front Sense R", colors[2].red);
 
@@ -296,6 +302,10 @@ public class CDSSubsystem extends SubsystemBase {
     return state;
   }
 
+  public boolean managementEnabled() {
+    return managementOnOff.getBoolean(true);
+  }
+
   int count = 0;
   int runCount = 0;
 
@@ -308,40 +318,44 @@ public class CDSSubsystem extends SubsystemBase {
     boolean ballPresent =
         activationArray[2]; // whether or not there's a ball at the centering wheels
 
-    switch (state) {
-      case IDLE:
-        nextOpenSensor = -1;
-        msCurrent = 0;
-
-        if ((ballCount > 2 || sensedBallColor != allianceColor) && ballPresent) {
-          state = ManagementState.EJECT;
-        }
-
-        if (ballCount < 3 && currentOpenSensor != -1 && ballPresent) {
-          state = ManagementState.ADVANCE;
-          nextOpenSensor = currentOpenSensor;
-        }
-
-        break;
-      case ADVANCE:
-        if (sensedBallColor != allianceColor && ballPresent) {
-          state = ManagementState.EJECT;
+    if (managementEnabled()) {
+      switch (state) {
+        case IDLE:
+          nextOpenSensor = -1;
           msCurrent = 0;
-        } else if (activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) {
-          state = ManagementState.IDLE;
-        } else {
-          msCurrent += 20;
-        }
 
-        break;
-      case EJECT:
-        if (msCurrent >= ejectRuntime) {
-          state = ManagementState.IDLE;
-        } else {
-          msCurrent += 20;
-        }
+          if ((ballCount > 2 || sensedBallColor != allianceColor) && ballPresent) {
+            state = ManagementState.EJECT;
+          }
 
-        break;
+          if ((ballCount < 3 && currentOpenSensor != -1 && ballPresent)) {
+            state = ManagementState.ADVANCE;
+            nextOpenSensor = currentOpenSensor;
+          }
+
+          break;
+        case ADVANCE:
+          if (sensedBallColor != allianceColor && ballPresent) {
+            state = ManagementState.EJECT;
+            msCurrent = 0;
+          } else if (activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) {
+            state = ManagementState.IDLE;
+          } else {
+            msCurrent += 20;
+          }
+
+          break;
+        case EJECT:
+          if (msCurrent >= ejectRuntime) {
+            state = ManagementState.IDLE;
+          } else {
+            msCurrent += 20;
+          }
+
+          break;
+      }
+    } else {
+      state = ManagementState.IDLE;
     }
     CDSState.setString(state.toString());
   }
