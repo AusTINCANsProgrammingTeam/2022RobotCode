@@ -175,6 +175,8 @@ public class AutonModes {
     }
   }
 
+  // TODO: look at if cds auto advance can be used throughout auton period instead of parallel
+  // commands
   private ParallelDeadlineGroup[] getParallelCommands(Command... ramsetes) {
     ParallelDeadlineGroup[] parallels = new ParallelDeadlineGroup[ramsetes.length];
     for (int i = 0; i < ramsetes.length; i++) {
@@ -249,18 +251,17 @@ public class AutonModes {
       ParallelDeadlineGroup[] fiveBallParallels = getParallelCommands(fiveBallRamseteCommands);
       fiveBallCommand =
           new SequentialCommandGroup(
-              new WaitCommand(initialWaitTime),
               fiveBallParallels[0],
               fiveBallParallels[1],
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
               fiveBallParallels[2],
               fiveBallParallels[3],
-              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
-              fiveBallParallels[4],
-              fiveBallParallels[5],
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
     }
   }
+
+  // TODO: think about maybe adding a way to slow down the acceleration of the robot using
+  // trajectory config or constraint
 
   private void initializeTest() {
     // REPLACE ME to test anything
