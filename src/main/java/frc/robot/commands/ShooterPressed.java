@@ -76,7 +76,9 @@ public class ShooterPressed extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (i >= 15) { // 1000 miliseconds delay TODO: Use a CDS method for this when possible
+    // TODO: use CDSSubsystem getBallCount to check if all balls are shot yet
+
+    if (i >= 20) { // 20 * 20 = 400 miliseconds timeout
       return true;
     }
     return false;

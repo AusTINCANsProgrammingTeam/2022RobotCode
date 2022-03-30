@@ -121,7 +121,7 @@ public final class Constants {
     // spotless:off
     PUSHTAXI("PushTaxi", "paths/TaxiOutPushBall.wpilib.json"),
     INTAKETAXI("IntakeTaxi", "paths/TaxiOutGrabBall.wpilib.json"),
-    ONEBALL("Taxi", "paths/TaxiOutFromFender.wpilib.json"),
+    ONEBALL("OneBall", "paths/OneBall.wpilib.json"),
     TWOBALL("TwoBall", "paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json"),
     THREEBALL("ThreeBall", "paths/Three1.wpilib.json", "paths/Three2.wpilib.json", "paths/Three3.wpilib.json", "paths/Three4.wpilib.json"),
     FOURBALL("FourBall", "paths/Four1.wpilib.json", "paths/Four2.wpilib.json", "paths/Four3.wpilib.json", "paths/Four4.wpilib.json"),
@@ -186,22 +186,23 @@ public final class Constants {
   public static final int initialBallSensorChannel = 0;
   public static final int middleBallSensorChannel = 1;
   public static final int finalBallSensorChannel = 2;
+  public static final int sensorsDownLimit = 3;
 
   // CDS Constants
-  public static final boolean ballManagementEnabled = false;
+  public static final boolean ballManagementEnabled = true;
 
   public static final int CDSBeltID = 3;
   public static final int CDSWheelControllerOneID = 2;
   public static final int CDSWheelControllerTwoID = 9;
-  public static final double CDSBeltSpeed = 1.0;
-  public static final double CDSWheelControllerSpeed = 0.65;
+  public static final double CDSBeltSpeed = 0.40;
+  public static final double CDSWheelControllerSpeed = 0.80;
   public static final int frontSensorActivation = 200;
   public static final int middleSensorActivation = 450;
   public static final int backSensorActivation = 600;
 
   public static final boolean testMode = false; // if false CDS will eject balls of wrong color
 
-  public static final double stopperWheelSpeed = -0.10;
+  public static final double reverseStopperWheelSpeed = -0.10;
 
   // spotless:off
   // Controller Constants {
@@ -269,7 +270,7 @@ public final class Constants {
 
     // PID settings
     // 2.5e-4, 2.5e-7, 2e-6, 1e-4
-    public static final double kPIDFArray[] = {8.0383e-8, 0, 0};
+    public static final double kPIDFArray[] = {8.0383e-8, 7e-9, 0};
     // public static final double kPIDFArray[] = {2.5e-8, 5.5e-8, 0};
     public static final double kMaxIAccum = 0.9;
     public static final int kMaxISlot = 0;
