@@ -69,7 +69,7 @@ public class CDSSubsystem extends SubsystemBase {
           .getEntry();
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
-  private NetworkTableEntry ballColor = CDSTab.add("Ball Color", "None").getEntry();
+  private NetworkTableEntry ballColor = CDSTab.add("Ball Color", "Blue").getEntry();
   // private NetworkTableEntry CDSBallCount =
   // CDSTab.add("Ball Count", 0).getEntry();
   private NetworkTableEntry frontSensorProx = CDSTab.add("Front Proximity", 0).getEntry();
