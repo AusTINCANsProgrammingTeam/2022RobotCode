@@ -164,7 +164,8 @@ public class ClimbSubsystem extends SubsystemBase {
   public void midClimb() {
     if (climbEnabble) {
       McjoystickAxis = -m_climbJoystick.getRawAxis(Constants.leftJoystickY);
-      if (McjoystickAxis > Constants.ControllerDeadZone || McjoystickAxis < -Constants.ControllerDeadZone) {
+      if (McjoystickAxis > Constants.ControllerDeadZone
+          || McjoystickAxis < -Constants.ControllerDeadZone) {
         if (McjoystickAxis > 0) {
 
           if (McHeightOne + (McjoystickAxis * -1.5) >= Constants.McHeightMin) {
@@ -194,7 +195,8 @@ public class ClimbSubsystem extends SubsystemBase {
   public void highArms() {
     if (climbEnabble) {
       HajoystickAxis = -m_climbJoystick.getRawAxis(Constants.rightJoystickY);
-      if (HajoystickAxis > Constants.ControllerDeadZone || HajoystickAxis < -Constants.ControllerDeadZone) {
+      if (HajoystickAxis > Constants.ControllerDeadZone
+          || HajoystickAxis < -Constants.ControllerDeadZone) {
         if (HajoystickAxis > 0) {
           if (HaHeightOne + (HajoystickAxis / 10 * 8) <= Constants.HaHeightMax) {
             HaHeightOne = HaHeightOne + (HajoystickAxis * Constants.HaSpeed);
