@@ -135,11 +135,11 @@ public class ClimbSubsystem extends SubsystemBase {
 
     m_HaOne.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
       sbHaHeightOne.setNumber(HaHeightOne);
-      m_HaOne.getPIDCtrl().setIMaxAccum(0.45, 0);
+      m_HaOne.getPIDCtrl().setIMaxAccum(0.25, 0);
 
     m_HaTwo.getPIDCtrl().setReference(HaHeightTwo, CANSparkMax.ControlType.kPosition);
       sbHaHeightTwo.setNumber(HaHeightTwo);
-      m_HaTwo.getPIDCtrl().setIMaxAccum(0.45, 0);
+      m_HaTwo.getPIDCtrl().setIMaxAccum(0.25, 0);
 
   }
 
@@ -167,11 +167,12 @@ public class ClimbSubsystem extends SubsystemBase {
       McjoystickAxis = -m_climbJoystick.getRawAxis(Constants.leftJoystickY);
       if (McjoystickAxis > 0.1 || McjoystickAxis < -0.1) {
         if (McjoystickAxis > 0) {
+          
           if (McHeightOne + (McjoystickAxis * -1.5) >= Constants.McHeightMin) {
-            McHeightOne = McHeightOne + (McjoystickAxis * -0.5);
+            McHeightOne = McHeightOne + (McjoystickAxis * -0.75);
           }
           if (McHeightTwo + (McjoystickAxis * -1.5) >= Constants.McHeightMin) {
-            McHeightTwo = McHeightTwo + (McjoystickAxis * -0.5);
+            McHeightTwo = McHeightTwo + (McjoystickAxis * -0.75);
           }
         }
         if (McjoystickAxis < 0) {
