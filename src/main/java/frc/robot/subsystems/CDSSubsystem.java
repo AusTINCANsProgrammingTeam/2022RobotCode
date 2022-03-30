@@ -79,9 +79,11 @@ public class CDSSubsystem extends SubsystemBase {
   private NetworkTableEntry backSensorProx = CDSTab.add("Back Proximity", 0).getEntry();
   private NetworkTableEntry CDSBallCount = CDSTab.add("Ball Count", 0).getEntry();
   private NetworkTableEntry CDSState = CDSTab.add("CDS State", "IDLE").getEntry();
-  private NetworkTableEntry managementOnOff = 
+  private NetworkTableEntry managementOnOff =
       CDSTab.add("Run Auto Intake and Eject", true)
-      .withWidget(BuiltInWidgets.kToggleButton).withPosition(1, 2).getEntry();
+          .withWidget(BuiltInWidgets.kToggleButton)
+          .withPosition(1, 2)
+          .getEntry();
 
   public CDSSubsystem() {
     // BManualCDS.setBoolean(Constants.); TODO: setup when manual cds toggle is merged
@@ -325,7 +327,7 @@ public class CDSSubsystem extends SubsystemBase {
       case IDLE:
         nextOpenSensor = -1;
         msCurrent = 0;
-        
+
         if (ballCount == 1 && sensedBallColor != allianceColor && ballPresent) {
           state = ManagementState.SHOOTER_EJECT;
         } else if ((ballCount > 2 || sensedBallColor != allianceColor) && ballPresent) {
@@ -348,7 +350,8 @@ public class CDSSubsystem extends SubsystemBase {
 
         break;
       case SHOOTER_EJECT:
-        if (msCurrent >= shooterEjectRuntime || (activationArray[0] && topBallColor == allianceColor)) {
+        if (msCurrent >= shooterEjectRuntime
+            || (activationArray[0] && topBallColor == allianceColor)) {
           state = ManagementState.IDLE;
         } else {
           msCurrent += 20;
@@ -357,7 +360,8 @@ public class CDSSubsystem extends SubsystemBase {
         break;
 
       case EJECT:
-        // finish shooter eject if runtime is greater than the timeout or if the next ball in line has the right color
+        // finish shooter eject if runtime is greater than the timeout or if the next ball in line
+        // has the right color
         if (msCurrent >= ejectRuntime) {
           state = ManagementState.IDLE;
         } else {
@@ -365,7 +369,6 @@ public class CDSSubsystem extends SubsystemBase {
         }
 
         break;
-      
     }
     CDSState.setString(state.toString());
   }
@@ -389,11 +392,10 @@ public class CDSSubsystem extends SubsystemBase {
       simCount++;
     }
   }
-  
+
   public boolean managementEnabled() {
     return managementOnOff.getBoolean(true);
   }
 
-  public void periodic() {
-  }  
+  public void periodic() {}
 }

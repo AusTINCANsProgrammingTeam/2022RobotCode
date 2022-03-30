@@ -7,13 +7,11 @@ package frc.robot.commands;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.commands.ShooterEject;
 
 public class CDSBallManagementCommand extends CommandBase {
   /** Creates a new CDSBallManagementCommand. */
@@ -21,7 +19,7 @@ public class CDSBallManagementCommand extends CommandBase {
 
   private final IntakeSubsystem intakeSubsystem;
   private final ShooterSubsystem shooterSubsystem;
-  private final ShooterEject shooterEject; 
+  private final ShooterEject shooterEject;
 
   private int msBeltCurrent = 0;
   private int beltEjectRuntime = 100;
