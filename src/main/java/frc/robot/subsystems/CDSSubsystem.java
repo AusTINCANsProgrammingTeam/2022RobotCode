@@ -76,6 +76,11 @@ public class CDSSubsystem extends SubsystemBase {
   private NetworkTableEntry backSensorProx = CDSTab.add("Back Proximity", 0).getEntry();
   private NetworkTableEntry CDSBallCount = CDSTab.add("Ball Count", 0).getEntry();
   private NetworkTableEntry CDSState = CDSTab.add("CDS State", "IDLE").getEntry();
+  private NetworkTableEntry managementOnOff =
+      CDSTab.add("Run Auto Intake and Eject", true)
+          .withWidget(BuiltInWidgets.kToggleButton)
+          .withPosition(1, 2)
+          .getEntry();
 
   public CDSSubsystem() {
     // BManualCDS.setBoolean(Constants.); TODO: setup when manual cds toggle is merged
@@ -294,6 +299,10 @@ public class CDSSubsystem extends SubsystemBase {
 
   public ManagementState getState() {
     return state;
+  }
+
+  public boolean managementEnabled() {
+    return managementOnOff.getBoolean(true);
   }
 
   int count = 0;
