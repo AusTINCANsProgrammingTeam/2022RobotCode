@@ -50,7 +50,7 @@ public class CDSBallManagementCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (CDSSubsystem.managementEnabled()){
+    if (CDSSubsystem.managementEnabled()) {
       CDSSubsystem.ManagementState state = CDSSubsystem.getState();
 
       switch (state) {

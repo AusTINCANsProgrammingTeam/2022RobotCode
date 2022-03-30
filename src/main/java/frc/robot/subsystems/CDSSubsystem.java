@@ -318,12 +318,12 @@ public class CDSSubsystem extends SubsystemBase {
     boolean ballPresent =
         activationArray[2]; // whether or not there's a ball at the centering wheels
 
-    if (managementEnabled()){
+    if (managementEnabled()) {
       switch (state) {
         case IDLE:
           nextOpenSensor = -1;
           msCurrent = 0;
-          
+
           if ((ballCount > 2 || sensedBallColor != allianceColor) && ballPresent) {
             state = ManagementState.EJECT;
           }
@@ -354,7 +354,7 @@ public class CDSSubsystem extends SubsystemBase {
 
           break;
       }
-    } else{
+    } else {
       state = ManagementState.IDLE;
     }
     CDSState.setString(state.toString());
