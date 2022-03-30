@@ -48,7 +48,7 @@ public class CDSSubsystem extends SubsystemBase {
   private int advanceTimeout = 2000; // how long CDS should run before it times out
 
   private int ballCount = 0;
-  private double colorThreshold = 0.5; // TODO: change during testing
+  private Color[] colors = new Color[3];
 
   private int[] sensorStatuses;
   private boolean[] activationArray = new boolean[3];
@@ -251,25 +251,20 @@ public class CDSSubsystem extends SubsystemBase {
   public String senseColor() {
     if (currentColorCycle % cycleWait == 0) {
       currentColorCycle = 0;
-      Color[] colors = colorSensors.getColors();
+      colors = colorSensors.getColors();
       SmartDashboard.putNumber("Front Sense B", colors[2].blue);
       SmartDashboard.putNumber("Front Sense R", colors[2].red);
 
-      double magnitude = colors[2].red + colors[2].green + colors[2].blue;
-      double redRatio = colors[2].red / magnitude;
-      double blueRatio = colors[2].blue / magnitude;
-
       // Only sensing colors for first sensor so that we can handle it when it's coming in and not
       // dealing with any other complexities
-      if (redRatio > colorThreshold) {
+      double redAmount = colors[2].red;
+      double blueAmount = colors[2].blue;
+      if (redAmount > blueAmount) {
         ballColor.setString("Red");
         lastBallColor = "Red";
-      } else if (blueRatio > colorThreshold){
+      } else {
         ballColor.setString("Blue");
         lastBallColor = "Blue";
-      } else {
-        ballColor.setString("None");
-        lastBallColor = "None";
       }
     }
 
