@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.ClimbSubsystem;
 
-public class ClimbKeepDown extends CommandBase {
+public class ClimbPeriodic extends CommandBase {
   private final ClimbSubsystem m_subsystem;
 
   /** Creates a new ClimbKeepDown. */
-  public ClimbKeepDown(ClimbSubsystem s) {
+  public ClimbPeriodic(ClimbSubsystem s) {
     addRequirements(s);
 
     m_subsystem = s;

@@ -296,4 +296,10 @@ public final class Constants {
   public static final int HaHeightMin = -70;
   public static final int HaMotorTwo = 16;
   public static final int HaMotorOne = 15;
+
+  public static final int ClimbLowCurrent = 10;
+  public static final int ClimbHighCurrent = 60;
+
+  public static final double DriveSpeedHigh = 1;
+  public static final double DriveSpeedLow = 0.6;
 }

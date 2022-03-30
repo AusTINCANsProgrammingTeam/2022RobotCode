@@ -126,12 +126,12 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public void climbKeepDownFunction() {
     m_McOne.getPIDCtrl().setReference(McHeightOne, CANSparkMax.ControlType.kPosition);
-      m_McOne.getPIDCtrl().setIMaxAccum(0.45, 0);
-      sbMcHeightOne.setNumber(McHeightOne);
+    m_McOne.getPIDCtrl().setIMaxAccum(0.45, 0);
+    sbMcHeightOne.setNumber(McHeightOne);
 
     m_McTwo.getPIDCtrl().setReference(McHeightTwo, CANSparkMax.ControlType.kPosition);
-      sbMcHeightTwo.setNumber(McHeightTwo);
-      m_McTwo.getPIDCtrl().setIMaxAccum(0.45, 0);
+    sbMcHeightTwo.setNumber(McHeightTwo);
+    m_McTwo.getPIDCtrl().setIMaxAccum(0.45, 0);
 
     m_HaOne.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
       sbHaHeightOne.setNumber(HaHeightOne);
@@ -146,15 +146,15 @@ public class ClimbSubsystem extends SubsystemBase {
   public void climbEnable() {
     climbEnabble = !climbEnabble;
     if (climbEnabble) {
-      m_McOne.setSmartCurrentLimit(60);
-      m_McTwo.setSmartCurrentLimit(60);
-      m_HaOne.setSmartCurrentLimit(60);
-      m_HaTwo.setSmartCurrentLimit(60);
+      m_McOne.setSmartCurrentLimit(Constants.ClimbHighCurrent);
+      m_McTwo.setSmartCurrentLimit(Constants.ClimbHighCurrent);
+      m_HaOne.setSmartCurrentLimit(Constants.ClimbHighCurrent);
+      m_HaTwo.setSmartCurrentLimit(Constants.ClimbHighCurrent);
     } else {
-      m_McOne.setSmartCurrentLimit(10);
-      m_McTwo.setSmartCurrentLimit(10);
-      m_HaOne.setSmartCurrentLimit(10);
-      m_HaTwo.setSmartCurrentLimit(10);
+      m_McOne.setSmartCurrentLimit(Constants.ClimbLowCurrent);
+      m_McTwo.setSmartCurrentLimit(Constants.ClimbLowCurrent);
+      m_HaOne.setSmartCurrentLimit(Constants.ClimbLowCurrent);
+      m_HaTwo.setSmartCurrentLimit(Constants.ClimbLowCurrent);
     }
   }
 
@@ -185,11 +185,10 @@ public class ClimbSubsystem extends SubsystemBase {
         }
       }
       m_McOne.getPIDCtrl().setReference(McHeightOne, CANSparkMax.ControlType.kPosition);
-        sbMcHeightOne.setNumber(McHeightOne);
+      sbMcHeightOne.setNumber(McHeightOne);
 
-
-      m_McTwo.getPIDCtrl().setReference(McHeightOne, CANSparkMax.ControlType.kPosition);
-        sbMcHeightTwo.setNumber(McHeightOne);
+      m_McTwo.getPIDCtrl().setReference(McHeightTwo, CANSparkMax.ControlType.kPosition);
+      sbMcHeightTwo.setNumber(McHeightTwo);
     }
   }
 
@@ -222,7 +221,16 @@ public class ClimbSubsystem extends SubsystemBase {
     }
   }
 
+  public void deployHA() {
+    HaHeightOne = Constants.HaHeightMax;
+    HaHeightTwo = Constants.HaHeightMax;
+  }
+
   public void periodic() {
+    if (DriverStation.isDisabled() && climbEnabble) {
+      climbEnable();
+    }
+
     if (sbMcHeightOne.getDouble(0) != McHeightOne) {
       McHeightOne = sbMcHeightOne.getDouble(0);
     }
