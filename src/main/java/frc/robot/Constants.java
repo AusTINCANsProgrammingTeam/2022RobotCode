@@ -25,7 +25,7 @@ public final class Constants {
         return values()[values().length - 1];
       }
     },
-    EJECT(1500.0, 0.0),
+    EJECT(1750.0, 0.0),
     LAUNCH(0.0, 0.0),
     TARMAC(2530.0, 0.0),
     TEST {

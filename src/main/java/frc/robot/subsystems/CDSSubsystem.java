@@ -47,7 +47,7 @@ public class CDSSubsystem extends SubsystemBase {
   private int msCurrent = 0;
   private int ejectRuntime = 650; // amount of time auto eject will run intake backwards for in ms
   private int advanceTimeout = 2000; // how long CDS should run before it times out
-  private int shooterEjectRuntime = 2500; // how long shooter eject will run before it stops
+  private int shooterEjectRuntime = 4000; // how long shooter eject will run before it stops
 
   private int ballCount = 0;
 
@@ -314,6 +314,13 @@ public class CDSSubsystem extends SubsystemBase {
     boolean ballPresent =
         activationArray[2]; // whether or not there's a ball at the centering wheels
 
+    String topBallColor;
+    if (colors[0].red > colors[0].blue) {
+      topBallColor = "Red";
+    } else {
+      topBallColor = "Blue";
+    }
+
     switch (state) {
       case IDLE:
         nextOpenSensor = -1;
@@ -341,7 +348,7 @@ public class CDSSubsystem extends SubsystemBase {
 
         break;
       case SHOOTER_EJECT:
-        if (msCurrent >= shooterEjectRuntime) {
+        if (msCurrent >= shooterEjectRuntime || (activationArray[0] && topBallColor == allianceColor)) {
           state = ManagementState.IDLE;
         } else {
           msCurrent += 20;
@@ -350,6 +357,7 @@ public class CDSSubsystem extends SubsystemBase {
         break;
 
       case EJECT:
+        // finish shooter eject if runtime is greater than the timeout or if the next ball in line has the right color
         if (msCurrent >= ejectRuntime) {
           state = ManagementState.IDLE;
         } else {
