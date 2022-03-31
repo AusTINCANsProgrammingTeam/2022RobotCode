@@ -80,7 +80,7 @@ public class CDSBallManagementCommand extends CommandBase {
 
           intakeSubsystem.toggleIntake(true);
           CDSSubsystem.CDSWheelToggle(true);
-          autoEjectRunning.setString("true");
+          autoEjectRunning.setBoolean(true);
 
           break;
 
@@ -95,7 +95,7 @@ public class CDSBallManagementCommand extends CommandBase {
         case SHOOTER_EJECT:
           CDSSubsystem.CDSWheelToggle(false);
           CDSSubsystem.CDSBeltToggle(false);
-          autoEjectRunning.setString("true");
+          autoEjectRunning.setBoolean(true);
           shooterSubsystem.runCargo(Constants.Shooter.cargoForward);
 
           if (firstRun) {

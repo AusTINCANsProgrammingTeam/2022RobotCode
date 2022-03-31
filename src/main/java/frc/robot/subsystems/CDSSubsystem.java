@@ -50,7 +50,7 @@ public class CDSSubsystem extends SubsystemBase {
   private int shooterEjectRuntime = 2500; // how long shooter eject will run before it stops
 
   private int ballCount = 0;
-  private double colorThreshold = 0.5; // TODO: change during testing
+  private double colorThreshold = 0.3; // TODO: change during testing
 
   private int[] sensorStatuses;
   private boolean[] activationArray = new boolean[3];
@@ -254,13 +254,14 @@ public class CDSSubsystem extends SubsystemBase {
   public String senseColor() {
     if (currentColorCycle % cycleWait == 0) {
       currentColorCycle = 0;
-      Color[] colors = colorSensors.getColors();
-      SmartDashboard.putNumber("Front Sense B", colors[2].blue);
-      SmartDashboard.putNumber("Front Sense R", colors[2].red);
+      colors = colorSensors.getColors();
+      
 
       double magnitude = colors[2].red + colors[2].green + colors[2].blue;
       double redRatio = colors[2].red / magnitude;
       double blueRatio = colors[2].blue / magnitude;
+      SmartDashboard.putNumber("Front Sense B",  blueRatio);
+      SmartDashboard.putNumber("Front Sense R", redRatio);
 
       // Only sensing colors for first sensor so that we can handle it when it's coming in and not
       // dealing with any other complexities
@@ -328,53 +329,57 @@ public class CDSSubsystem extends SubsystemBase {
       topBallColor = "Blue";
     }
 
-    switch (state) {
-      case IDLE:
-        nextOpenSensor = -1;
-        msCurrent = 0;
-
-        if (ballCount == 1 && sensedBallColor != allianceColor && ballPresent) {
-          state = ManagementState.SHOOTER_EJECT;
-        } else if ((ballCount > 2 || sensedBallColor != allianceColor) && ballPresent) {
-          state = ManagementState.EJECT;
-        } else if (ballCount < 3 && currentOpenSensor != -1 && ballPresent) {
-          state = ManagementState.ADVANCE;
-          nextOpenSensor = currentOpenSensor;
-        }
-
-        break;
-      case ADVANCE:
-        if (sensedBallColor != allianceColor && ballPresent) {
-          state = ManagementState.EJECT;
+    if (managementEnabled()){
+      switch (state) {
+        case IDLE:
+          nextOpenSensor = -1;
           msCurrent = 0;
-        } else if (activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) {
-          state = ManagementState.IDLE;
-        } else {
-          msCurrent += 20;
-        }
 
-        break;
-      case SHOOTER_EJECT:
-        if (msCurrent >= shooterEjectRuntime
-            || (activationArray[0] && topBallColor == allianceColor)) {
-          state = ManagementState.IDLE;
-        } else {
-          msCurrent += 20;
-        }
+          if (ballCount == 1 && sensedBallColor != allianceColor && ballPresent && sensedBallColor != "None") {
+            state = ManagementState.SHOOTER_EJECT;
+          } else if ((ballCount > 2 || sensedBallColor != allianceColor) && ballPresent && sensedBallColor != "None") {
+            state = ManagementState.EJECT;
+          } else if (ballCount < 3 && currentOpenSensor != -1 && ballPresent && sensedBallColor != "None") {
+            state = ManagementState.ADVANCE;
+            nextOpenSensor = currentOpenSensor;
+          }
 
-        break;
+          break;
+        case ADVANCE:
+          if (ballCount == 1 && sensedBallColor != allianceColor && ballPresent && sensedBallColor != "None") {
+            state = ManagementState.SHOOTER_EJECT;
+          } else if (sensedBallColor != allianceColor && ballPresent && sensedBallColor != "None") {
+            state = ManagementState.EJECT;
+            msCurrent = 0;
+          } else if (activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) {
+            state = ManagementState.IDLE;
+          } else {
+            msCurrent += 20;
+          }
 
-      case EJECT:
-        // finish shooter eject if runtime is greater than the timeout or if the next ball in line
-        // has the right color
-        if (msCurrent >= ejectRuntime) {
-          state = ManagementState.IDLE;
-        } else {
-          msCurrent += 20;
-        }
+          break;
+        case SHOOTER_EJECT:
+          if (msCurrent >= shooterEjectRuntime
+              || (activationArray[0] && topBallColor == allianceColor)) {
+            state = ManagementState.IDLE;
+          } else {
+            msCurrent += 20;
+          }
 
-        break;
-    }
+          break;
+
+        case EJECT:
+          // finish shooter eject if runtime is greater than the timeout or if the next ball in line
+          // has the right color
+          if (msCurrent >= ejectRuntime) {
+            state = ManagementState.IDLE;
+          } else {
+            msCurrent += 20;
+          }
+
+          break;
+      }
+  }
     CDSState.setString(state.toString());
   }
 
