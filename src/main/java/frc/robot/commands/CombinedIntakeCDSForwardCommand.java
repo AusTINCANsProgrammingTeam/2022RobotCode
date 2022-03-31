@@ -52,7 +52,7 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
         CDSSubsystem.CDSBeltToggle(false);
         CDSSubsystem.CDSWheelToggle(false);
         intakeSubsystem.toggleIntake(false);
-        shooterSubsystem.runCargo(Constants.reverseStopperWheelSpeed);
+        shooterSubsystem.runCargo(Constants.Shooter.cargoReverse);
       }
     } else {
       // run ball management if it's in the middle of doing something
