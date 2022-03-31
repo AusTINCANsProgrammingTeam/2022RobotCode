@@ -56,7 +56,6 @@ public class ShooterPressed extends CommandBase {
           m_ShooterSubsystem.setCargoBoolean(true);
         }
         i++;
-        SmartDashboard.putNumber("ShooterPressed i count", i);
       }
     } else if (i == 0) {
       // when wheel is not ready and i is still 0
