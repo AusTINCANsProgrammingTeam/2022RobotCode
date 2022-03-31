@@ -122,7 +122,7 @@ public final class Constants {
     PUSHTAXI("PushTaxi", "paths/TaxiOutPushBall.wpilib.json"),
     INTAKETAXI("IntakeTaxi", "paths/TaxiOutGrabBall.wpilib.json"),
     ONEBALL("OneBall", "paths/OneBall.wpilib.json"),
-    TWOBALL("TwoBall", "paths/GetBall.wpilib.json", "paths/GoBackIntoTarmac.wpilib.json"),
+    TWOBALL("TwoBall", "paths/TwoBall1.wpilib.json", "paths/TwoBall2.wpilib.json"),
     THREEBALL("ThreeBall", "paths/Three1.wpilib.json", "paths/Three2.wpilib.json", "paths/Three3.wpilib.json", "paths/Three4.wpilib.json"),
     FOURBALL("FourBall", "paths/Four1.wpilib.json", "paths/Four2.wpilib.json", "paths/Four3.wpilib.json", "paths/Four4.wpilib.json"),
     FIVEBALL("FiveBall", "paths/Five1.wpilib.json", "paths/Five2.wpilib.json", "paths/Five3.wpilib.json", "paths/Five4.wpilib.json", "paths/Five5.wpilib.json", "paths/Five6.wpilib.json"),
@@ -158,8 +158,6 @@ public final class Constants {
   public static final double kvVoltSecondsPerMeter = 0.81588; // Kv, Velocity
   public static final double kaVoltSecondsSquaredPerMeter = 0.129; // Ka, Accelleration
 
-  public static final double arbFeedForward =
-      1.9829E-07; // voltage applied to the motor after the result of the specified control mode
   public static final double trackWidth = 0.559; // track width of kitbot
   public static final DifferentialDriveKinematics driveKinematics =
       new DifferentialDriveKinematics(trackWidth);
@@ -194,7 +192,7 @@ public final class Constants {
   public static final int CDSBeltID = 3;
   public static final int CDSWheelControllerOneID = 2;
   public static final int CDSWheelControllerTwoID = 9;
-  public static final double CDSBeltSpeed = 0.40;
+  public static final double CDSBeltSpeed = .95;
   public static final double CDSWheelControllerSpeed = 0.80;
   public static final int frontSensorActivation = 200;
   public static final int middleSensorActivation = 450;
@@ -202,7 +200,7 @@ public final class Constants {
 
   public static final boolean testMode = false; // if false CDS will eject balls of wrong color
 
-  public static final double reverseStopperWheelSpeed = -0.10;
+  public static final double reverseStopperWheelSpeed = -0.125;
 
   // spotless:off
   // Controller Constants {
@@ -284,6 +282,15 @@ public final class Constants {
   }
 
   // Climb Constants
+  public static final boolean usingTraversal = true; // traversal climb on robot
+  // todo: change if mid climb comes back on
+
+  // use correct arbFeedForward according to which climb being used
+  public static final double arbFeedForward =
+      (usingTraversal)
+          ? 2.5778E-07
+          : 1.9829E-07; // voltage applied to the motor after the result of the specified control
+  // mode
   public static final int McMotorOne = 5;
   public static final int McMotorTwo = 12;
   public static final int McHeightMax = 0;
@@ -293,7 +300,7 @@ public final class Constants {
   // Ha = High Arms                          Mc = Mid Climb;
   public static final double[] HaLeftPID = {0.25, 0.005, 1.0};
   public static final double[] HaRightPID = {0.25, 0.005, 1.0};
-  public static final double HaHeightMax = 5.5;
+  public static final double HaHeightMax = 4.5;
   public static final int HaHeightMin = -70;
   public static final int HaMotorTwo = 16;
   public static final int HaMotorOne = 15;
