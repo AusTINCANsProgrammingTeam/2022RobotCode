@@ -224,7 +224,6 @@ public class RobotContainer {
 
     if (climbSubsystem != null) {
       buttons2[Constants.startButton].whenPressed(climbEnabling);
-      buttons2[Constants.XButton].whenPressed(HaDeploy);
     }
 
     if (outtakeCommand != null && intakeForwardCommand != null) {
@@ -268,14 +267,16 @@ public class RobotContainer {
         if (shooterSubsystem != null
             && driveBaseSubsystem != null
             && intakeSubsystem != null
-            && cdsSubsystem != null) {
+            && cdsSubsystem != null
+            && climbSubsystem != null) {
           autonModes =
               new AutonModes(
                   driveBaseSubsystem,
                   shooterSubsystem,
                   limelightSubsystem,
                   cdsSubsystem,
-                  intakeSubsystem);
+                  intakeSubsystem,
+                  climbSubsystem);
         } else {
           success = false;
         }

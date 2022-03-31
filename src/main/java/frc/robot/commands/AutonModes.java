@@ -6,12 +6,14 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.CDSSubsystem;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
@@ -27,6 +29,7 @@ public class AutonModes {
   private LimelightSubsystem limelightSubsystem;
   private CDSSubsystem cdsSubsystem;
   private IntakeSubsystem intakeSubsystem;
+  private ClimbSubsystem climbSubsystem;
 
   private boolean shooterEnabled;
 
@@ -86,7 +89,8 @@ public class AutonModes {
       ShooterSubsystem s,
       LimelightSubsystem l,
       CDSSubsystem c,
-      IntakeSubsystem i) {
+      IntakeSubsystem i,
+      ClimbSubsystem t) {
 
     this.driveBaseSubsystem = d;
     this.shooterSubsystem = s;
@@ -94,6 +98,7 @@ public class AutonModes {
     this.limelightSubsystem = l;
     this.cdsSubsystem = c;
     this.intakeSubsystem = i;
+    this.climbSubsystem = t;
 
     shooterEnabled = true;
 
@@ -183,6 +188,9 @@ public class AutonModes {
               ramsetes[i],
               new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
     }
+    parallels[0] =
+        parallels[0].deadlineWith(new InstantCommand(climbSubsystem::deployHA, climbSubsystem));
+
     return parallels;
   }
 

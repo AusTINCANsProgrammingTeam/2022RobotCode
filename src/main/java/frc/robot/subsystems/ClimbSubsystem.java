@@ -113,7 +113,7 @@ public class ClimbSubsystem extends SubsystemBase {
     m_HaTwo.setIdleMode(IdleMode.kBrake);
     m_HaTwo.setInverted(true);
 
-    //resetTargetedHeight();
+    // resetTargetedHeight();
     McHeightOne = 0;
     McHeightTwo = 0;
     HaHeightOne = 0;
@@ -290,11 +290,10 @@ public class ClimbSubsystem extends SubsystemBase {
 
     // High Arms
 
-      sbHaTargettedOne.setDouble(HaHeightOne);
+    sbHaTargettedOne.setDouble(HaHeightOne);
     sbHaSpeedOne.setDouble(m_HaOne.getEncoder().getVelocity());
 
-
-      sbHaTargettedTwo.setDouble(HaHeightTwo);
+    sbHaTargettedTwo.setDouble(HaHeightTwo);
     sbHaSpeedTwo.setDouble(m_HaTwo.getEncoder().getVelocity());
 
     if ((m_McOne.getPIDCtrl().getP() != sbMcOneP.getDouble(0))
