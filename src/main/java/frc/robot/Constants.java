@@ -295,7 +295,7 @@ public final class Constants {
   // use correct arbFeedForward according to which climb being used
   public static final double arbFeedForward =
       (usingTraversal)
-          ? 1.9829E-07
+          ? 2.5778E-07
           : 1.9829E-07; // voltage applied to the motor after the result of the specified control
   // mode
 }
