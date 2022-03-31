@@ -47,11 +47,11 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
   @Override
   public void execute() {
     if (CDSSubsystem.getState() == ManagementState.IDLE) {
-        // If mangement isn't doing anything, run button normally
-        CDSSubsystem.CDSBeltToggle(false);
-        CDSSubsystem.CDSWheelToggle(false);
-        intakeSubsystem.toggleIntake(false);
-        shooterSubsystem.runCargo(Constants.Shooter.cargoReverse);
+      // If mangement isn't doing anything, run button normally
+      CDSSubsystem.CDSBeltToggle(false);
+      CDSSubsystem.CDSWheelToggle(false);
+      intakeSubsystem.toggleIntake(false);
+      shooterSubsystem.runCargo(Constants.Shooter.cargoReverse);
     } else {
       // run ball management if it's in the middle of doing something
       ballManagement.execute();
