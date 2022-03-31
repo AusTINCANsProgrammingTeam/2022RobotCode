@@ -200,7 +200,7 @@ public final class Constants {
 
   public static final boolean testMode = false; // if false CDS will eject balls of wrong color
 
-  public static final double reverseStopperWheelSpeed = -0.10;
+  public static final double reverseStopperWheelSpeed = -0.125;
 
   // spotless:off
   // Controller Constants {
