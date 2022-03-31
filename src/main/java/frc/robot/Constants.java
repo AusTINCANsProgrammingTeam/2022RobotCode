@@ -158,8 +158,6 @@ public final class Constants {
   public static final double kvVoltSecondsPerMeter = 0.81588; // Kv, Velocity
   public static final double kaVoltSecondsSquaredPerMeter = 0.129; // Ka, Accelleration
 
-  public static final double arbFeedForward =
-      1.9829E-07; // voltage applied to the motor after the result of the specified control mode
   public static final double trackWidth = 0.559; // track width of kitbot
   public static final DifferentialDriveKinematics driveKinematics =
       new DifferentialDriveKinematics(trackWidth);
@@ -284,10 +282,20 @@ public final class Constants {
   }
 
   // Climb Constants
+  public static final boolean usingTraversal = true; // traversal climb on robot
+  // todo: change if mid climb comes back on
+
   public static final int ClimbMotorOne = 5;
   public static final int ClimbMotorTwo = 12;
   public static final int climbHeightMax = 65;
   public static final double[] climbRightPID = {0.25, 0.005, 1.0};
   public static final double[] climbLeftPID = {0.25, 0.005, 1.0};
   // public static final int LimitSwitchChannel = 12; // Check what number this needs to be
+
+  // use correct arbFeedForward according to which climb being used
+  public static final double arbFeedForward =
+      (usingTraversal)
+          ? 1.9829E-07
+          : 1.9829E-07; // voltage applied to the motor after the result of the specified control
+  // mode
 }
