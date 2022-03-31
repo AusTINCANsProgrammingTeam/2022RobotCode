@@ -80,7 +80,7 @@ public final class Constants {
   }
 
   // TODO: when true, shooter is over shooting
-  public static final boolean DebugMode = true; // TODO: change to false for competition time
+  public static final boolean DebugMode = false; // TODO: change to false for competition time
 
   // motor controller constants
   public static final int defaultCurrentLimit = 40;
