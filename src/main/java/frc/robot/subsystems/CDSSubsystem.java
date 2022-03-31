@@ -48,6 +48,7 @@ public class CDSSubsystem extends SubsystemBase {
   private int advanceTimeout = 2000; // how long CDS should run before it times out
 
   private int ballCount = 0;
+  private Color[] colors = new Color[3];
 
   private int[] sensorStatuses;
   private boolean[] activationArray = new boolean[3];
@@ -76,6 +77,11 @@ public class CDSSubsystem extends SubsystemBase {
   private NetworkTableEntry backSensorProx = CDSTab.add("Back Proximity", 0).getEntry();
   private NetworkTableEntry CDSBallCount = CDSTab.add("Ball Count", 0).getEntry();
   private NetworkTableEntry CDSState = CDSTab.add("CDS State", "IDLE").getEntry();
+  private NetworkTableEntry managementOnOff =
+      CDSTab.add("Run Auto Intake and Eject", true)
+          .withWidget(BuiltInWidgets.kToggleButton)
+          .withPosition(1, 2)
+          .getEntry();
 
   public CDSSubsystem() {
     // BManualCDS.setBoolean(Constants.); TODO: setup when manual cds toggle is merged
@@ -113,26 +119,26 @@ public class CDSSubsystem extends SubsystemBase {
       DCDSSpeed.setDouble(-1);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Wheel Direction", "Reverse");
-        SmartDashboard.putNumber("CDS Wheel Speed", -Constants.CDSWheelControllerSpeed);
+        SmartDashboard.putNumber("CDS Wheel Speed 2", -Constants.CDSWheelControllerSpeed);
       }
 
       CDSBeltController.set(-Constants.CDSBeltSpeed);
       if (Constants.DebugMode) {
-        SmartDashboard.putString("CDS Belt Direction", "Reverse");
-        SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
+        SmartDashboard.putString("CDS Belt Direction 3", "Reverse");
+        SmartDashboard.putNumber("CDS Belt Speed 2", -Constants.CDSBeltSpeed);
       }
     } else {
       DCDSSpeed.setDouble(1);
       CDSWheelControllerOne.set(Constants.CDSWheelControllerSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Wheel Direction", "Forward");
-        SmartDashboard.putNumber("CDS Wheel Speed", Constants.CDSWheelControllerSpeed);
+        SmartDashboard.putNumber("CDS Wheel Speed 3", Constants.CDSWheelControllerSpeed);
       }
 
       CDSBeltController.set(Constants.CDSBeltSpeed);
       if (Constants.DebugMode) {
-        SmartDashboard.putString("CDS Belt Direction", "Forward");
-        SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
+        SmartDashboard.putString("CDS Belt Direction 4", "Forward");
+        SmartDashboard.putNumber("CDS Belt Speed 3", Constants.CDSBeltSpeed);
       }
     }
   }
@@ -145,7 +151,7 @@ public class CDSSubsystem extends SubsystemBase {
       CDSWheelControllerOne.set(Constants.CDSWheelControllerSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Wheel Direction", "Forward");
-        SmartDashboard.putNumber("CDS Wheel Speed", Constants.CDSWheelControllerSpeed);
+        SmartDashboard.putNumber("CDS Wheel Speed 4", Constants.CDSWheelControllerSpeed);
       }
     }
   }
@@ -155,15 +161,15 @@ public class CDSSubsystem extends SubsystemBase {
     if (reverse) {
       CDSBeltController.set(-Constants.CDSBeltSpeed);
       if (Constants.DebugMode) {
-        SmartDashboard.putString("CDS Belt Direction", "Reverse");
-        SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
+        SmartDashboard.putString("CDS Belt Direction 5", "Reverse");
+        SmartDashboard.putNumber("CDS Belt Speed 4", -Constants.CDSBeltSpeed);
       }
     } else {
       DCDSSpeed.setDouble(1);
       CDSBeltController.set(Constants.CDSBeltSpeed);
       if (Constants.DebugMode) {
-        SmartDashboard.putString("CDS Belt Direction", "Forward");
-        SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
+        SmartDashboard.putString("CDS Belt Direction 6", "Forward");
+        SmartDashboard.putNumber("CDS Belt Speed 5", Constants.CDSBeltSpeed);
       }
     }
   }
@@ -182,8 +188,8 @@ public class CDSSubsystem extends SubsystemBase {
     CDSWheelControllerOne.set(0.0);
     CDSBeltController.set(0.0);
     if (Constants.DebugMode) {
-      SmartDashboard.putNumber("CDS Wheel Speed", 0.0);
-      SmartDashboard.putNumber("CDS Belt Speed", 0.0);
+      SmartDashboard.putNumber("CDS Wheel Speed 5", 0.0);
+      SmartDashboard.putNumber("CDS Belt Speed 6", 0.0);
     }
   }
 
@@ -191,7 +197,7 @@ public class CDSSubsystem extends SubsystemBase {
     // Stops only the centering wheels
     CDSWheelControllerOne.set(0.0);
     if (Constants.DebugMode) {
-      SmartDashboard.putNumber("CDS Wheel Speed", 0.0);
+      SmartDashboard.putNumber("CDS Wheel Speed 6", 0.0);
     }
   }
 
@@ -245,7 +251,7 @@ public class CDSSubsystem extends SubsystemBase {
   public String senseColor() {
     if (currentColorCycle % cycleWait == 0) {
       currentColorCycle = 0;
-      Color[] colors = colorSensors.getColors();
+      colors = colorSensors.getColors();
       SmartDashboard.putNumber("Front Sense B", colors[2].blue);
       SmartDashboard.putNumber("Front Sense R", colors[2].red);
 
@@ -296,6 +302,10 @@ public class CDSSubsystem extends SubsystemBase {
     return state;
   }
 
+  public boolean managementEnabled() {
+    return managementOnOff.getBoolean(true);
+  }
+
   int count = 0;
   int runCount = 0;
 
@@ -308,40 +318,44 @@ public class CDSSubsystem extends SubsystemBase {
     boolean ballPresent =
         activationArray[2]; // whether or not there's a ball at the centering wheels
 
-    switch (state) {
-      case IDLE:
-        nextOpenSensor = -1;
-        msCurrent = 0;
-
-        if ((ballCount > 2 || sensedBallColor != allianceColor) && ballPresent) {
-          state = ManagementState.EJECT;
-        }
-
-        if (ballCount < 3 && currentOpenSensor != -1 && ballPresent) {
-          state = ManagementState.ADVANCE;
-          nextOpenSensor = currentOpenSensor;
-        }
-
-        break;
-      case ADVANCE:
-        if (sensedBallColor != allianceColor && ballPresent) {
-          state = ManagementState.EJECT;
+    if (managementEnabled()) {
+      switch (state) {
+        case IDLE:
+          nextOpenSensor = -1;
           msCurrent = 0;
-        } else if (activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) {
-          state = ManagementState.IDLE;
-        } else {
-          msCurrent += 20;
-        }
 
-        break;
-      case EJECT:
-        if (msCurrent >= ejectRuntime) {
-          state = ManagementState.IDLE;
-        } else {
-          msCurrent += 20;
-        }
+          if ((ballCount > 2 || sensedBallColor != allianceColor) && ballPresent) {
+            state = ManagementState.EJECT;
+          }
 
-        break;
+          if ((ballCount < 3 && currentOpenSensor != -1 && ballPresent)) {
+            state = ManagementState.ADVANCE;
+            nextOpenSensor = currentOpenSensor;
+          }
+
+          break;
+        case ADVANCE:
+          if (sensedBallColor != allianceColor && ballPresent) {
+            state = ManagementState.EJECT;
+            msCurrent = 0;
+          } else if (activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) {
+            state = ManagementState.IDLE;
+          } else {
+            msCurrent += 20;
+          }
+
+          break;
+        case EJECT:
+          if (msCurrent >= ejectRuntime) {
+            state = ManagementState.IDLE;
+          } else {
+            msCurrent += 20;
+          }
+
+          break;
+      }
+    } else {
+      state = ManagementState.IDLE;
     }
     CDSState.setString(state.toString());
   }
