@@ -81,6 +81,26 @@ public class ClimbSubsystem extends SubsystemBase {
 
   // Operator Tab
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
+ private NetworkTableEntry DClimbHeight1 =
+  operatorTab
+      .add("Arm Height", 0)
+      .withWidget(BuiltInWidgets.kNumberBar)
+      .withSize(2, 1)
+      .withPosition(6, 0)
+      .getEntry();
+private NetworkTableEntry DClimbHeight2 =
+  operatorTab
+      .add("Pole Height", 0)
+      .withWidget(BuiltInWidgets.kNumberBar)
+      .withSize(2, 1)
+      .withPosition(6, 1)
+      .getEntry();
+private NetworkTableEntry BClimbEnabled =
+  operatorTab
+      .add("Climb Enabled", false)
+      .withPosition(5, 0)
+      .withWidget(BuiltInWidgets.kBooleanBox)
+      .getEntry();
 
   public ClimbSubsystem(Joystick joystick) {
     instantiateShuffleBoard();
@@ -249,7 +269,9 @@ public class ClimbSubsystem extends SubsystemBase {
       McHeightTwo = sbMcHeightTwo.getDouble(0);
     }
 
-    sbClimbEnabble.setBoolean(climbEnabble);
+    BClimbEnabled.setBoolean(climbEnabble);
+    DClimbHeight1.setNumber(McHeightTwo);
+    DClimbHeight2.setNumber(HaHeightTwo);
   }
 
   public void debugPeriodic() {
@@ -435,8 +457,6 @@ public class ClimbSubsystem extends SubsystemBase {
               .getEntry();
 
       // Other
-      sbClimbEnabble =
-          climbTab.add("Climb Enabled", false).withSize(10, 1).withPosition(0, 2).getEntry();
     } else {
       sbMcHeightOne =
           operatorTab
@@ -465,12 +485,6 @@ public class ClimbSubsystem extends SubsystemBase {
               .withWidget(BuiltInWidgets.kNumberBar)
               .withSize(2, 1)
               .withPosition(6, 1)
-              .getEntry();
-      sbClimbEnabble =
-          operatorTab
-              .add("Climb Enabled", false)
-              .withPosition(5, 0)
-              .withWidget(BuiltInWidgets.kBooleanBox)
               .getEntry();
     }
   }
