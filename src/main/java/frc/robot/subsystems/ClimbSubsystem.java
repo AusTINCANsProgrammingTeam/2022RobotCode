@@ -81,26 +81,26 @@ public class ClimbSubsystem extends SubsystemBase {
 
   // Operator Tab
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
- private NetworkTableEntry DClimbHeight1 =
-  operatorTab
-      .add("Arm Height", 0)
-      .withWidget(BuiltInWidgets.kNumberBar)
-      .withSize(2, 1)
-      .withPosition(6, 0)
-      .getEntry();
-private NetworkTableEntry DClimbHeight2 =
-  operatorTab
-      .add("Pole Height", 0)
-      .withWidget(BuiltInWidgets.kNumberBar)
-      .withSize(2, 1)
-      .withPosition(6, 1)
-      .getEntry();
-private NetworkTableEntry BClimbEnabled =
-  operatorTab
-      .add("Climb Enabled", false)
-      .withPosition(5, 0)
-      .withWidget(BuiltInWidgets.kBooleanBox)
-      .getEntry();
+  private NetworkTableEntry DClimbHeight1 =
+      operatorTab
+          .add("Arm Height", 0)
+          .withWidget(BuiltInWidgets.kNumberBar)
+          .withSize(2, 1)
+          .withPosition(6, 0)
+          .getEntry();
+  private NetworkTableEntry DClimbHeight2 =
+      operatorTab
+          .add("Pole Height", 0)
+          .withWidget(BuiltInWidgets.kNumberBar)
+          .withSize(2, 1)
+          .withPosition(6, 1)
+          .getEntry();
+  private NetworkTableEntry BClimbEnabled =
+      operatorTab
+          .add("Climb Enabled", false)
+          .withPosition(5, 0)
+          .withWidget(BuiltInWidgets.kBooleanBox)
+          .getEntry();
 
   public ClimbSubsystem(Joystick joystick) {
     instantiateShuffleBoard();
