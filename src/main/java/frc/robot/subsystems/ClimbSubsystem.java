@@ -113,7 +113,11 @@ public class ClimbSubsystem extends SubsystemBase {
     m_HaTwo.setIdleMode(IdleMode.kBrake);
     m_HaTwo.setInverted(true);
 
-    resetTargetedHeight();
+    //resetTargetedHeight();
+    McHeightOne = 0;
+    McHeightTwo = 0;
+    HaHeightOne = 0;
+    HaHeightTwo = 0;
   }
 
   public void resetTargetedHeight() {
@@ -198,19 +202,19 @@ public class ClimbSubsystem extends SubsystemBase {
       if (HajoystickAxis > Constants.ControllerDeadZone
           || HajoystickAxis < -Constants.ControllerDeadZone) {
         if (HajoystickAxis > 0) {
-          if (HaHeightOne + (HajoystickAxis / Constants.HaSpeed) <= Constants.HaHeightMax) {
-            HaHeightOne = HaHeightOne + (HajoystickAxis * Constants.HaSpeed);
+          if (HaHeightOne + (HajoystickAxis * Constants.HaInSpeed) <= Constants.HaHeightMax) {
+            HaHeightOne = HaHeightOne + (HajoystickAxis * Constants.HaInSpeed);
           }
-          if (HaHeightTwo + (HajoystickAxis / Constants.HaSpeed) <= Constants.HaHeightMax) {
-            HaHeightTwo = HaHeightTwo + (HajoystickAxis * Constants.HaSpeed);
+          if (HaHeightTwo + (HajoystickAxis * Constants.HaInSpeed) <= Constants.HaHeightMax) {
+            HaHeightTwo = HaHeightTwo + (HajoystickAxis * Constants.HaInSpeed);
           }
         }
         if (HajoystickAxis < 0) {
-          if (HaHeightOne + (HajoystickAxis / Constants.HaSpeed) >= Constants.HaHeightMin) {
-            HaHeightOne = HaHeightOne + (HajoystickAxis * Constants.HaSpeed);
+          if (HaHeightOne + (HajoystickAxis * Constants.HaOutSpeed) >= Constants.HaHeightMin) {
+            HaHeightOne = HaHeightOne + (HajoystickAxis * Constants.HaOutSpeed);
           }
-          if (HaHeightTwo + (HajoystickAxis / Constants.HaSpeed) >= Constants.HaHeightMin) {
-            HaHeightTwo = HaHeightTwo + (HajoystickAxis * Constants.HaSpeed);
+          if (HaHeightTwo + (HajoystickAxis * Constants.HaOutSpeed) >= Constants.HaHeightMin) {
+            HaHeightTwo = HaHeightTwo + (HajoystickAxis * Constants.HaOutSpeed);
           }
         }
       }
@@ -225,6 +229,11 @@ public class ClimbSubsystem extends SubsystemBase {
   public void deployHA() {
     HaHeightOne = Constants.HaHeightMax;
     HaHeightTwo = Constants.HaHeightMax;
+    m_HaOne.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
+    sbHaHeightOne.setNumber(HaHeightOne);
+
+    m_HaTwo.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
+    sbHaHeightTwo.setNumber(HaHeightOne);
   }
 
   public void periodic() {
@@ -280,18 +289,12 @@ public class ClimbSubsystem extends SubsystemBase {
     sbMcSpeedTwo.setDouble(m_McTwo.getEncoder().getVelocity());
 
     // High Arms
-    if (sbHaHeightOne.getDouble(0) != HaHeightOne) {
-      HaHeightOne = sbHaHeightOne.getDouble(0);
-    } else {
+
       sbHaTargettedOne.setDouble(HaHeightOne);
-    }
     sbHaSpeedOne.setDouble(m_HaOne.getEncoder().getVelocity());
 
-    if (sbHaHeightTwo.getDouble(0) != HaHeightTwo) {
-      HaHeightTwo = sbHaHeightTwo.getDouble(0);
-    } else {
+
       sbHaTargettedTwo.setDouble(HaHeightTwo);
-    }
     sbHaSpeedTwo.setDouble(m_HaTwo.getEncoder().getVelocity());
 
     if ((m_McOne.getPIDCtrl().getP() != sbMcOneP.getDouble(0))
@@ -396,13 +399,13 @@ public class ClimbSubsystem extends SubsystemBase {
               .getEntry();
       sbHaOneI =
           climbTab
-              .add("Ha1 I", Constants.HaRightPID[0])
+              .add("Ha1 I", Constants.HaRightPID[1])
               .withSize(1, 1)
               .withPosition(8, 0)
               .getEntry();
       sbHaOneD =
           climbTab
-              .add("Ha1 D", Constants.HaRightPID[0])
+              .add("Ha1 D", Constants.HaRightPID[2])
               .withSize(1, 1)
               .withPosition(9, 0)
               .getEntry();
@@ -420,13 +423,13 @@ public class ClimbSubsystem extends SubsystemBase {
               .getEntry();
       sbHaTwoI =
           climbTab
-              .add("Ha2 I", Constants.HaLeftPID[0])
+              .add("Ha2 I", Constants.HaLeftPID[1])
               .withSize(1, 1)
               .withPosition(8, 1)
               .getEntry();
       sbHaTwoD =
           climbTab
-              .add("Ha2 D", Constants.HaLeftPID[0])
+              .add("Ha2 D", Constants.HaLeftPID[2])
               .withSize(1, 1)
               .withPosition(9, 1)
               .getEntry();

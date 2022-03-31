@@ -80,7 +80,7 @@ public final class Constants {
   }
 
   // TODO: when true, shooter is over shooting
-  public static final boolean DebugMode = false; // TODO: change to false for competition time
+  public static final boolean DebugMode = true; // TODO: change to false for competition time
 
   // motor controller constants
   public static final int defaultCurrentLimit = 40;
@@ -293,7 +293,7 @@ public final class Constants {
   // Ha = High Arms                          Mc = Mid Climb;
   public static final double[] HaLeftPID = {0.25, 0.005, 1.0};
   public static final double[] HaRightPID = {0.25, 0.005, 1.0};
-  public static final int HaHeightMax = 8;
+  public static final int HaHeightMax = 4;
   public static final int HaHeightMin = -70;
   public static final int HaMotorTwo = 16;
   public static final int HaMotorOne = 15;
@@ -309,7 +309,8 @@ public final class Constants {
   public static final double McUpSpeed = -0.75;
   public static final double McDownSpeed = -0.4;
 
-  public static final double HaSpeed = 0.5;
+  public static final double HaInSpeed = 0.5;
+  public static final double HaOutSpeed = 0.6;
 
   public static final double McsetIMaxAccum = 0.45;
   public static final double HasetIMaxAccum = 0.25;
