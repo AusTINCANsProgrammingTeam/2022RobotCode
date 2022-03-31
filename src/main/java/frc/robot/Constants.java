@@ -284,10 +284,34 @@ public final class Constants {
   }
 
   // Climb Constants
-  public static final int ClimbMotorOne = 5;
-  public static final int ClimbMotorTwo = 12;
-  public static final int climbHeightMax = 65;
-  public static final double[] climbRightPID = {0.25, 0.005, 1.0};
-  public static final double[] climbLeftPID = {0.25, 0.005, 1.0};
-  // public static final int LimitSwitchChannel = 12; // Check what number this needs to be
+  public static final int McMotorOne = 5;
+  public static final int McMotorTwo = 12;
+  public static final int McHeightMax = 0;
+  public static final int McHeightMin = -135;
+  public static final double[] McRightPID = {0.25, 0.005, 1.0};
+  public static final double[] McLeftPID = {0.25, 0.005, 1.0};
+  // Ha = High Arms                          Mc = Mid Climb;
+  public static final double[] HaLeftPID = {0.25, 0.005, 1.0};
+  public static final double[] HaRightPID = {0.25, 0.005, 1.0};
+  public static final double HaHeightMax = 5.5;
+  public static final int HaHeightMin = -70;
+  public static final int HaMotorTwo = 16;
+  public static final int HaMotorOne = 15;
+
+  public static final int ClimbLowCurrent = 10;
+  public static final int ClimbHighCurrent = 60;
+
+  public static final double DriveSpeedHigh = 1;
+  public static final double DriveSpeedLow = 0.6;
+
+  public static final double ControllerDeadZone = 0.1;
+
+  public static final double McUpSpeed = -1;
+  public static final double McDownSpeed = -0.4;
+
+  public static final double HaInSpeed = 0.5;
+  public static final double HaOutSpeed = 0.6;
+
+  public static final double McsetIMaxAccum = 0.45;
+  public static final double HasetIMaxAccum = 0.25;
 }

@@ -119,26 +119,26 @@ public class CDSSubsystem extends SubsystemBase {
       DCDSSpeed.setDouble(-1);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Wheel Direction", "Reverse");
-        SmartDashboard.putNumber("CDS Wheel Speed", -Constants.CDSWheelControllerSpeed);
+        SmartDashboard.putNumber("CDS Wheel Speed 2", -Constants.CDSWheelControllerSpeed);
       }
 
       CDSBeltController.set(-Constants.CDSBeltSpeed);
       if (Constants.DebugMode) {
-        SmartDashboard.putString("CDS Belt Direction", "Reverse");
-        SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
+        SmartDashboard.putString("CDS Belt Direction 3", "Reverse");
+        SmartDashboard.putNumber("CDS Belt Speed 2", -Constants.CDSBeltSpeed);
       }
     } else {
       DCDSSpeed.setDouble(1);
       CDSWheelControllerOne.set(Constants.CDSWheelControllerSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Wheel Direction", "Forward");
-        SmartDashboard.putNumber("CDS Wheel Speed", Constants.CDSWheelControllerSpeed);
+        SmartDashboard.putNumber("CDS Wheel Speed 3", Constants.CDSWheelControllerSpeed);
       }
 
       CDSBeltController.set(Constants.CDSBeltSpeed);
       if (Constants.DebugMode) {
-        SmartDashboard.putString("CDS Belt Direction", "Forward");
-        SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
+        SmartDashboard.putString("CDS Belt Direction 4", "Forward");
+        SmartDashboard.putNumber("CDS Belt Speed 3", Constants.CDSBeltSpeed);
       }
     }
   }
@@ -151,7 +151,7 @@ public class CDSSubsystem extends SubsystemBase {
       CDSWheelControllerOne.set(Constants.CDSWheelControllerSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Wheel Direction", "Forward");
-        SmartDashboard.putNumber("CDS Wheel Speed", Constants.CDSWheelControllerSpeed);
+        SmartDashboard.putNumber("CDS Wheel Speed 4", Constants.CDSWheelControllerSpeed);
       }
     }
   }
@@ -161,15 +161,15 @@ public class CDSSubsystem extends SubsystemBase {
     if (reverse) {
       CDSBeltController.set(-Constants.CDSBeltSpeed);
       if (Constants.DebugMode) {
-        SmartDashboard.putString("CDS Belt Direction", "Reverse");
-        SmartDashboard.putNumber("CDS Belt Speed", -Constants.CDSBeltSpeed);
+        SmartDashboard.putString("CDS Belt Direction 5", "Reverse");
+        SmartDashboard.putNumber("CDS Belt Speed 4", -Constants.CDSBeltSpeed);
       }
     } else {
       DCDSSpeed.setDouble(1);
       CDSBeltController.set(Constants.CDSBeltSpeed);
       if (Constants.DebugMode) {
-        SmartDashboard.putString("CDS Belt Direction", "Forward");
-        SmartDashboard.putNumber("CDS Belt Speed", Constants.CDSBeltSpeed);
+        SmartDashboard.putString("CDS Belt Direction 6", "Forward");
+        SmartDashboard.putNumber("CDS Belt Speed 5", Constants.CDSBeltSpeed);
       }
     }
   }
@@ -188,8 +188,8 @@ public class CDSSubsystem extends SubsystemBase {
     CDSWheelControllerOne.set(0.0);
     CDSBeltController.set(0.0);
     if (Constants.DebugMode) {
-      SmartDashboard.putNumber("CDS Wheel Speed", 0.0);
-      SmartDashboard.putNumber("CDS Belt Speed", 0.0);
+      SmartDashboard.putNumber("CDS Wheel Speed 5", 0.0);
+      SmartDashboard.putNumber("CDS Belt Speed 6", 0.0);
     }
   }
 
@@ -197,7 +197,7 @@ public class CDSSubsystem extends SubsystemBase {
     // Stops only the centering wheels
     CDSWheelControllerOne.set(0.0);
     if (Constants.DebugMode) {
-      SmartDashboard.putNumber("CDS Wheel Speed", 0.0);
+      SmartDashboard.putNumber("CDS Wheel Speed 6", 0.0);
     }
   }
 
