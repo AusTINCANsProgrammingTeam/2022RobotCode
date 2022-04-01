@@ -28,6 +28,7 @@ public final class Constants {
     EJECT(2500.0, 0.0),
     LAUNCH(0.0, 0.0),
     TARMAC(2530.0, 0.0),
+    ATARMAC(2550.0, 0.0),
     TEST {
       @Override
       public AimModes next() {
@@ -192,7 +193,7 @@ public final class Constants {
   public static final int CDSBeltID = 3;
   public static final int CDSWheelControllerOneID = 2;
   public static final int CDSWheelControllerTwoID = 9;
-  public static final double CDSBeltSpeed = .95;
+  public static final double CDSBeltSpeed = .75;
   public static final double CDSWheelControllerSpeed = 0.80;
   public static final int frontSensorActivation = 200;
   public static final int middleSensorActivation = 450;
@@ -294,19 +295,23 @@ public final class Constants {
   public static final int McMotorOne = 5;
   public static final int McMotorTwo = 12;
   public static final int McHeightMax = 0;
+  public static final int McHeightFeather = -20;
   public static final int McHeightMin = -135;
   public static final double[] McRightPID = {0.25, 0.005, 1.0};
   public static final double[] McLeftPID = {0.25, 0.005, 1.0};
   // Ha = High Arms                          Mc = Mid Climb;
   public static final double[] HaLeftPID = {0.25, 0.005, 1.0};
   public static final double[] HaRightPID = {0.25, 0.005, 1.0};
-  public static final double HaHeightMax = 4.5;
+  public static final double HaHeightMax = 6;
+  public static final int HaHeightUnlatch = -37;
   public static final int HaHeightMin = -70;
   public static final int HaMotorTwo = 16;
   public static final int HaMotorOne = 15;
 
-  public static final int ClimbLowCurrent = 10;
-  public static final int ClimbHighCurrent = 60;
+  public static final int ClimbHaLowCurrent = 15;
+  public static final int ClimbMcLowCurrent = 10;
+  public static final int ClimbHaHighCurrent = 50;
+  public static final int ClimbMcHighCurrent = 60;
 
   public static final double DriveSpeedHigh = 1;
   public static final double DriveSpeedLow = 0.6;
@@ -314,7 +319,7 @@ public final class Constants {
   public static final double ControllerDeadZone = 0.1;
 
   public static final double McUpSpeed = -1;
-  public static final double McDownSpeed = -0.4;
+  public static final double McDownSpeed = -0.65;
 
   public static final double HaInSpeed = 0.5;
   public static final double HaOutSpeed = 0.6;

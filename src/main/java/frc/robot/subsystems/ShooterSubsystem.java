@@ -212,6 +212,7 @@ public class ShooterSubsystem extends SubsystemBase {
         case LOW: // aimMode used to dump into the low goal from ~1ft
         case TARMAC: // aimMode used to shoot into the high goal from ~2ft
         case LAUNCH: // aimMode used to shoot into the high goal from the launchpad
+        case ATARMAC:
           adjustHood(aimMode.getAngle());
           windFlywheel(aimMode.getRPM());
           break;

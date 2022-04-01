@@ -179,7 +179,6 @@ public class RobotContainer {
     if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
       climbEnabling = new ClimbEnable(climbSubsystem, driveBaseSubsystem);
       ClimbPeriodic = new ClimbPeriodic(climbSubsystem);
-      HaDeploy = new InstantCommand(climbSubsystem::deployHA, climbSubsystem);
       climbSubsystem.setDefaultCommand(ClimbPeriodic);
     }
   }
@@ -245,20 +244,20 @@ public class RobotContainer {
     boolean success = true;
     switch (mode) {
       case TEST:
-        if (driveBaseSubsystem != null) {
+       /* if (driveBaseSubsystem != null) {
           autonModes = new AutonModes(driveBaseSubsystem);
         } else {
           success = false;
         }
-        break;
+        break;*/
       case PUSHTAXI: // the two taxis
       case INTAKETAXI:
-        if (driveBaseSubsystem != null && intakeSubsystem != null && cdsSubsystem != null) {
+       /* if (driveBaseSubsystem != null && intakeSubsystem != null && cdsSubsystem != null) {
           autonModes = new AutonModes(driveBaseSubsystem, intakeSubsystem, cdsSubsystem);
         } else {
           success = false;
         }
-        break;
+        break;*/
       case ONEBALL: // all of these modes go down to the FIVEBALL case
       case TWOBALL:
       case THREEBALL:

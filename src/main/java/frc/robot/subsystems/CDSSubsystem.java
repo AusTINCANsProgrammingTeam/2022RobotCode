@@ -79,7 +79,7 @@ public class CDSSubsystem extends SubsystemBase {
   private NetworkTableEntry CDSBallCount = CDSTab.add("Ball Count", 0).getEntry();
   private NetworkTableEntry CDSState = CDSTab.add("CDS State", "IDLE").getEntry();
   private NetworkTableEntry managementOnOff =
-      operatorTab.add("Run Auto Intake and Eject", true)
+      operatorTab.add("Run Auto Intake and Eject", false)
           .withWidget(BuiltInWidgets.kToggleButton)
           .withPosition(5, 1)
           .getEntry();
@@ -304,7 +304,7 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public boolean managementEnabled() {
-    return managementOnOff.getBoolean(true);
+    return managementOnOff.getBoolean(false);
   }
 
   int count = 0;

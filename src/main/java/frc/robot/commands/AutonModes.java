@@ -95,7 +95,7 @@ public class AutonModes {
 
     this.driveBaseSubsystem = d;
     this.shooterSubsystem = s;
-    this.shooterSubsystem.setAimMode(Constants.AimModes.TARMAC);
+    this.shooterSubsystem.setAimMode(Constants.AimModes.ATARMAC);
     this.limelightSubsystem = l;
     this.cdsSubsystem = c;
     this.intakeSubsystem = i;
