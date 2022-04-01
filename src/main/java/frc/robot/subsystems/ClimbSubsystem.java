@@ -191,19 +191,19 @@ public class ClimbSubsystem extends SubsystemBase {
       if (McjoystickAxis > Constants.ControllerDeadZone
           || McjoystickAxis < -Constants.ControllerDeadZone) {
         if (McjoystickAxis > 0) {
-          if (McHeightOne + (McjoystickAxis * Constants.McUpSpeed/2) >= Constants.McHeightFeather) {
+          /*if (McHeightOne + (McjoystickAxis * (Constants.McUpSpeed/2)) >= Constants.McHeightFeather) {
             McHeightOne = McHeightOne + (McjoystickAxis * Constants.McUpSpeed/2);
-          } else{
+          } else{*/
             if (McHeightOne + (McjoystickAxis * Constants.McUpSpeed) >= Constants.McHeightMin) {
               McHeightOne = McHeightOne + (McjoystickAxis * Constants.McUpSpeed);
-          }
+          //}
         }
-          if (McHeightTwo + (McjoystickAxis * Constants.McUpSpeed/2) >= Constants.McHeightFeather) {
+          /*if (McHeightTwo + (McjoystickAxis * (Constants.McUpSpeed/2)) >= Constants.McHeightFeather) {
             McHeightTwo = McHeightTwo + (McjoystickAxis * Constants.McUpSpeed/2);
-          } else{
+          } else{*/
             if (McHeightTwo + (McjoystickAxis * Constants.McUpSpeed) >= Constants.McHeightMin) {
               McHeightTwo = McHeightTwo + (McjoystickAxis * Constants.McUpSpeed);
-          }
+          //}
         }
       }
         if (McjoystickAxis < 0) {
