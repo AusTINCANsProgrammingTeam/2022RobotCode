@@ -24,6 +24,7 @@ import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShooterHeld;
+import frc.robot.commands.ShooterPressed;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveBaseSubsystem;
@@ -64,6 +65,7 @@ public class RobotContainer {
   private ClimbCommand climbCommand;
 
   private ShooterHeld shooterHeldLow, shooterHeldAuto;
+  private ShooterPressed shooterPressed;
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
@@ -171,6 +173,7 @@ public class RobotContainer {
       shooterHeldLow =
           new ShooterHeld(
               shooterSubsystem, limelightSubsystem, cdsSubsystem, (limelightSubsystem != null));
+              shooterPressed = new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, (limelightSubsystem != null));
     }
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
@@ -206,12 +209,13 @@ public class RobotContainer {
 
     if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
       // Auto Aim Shot
-      buttons[Constants.LTriggerButton].whileHeld(
+      buttons[Constants.LTriggerButton].whenPressed(shooterPressed);
+      /*buttons[Constants.LTriggerButton].whileHeld(
           shooterHeldAuto.beforeStarting(
               () -> {
                 shooterSubsystem.setAimMode(Constants.AimModes.TARMAC);
               },
-              shooterSubsystem));
+              shooterSubsystem));*/
       // Fender Shot
       buttons[Constants.LBumper].whileHeld(
           shooterHeldLow.beforeStarting(
