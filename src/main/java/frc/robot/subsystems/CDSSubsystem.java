@@ -175,6 +175,24 @@ public class CDSSubsystem extends SubsystemBase {
     }
   }
 
+  public void CDSBeltToggle(boolean reverse, double beltSpeed) {
+    DCDSSpeed.setDouble(-1);
+    if (reverse) {
+      CDSBeltController.set(-beltSpeed);
+      if (Constants.DebugMode) {
+        SmartDashboard.putString("CDS Belt Direction 5", "Reverse");
+        SmartDashboard.putNumber("CDS Belt Speed 4", -beltSpeed);
+      }
+    } else {
+      DCDSSpeed.setDouble(1);
+      CDSBeltController.set(beltSpeed);
+      if (Constants.DebugMode) {
+        SmartDashboard.putString("CDS Belt Direction 6", "Forward");
+        SmartDashboard.putNumber("CDS Belt Speed 5", beltSpeed);
+      }
+    }
+  }
+
   public double getBeltSpeed() {
     return CDSBeltController.getSpeed();
   }
