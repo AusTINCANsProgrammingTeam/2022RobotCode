@@ -83,18 +83,32 @@ public class ClimbSubsystem extends SubsystemBase {
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
   private NetworkTableEntry DClimbHeight1 =
       operatorTab
-          .add("Arm Height", 0)
+          .add("Arm Height 1", 0)
           .withWidget(BuiltInWidgets.kNumberBar)
           .withSize(2, 1)
           .withPosition(6, 0)
           .getEntry();
   private NetworkTableEntry DClimbHeight2 =
       operatorTab
-          .add("Pole Height", 0)
+          .add("Arm Height 2", 0)
           .withWidget(BuiltInWidgets.kNumberBar)
           .withSize(2, 1)
           .withPosition(6, 1)
           .getEntry();
+  private NetworkTableEntry DClimbHeight3 =
+      operatorTab
+          .add("Pole Height 1", 0)
+              .withWidget(BuiltInWidgets.kNumberBar)
+              .withSize(2, 1)
+              .withPosition(6, 2)
+              .getEntry();
+      private NetworkTableEntry DClimbHeight4 =
+          operatorTab
+              .add("Pole Height 2", 0)
+              .withWidget(BuiltInWidgets.kNumberBar)
+              .withSize(2, 1)
+              .withPosition(6, 3)
+              .getEntry();
   private NetworkTableEntry BClimbEnabled =
       operatorTab
           .add("Climb Enabled", false)
@@ -283,9 +297,12 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     BClimbEnabled.setBoolean(climbEnabble);
-    DClimbHeight1.setNumber(m_McTwo.getEncoder().getPosition());
-    DClimbHeight2.setNumber(m_HaTwo.getEncoder().getPosition());
+    DClimbHeight1.setNumber(m_McOne.getEncoder().getPosition());
+    DClimbHeight2.setNumber(m_McTwo.getEncoder().getPosition());
+    DClimbHeight3.setNumber(m_HaOne.getEncoder().getPosition());
+    DClimbHeight4.setNumber(m_HaTwo.getEncoder().getPosition());
   }
+  
 
   public void debugPeriodic() {
     if (DriverStation.isDisabled() && climbEnabble) {

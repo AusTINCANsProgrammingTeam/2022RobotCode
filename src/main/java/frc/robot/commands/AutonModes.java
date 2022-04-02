@@ -221,7 +221,8 @@ public class AutonModes {
       CommandGroupBase[] twoBallParallels = getParallelCommands(twoBallRamseteCommands);
       twoBallCommand =
           new SequentialCommandGroup(
-              new WaitCommand(initialWaitTime), twoBallParallels[0], twoBallParallels[1]);
+              new WaitCommand(initialWaitTime), twoBallParallels[0], twoBallParallels[1],    
+              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
 
       // -------------------------------------------
 
