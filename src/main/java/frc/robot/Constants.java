@@ -27,8 +27,8 @@ public final class Constants {
     },
     EJECT(2500.0, 0.0),
     LAUNCH(0.0, 0.0),
-    TARMAC(2530.0, 0.0),
-    ATARMAC(2550.0, 0.0),
+    TARMAC(2480.0, 0.0),
+    ATARMAC(2480.0, 0.0),
     TEST {
       @Override
       public AimModes next() {
@@ -314,7 +314,7 @@ public final class Constants {
   public static final int ClimbMcHighCurrent = 60;
 
   public static final double DriveSpeedHigh = 1;
-  public static final double DriveSpeedLow = 0.6;
+  public static final double DriveSpeedLow = 1;
 
   public static final double ControllerDeadZone = 0.1;
 
