@@ -165,6 +165,10 @@ public class ShooterSubsystem extends SubsystemBase {
     stopperController.set(speed);
   }
 
+  public boolean wheelReady(int low, int high) {
+    return (smoothRPM > targetRPM - low && smoothRPM < targetRPM + high);
+  }
+
   public boolean wheelReady() {
     return (smoothRPM > targetRPM - 56 && smoothRPM < targetRPM + 56);
   }

@@ -98,17 +98,17 @@ public class ClimbSubsystem extends SubsystemBase {
   private NetworkTableEntry DClimbHeight3 =
       operatorTab
           .add("Pole Height 1", 0)
-              .withWidget(BuiltInWidgets.kNumberBar)
-              .withSize(2, 1)
-              .withPosition(6, 2)
-              .getEntry();
-      private NetworkTableEntry DClimbHeight4 =
-          operatorTab
-              .add("Pole Height 2", 0)
-              .withWidget(BuiltInWidgets.kNumberBar)
-              .withSize(2, 1)
-              .withPosition(6, 3)
-              .getEntry();
+          .withWidget(BuiltInWidgets.kNumberBar)
+          .withSize(2, 1)
+          .withPosition(6, 2)
+          .getEntry();
+  private NetworkTableEntry DClimbHeight4 =
+      operatorTab
+          .add("Pole Height 2", 0)
+          .withWidget(BuiltInWidgets.kNumberBar)
+          .withSize(2, 1)
+          .withPosition(6, 3)
+          .getEntry();
   private NetworkTableEntry BClimbEnabled =
       operatorTab
           .add("Climb Enabled", false)
@@ -208,18 +208,18 @@ public class ClimbSubsystem extends SubsystemBase {
           /*if (McHeightOne + (McjoystickAxis * (Constants.McUpSpeed/2)) >= Constants.McHeightFeather) {
             McHeightOne = McHeightOne + (McjoystickAxis * Constants.McUpSpeed/2);
           } else{*/
-            if (McHeightOne + (McjoystickAxis * Constants.McUpSpeed) >= Constants.McHeightMin) {
-              McHeightOne = McHeightOne + (McjoystickAxis * Constants.McUpSpeed);
-          //}
-        }
+          if (McHeightOne + (McjoystickAxis * Constants.McUpSpeed) >= Constants.McHeightMin) {
+            McHeightOne = McHeightOne + (McjoystickAxis * Constants.McUpSpeed);
+            // }
+          }
           /*if (McHeightTwo + (McjoystickAxis * (Constants.McUpSpeed/2)) >= Constants.McHeightFeather) {
             McHeightTwo = McHeightTwo + (McjoystickAxis * Constants.McUpSpeed/2);
           } else{*/
-            if (McHeightTwo + (McjoystickAxis * Constants.McUpSpeed) >= Constants.McHeightMin) {
-              McHeightTwo = McHeightTwo + (McjoystickAxis * Constants.McUpSpeed);
-          //}
+          if (McHeightTwo + (McjoystickAxis * Constants.McUpSpeed) >= Constants.McHeightMin) {
+            McHeightTwo = McHeightTwo + (McjoystickAxis * Constants.McUpSpeed);
+            // }
+          }
         }
-      }
         if (McjoystickAxis < 0) {
           if (McHeightOne + (McjoystickAxis * Constants.McDownSpeed) <= Constants.McHeightMax) {
             McHeightOne = McHeightOne + (McjoystickAxis * Constants.McDownSpeed);
@@ -302,7 +302,6 @@ public class ClimbSubsystem extends SubsystemBase {
     DClimbHeight3.setNumber(m_HaOne.getEncoder().getPosition());
     DClimbHeight4.setNumber(m_HaTwo.getEncoder().getPosition());
   }
-  
 
   public void debugPeriodic() {
     if (DriverStation.isDisabled() && climbEnabble) {

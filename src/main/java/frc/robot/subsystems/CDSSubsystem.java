@@ -68,7 +68,6 @@ public class CDSSubsystem extends SubsystemBase {
           .withPosition(3, 1)
           .getEntry();
 
-
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry ballColor = CDSTab.add("Ball Color", "Blue").getEntry();
   // private NetworkTableEntry CDSBallCount =
@@ -79,7 +78,8 @@ public class CDSSubsystem extends SubsystemBase {
   private NetworkTableEntry CDSBallCount = CDSTab.add("Ball Count", 0).getEntry();
   private NetworkTableEntry CDSState = CDSTab.add("CDS State", "IDLE").getEntry();
   private NetworkTableEntry managementOnOff =
-      operatorTab.add("Run Auto Intake and Eject", false)
+      operatorTab
+          .add("Run Auto Intake and Eject", false)
           .withWidget(BuiltInWidgets.kToggleButton)
           .withPosition(5, 1)
           .getEntry();

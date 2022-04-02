@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
@@ -244,7 +243,7 @@ public class RobotContainer {
     boolean success = true;
     switch (mode) {
       case TEST:
-       /* if (driveBaseSubsystem != null) {
+        /* if (driveBaseSubsystem != null) {
           autonModes = new AutonModes(driveBaseSubsystem);
         } else {
           success = false;
@@ -252,7 +251,7 @@ public class RobotContainer {
         break;*/
       case PUSHTAXI: // the two taxis
       case INTAKETAXI:
-       /* if (driveBaseSubsystem != null && intakeSubsystem != null && cdsSubsystem != null) {
+        /* if (driveBaseSubsystem != null && intakeSubsystem != null && cdsSubsystem != null) {
           autonModes = new AutonModes(driveBaseSubsystem, intakeSubsystem, cdsSubsystem);
         } else {
           success = false;
