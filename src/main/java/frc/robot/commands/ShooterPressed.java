@@ -45,7 +45,7 @@ public class ShooterPressed extends CommandBase {
   @Override
   public void execute() {
     m_ShooterSubsystem.prime();
-    if (m_ShooterSubsystem.wheelReady()) {
+    if (m_ShooterSubsystem.wheelReady() || i > 0) {
       // If below will bypass the LL check if the stopper is already running, or the LL is disabled.
       // Otherwise, alignment is checked.
       if (i > 0 || !LLEnabled || m_LimelightSubsystem.calculatePID() == 0.0) {
@@ -76,7 +76,9 @@ public class ShooterPressed extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (i >= 15) { // 1000 miliseconds delay TODO: Use a CDS method for this when possible
+    // TODO: use CDSSubsystem getBallCount to check if all balls are shot yet
+
+    if (i >= 20) { // 20 * 20 = 400 miliseconds timeout
       return true;
     }
     return false;

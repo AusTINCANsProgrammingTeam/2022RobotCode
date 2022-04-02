@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveBaseSubsystem;
 
@@ -28,9 +29,9 @@ public class ClimbEnable extends CommandBase {
     m_subsystem.resetTargetedHeight();
 
     if (m_subsystem.getclimbingenable()) {
-      m_drivesubsystem.setDriveBaseSpeed(0.40);
+      m_drivesubsystem.setDriveBaseSpeed(Constants.DriveSpeedLow);
     } else {
-      m_drivesubsystem.setDriveBaseSpeed(1);
+      m_drivesubsystem.setDriveBaseSpeed(Constants.DriveSpeedHigh);
     }
   }
 
