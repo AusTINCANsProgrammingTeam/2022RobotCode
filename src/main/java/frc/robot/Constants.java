@@ -296,7 +296,7 @@ public final class Constants {
   public static final int McMotorTwo = 12;
   public static final int McHeightMax = 0;
   public static final int McHeightFeather = -20;
-  public static final int McHeightMin = -135;
+  public static final int McHeightMin = -128;
   public static final double[] McRightPID = {0.25, 0.005, 1.0};
   public static final double[] McLeftPID = {0.25, 0.005, 1.0};
   // Ha = High Arms                          Mc = Mid Climb;
