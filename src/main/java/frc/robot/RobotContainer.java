@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.Auton;
 import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
@@ -232,62 +233,47 @@ public class RobotContainer {
     }
   }
 
-  public Command getAutonomousCommand(Constants.Auton a) {
-    if (autonModes != null) {
-      chosenAutonMode = autonModes.getChosenCommand(a);
-      return chosenAutonMode;
-    }
-    return null;
-  }
-
-  public void initAuton(Constants.Auton mode) {
-    // switch for readibility
-    boolean success = true;
+  public Command getAutonomousCommand(Auton mode) {
     switch (mode) {
       case TEST:
-        if (driveBaseSubsystem != null) {
-          autonModes = new AutonModes(driveBaseSubsystem);
-        } else {
-          success = false;
-        }
+        System.out.println("Auton: Test mode selected.");
         break;
-      case PUSHTAXI: // the two taxis
+      case PUSHTAXI:
+        System.out.println("Auton: Push Taxi mode selected.");
+        break;
       case INTAKETAXI:
-        if (driveBaseSubsystem != null && intakeSubsystem != null && cdsSubsystem != null) {
-          autonModes = new AutonModes(driveBaseSubsystem, intakeSubsystem, cdsSubsystem);
-        } else {
-          success = false;
-        }
+        System.out.println("Auton: Intake Taxi mode selected.");
         break;
-      case ONEBALL: // all of these modes go down to the FIVEBALL case
+      case ONEBALL:
+        System.out.println("Auton: One Ball mode selected.");
+        break;
       case TWOBALL:
+        System.out.println("Auton: Two Ball mode selected.");
+        break;
       case THREEBALL:
+        System.out.println("Auton: Three Ball mode selected.");
+        break;
       case FOURBALL:
+        System.out.println("Auton: Four Ball mode selected.");
+        break;
       case FIVEBALL:
-        if (shooterSubsystem != null
-            && driveBaseSubsystem != null
-            && intakeSubsystem != null
-            && cdsSubsystem != null
-            && climbSubsystem != null) {
-          autonModes =
-              new AutonModes(
-                  driveBaseSubsystem,
-                  shooterSubsystem,
-                  limelightSubsystem,
-                  cdsSubsystem,
-                  intakeSubsystem,
-                  climbSubsystem);
-        } else {
-          success = false;
-        }
+        System.out.println("Auton: Five Ball mode selected.");
         break;
       default:
-        System.out.println("No mode selected");
-        break;
+        System.out.println("Auton: No mode selected.");
+        return null;
     }
-    if (success == false) {
-      System.out.println(mode.getName() + " mode unable to be created.");
-    }
+
+    AutonModes autonMode =
+        new AutonModes(
+            mode,
+            driveBaseSubsystem,
+            shooterSubsystem,
+            limelightSubsystem,
+            cdsSubsystem,
+            intakeSubsystem,
+            climbSubsystem);
+    return autonMode.getAutonCommand();
   }
 
   public static DriveBaseSubsystem getDriveBase() {
