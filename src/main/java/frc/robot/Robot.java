@@ -65,7 +65,7 @@ public class Robot extends TimedRobot {
     chooser.addOption("Two Ball", Constants.Auton.TWOBALL);
     chooser.addOption("Three Ball", Constants.Auton.THREEBALL);
     chooser.addOption("Four Ball", Constants.Auton.FOURBALL);
-    chooser.addOption("Five Ball", Constants.Auton.FIVEBALL);
+    // chooser.addOption("Five Ball", Constants.Auton.FIVEBALL);
     // chooser.addOption("Test Mode", Constants.Auton.TEST);      // don't need to show during
     // competition
 

@@ -11,13 +11,13 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
-import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.ClimbEnable;
-import frc.robot.commands.ClimbKeepDown;
+import frc.robot.commands.ClimbPeriodic;
 import frc.robot.commands.CombinedIntakeCDSForwardCommand;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
@@ -62,14 +62,14 @@ public class RobotContainer {
   private IntakeReverseCommand intakeReverseCommand;
   private CDSBallManagementCommand ballManagementCommand;
   private CombinedIntakeCDSForwardCommand combinedIntakeCDS;
-  private ClimbCommand climbCommand;
 
   private ShooterHeld shooterHeldLow, shooterHeldAuto;
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
   private ClimbEnable climbEnabling;
-  private ClimbKeepDown climbKeepDown;
+  private ClimbPeriodic ClimbPeriodic;
+  private Command HaDeploy;
 
   // auton
   private AutonModes autonModes;
@@ -138,7 +138,6 @@ public class RobotContainer {
     limelightSubsystem = new LimelightSubsystem();
 
     climbSubsystem = new ClimbSubsystem(operatorJoystick);
-    climbCommand = new ClimbCommand(climbSubsystem);
   }
 
   private void initCommands() {
@@ -179,8 +178,9 @@ public class RobotContainer {
 
     if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
       climbEnabling = new ClimbEnable(climbSubsystem, driveBaseSubsystem);
-      climbKeepDown = new ClimbKeepDown(climbSubsystem);
-      climbSubsystem.setDefaultCommand(climbKeepDown);
+      ClimbPeriodic = new ClimbPeriodic(climbSubsystem);
+      HaDeploy = new InstantCommand(climbSubsystem::deployHA, climbSubsystem);
+      climbSubsystem.setDefaultCommand(ClimbPeriodic);
     }
   }
 
@@ -267,14 +267,16 @@ public class RobotContainer {
         if (shooterSubsystem != null
             && driveBaseSubsystem != null
             && intakeSubsystem != null
-            && cdsSubsystem != null) {
+            && cdsSubsystem != null
+            && climbSubsystem != null) {
           autonModes =
               new AutonModes(
                   driveBaseSubsystem,
                   shooterSubsystem,
                   limelightSubsystem,
                   cdsSubsystem,
-                  intakeSubsystem);
+                  intakeSubsystem,
+                  climbSubsystem);
         } else {
           success = false;
         }

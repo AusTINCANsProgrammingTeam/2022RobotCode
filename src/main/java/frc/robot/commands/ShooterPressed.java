@@ -45,7 +45,7 @@ public class ShooterPressed extends CommandBase {
   @Override
   public void execute() {
     m_ShooterSubsystem.prime();
-    if (m_ShooterSubsystem.wheelReady()) {
+    if (m_ShooterSubsystem.wheelReady() || i > 0) {
       // If below will bypass the LL check if the stopper is already running, or the LL is disabled.
       // Otherwise, alignment is checked.
       if (i > 0 || !LLEnabled || m_LimelightSubsystem.calculatePID() == 0.0) {
