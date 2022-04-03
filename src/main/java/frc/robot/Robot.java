@@ -57,8 +57,7 @@ public class Robot extends TimedRobot {
 
     robotContainer = new RobotContainer();
 
-    chooser.setDefaultOption(
-        "Four Ball", Auton.FOURBALL); // default is four ball mode for now
+    chooser.setDefaultOption("Four Ball", Auton.FOURBALL); // default is four ball mode for now
 
     chooser.addOption("Intake Taxi", Auton.INTAKETAXI);
     chooser.addOption("Push Taxi", Auton.PUSHTAXI);
