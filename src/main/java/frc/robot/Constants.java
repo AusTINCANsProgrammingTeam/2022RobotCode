@@ -303,7 +303,6 @@ public final class Constants {
   public static final double[] HaLeftPID = {0.25, 0.005, 1.0};
   public static final double[] HaRightPID = {0.25, 0.005, 1.0};
   public static final double HaHeightMax = 6;
-  public static final int HaHeightUnlatch = -37;
   public static final int HaHeightMin = -70;
   public static final int HaMotorTwo = 16;
   public static final int HaMotorOne = 15;

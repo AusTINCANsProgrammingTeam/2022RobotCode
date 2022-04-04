@@ -275,14 +275,6 @@ public class ClimbSubsystem extends SubsystemBase {
     m_HaTwo.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
   }
 
-  public void unlatchHA() {
-    HaHeightOne = Constants.HaHeightUnlatch;
-    HaHeightTwo = Constants.HaHeightUnlatch;
-    m_HaOne.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
-
-    m_HaTwo.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
-  }
-
   public void periodic() {
     if (DriverStation.isDisabled() && climbEnabble) {
       climbEnable();
