@@ -139,11 +139,11 @@ public class ColorSensorMuxed {
     if (Timer.getFPGATimestamp() - lastColorReads[i] > sensorPeriodInSeconds) {
       if (setI2cPort(i2cPort)) {
         colors[i] = sensors.getColor();
+        lastColorReads[i] = Timer.getFPGATimestamp();
       } else {
         DriverStation.reportError("Failed to get color from sensor on I2C port " + i2cPort, false);
         colors[i] = new Color(0, 0, 0);
       }
-      lastColorReads[i] = Timer.getFPGATimestamp();
     }
     return colors[i];
   }
@@ -158,13 +158,13 @@ public class ColorSensorMuxed {
     if (Timer.getFPGATimestamp() - lastProxReads[i] > sensorPeriodInSeconds) {
       if (setI2cPort(i2cPort)) {
         proximities[i] = sensors.getProximity();
+        lastProxReads[i] = Timer.getFPGATimestamp();
       } else {
         DriverStation.reportError(
             "Failed to get proximity from sensor on I2C port " + i2cPort, false);
         proximities[i] = 0;
       }
     }
-    lastProxReads[i] = Timer.getFPGATimestamp();
     return proximities[i];
   }
 
