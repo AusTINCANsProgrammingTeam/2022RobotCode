@@ -314,7 +314,7 @@ public final class Constants {
   public static final int ClimbMcHighCurrent = 60;
 
   public static final double DriveSpeedHigh = 1;
-  public static final double DriveSpeedLow = 1;
+  public static final double DriveSpeedLow = 0.6;
 
   public static final double ControllerDeadZone = 0.1;
 
