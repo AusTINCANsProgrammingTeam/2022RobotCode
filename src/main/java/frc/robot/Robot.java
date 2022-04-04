@@ -56,7 +56,6 @@ public class Robot extends TimedRobot {
 
     robotContainer = new RobotContainer();
 
-    // TODO: change to correct default
     chooser.setDefaultOption(
         "Four Ball", Constants.Auton.FOURBALL); // default is four ball mode for now
 
@@ -66,7 +65,7 @@ public class Robot extends TimedRobot {
     chooser.addOption("Two Ball", Constants.Auton.TWOBALL);
     chooser.addOption("Three Ball", Constants.Auton.THREEBALL);
     chooser.addOption("Four Ball", Constants.Auton.FOURBALL);
-    chooser.addOption("Five Ball", Constants.Auton.FIVEBALL);
+    // chooser.addOption("Five Ball", Constants.Auton.FIVEBALL);
     // chooser.addOption("Test Mode", Constants.Auton.TEST);      // don't need to show during
     // competition
 
@@ -86,6 +85,8 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+
+    robotContainer.pushSmartDashData();
 
     CommandScheduler.getInstance().run();
   }
@@ -130,7 +131,11 @@ public class Robot extends TimedRobot {
 
   // This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    RobotContainer.getCDSSubsystem().changeState();
+    // RobotContainer.getCDSSubsystem().simulateColorSense();
+
+  }
 
   @Override
   public void testInit() {

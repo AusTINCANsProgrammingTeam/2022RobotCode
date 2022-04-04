@@ -9,14 +9,15 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
-import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.ClimbEnable;
-import frc.robot.commands.ClimbKeepDown;
+import frc.robot.commands.ClimbPeriodic;
 import frc.robot.commands.CombinedIntakeCDSForwardCommand;
 import frc.robot.commands.DeployIntake;
 import frc.robot.commands.DriveBaseTeleopCommand;
@@ -63,14 +64,14 @@ public class RobotContainer {
   private IntakeReverseCommand intakeReverseCommand;
   private CDSBallManagementCommand ballManagementCommand;
   private CombinedIntakeCDSForwardCommand combinedIntakeCDS;
-  private ClimbCommand climbCommand;
 
   private ShooterHeld shooterHeldLow, shooterHeldAuto;
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
   private ClimbEnable climbEnabling;
-  private ClimbKeepDown climbKeepDown;
+  private ClimbPeriodic ClimbPeriodic;
+  private Command HaDeploy;
 
   // auton
   private AutonModes autonModes;
@@ -139,7 +140,6 @@ public class RobotContainer {
     limelightSubsystem = new LimelightSubsystem();
 
     climbSubsystem = new ClimbSubsystem(operatorJoystick);
-    climbCommand = new ClimbCommand(climbSubsystem);
   }
 
   private void initCommands() {
@@ -159,9 +159,9 @@ public class RobotContainer {
 
       if (Constants.ballManagementEnabled) {
         intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
-        ballManagementCommand = new CDSBallManagementCommand(cdsSubsystem, intakeSubsystem);
+        ballManagementCommand =
+            new CDSBallManagementCommand(cdsSubsystem, intakeSubsystem, shooterSubsystem);
         cdsSubsystem.setDefaultCommand(ballManagementCommand);
-      } else {
         combinedIntakeCDS =
             new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem);
       }
@@ -181,8 +181,9 @@ public class RobotContainer {
 
     if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
       climbEnabling = new ClimbEnable(climbSubsystem, driveBaseSubsystem);
-      climbKeepDown = new ClimbKeepDown(climbSubsystem);
-      climbSubsystem.setDefaultCommand(climbKeepDown);
+      ClimbPeriodic = new ClimbPeriodic(climbSubsystem);
+      HaDeploy = new InstantCommand(climbSubsystem::deployHA, climbSubsystem);
+      climbSubsystem.setDefaultCommand(ClimbPeriodic);
     }
   }
 
@@ -207,9 +208,9 @@ public class RobotContainer {
 
     if (combinedIntakeCDS != null) {
       buttons[Constants.RTriggerButton].whileHeld(combinedIntakeCDS);
-    } else {
-      buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
-    }
+    } /*else {
+        buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
+      }*/
 
     if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
       // Auto Aim Shot
@@ -273,14 +274,16 @@ public class RobotContainer {
         if (shooterSubsystem != null
             && driveBaseSubsystem != null
             && intakeSubsystem != null
-            && cdsSubsystem != null) {
+            && cdsSubsystem != null
+            && climbSubsystem != null) {
           autonModes =
               new AutonModes(
                   driveBaseSubsystem,
                   shooterSubsystem,
                   limelightSubsystem,
                   cdsSubsystem,
-                  intakeSubsystem);
+                  intakeSubsystem,
+                  climbSubsystem);
         } else {
           success = false;
         }
@@ -294,13 +297,26 @@ public class RobotContainer {
     }
   }
 
-  // TODO: create get methods for other subsystems to pass into TabContainer, or
-  // find a more
-  // efficient way
   public static DriveBaseSubsystem getDriveBase() {
     if (driveBaseSubsystem != null) {
       return driveBaseSubsystem;
     }
     return null;
+  }
+
+  public static CDSSubsystem getCDSSubsystem() {
+    if (cdsSubsystem != null) {
+      return cdsSubsystem;
+    }
+    return null;
+  }
+
+  public void pushSmartDashData() {
+    SmartDashboard.putData(climbSubsystem);
+    SmartDashboard.putData(driveBaseSubsystem);
+    SmartDashboard.putData(cdsSubsystem);
+    SmartDashboard.putData(intakeSubsystem);
+    SmartDashboard.putData(shooterSubsystem);
+    SmartDashboard.putData(limelightSubsystem);
   }
 }
