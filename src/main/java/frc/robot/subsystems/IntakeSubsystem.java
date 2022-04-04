@@ -26,25 +26,25 @@ public class IntakeSubsystem extends SubsystemBase {
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
   private ShuffleboardTab intakeTab = Shuffleboard.getTab("Intake Tab");
   private NetworkTableEntry sbintakeDeployP =
-      intakeTab.add("Intake deploy P", 0).withSize(1, 1).withPosition(0, 2).getEntry();
+      intakeTab.add("Intake deploy P", 0).withSize(1, 1).withPosition(0, 1).getEntry();
   private NetworkTableEntry sbintakeDeployI =
-      intakeTab.add("Intake deploy I", 0).withSize(1, 1).withPosition(0, 3).getEntry();
+      intakeTab.add("Intake deploy I", 0).withSize(1, 1).withPosition(0, 2).getEntry();
   private NetworkTableEntry sbintakeDeployD =
-      intakeTab.add("Intake deploy D", 0).withSize(1, 1).withPosition(0, 4).getEntry();
+      intakeTab.add("Intake deploy D", 0).withSize(1, 1).withPosition(0, 3).getEntry();
   private NetworkTableEntry sbintakeDeployMaxIAcum =
-      intakeTab.add("Intake deploy I Max Acum", 0).withSize(1, 1).withPosition(0, 5).getEntry();
+      intakeTab.add("Intake deploy I Max Acum", 0).withSize(1, 1).withPosition(0, 4).getEntry();
   private NetworkTableEntry sbintakeDeployCurrenttLimit =
-      intakeTab.add("Intake deploy current limit", 0).withSize(1, 1).withPosition(0, 4).getEntry();
+      intakeTab.add("Intake deploy current limit", 0).withSize(1, 1).withPosition(0, 5).getEntry();
   private NetworkTableEntry sbintakeDeployPosition =
-      intakeTab.add("Intake deploy position", 0).withSize(1, 1).withPosition(0, 5).getEntry();
+      intakeTab.add("Intake deploy position", 0).withSize(1, 1).withPosition(1, 1).getEntry();
   private NetworkTableEntry sbintakeDeployed =
-      intakeTab.add("Intake Deployed", false).withSize(1, 1).withPosition(0, 6).getEntry();
+      intakeTab.add("Intake Deployed", false).withSize(1, 1).withPosition(1, 2).getEntry();
 
   private NetworkTableEntry DIntakeSpeed =
       operatorTab
           .add("Intake Speed", 0)
           .withWidget(BuiltInWidgets.kNumberBar)
-          .withPosition(3, 0)
+          .withPosition(1, 3)
           .withSize(2, 1)
           .getEntry();
 
@@ -74,15 +74,8 @@ public class IntakeSubsystem extends SubsystemBase {
     deployPID.setIMaxAccum(sbintakeDeployMaxIAcum.getDouble(0), 0);
   }
 
-  public void deployIntake(boolean deploy) {
-    if (deploy) {
-      deployPID.setReference(10, CANSparkMax.ControlType.kPosition);
-      intakeDeployed = true;
-    } else {
-      deployPID.setReference(0, CANSparkMax.ControlType.kPosition);
-      intakeDeployed = false;
-    }
-  }
+
+
 
   public boolean getIntakeDeployed() {
     return intakeDeployed;
@@ -110,9 +103,9 @@ public class IntakeSubsystem extends SubsystemBase {
   public void deployIntake() {
     intakeDeployed = !intakeDeployed;
     if (intakeDeployed) {
-      deployPID.setReference(deployEncoder.getPosition() + 10, CANSparkMax.ControlType.kPosition);
+      deployPID.setReference(10, CANSparkMax.ControlType.kPosition);
     } else {
-      deployPID.setReference(deployEncoder.getPosition() - 10, CANSparkMax.ControlType.kPosition);
+      deployPID.setReference(0, CANSparkMax.ControlType.kPosition);
     }
   }
 
