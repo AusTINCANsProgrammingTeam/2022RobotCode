@@ -45,9 +45,8 @@ public class CDSSubsystem extends SubsystemBase {
   private int simCount = 0;
 
   private int msCurrent = 0;
-  private int ejectRuntime = 650; // amount of time auto eject will run intake backwards for in ms
+  private int ejectRuntime = 2000; // amount of time auto eject will run intake backwards for in ms
   private int advanceTimeout = 2000; // how long CDS should run before it times out
-  private int shooterEjectRuntime = 2500; // how long shooter eject will run before it stops
 
   private int ballCount = 0;
   private double colorThreshold = 0.3; // TODO: change during testing
@@ -280,6 +279,32 @@ public class CDSSubsystem extends SubsystemBase {
     currentColorCycle++;
     return lastBallColor;
 }
+
+public String[] senseAllColors() {
+  if (currentColorCycle % cycleWait == 0) {
+    Color[] colors = colorSensors.getColors();
+    currentColorCycle = 0;
+  } 
+
+  String[] sensedColors = new String[3];
+
+  for (int i = 0; i<3; i++) {
+    double magnitude = colors[i].red + colors[2].green + colors[2].blue;
+    double redRatio = colors[i].red / magnitude;
+    double blueRatio = colors[i].blue / magnitude;
+
+    if (redRatio > colorThreshold) {
+      sensedColors[i] = "Red";
+    } else if (blueRatio > colorThreshold){
+      sensedColors[i] = "Blue";
+    } else {
+      sensedColors[i] = "None";
+    }
+  }
+
+  return sensedColors;
+}
+
   public boolean sensorsOnline() {
     boolean isOnline = true;
     sensorsDown = 0;
@@ -316,18 +341,17 @@ public class CDSSubsystem extends SubsystemBase {
   public void changeState() {
     getSensorStatus();
     ballCount = getBallCount();
-    String sensedBallColor = senseColor();
+    String[] sensedBallColors = senseAllColors();
     int currentOpenSensor = getNextOpenSensor();
 
-    boolean ballPresent =
-        activationArray[2]; // whether or not there's a ball at the centering wheels
+    // wrapper variables for clarity :)
+    boolean topColorMatching = sensedBallColors[0] == allianceColor;
+    boolean middleColorMatching = sensedBallColors[1] == allianceColor;
+    boolean bottomColorMatching = sensedBallColors[2] == allianceColor;
 
-    String topBallColor;
-    if (colors[0].red > colors[0].blue) {
-      topBallColor = "Red";
-    } else {
-      topBallColor = "Blue";
-    }
+    boolean topBallPresent = activationArray[2];
+    boolean middleBallPresent = activationArray[1];
+    boolean bottomBallPresent = activationArray[0];
 
     if (managementEnabled()){
       switch (state) {
@@ -335,6 +359,33 @@ public class CDSSubsystem extends SubsystemBase {
           nextOpenSensor = -1;
           msCurrent = 0;
 
+          // shooter eject
+          if (!topColorMatching && topBallPresent) {
+            state = ManagementState.SHOOTER_EJECT;
+          } else if (!bottomColorMatching && bottomBallPresent && ballCount == 1) {
+            state = ManagementState.SHOOTER_EJECT;
+          } else if (!middleColorMatching && middleBallPresent && ballCount == 1) {
+            state = ManagementState.SHOOTER_EJECT;
+          } 
+          
+          // intake eject
+          else if (!middleColorMatching && middleBallPresent && topBallPresent) {
+            state = ManagementState.EJECT;
+          } else if (!bottomColorMatching && ballCount > 1)  {
+            state = ManagementState.EJECT;
+          } else if (!middleColorMatching && middleBallPresent && !topColorMatching && topBallPresent) {
+            state = ManagementState.EJECT;
+          } else if (ballCount > 2 && bottomBallPresent) {
+            state = ManagementState.EJECT;
+          }
+
+          // advance 
+          if (bottomBallPresent && currentOpenSensor != -1 && bottomColorMatching) {
+            state = ManagementState.ADVANCE;
+            nextOpenSensor = currentOpenSensor;
+          } 
+
+          /*
           if (ballCount == 1 && sensedBallColor != allianceColor && ballPresent && sensedBallColor != "None") {
             state = ManagementState.SHOOTER_EJECT;
           } else if ((ballCount > 2 || sensedBallColor != allianceColor) && ballPresent && sensedBallColor != "None") {
@@ -342,16 +393,19 @@ public class CDSSubsystem extends SubsystemBase {
           } else if (ballCount < 3 && currentOpenSensor != -1 && ballPresent && sensedBallColor != "None") {
             state = ManagementState.ADVANCE;
             nextOpenSensor = currentOpenSensor;
-          }
+          }*/
 
           break;
         case ADVANCE:
+        /*
           if (ballCount == 1 && sensedBallColor != allianceColor && ballPresent && sensedBallColor != "None") {
             state = ManagementState.SHOOTER_EJECT;
           } else if (sensedBallColor != allianceColor && ballPresent && sensedBallColor != "None") {
             state = ManagementState.EJECT;
             msCurrent = 0;
-          } else if (activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) {
+          }*/ 
+
+          if (activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) {
             state = ManagementState.IDLE;
           } else {
             msCurrent += 20;
@@ -359,19 +413,31 @@ public class CDSSubsystem extends SubsystemBase {
 
           break;
         case SHOOTER_EJECT:
+        /*
           if (msCurrent >= shooterEjectRuntime
               || (activationArray[0] && topBallColor == allianceColor)) {
             state = ManagementState.IDLE;
           } else {
             msCurrent += 20;
+          }*/
+          
+          if (activationArray[0] && topColorMatching) {
+            state = ManagementState.IDLE;
           }
 
           break;
 
         case EJECT:
-          // finish shooter eject if runtime is greater than the timeout or if the next ball in line
-          // has the right color
+          /*
           if (msCurrent >= ejectRuntime) {
+            state = ManagementState.IDLE;
+          } else {
+            msCurrent += 20;
+          }*/
+
+          if (bottomBallPresent && bottomColorMatching) {
+            state = ManagementState.ADVANCE;
+          } else if (msCurrent >= ejectRuntime) {
             state = ManagementState.IDLE;
           } else {
             msCurrent += 20;

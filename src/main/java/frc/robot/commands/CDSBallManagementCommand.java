@@ -85,6 +85,8 @@ public class CDSBallManagementCommand extends CommandBase {
           break;
 
         case ADVANCE:
+          intakeSubsystem.stopIntake(); // done in cases where transition from front eject to CDS is instant
+
           CDSSubsystem.CDSWheelToggle(false);
           CDSSubsystem.CDSBeltToggle(false);
           shooterSubsystem.runCargo(Constants.reverseStopperWheelSpeed);
