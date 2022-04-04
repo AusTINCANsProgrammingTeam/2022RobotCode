@@ -5,10 +5,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.SparkMaxRelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -25,6 +24,22 @@ public class IntakeSubsystem extends SubsystemBase {
   // here. Call these from Commands.
   private boolean intakeDeployed;
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
+  private ShuffleboardTab intakeTab = Shuffleboard.getTab("Intake Tab");
+  private NetworkTableEntry sbintakeDeployP =
+      intakeTab.add("Intake deploy P", 0).withSize(1, 1).withPosition(0, 2).getEntry();
+  private NetworkTableEntry sbintakeDeployI =
+      intakeTab.add("Intake deploy I", 0).withSize(1, 1).withPosition(0, 3).getEntry();
+  private NetworkTableEntry sbintakeDeployD =
+      intakeTab.add("Intake deploy D", 0).withSize(1, 1).withPosition(0, 4).getEntry();
+  private NetworkTableEntry sbintakeDeployMaxIAcum =
+      intakeTab.add("Intake deploy I Max Acum", 0).withSize(1, 1).withPosition(0, 5).getEntry();
+  private NetworkTableEntry sbintakeDeployCurrenttLimit =
+      intakeTab.add("Intake deploy current limit", 0).withSize(1, 1).withPosition(0, 4).getEntry();
+  private NetworkTableEntry sbintakeDeployPosition =
+      intakeTab.add("Intake deploy position", 0).withSize(1, 1).withPosition(0, 5).getEntry();
+  private NetworkTableEntry sbintakeDeployed =
+      intakeTab.add("Intake Deployed", false).withSize(1, 1).withPosition(0, 6).getEntry();
+
   private NetworkTableEntry DIntakeSpeed =
       operatorTab
           .add("Intake Speed", 0)
@@ -40,15 +55,23 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public IntakeSubsystem() {
     intakeDeployed = false;
-    intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID, Constants.intakeDeployPID);
-    deployController =
-        new MotorController("Intake Deploy", Constants.intakeDeployMotorID);
+    intakeMotorControllerOne =
+        new MotorController(
+            "Intake Motor One", Constants.intakeMotorOneID, Constants.intakeDeployPID);
+    deployController = new MotorController("Intake Deploy", Constants.intakeDeployMotorID);
     deployPID = deployController.getPIDCtrl();
     deployEncoder = deployController.getEncoder();
     deployController.setIdleMode(IdleMode.kBrake);
     deployEncoder.setPosition(0);
 
     intakeMotorControllerOne.setInverted(true);
+  }
+
+  public void resetpid() {
+    deployPID.setP(sbintakeDeployP.getDouble(0));
+    deployPID.setI(sbintakeDeployI.getDouble(0));
+    deployPID.setD(sbintakeDeployD.getDouble(0));
+    deployPID.setIMaxAccum(sbintakeDeployMaxIAcum.getDouble(0), 0);
   }
 
   public void deployIntake(boolean deploy) {
@@ -61,7 +84,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
   }
 
-  public boolean getIntakeDeployed(){
+  public boolean getIntakeDeployed() {
     return intakeDeployed;
   }
 
@@ -84,6 +107,15 @@ public class IntakeSubsystem extends SubsystemBase {
     }
   }
 
+  public void deployIntake() {
+    intakeDeployed = !intakeDeployed;
+    if (intakeDeployed) {
+      deployPID.setReference(deployEncoder.getPosition() + 10, CANSparkMax.ControlType.kPosition);
+    } else {
+      deployPID.setReference(deployEncoder.getPosition() - 10, CANSparkMax.ControlType.kPosition);
+    }
+  }
+
   public void stopIntake() {
     intakeMotorControllerOne.set(0.0);
     DIntakeSpeed.setDouble(0);
@@ -93,6 +125,15 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void periodic() {
+    if ((sbintakeDeployP.getDouble(0) != deployPID.getP())
+        | (sbintakeDeployI.getDouble(0) != deployPID.getI())
+        | (sbintakeDeployD.getDouble(0) != deployPID.getD())
+        | (sbintakeDeployMaxIAcum.getDouble(0) != deployPID.getIMaxAccum(0))) {
+      resetpid();
+    }
+    sbintakeDeployed.setBoolean(intakeDeployed);
+    sbintakeDeployPosition.setDouble(deployEncoder.getPosition());
+
     deployController.updateSmartDashboard();
     SmartDashboard.putBoolean("Intake Out?", intakeDeployed);
     SmartDashboard.putNumber("Deploy Encoder", deployEncoder.getPosition());
