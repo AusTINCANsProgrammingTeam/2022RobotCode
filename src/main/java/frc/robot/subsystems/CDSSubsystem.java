@@ -404,17 +404,17 @@ public class CDSSubsystem extends SubsystemBase {
             state = ManagementState.SHOOTER_EJECT;
           } else if (!middleColorMatching && middleBallPresent && ballCount == 1) {
             state = ManagementState.SHOOTER_EJECT;
+          } else if (!middleColorMatching
+              && middleBallPresent
+              && !topColorMatching
+              && topBallPresent) {
+            state = ManagementState.SHOOTER_EJECT;
           }
 
           // intake eject
           else if (!middleColorMatching && middleBallPresent && topBallPresent) {
             state = ManagementState.EJECT;
           } else if (!bottomColorMatching && ballCount > 1) {
-            state = ManagementState.EJECT;
-          } else if (!middleColorMatching
-              && middleBallPresent
-              && !topColorMatching
-              && topBallPresent) {
             state = ManagementState.EJECT;
           } else if (ballCount > 2 && bottomBallPresent) {
             state = ManagementState.EJECT;
