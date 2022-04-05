@@ -5,39 +5,30 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.ClimbSubsystem;
-import frc.robot.subsystems.DriveBaseSubsystem;
 
-public class ClimbEnable extends CommandBase {
-  private final ClimbSubsystem m_subsystem;
-  private final DriveBaseSubsystem m_drivesubsystem;
+public class ClimbSequence1 extends CommandBase {
+  private final ClimbSubsystem climbSubsystem;
 
-  /** Creates a new ClimbEnable. */
-  public ClimbEnable(ClimbSubsystem s, DriveBaseSubsystem d) {
+  /** Creates a new ClimbKeepDown. */
+  public ClimbSequence1(ClimbSubsystem s) {
     addRequirements(s);
-    addRequirements(d);
-    m_subsystem = s;
-    m_drivesubsystem = d;
+
+    this.climbSubsystem = s;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.climbEnable();
-    m_subsystem.resetClimbHeights();
-
-    if (m_subsystem.getclimbingenable()) {
-      m_drivesubsystem.setDriveBaseSpeed(Constants.driveSpeedLow);
-    } else {
-      m_drivesubsystem.setDriveBaseSpeed(Constants.driveSpeedHigh);
-    }
+    climbSubsystem.deployPoles();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    climbSubsystem.deployArms();
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -46,6 +37,6 @@ public class ClimbEnable extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return climbSubsystem.atFirstSetpoint();
   }
 }

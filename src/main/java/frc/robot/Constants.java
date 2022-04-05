@@ -293,37 +293,43 @@ public final class Constants {
           ? 2.5778E-07
           : 1.9829E-07; // voltage applied to the motor after the result of the specified control
   // mode
-  public static final int McMotorOne = 5;
-  public static final int McMotorTwo = 12;
-  public static final int McHeightMax = 0;
-  public static final int McHeightFeather = -20;
-  public static final int McHeightMin = -128;
-  public static final double[] McRightPID = {0.25, 0.005, 1.0};
-  public static final double[] McLeftPID = {0.25, 0.005, 1.0};
-  // Ha = High Arms                          Mc = Mid Climb;
-  public static final double[] HaLeftPID = {0.25, 0.005, 1.0};
-  public static final double[] HaRightPID = {0.25, 0.005, 1.0};
-  public static final double HaHeightMax = 6;
-  public static final int HaHeightMin = -70;
-  public static final int HaMotorTwo = 16;
-  public static final int HaMotorOne = 15;
 
-  public static final int ClimbHaLowCurrent = 15;
-  public static final int ClimbMcLowCurrent = 10;
-  public static final int ClimbHaHighCurrent = 50;
-  public static final int ClimbMcHighCurrent = 60;
+  // climb motor ids
+  public static final int armMotorOne = 5;
+  public static final int armMotorTwo = 12;
+  public static final int poleMotorOne = 15;
+  public static final int poleMotorTwo = 16;
 
-  public static final double DriveSpeedHigh = 1;
-  public static final double DriveSpeedLow = 1;
+  public static final int armHeightMax = 0;
+  public static final int armHeightMin = -128;
+  public static final int armHeightFeather = -20;
+  public static final int armFeatherRPM = 500;
+  public static final int poleHeightMax = 6;
+  public static final int poleHeightMin = -70;
+  public static final int poleHeightDeploy = -37;
 
-  public static final double ControllerDeadZone = 0.1;
+  public static final double[] armOnePID = {0.25, 0.005, 1.0};
+  public static final double[] armTwoPID = {0.25, 0.005, 1.0};
+  public static final double[] poleOnePID = {0.25, 0.005, 1.0};
+  public static final double[] poleTwoPID = {0.25, 0.005, 1.0};
 
-  public static final double McUpSpeed = -1;
-  public static final double McDownSpeed = -0.65;
+  public static final int climbPoleLowCurrent = 15;
+  public static final int climbArmLowCurrent = 10;
+  public static final int climbPoleHighCurrent = 50;
+  public static final int climbArmHighCurrent = 60;
 
-  public static final double HaInSpeed = 0.5;
-  public static final double HaOutSpeed = 0.6;
+  public static final double driveSpeedHigh = 1;
+  public static final double driveSpeedLow = 1;
 
-  public static final double McsetIMaxAccum = 0.45;
-  public static final double HasetIMaxAccum = 0.25;
+  public static final double controllerDeadZone = 0.1;
+
+  public static final double armUpSpeed = -1;
+  public static final double armDownSpeed = -0.65;
+  public static final double poleInSpeed = 0.5;
+  public static final double poleOutSpeed = 0.6;
+
+  public static final double armSetIMaxAccum = 0.45;
+  public static final double poleSetIMaxAccum = 0.25;
+
+  public static final int climbArmDeadband = 1;
 }
