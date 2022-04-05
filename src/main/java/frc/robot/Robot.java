@@ -63,6 +63,8 @@ public class Robot extends TimedRobot {
     chooser.addOption("Push Taxi", Auton.PUSHTAXI);
     chooser.addOption("One Ball", Auton.ONEBALL);
     chooser.addOption("Two Ball", Auton.TWOBALL);
+    chooser.addOption("Two Ball Steal 1", Auton.TWOBALLSTEAL1);
+    chooser.addOption("Two Ball Steal 2", Auton.TWOBALLSTEAL2);
     chooser.addOption("Three Ball", Auton.THREEBALL);
     chooser.addOption("Four Ball", Auton.FOURBALL);
     // chooser.addOption("Five Ball", Auton.FIVEBALL);
