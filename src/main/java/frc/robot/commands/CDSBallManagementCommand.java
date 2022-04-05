@@ -61,7 +61,6 @@ public class CDSBallManagementCommand extends CommandBase {
 
       switch (state) {
         case IDLE:
-
           CDSSubsystem.stopCDS();
           intakeSubsystem.stopIntake();
           shooterSubsystem.runCargo(0.0);
@@ -87,8 +86,8 @@ public class CDSBallManagementCommand extends CommandBase {
           break;
 
         case ADVANCE:
-          intakeSubsystem.stopIntake(); 
-            // done in cases where transition from front eject to CDS is instant
+          intakeSubsystem.stopIntake();
+          // done in cases where transition from front eject to CDS is instant
 
           CDSSubsystem.CDSWheelToggle(false);
           CDSSubsystem.CDSBeltToggle(false);

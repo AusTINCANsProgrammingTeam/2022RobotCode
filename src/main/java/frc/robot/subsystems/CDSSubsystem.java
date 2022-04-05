@@ -21,8 +21,8 @@ import frc.robot.Robot;
 import frc.robot.common.hardware.ColorSensorMuxed;
 import frc.robot.common.hardware.ColorSensorMuxed.MeasurementRate;
 import frc.robot.common.hardware.MotorController;
-import java.util.Random;
 import java.util.Arrays;
+import java.util.Random;
 
 public class CDSSubsystem extends SubsystemBase {
   public enum ManagementState {
@@ -385,7 +385,7 @@ public class CDSSubsystem extends SubsystemBase {
     String[] sensedBallColors = senseAllColors();
     int currentOpenSensor = getNextOpenSensor();
 
-    String[] ballLayoutArray = new String[]{"0", "0", "0"};
+    String[] ballLayoutArray = new String[] {"0", "0", "0"};
     for (int i = 0; i < 3; i++) {
       if (activationArray[i] && sensedBallColors[i] == allianceColor) {
         ballLayoutArray[i] = "2";
@@ -394,7 +394,8 @@ public class CDSSubsystem extends SubsystemBase {
       }
     }
 
-    ballLayout = String.format("%s%s%s", ballLayoutArray[0], ballLayoutArray[1], ballLayoutArray[2]);
+    ballLayout =
+        String.format("%s%s%s", ballLayoutArray[0], ballLayoutArray[1], ballLayoutArray[2]);
 
     // offset for entering idle so that we don't enter it while balls are in transit
     if (managementEnabled()) {
@@ -403,7 +404,8 @@ public class CDSSubsystem extends SubsystemBase {
         msCurrent = idleEnterOffset + 1;
       }
 
-      if (Arrays.asList(Constants.idleStates).contains(ballLayout) && msCurrent >= idleEnterOffset) {
+      if (Arrays.asList(Constants.idleStates).contains(ballLayout)
+          && msCurrent >= idleEnterOffset) {
         state = ManagementState.IDLE;
         msCurrent = 0;
       } else {
@@ -419,12 +421,12 @@ public class CDSSubsystem extends SubsystemBase {
       }
 
       CDSState.setString(state.toString());
-    }  
-  } 
+    }
+  }
 
   public void newColorSim() {
     if (Robot.isSimulation()) {
-      if (simCount == 250) {        
+      if (simCount == 250) {
         SmartDashboard.putString("CDS Sim Ball Layout", ballLayout);
         SmartDashboard.putString("CDS Sim State", state.toString());
 

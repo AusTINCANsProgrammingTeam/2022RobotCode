@@ -202,8 +202,9 @@ public final class Constants {
   public static final String[] idleStates = {"000", "002", "022"};
   public static final String[] advanceStates = {"020", "200", "220", "202"};
   public static final String[] intakeEjectStates = {"012", "102", "120"};
-  public static final String[] shooterEjectStates = {"001", "010", "011", "021", "100", "101", "110", "111", "201", "210", "211", "212", "221", "222"};
-
+  public static final String[] shooterEjectStates = {
+    "001", "010", "011", "021", "100", "101", "110", "111", "201", "210", "211", "212", "221", "222"
+  };
 
   public static final boolean testMode = false; // if false CDS will eject balls of wrong color
 
