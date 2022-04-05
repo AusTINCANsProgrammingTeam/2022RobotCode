@@ -179,8 +179,8 @@ public final class Constants {
   public static final int encoderCountsPerRev = 8192;
 
   // Intake Constants
-  public static final int intakeMotorOneID = 24;
-  public static final int intakeDeployMotorID = 9;
+  public static final int intakeMotorOneID = 1;
+  public static final int intakeDeployMotorID = 8;
   public static final double[] intakeDeployPID = {0.001, 0, 0};
 
   public static final double intakeMotorSpeed = 1.0;

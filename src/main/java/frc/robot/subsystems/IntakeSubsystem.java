@@ -98,14 +98,21 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void deployIntake() {
-    intakeDeployed = !intakeDeployed;
+    deployPID.setReference(0, CANSparkMax.ControlType.kPosition);
+    intakeDeployed = true;
+    
+  }
+  public void retractIntake() {
+    deployPID.setReference(10, CANSparkMax.ControlType.kPosition);
+    intakeDeployed = false;
+  }
+  /*
+  intakeDeployed = !intakeDeployed;
     if (intakeDeployed) {
       deployPID.setReference(10, CANSparkMax.ControlType.kPosition);
     } else {
       deployPID.setReference(0, CANSparkMax.ControlType.kPosition);
-    }
-  }
-
+    }*/
   public void stopIntake() {
     intakeMotorControllerOne.set(0.0);
     DIntakeSpeed.setDouble(0);
