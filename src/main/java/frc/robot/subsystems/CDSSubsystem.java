@@ -497,10 +497,21 @@ public class CDSSubsystem extends SubsystemBase {
 
   public void newColorSim() {
     if (Robot.isSimulation()) {
-      // print out state and current random values
+      String[] stateNumber = new String[]{"0", "0", "0"};
+
+      for (int i = 0; i < 3; i++) {
+        if (simActivationArray[i] && simColorArray[i] == allianceColor) {
+          stateNumber[i] = "2";
+        } else if (simActivationArray[i] && simColorArray[i] != allianceColor) {
+          stateNumber[i] = "1";
+        }
+      }
+
+      System.out.printf("%s%s%s - %s", stateNumber[0], stateNumber[1], stateNumber[2], state.toString());
     }
   }
 
+  /*
   public void simulateColorSense() {
     if (Robot.isSimulation()) {
       if (simCount == 500) {
@@ -519,7 +530,7 @@ public class CDSSubsystem extends SubsystemBase {
       }
       simCount++;
     }
-  }
+  }*/
 
   public boolean managementEnabled() {
     return managementOnOff.getBoolean(true);
