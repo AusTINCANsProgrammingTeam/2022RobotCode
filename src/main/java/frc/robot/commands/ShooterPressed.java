@@ -50,7 +50,7 @@ public class ShooterPressed extends CommandBase {
       // Otherwise, alignment is checked.
       if (i > 0 || !LLEnabled || m_LimelightSubsystem.calculatePID() == 0.0) {
         if (i == 0) {
-          m_CDSSubsystem.CDSBeltToggle(false, 0.95);
+          m_CDSSubsystem.CDSBeltToggle(false, Constants.CDSAutoBeltSpeed);
           m_ShooterSubsystem.runCargo(Constants.Shooter.cargoForward);
           m_ShooterSubsystem.setCargoBoolean(true);
         }
