@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -24,6 +25,8 @@ public class ClimbSubsystem extends SubsystemBase {
   private MotorController armTwo;
   private MotorController poleOne;
   private MotorController poleTwo;
+  private Servo servoOne;
+  private Servo servoTwo;
 
   private boolean climbEnable;
 
@@ -179,6 +182,10 @@ public class ClimbSubsystem extends SubsystemBase {
     armTwo.getPIDCtrl().setD(Constants.armPosPID[2], Constants.armPosPIDSlot);
 
     resetClimbHeights();
+
+    // servos
+    // servoOne = new Servo(Constants.climbServoIDOne);
+    // servoTwo = new Servo(Constants.climbServoIDTwo);
   }
 
   public void resetClimbHeights() {
@@ -335,6 +342,11 @@ public class ClimbSubsystem extends SubsystemBase {
     poleTwo
         .getPIDCtrl()
         .setReference(Constants.poleHeightDeploy, CANSparkMax.ControlType.kPosition);
+  }
+
+  public void deployHooks() {
+    // servoOne.set(Constants.climbServoSetPoint);
+    // servoTwo.set(Constants.climbServoSetPoint);
   }
 
   public boolean atFirstSetpoint() {

@@ -22,6 +22,7 @@ public class ClimbSequence1 extends CommandBase {
   @Override
   public void initialize() {
     climbSubsystem.deployPoles();
+    climbSubsystem.deployHooks();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

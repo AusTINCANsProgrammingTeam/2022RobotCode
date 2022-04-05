@@ -320,6 +320,12 @@ public final class Constants {
   public static final int climbPoleHighCurrent = 50;
   public static final int climbArmHighCurrent = 60;
 
+  // servo for hooks
+  // TODO: find the real ids as well as make sure the set point is correct
+  public static final int climbServoIDOne = 0;
+  public static final int climbServoIDTwo = 0;
+  public static final double climbServoSetPoint = 0.5;
+
   public static final double driveSpeedHigh = 1;
   public static final double driveSpeedLow = 1;
 
