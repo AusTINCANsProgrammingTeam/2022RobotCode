@@ -168,13 +168,16 @@ public final class Constants {
   }
 
   // Volts, constants for ramseteCommand
-  public static final double ksVolts = 0.2358; // Ks
-  public static final double kvVoltSecondsPerMeter = 0.81588; // Kv, Velocity
-  public static final double kaVoltSecondsSquaredPerMeter = 0.129; // Ka, Accelleration
+  public static final double ksVolts = 0.26514; // Ks
+  public static final double kvVoltSecondsPerMeter = 0.81633; // Kv, Velocity
+  public static final double kaVoltSecondsSquaredPerMeter = 0.15052; // Ka, Accelleration
 
   public static final double trackWidth = 0.559; // track width of kitbot
   public static final DifferentialDriveKinematics driveKinematics =
       new DifferentialDriveKinematics(trackWidth);
+
+  public static final double arbFeedForward =
+      2.5778E-07; // voltage applied to the motor after the result of the specified control
 
   // Pathweaver constants, baselind values, units: meters per second
   public static final double ramseteB = 2; // Convergence, larger values are more aggressive
@@ -296,14 +299,7 @@ public final class Constants {
   }
 
   // Climb Constants
-  public static final boolean usingTraversal = true; // traversal climb on robot
-  // todo: change if mid climb comes back on
 
-  // use correct arbFeedForward according to which climb being used
-  public static final double arbFeedForward =
-      (usingTraversal)
-          ? 2.5778E-07
-          : 1.9829E-07; // voltage applied to the motor after the result of the specified control
   // mode
   public static final int McMotorOne = 5;
   public static final int McMotorTwo = 12;
