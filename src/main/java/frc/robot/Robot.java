@@ -57,18 +57,19 @@ public class Robot extends TimedRobot {
 
     robotContainer = new RobotContainer();
 
-    chooser.setDefaultOption("Two Ball", Auton.TWOBALL); // default is four ball mode for now
+    chooser.setDefaultOption(
+        Auton.TWOBALL.getName(), Auton.TWOBALL); // default is four ball mode for now
 
-    chooser.addOption("Intake Taxi", Auton.INTAKETAXI);
-    chooser.addOption("Push Taxi", Auton.PUSHTAXI);
-    chooser.addOption("One Ball", Auton.ONEBALL);
-    chooser.addOption("Two Ball", Auton.TWOBALL);
-    chooser.addOption("Two Ball Steal 1", Auton.TWOBALLSTEAL1);
-    chooser.addOption("Two Ball Steal 2", Auton.TWOBALLSTEAL2);
-    chooser.addOption("Three Ball", Auton.THREEBALL);
-    chooser.addOption("Four Ball", Auton.FOURBALL);
-    // chooser.addOption("Five Ball", Auton.FIVEBALL);
-    // chooser.addOption("Test Mode", Auton.TEST);      // don't need to show during
+    chooser.addOption(Auton.INTAKETAXI.getName(), Auton.INTAKETAXI);
+    chooser.addOption(Auton.PUSHTAXI.getName(), Auton.PUSHTAXI);
+    chooser.addOption(Auton.ONEBALL.getName(), Auton.ONEBALL);
+    chooser.addOption(Auton.TWOBALL.getName(), Auton.TWOBALL);
+    chooser.addOption(Auton.TWOBALLSTEAL1.getName(), Auton.TWOBALLSTEAL1);
+    chooser.addOption(Auton.TWOBALLSTEAL2.getName(), Auton.TWOBALLSTEAL2);
+    chooser.addOption(Auton.THREEBALL.getName(), Auton.THREEBALL);
+    chooser.addOption(Auton.FOURBALL.getName(), Auton.FOURBALL);
+    // chooser.addOption(Auton.FIVEBALL.getName(), Auton.FIVEBALL);
+    // chooser.addOption(Auton.TEST.getName(), Auton.TEST);      // don't need to show during
     // competition
 
     configTab.add("Auton mode", chooser).withPosition(0, 1).withSize(2, 2);
