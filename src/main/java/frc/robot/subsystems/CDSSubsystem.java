@@ -22,6 +22,7 @@ import frc.robot.common.hardware.ColorSensorMuxed;
 import frc.robot.common.hardware.ColorSensorMuxed.MeasurementRate;
 import frc.robot.common.hardware.MotorController;
 import java.util.Random;
+import java.util.Arrays;
 
 public class CDSSubsystem extends SubsystemBase {
   public enum ManagementState {
@@ -39,7 +40,6 @@ public class CDSSubsystem extends SubsystemBase {
   private String allianceColor;
   private ColorSensorMuxed colorSensors;
   private ManagementState state;
-  private int nextOpenSensor = -1;
 
   private SimDeviceSim colorSenseSim;
   private SimDouble m_simR, m_simG, m_simB, m_simProx;
@@ -47,9 +47,14 @@ public class CDSSubsystem extends SubsystemBase {
   private int simCount = 0;
   private String[] simColorArray = new String[3];
 
+  private String ballLayout;
+
   private int msCurrent = 0;
+  private int idleEnterOffset = 2500;
+
+  /*
   private int ejectRuntime = 2000; // amount of time auto eject will run intake backwards for in ms
-  private int advanceTimeout = 2000; // how long CDS should run before it times out
+  private int advanceTimeout = 2000; // how long CDS should run before it times out*/
 
   private int ballCount = 0;
   private double colorThreshold = 0.3; // TODO: change during testing
@@ -380,182 +385,55 @@ public class CDSSubsystem extends SubsystemBase {
     String[] sensedBallColors = senseAllColors();
     int currentOpenSensor = getNextOpenSensor();
 
-    simColorArray = sensedBallColors;
-
-    // wrapper variables for clarity :)
-    boolean topColorMatching = sensedBallColors[0] == allianceColor;
-    boolean middleColorMatching = sensedBallColors[1] == allianceColor;
-    boolean bottomColorMatching = sensedBallColors[2] == allianceColor;
-
-    boolean topBallPresent = activationArray[2];
-    boolean middleBallPresent = activationArray[1];
-    boolean bottomBallPresent = activationArray[0];
-
-    if (managementEnabled()) {
-      switch (state) {
-        case IDLE:
-          nextOpenSensor = -1;
-          msCurrent = 0;
-
-          // shooter eject
-          if (!topColorMatching && topBallPresent) {
-            state = ManagementState.SHOOTER_EJECT;
-          } else if (!middleColorMatching && middleBallPresent && !topBallPresent) {
-            state = ManagementState.SHOOTER_EJECT;
-          } else if (!middleColorMatching
-              && middleBallPresent
-              && !topColorMatching
-              && topBallPresent) {
-            state = ManagementState.SHOOTER_EJECT;
-          } else if (middleColorMatching && !topColorMatching){
-            state = ManagementState.SHOOTER_EJECT;
-          } else if (!bottomColorMatching && bottomBallPresent && !middleBallPresent && !topBallPresent){
-            state = ManagementState.SHOOTER_EJECT;
-          } else if (!bottomColorMatching && bottomBallPresent && !middleBallPresent && !topColorMatching && topBallPresent){
-            state = ManagementState.SHOOTER_EJECT;
-          }
-
-          // intake eject
-          if (!middleColorMatching && middleBallPresent && topBallPresent && topColorMatching) {
-            state = ManagementState.EJECT;
-          } else if (!bottomColorMatching && ballCount > 1) {
-            state = ManagementState.EJECT;
-          } else if (ballCount > 2 && bottomBallPresent) {
-            state = ManagementState.EJECT;
-          } else if (!bottomColorMatching && middleColorMatching && middleBallPresent){
-            state = ManagementState.EJECT;
-          }
-
-          // advance
-          if (bottomBallPresent && currentOpenSensor != -1 && bottomColorMatching) {
-            state = ManagementState.ADVANCE;
-            nextOpenSensor = currentOpenSensor;
-          } else if (bottomColorMatching && ballCount == 0){
-            state = ManagementState.ADVANCE;
-          } else if (bottomColorMatching && middleColorMatching && !topBallPresent){
-            state = ManagementState.ADVANCE;
-          } else if (middleBallPresent && middleColorMatching && ballCount == 1){
-            state = ManagementState.ADVANCE;
-          }
-
-          /*
-          if (ballCount == 1 && sensedBallColor != allianceColor && ballPresent && sensedBallColor != "None") {
-            state = ManagementState.SHOOTER_EJECT;
-          } else if ((ballCount > 2 || sensedBallColor != allianceColor) && ballPresent && sensedBallColor != "None") {
-            state = ManagementState.EJECT;
-          } else if (ballCount < 3 && currentOpenSensor != -1 && ballPresent && sensedBallColor != "None") {
-            state = ManagementState.ADVANCE;
-            nextOpenSensor = currentOpenSensor;
-          }*/
-
-          break;
-        case ADVANCE:
-          /*
-          if (ballCount == 1 && sensedBallColor != allianceColor && ballPresent && sensedBallColor != "None") {
-            state = ManagementState.SHOOTER_EJECT;
-          } else if (sensedBallColor != allianceColor && ballPresent && sensedBallColor != "None") {
-            state = ManagementState.EJECT;
-            msCurrent = 0;
-          }*/
-
-          if ((activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) && Robot.isReal()) {
-            state = ManagementState.IDLE;
-          } else if (middleBallPresent && middleColorMatching && topBallPresent && topColorMatching && Robot.isReal()){
-            state = ManagementState.IDLE;
-          } else if (topBallPresent && topColorMatching && Robot.isReal()){
-            state = ManagementState.IDLE;
-          } else {
-            msCurrent += 20;
-          }
-
-          break;
-        case SHOOTER_EJECT:
-          /*
-          if (msCurrent >= shooterEjectRuntime
-              || (activationArray[0] && topBallColor == allianceColor)) {
-            state = ManagementState.IDLE;
-          } else {
-            msCurrent += 20;
-          }*/
-          
-          if (activationArray[0] && topColorMatching && Robot.isReal()) {
-            state = ManagementState.IDLE;
-          } else if (ballCount == 0 && Robot.isReal()){
-            state = ManagementState.IDLE;
-          }
-
-          break;
-
-        case EJECT:
-          /*
-          if (msCurrent >= ejectRuntime) {
-            state = ManagementState.IDLE;
-          } else {
-            msCurrent += 20;
-          }*/
-
-          if (bottomBallPresent && bottomColorMatching && Robot.isReal()) {
-            state = ManagementState.ADVANCE;
-          } else if (msCurrent >= ejectRuntime && Robot.isReal()) {
-            state = ManagementState.IDLE;
-          } else if (ballCount == 0 && Robot.isReal()){
-            state = ManagementState.IDLE;
-          } else {
-            msCurrent += 20;
-          }
-
-          break;
+    String[] ballLayoutArray = new String[]{"0", "0", "0"};
+    for (int i = 0; i < 3; i++) {
+      if (activationArray[i] && sensedBallColors[i] == allianceColor) {
+        ballLayoutArray[i] = "2";
+      } else if (activationArray[i] && sensedBallColors[i] != allianceColor) {
+        ballLayoutArray[i] = "1";
       }
     }
-    CDSState.setString(state.toString());
-  }
+
+    ballLayout = String.format("%s%s%s", ballLayoutArray[0], ballLayoutArray[1], ballLayoutArray[2]);
+
+    // offset for entering idle so that we don't enter it while balls are in transit
+    if (managementEnabled()) {
+      if (Robot.isSimulation()) {
+        // if robot is in simulation, don't worry about time offsets
+        msCurrent = idleEnterOffset + 1;
+      }
+
+      if (Arrays.asList(Constants.idleStates).contains(ballLayout) && msCurrent >= idleEnterOffset) {
+        state = ManagementState.IDLE;
+        msCurrent = 0;
+      } else {
+        msCurrent += 20;
+      }
+
+      if (Arrays.asList(Constants.advanceStates).contains(ballLayout)) {
+        state = ManagementState.ADVANCE;
+      } else if (Arrays.asList(Constants.intakeEjectStates).contains(ballLayout)) {
+        state = ManagementState.EJECT;
+      } else if (Arrays.asList(Constants.shooterEjectStates).contains(ballLayout)) {
+        state = ManagementState.SHOOTER_EJECT;
+      }
+
+      CDSState.setString(state.toString());
+    }  
+  } 
 
   public void newColorSim() {
     if (Robot.isSimulation()) {
-      if (simCount == 250) {
-        String[] stateNumber = new String[]{"0", "0", "0"};
-
-        for (int i = 0; i < 3; i++) {
-          if (activationArray[i] && simColorArray[i] == allianceColor) {
-            stateNumber[i] = "2";
-          } else if (activationArray[i] && simColorArray[i] != allianceColor) {
-            stateNumber[i] = "1";
-          }
-        }
-
-        String ballLayout = String.format("%s%s%s", stateNumber[0], stateNumber[1], stateNumber[2]);
-        
+      if (simCount == 250) {        
         SmartDashboard.putString("CDS Sim Ball Layout", ballLayout);
         SmartDashboard.putString("CDS Sim State", state.toString());
 
         simCount = 0;
-        // System.out.printf("%s%s%s - %s", stateNumber[0], stateNumber[1], stateNumber[2], state.toString());
       } else {
         simCount++;
       }
     }
   }
-
-  /*
-  public void simulateColorSense() {
-    if (Robot.isSimulation()) {
-      if (simCount == 500) {
-        m_simProx.set(Constants.frontSensorActivation + 1);
-        if (allianceColor == "Blue") {
-          m_simB.set(.9);
-        } else {
-          m_simR.set(.9);
-        }
-      } else if (simCount == 1000) {
-        m_simProx.set(50);
-        m_simB.set(0);
-        m_simR.set(0);
-
-        simCount = 0;
-      }
-      simCount++;
-    }
-  }*/
 
   public boolean managementEnabled() {
     return managementOnOff.getBoolean(true);

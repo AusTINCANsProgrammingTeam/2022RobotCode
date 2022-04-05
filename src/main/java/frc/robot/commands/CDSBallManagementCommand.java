@@ -23,8 +23,9 @@ public class CDSBallManagementCommand extends CommandBase {
 
   private int msBeltCurrent = 0;
   private int beltEjectRuntime = 100;
-
   private boolean firstRun = true;
+
+  private String lastState;
 
   private static ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private static NetworkTableEntry autoEjectRunning =
@@ -60,6 +61,7 @@ public class CDSBallManagementCommand extends CommandBase {
 
       switch (state) {
         case IDLE:
+
           CDSSubsystem.stopCDS();
           intakeSubsystem.stopIntake();
           shooterSubsystem.runCargo(0.0);
@@ -85,8 +87,8 @@ public class CDSBallManagementCommand extends CommandBase {
           break;
 
         case ADVANCE:
-          intakeSubsystem
-              .stopIntake(); // done in cases where transition from front eject to CDS is instant
+          intakeSubsystem.stopIntake(); 
+            // done in cases where transition from front eject to CDS is instant
 
           CDSSubsystem.CDSWheelToggle(false);
           CDSSubsystem.CDSBeltToggle(false);
