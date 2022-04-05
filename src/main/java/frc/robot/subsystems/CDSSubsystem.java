@@ -79,7 +79,7 @@ public class CDSSubsystem extends SubsystemBase {
   private NetworkTableEntry CDSState = CDSTab.add("CDS State", "IDLE").getEntry();
   private NetworkTableEntry managementOnOff =
       operatorTab
-          .add("Run Auto Intake and Eject", true)
+          .add("Run Auto Intake and Eject", false)
           .withWidget(BuiltInWidgets.kToggleButton)
           .withPosition(5, 1)
           .getEntry();
@@ -157,20 +157,20 @@ public class CDSSubsystem extends SubsystemBase {
     }
   }
 
-  public void CDSBeltToggle(boolean reverse) {
+  public void CDSBeltToggle(boolean reverse, double beltSpeed) {
     DCDSSpeed.setDouble(-1);
     if (reverse) {
-      CDSBeltController.set(-Constants.CDSBeltSpeed);
+      CDSBeltController.set(-beltSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Belt Direction 5", "Reverse");
-        SmartDashboard.putNumber("CDS Belt Speed 4", -Constants.CDSBeltSpeed);
+        SmartDashboard.putNumber("CDS Belt Speed 4", -beltSpeed);
       }
     } else {
       DCDSSpeed.setDouble(1);
-      CDSBeltController.set(Constants.CDSBeltSpeed);
+      CDSBeltController.set(beltSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Belt Direction 6", "Forward");
-        SmartDashboard.putNumber("CDS Belt Speed 5", Constants.CDSBeltSpeed);
+        SmartDashboard.putNumber("CDS Belt Speed 5", beltSpeed);
       }
     }
   }
@@ -304,7 +304,7 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public boolean managementEnabled() {
-    return managementOnOff.getBoolean(true);
+    return managementOnOff.getBoolean(false);
   }
 
   int count = 0;

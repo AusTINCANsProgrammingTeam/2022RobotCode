@@ -65,7 +65,7 @@ public class CDSBallManagementCommand extends CommandBase {
 
         case EJECT:
           if (msBeltCurrent <= beltEjectRuntime) {
-            CDSSubsystem.CDSBeltToggle(true);
+            CDSSubsystem.CDSBeltToggle(true, Constants.CDSBeltSpeed);
             msBeltCurrent += 20;
           } else {
             CDSSubsystem.stopCDSBelt();
@@ -79,7 +79,7 @@ public class CDSBallManagementCommand extends CommandBase {
 
         case ADVANCE:
           CDSSubsystem.CDSWheelToggle(false);
-          CDSSubsystem.CDSBeltToggle(false);
+          CDSSubsystem.CDSBeltToggle(false, Constants.CDSBeltSpeed);
           shooterSubsystem.runCargo(Constants.reverseStopperWheelSpeed);
           autoIntakeRunning.setBoolean(true);
 
