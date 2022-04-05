@@ -308,11 +308,13 @@ public final class Constants {
   public static final int poleHeightMin = -70;
   public static final int poleHeightDeploy = -37;
 
-  public static final double[] armOnePID = {0.25, 0.005, 1.0};
-  public static final double[] armTwoPID = {0.25, 0.005, 1.0};
-  public static final double[] poleOnePID = {0.25, 0.005, 1.0};
-  public static final double[] poleTwoPID = {0.25, 0.005, 1.0};
+  public static final double[] armPosPID = {0.25, 0.005, 1.0};
+  public static final double[] armVelocityPID = {0.25, 0.005, 1.0};
+  public static final double[] polePosPID = {0.25, 0.005, 1.0};
+  public static final int armPosPIDSlot = 1;
+  public static final int armVelPIDSlot = 2;
 
+  public static final double climbMaxOutput = 0.4;
   public static final int climbPoleLowCurrent = 15;
   public static final int climbArmLowCurrent = 10;
   public static final int climbPoleHighCurrent = 50;

@@ -24,7 +24,9 @@ public class ClimbSubsystem extends SubsystemBase {
   private MotorController armTwo;
   private MotorController poleOne;
   private MotorController poleTwo;
+
   private boolean climbEnable;
+
   private double armHeightOne;
   private double armHeightTwo;
   private double poleHeightOne;
@@ -128,29 +130,53 @@ public class ClimbSubsystem extends SubsystemBase {
     sbPoleSpeedTwo = climbTab.add("Pole2 Speed", 0).withSize(2, 1).withPosition(5, 1).getEntry();
 
     // Arm 1 MotorController
-    armOne = new MotorController("Arm1 Motor", Constants.armMotorOne, Constants.armTwoPID);
+    armOne = new MotorController("Arm1 Motor", Constants.armMotorOne, Constants.armPosPID);
     armOne.setSmartCurrentLimit(10);
     armOne.getEncoder().setPosition(0);
     armOne.setIdleMode(IdleMode.kBrake);
 
     // Arm 2 MotorController
-    armTwo = new MotorController("Arm2 Motor", Constants.armMotorTwo, Constants.armOnePID);
+    armTwo = new MotorController("Arm2 Motor", Constants.armMotorTwo, Constants.armPosPID);
     armTwo.setSmartCurrentLimit(10);
     armTwo.getEncoder().setPosition(0);
     armTwo.setIdleMode(IdleMode.kBrake);
     armTwo.setInverted(true);
     // Pole 1 MotorController
-    poleOne = new MotorController("Pole1 Motor", Constants.armMotorOne, Constants.poleOnePID);
+    poleOne = new MotorController("Pole1 Motor", Constants.armMotorOne, Constants.polePosPID);
     poleOne.setSmartCurrentLimit(10);
     poleOne.getEncoder().setPosition(0);
     poleOne.setIdleMode(IdleMode.kBrake);
 
     // Pole 2 MotorController
-    poleTwo = new MotorController("Pole2 Motor", Constants.poleMotorTwo, Constants.poleTwoPID);
+    poleTwo = new MotorController("Pole2 Motor", Constants.poleMotorTwo, Constants.polePosPID);
     poleTwo.setSmartCurrentLimit(10);
     poleTwo.getEncoder().setPosition(0);
     poleTwo.setIdleMode(IdleMode.kBrake);
     poleTwo.setInverted(true);
+
+    // set the max output on each pid controller
+    // range is plus minus the max output
+    armOne.getPIDCtrl().setOutputRange(-Constants.climbMaxOutput, Constants.climbMaxOutput);
+    armTwo.getPIDCtrl().setOutputRange(-Constants.climbMaxOutput, Constants.climbMaxOutput);
+    poleOne.getPIDCtrl().setOutputRange(-Constants.climbMaxOutput, Constants.climbMaxOutput);
+    poleTwo.getPIDCtrl().setOutputRange(-Constants.climbMaxOutput, Constants.climbMaxOutput);
+
+    // set pid values
+    armOne.getPIDCtrl().setP(Constants.armVelocityPID[0], Constants.armVelPIDSlot);
+    armOne.getPIDCtrl().setI(Constants.armVelocityPID[1], Constants.armVelPIDSlot);
+    armOne.getPIDCtrl().setD(Constants.armVelocityPID[2], Constants.armVelPIDSlot);
+
+    armTwo.getPIDCtrl().setP(Constants.armVelocityPID[0], Constants.armVelPIDSlot);
+    armTwo.getPIDCtrl().setI(Constants.armVelocityPID[1], Constants.armVelPIDSlot);
+    armTwo.getPIDCtrl().setD(Constants.armVelocityPID[2], Constants.armVelPIDSlot);
+
+    armOne.getPIDCtrl().setP(Constants.armPosPID[0], Constants.armPosPIDSlot);
+    armOne.getPIDCtrl().setI(Constants.armPosPID[1], Constants.armPosPIDSlot);
+    armOne.getPIDCtrl().setD(Constants.armPosPID[2], Constants.armPosPIDSlot);
+
+    armTwo.getPIDCtrl().setP(Constants.armPosPID[0], Constants.armPosPIDSlot);
+    armTwo.getPIDCtrl().setI(Constants.armPosPID[1], Constants.armPosPIDSlot);
+    armTwo.getPIDCtrl().setD(Constants.armPosPID[2], Constants.armPosPIDSlot);
 
     resetClimbHeights();
   }
@@ -280,12 +306,25 @@ public class ClimbSubsystem extends SubsystemBase {
 
   // functions for ClimbSequence1
   public void deployArms() {
-    if (armEncoderHeightOne < Constants.armHeightFeather && armEncoderHeightTwo < Constants.armHeightFeather) {
-      armOne.getPIDCtrl().setReference(Constants.armFeatherRPM, CANSparkMax.ControlType.kVelocity);
-      armTwo.getPIDCtrl().setReference(Constants.armFeatherRPM, CANSparkMax.ControlType.kVelocity);
+    if (armEncoderHeightOne < Constants.armHeightFeather
+        && armEncoderHeightTwo < Constants.armHeightFeather) {
+      armOne
+          .getPIDCtrl()
+          .setReference(
+              Constants.armFeatherRPM, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
+      armTwo
+          .getPIDCtrl()
+          .setReference(
+              Constants.armFeatherRPM, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
     } else {
-      armOne.getPIDCtrl().setReference(Constants.armHeightMin, CANSparkMax.ControlType.kPosition);
-      armTwo.getPIDCtrl().setReference(Constants.armHeightMin, CANSparkMax.ControlType.kPosition);
+      armOne
+          .getPIDCtrl()
+          .setReference(
+              Constants.armHeightMin, CANSparkMax.ControlType.kPosition, Constants.armPosPIDSlot);
+      armTwo
+          .getPIDCtrl()
+          .setReference(
+              Constants.armHeightMin, CANSparkMax.ControlType.kPosition, Constants.armPosPIDSlot);
     }
   }
 
@@ -331,5 +370,10 @@ public class ClimbSubsystem extends SubsystemBase {
     armEncoderHeightTwo = armTwo.getEncoder().getPosition();
     poleEncoderHeightOne = poleOne.getEncoder().getPosition();
     poleEncoderHeightTwo = poleTwo.getEncoder().getPosition();
+
+    armOne.updateSmartDashboard();
+    armTwo.updateSmartDashboard();
+    poleOne.updateSmartDashboard();
+    poleTwo.updateSmartDashboard();
   }
 }

@@ -229,7 +229,7 @@ public class RobotContainer {
       // enable climb and spool out arms
       buttons2[Constants.startButton].whenPressed(
           new SequentialCommandGroup(climbEnabling, climbSequence1));
-          
+
       // whenHeld button for ClimbSequence2
     }
 
