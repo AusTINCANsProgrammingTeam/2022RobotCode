@@ -21,6 +21,7 @@ public class ClimbSequence1 extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    climbSubsystem.setAutoBoolean(true);
     climbSubsystem.deployPoles();
     climbSubsystem.deployHooks();
   }
@@ -35,6 +36,7 @@ public class ClimbSequence1 extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    climbSubsystem.setAutoBoolean(false);
     climbSubsystem.resetClimbHeights();
   }
 

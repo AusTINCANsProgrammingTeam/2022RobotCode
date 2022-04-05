@@ -104,6 +104,12 @@ public class ClimbSubsystem extends SubsystemBase {
           .withPosition(5, 0)
           .withWidget(BuiltInWidgets.kBooleanBox)
           .getEntry();
+  private NetworkTableEntry BAutomaticControl =
+      operatorTab
+          .add("Auto Climb Active", false)
+          .withPosition(5, 2)
+          .withWidget(BuiltInWidgets.kBooleanBox)
+          .getEntry();
 
   public ClimbSubsystem(Joystick joystick) {
     climbJoystick = joystick;
@@ -347,6 +353,10 @@ public class ClimbSubsystem extends SubsystemBase {
   public void deployHooks() {
     // servoOne.set(Constants.climbServoSetPoint);
     // servoTwo.set(Constants.climbServoSetPoint);
+  }
+
+  public void setAutoBoolean(boolean a) {
+    BAutomaticControl.setBoolean(a);
   }
 
   public boolean atFirstSetpoint() {
