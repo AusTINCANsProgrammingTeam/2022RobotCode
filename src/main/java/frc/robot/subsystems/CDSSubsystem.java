@@ -399,7 +399,7 @@ public class CDSSubsystem extends SubsystemBase {
     // offset for entering idle so that we don't enter it while balls are in transit
     if (managementEnabled()) {
       if (Robot.isSimulation()) {
-        // if robot is in simulation, don't worry about time offsets
+        // if robot is in simulation, ignore about time offsets
         msCurrent = idleEnterOffset + 1;
       }
 
