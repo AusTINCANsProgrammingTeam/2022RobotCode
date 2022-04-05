@@ -327,7 +327,7 @@ public final class Constants {
   public static final double climbServoSetPoint = 0.5;
 
   public static final double driveSpeedHigh = 1;
-  public static final double driveSpeedLow = 1;
+  public static final double driveSpeedLow = 0.6;
 
   public static final double controllerDeadZone = 0.1;
 

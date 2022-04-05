@@ -29,11 +29,14 @@ public class ClimbSequence1 extends CommandBase {
   @Override
   public void execute() {
     climbSubsystem.deployArms();
+    climbSubsystem.resetClimbHeights();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    climbSubsystem.resetClimbHeights();
+  }
 
   // Returns true when the command should end.
   @Override
