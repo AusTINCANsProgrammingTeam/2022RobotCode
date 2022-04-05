@@ -142,7 +142,7 @@ public class ClimbSubsystem extends SubsystemBase {
     armTwo.setIdleMode(IdleMode.kBrake);
     armTwo.setInverted(true);
     // Pole 1 MotorController
-    poleOne = new MotorController("Pole1 Motor", Constants.armMotorOne, Constants.polePosPID);
+    poleOne = new MotorController("Pole1 Motor", Constants.poleMotorOne, Constants.polePosPID);
     poleOne.setSmartCurrentLimit(10);
     poleOne.getEncoder().setPosition(0);
     poleOne.setIdleMode(IdleMode.kBrake);
