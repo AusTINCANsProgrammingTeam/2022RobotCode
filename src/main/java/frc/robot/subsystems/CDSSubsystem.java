@@ -400,23 +400,29 @@ public class CDSSubsystem extends SubsystemBase {
           // shooter eject
           if (!topColorMatching && topBallPresent) {
             state = ManagementState.SHOOTER_EJECT;
-          } else if (!bottomColorMatching && bottomBallPresent && ballCount == 1) {
-            state = ManagementState.SHOOTER_EJECT;
-          } else if (!middleColorMatching && middleBallPresent && ballCount == 1) {
+          } else if (!middleColorMatching && middleBallPresent && !topBallPresent) {
             state = ManagementState.SHOOTER_EJECT;
           } else if (!middleColorMatching
               && middleBallPresent
               && !topColorMatching
               && topBallPresent) {
             state = ManagementState.SHOOTER_EJECT;
+          } else if (middleColorMatching && !topColorMatching){
+            state = ManagementState.SHOOTER_EJECT;
+          } else if (!bottomColorMatching && bottomBallPresent && !middleBallPresent && !topBallPresent){
+            state = ManagementState.SHOOTER_EJECT;
+          } else if (!bottomColorMatching && bottomBallPresent && !middleBallPresent && !topColorMatching && topBallPresent){
+            state = ManagementState.SHOOTER_EJECT;
           }
 
           // intake eject
-          else if (!middleColorMatching && middleBallPresent && topBallPresent) {
+          if (!middleColorMatching && middleBallPresent && topBallPresent && topColorMatching) {
             state = ManagementState.EJECT;
           } else if (!bottomColorMatching && ballCount > 1) {
             state = ManagementState.EJECT;
           } else if (ballCount > 2 && bottomBallPresent) {
+            state = ManagementState.EJECT;
+          } else if (!bottomColorMatching && middleColorMatching && middleBallPresent){
             state = ManagementState.EJECT;
           }
 
@@ -424,6 +430,12 @@ public class CDSSubsystem extends SubsystemBase {
           if (bottomBallPresent && currentOpenSensor != -1 && bottomColorMatching) {
             state = ManagementState.ADVANCE;
             nextOpenSensor = currentOpenSensor;
+          } else if (bottomColorMatching && ballCount == 0){
+            state = ManagementState.ADVANCE;
+          } else if (bottomColorMatching && middleColorMatching && !topBallPresent){
+            state = ManagementState.ADVANCE;
+          } else if (middleBallPresent && middleColorMatching && ballCount == 1){
+            state = ManagementState.ADVANCE;
           }
 
           /*
@@ -446,7 +458,11 @@ public class CDSSubsystem extends SubsystemBase {
             msCurrent = 0;
           }*/
 
-          if (activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) {
+          if ((activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) && Robot.isReal()) {
+            state = ManagementState.IDLE;
+          } else if (middleBallPresent && middleColorMatching && topBallPresent && topColorMatching && Robot.isReal()){
+            state = ManagementState.IDLE;
+          } else if (topBallPresent && topColorMatching && Robot.isReal()){
             state = ManagementState.IDLE;
           } else {
             msCurrent += 20;
@@ -461,8 +477,10 @@ public class CDSSubsystem extends SubsystemBase {
           } else {
             msCurrent += 20;
           }*/
-
-          if (activationArray[0] && topColorMatching) {
+          
+          if (activationArray[0] && topColorMatching && Robot.isReal()) {
+            state = ManagementState.IDLE;
+          } else if (ballCount == 0 && Robot.isReal()){
             state = ManagementState.IDLE;
           }
 
@@ -478,7 +496,9 @@ public class CDSSubsystem extends SubsystemBase {
 
           if (bottomBallPresent && bottomColorMatching && Robot.isReal()) {
             state = ManagementState.ADVANCE;
-          } else if (msCurrent >= ejectRuntime) {
+          } else if (msCurrent >= ejectRuntime && Robot.isReal()) {
+            state = ManagementState.IDLE;
+          } else if (ballCount == 0 && Robot.isReal()){
             state = ManagementState.IDLE;
           } else {
             msCurrent += 20;
