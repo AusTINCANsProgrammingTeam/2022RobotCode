@@ -252,20 +252,8 @@ public class RobotContainer {
     boolean success = true;
     switch (mode) {
       case TEST:
-        /* if (driveBaseSubsystem != null) {
-          autonModes = new AutonModes(driveBaseSubsystem);
-        } else {
-          success = false;
-        }
-        break;*/
       case PUSHTAXI: // the two taxis
       case INTAKETAXI:
-        /* if (driveBaseSubsystem != null && intakeSubsystem != null && cdsSubsystem != null) {
-          autonModes = new AutonModes(driveBaseSubsystem, intakeSubsystem, cdsSubsystem);
-        } else {
-          success = false;
-        }
-        break;*/
       case ONEBALL: // all of these modes go down to the FIVEBALL case
       case TWOBALL:
       case THREEBALL:
