@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
@@ -42,32 +43,6 @@ public class ClimbSubsystem extends SubsystemBase {
   private double armJoystickAxis;
   private double poleJoystickAxis;
 
-  // 1 = Right Side, 2 = Left Side
-  private ShuffleboardTab climbTab;
-
-  // Arm 1
-  private NetworkTableEntry sbArmSpeedOne;
-  private NetworkTableEntry sbArmTargettedOne;
-  private NetworkTableEntry sbarmHeightOne;
-
-  // Arm 2
-  private NetworkTableEntry sbArmSpeedTwo;
-  private NetworkTableEntry sbArmTargettedTwo;
-  private NetworkTableEntry sbarmHeightTwo;
-
-  // Pole 1
-  private NetworkTableEntry sbpoleHeightOne;
-  private NetworkTableEntry sbPoleSpeedOne;
-  private NetworkTableEntry sbPoleTargettedOne;
-
-  // Pole 2
-  private NetworkTableEntry sbpoleHeightTwo;
-  private NetworkTableEntry sbPoleSpeedTwo;
-  private NetworkTableEntry sbPoleTargettedTwo;
-
-  // Other
-  private NetworkTableEntry sbClimbEnable; // Displays ClimbEnable Boolean
-
   // Operator Tab
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
   private NetworkTableEntry DClimbHeight1 =
@@ -89,14 +64,14 @@ public class ClimbSubsystem extends SubsystemBase {
           .add("Pole Height 1", 0)
           .withWidget(BuiltInWidgets.kNumberBar)
           .withSize(2, 1)
-          .withPosition(6, 2)
+          .withPosition(8, 0)
           .getEntry();
   private NetworkTableEntry DClimbHeight4 =
       operatorTab
           .add("Pole Height 2", 0)
           .withWidget(BuiltInWidgets.kNumberBar)
           .withSize(2, 1)
-          .withPosition(6, 3)
+          .withPosition(8, 1)
           .getEntry();
   private NetworkTableEntry BClimbEnabled =
       operatorTab
@@ -107,36 +82,13 @@ public class ClimbSubsystem extends SubsystemBase {
   private NetworkTableEntry BAutomaticControl =
       operatorTab
           .add("Auto Climb Active", false)
-          .withPosition(5, 2)
+          .withPosition(5, 1)
           .withWidget(BuiltInWidgets.kBooleanBox)
           .getEntry();
 
   public ClimbSubsystem(Joystick joystick) {
     climbJoystick = joystick;
     climbEnable = false;
-
-    // Shuffle Board Widgets
-    climbTab = Shuffleboard.getTab("ClimbBase");
-
-    // Arm 1
-    sbArmTargettedOne =
-        climbTab.add("Arm1 targetted", 0).withSize(3, 1).withPosition(2, 3).getEntry();
-    sbArmSpeedOne = climbTab.add("Arm1 Speed", 0).withSize(2, 1).withPosition(5, 3).getEntry();
-
-    // Arm 2
-    sbArmTargettedTwo =
-        climbTab.add("Arm2 targetted", 0).withSize(3, 1).withPosition(2, 4).getEntry();
-    sbArmSpeedTwo = climbTab.add("Arm2 Speed", 0).withSize(2, 1).withPosition(5, 4).getEntry();
-
-    // Pole 1
-    sbPoleTargettedOne =
-        climbTab.add("Pole1 targetted", 0).withSize(3, 1).withPosition(2, 0).getEntry();
-    sbPoleSpeedOne = climbTab.add("Pole1 Speed", 0).withSize(2, 1).withPosition(5, 0).getEntry();
-
-    // Pole 2
-    sbPoleTargettedTwo =
-        climbTab.add("Pole2 targetted", 0).withSize(3, 1).withPosition(2, 1).getEntry();
-    sbPoleSpeedTwo = climbTab.add("Pole2 Speed", 0).withSize(2, 1).withPosition(5, 1).getEntry();
 
     // Arm 1 MotorController
     armOne = new MotorController("Arm1 Motor", Constants.armMotorOne, Constants.armPosPID);
@@ -205,18 +157,14 @@ public class ClimbSubsystem extends SubsystemBase {
   public void climbKeepDownFunction() {
     armOne.getPIDCtrl().setReference(armHeightOne, CANSparkMax.ControlType.kPosition);
     armOne.getPIDCtrl().setIMaxAccum(Constants.armSetIMaxAccum, 0);
-    sbarmHeightOne.setNumber(armHeightOne);
 
     armTwo.getPIDCtrl().setReference(armHeightTwo, CANSparkMax.ControlType.kPosition);
-    sbarmHeightTwo.setNumber(armHeightTwo);
     armTwo.getPIDCtrl().setIMaxAccum(Constants.armSetIMaxAccum, 0);
 
     poleOne.getPIDCtrl().setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
-    sbpoleHeightOne.setNumber(poleHeightOne);
     poleOne.getPIDCtrl().setIMaxAccum(Constants.poleSetIMaxAccum, 0);
 
     poleTwo.getPIDCtrl().setReference(poleHeightTwo, CANSparkMax.ControlType.kPosition);
-    sbpoleHeightTwo.setNumber(poleHeightTwo);
     poleTwo.getPIDCtrl().setIMaxAccum(Constants.poleSetIMaxAccum, 0);
   }
 
@@ -270,10 +218,8 @@ public class ClimbSubsystem extends SubsystemBase {
         }
       }
       armOne.getPIDCtrl().setReference(armHeightOne, CANSparkMax.ControlType.kPosition);
-      sbarmHeightOne.setNumber(armHeightOne);
 
       armTwo.getPIDCtrl().setReference(armHeightTwo, CANSparkMax.ControlType.kPosition);
-      sbarmHeightTwo.setNumber(armHeightTwo);
     }
   }
 
@@ -304,10 +250,8 @@ public class ClimbSubsystem extends SubsystemBase {
         }
       }
       poleOne.getPIDCtrl().setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
-      sbpoleHeightOne.setNumber(poleHeightOne);
 
       poleTwo.getPIDCtrl().setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
-      sbpoleHeightTwo.setNumber(poleHeightOne);
     }
   }
 
@@ -319,7 +263,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
   // functions for ClimbSequence1
   public void deployArms() {
-    if (armEncoderHeightOne < Constants.armHeightFeather
+    if (armEncoderHeightOne > Constants.armHeightFeather
         || armEncoderHeightTwo < Constants.armHeightFeather) {
       armOne
           .getPIDCtrl()
@@ -364,7 +308,7 @@ public class ClimbSubsystem extends SubsystemBase {
     return (armEncoderHeightOne > Constants.armHeightMin - Constants.climbArmDeadband
             && armEncoderHeightOne < Constants.armHeightMin + Constants.climbArmDeadband)
         && (armEncoderHeightTwo > Constants.armHeightMin - Constants.climbArmDeadband
-            && armEncoderHeightTwo < Constants.climbArmDeadband + Constants.climbArmDeadband);
+            && armEncoderHeightTwo < Constants.armHeightMin + Constants.climbArmDeadband);
   }
 
   public void periodic() {
@@ -382,6 +326,9 @@ public class ClimbSubsystem extends SubsystemBase {
     armEncoderHeightTwo = armTwo.getEncoder().getPosition();
     poleEncoderHeightOne = poleOne.getEncoder().getPosition();
     poleEncoderHeightTwo = poleTwo.getEncoder().getPosition();
+
+    SmartDashboard.putNumber("arm vel", armOne.getEncoder().getVelocity());
+    SmartDashboard.putNumber("arm pos", armOne.getEncoder().getPosition());
 
     armOne.updateSmartDashboard();
     armTwo.updateSmartDashboard();
