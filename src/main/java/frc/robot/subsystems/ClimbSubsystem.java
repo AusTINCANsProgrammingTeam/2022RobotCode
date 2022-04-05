@@ -78,6 +78,7 @@ public class ClimbSubsystem extends SubsystemBase {
   private NetworkTableEntry
       sbClimbSpeedInput; // Allows you to Manualy Change The speed Of The Climb
   private NetworkTableEntry sbClimbEnabble; // Displays Wheather Climb Is Enabbled
+  private NetworkTableEntry sbClimbLoggingEnable;
 
   // Operator Tab
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
@@ -166,6 +167,14 @@ public class ClimbSubsystem extends SubsystemBase {
     m_HaTwo.getPIDCtrl().setIMaxAccum(Constants.HasetIMaxAccum, 0);
   }
 
+  public void climbLogging(String Arms, double Position) {
+    if (Constants.DebugMode) {
+      if (sbClimbLoggingEnable.getBoolean(false)) {
+        System.out.printf("%d arm set reference position:%d", Arms, Position);
+      }
+    }
+  }
+
   public void climbEnable() {
     climbEnabble = !climbEnabble;
     if (climbEnabble) {
@@ -210,9 +219,11 @@ public class ClimbSubsystem extends SubsystemBase {
       }
       m_McOne.getPIDCtrl().setReference(McHeightOne, CANSparkMax.ControlType.kPosition);
       sbMcHeightOne.setNumber(McHeightOne);
+      climbLogging("MidClimb One", McHeightOne);
 
       m_McTwo.getPIDCtrl().setReference(McHeightTwo, CANSparkMax.ControlType.kPosition);
       sbMcHeightTwo.setNumber(McHeightTwo);
+      climbLogging("MidClimb Two", McHeightTwo);
     }
   }
 
@@ -240,9 +251,11 @@ public class ClimbSubsystem extends SubsystemBase {
       }
       m_HaOne.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
       sbHaHeightOne.setNumber(HaHeightOne);
+      climbLogging("HighClimb One", HaHeightOne);
 
       m_HaTwo.getPIDCtrl().setReference(HaHeightOne, CANSparkMax.ControlType.kPosition);
       sbHaHeightTwo.setNumber(HaHeightOne);
+      climbLogging("HighClimb Two", HaHeightTwo);
     }
   }
 
@@ -430,6 +443,13 @@ public class ClimbSubsystem extends SubsystemBase {
               .withSize(1, 1)
               .withPosition(9, 0)
               .getEntry();
+      sbClimbLoggingEnable =
+          climbTab
+              .add("Climb logging", false)
+              .withWidget(BuiltInWidgets.kBooleanBox)
+              .withSize(1, 1)
+              .withPosition(10, 1)
+              .getEntry();
 
       // High Arm 2
       sbHaHeightTwo = climbTab.add("Ha2 Height", 0).withSize(2, 1).withPosition(0, 1).getEntry();
@@ -453,6 +473,13 @@ public class ClimbSubsystem extends SubsystemBase {
               .add("Ha2 D", Constants.HaLeftPID[2])
               .withSize(1, 1)
               .withPosition(9, 1)
+              .getEntry();
+      sbClimbLoggingEnable =
+          climbTab
+              .add("Climb logging", false)
+              .withWidget(BuiltInWidgets.kBooleanBox)
+              .withSize(1, 1)
+              .withPosition(10, 1)
               .getEntry();
 
       // Other
@@ -484,6 +511,13 @@ public class ClimbSubsystem extends SubsystemBase {
               .withWidget(BuiltInWidgets.kNumberBar)
               .withSize(2, 1)
               .withPosition(6, 1)
+              .getEntry();
+      sbClimbLoggingEnable =
+          climbTab
+              .add("Climb logging", false)
+              .withWidget(BuiltInWidgets.kBooleanBox)
+              .withSize(1, 1)
+              .withPosition(10, 1)
               .getEntry();
     }
   }

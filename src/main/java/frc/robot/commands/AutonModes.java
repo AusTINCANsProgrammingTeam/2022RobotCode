@@ -212,10 +212,6 @@ public class AutonModes {
 
       oneBallCommand =
           new SequentialCommandGroup(
-<<<<<<< HEAD
-              new DeployIntake(intakeSubsystem),
-=======
->>>>>>> origin/main
               new WaitCommand(initialWaitTime),
               new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
               oneBallRamseteCommand);

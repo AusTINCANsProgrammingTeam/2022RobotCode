@@ -74,9 +74,6 @@ public class IntakeSubsystem extends SubsystemBase {
     deployPID.setIMaxAccum(sbintakeDeployMaxIAcum.getDouble(0), 0);
   }
 
-
-
-
   public boolean getIntakeDeployed() {
     return intakeDeployed;
   }

@@ -19,8 +19,8 @@ import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbEnable;
 import frc.robot.commands.ClimbPeriodic;
 import frc.robot.commands.CombinedIntakeCDSForwardCommand;
-import frc.robot.commands.DeployIntake;
 import frc.robot.commands.DriveBaseTeleopCommand;
+import frc.robot.commands.IntakeDeploy;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
@@ -59,11 +59,11 @@ public class RobotContainer {
 
   // commands
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
-  private DeployIntake deployIntake;
   private IntakeForwardCommand intakeForwardCommand;
   private IntakeReverseCommand intakeReverseCommand;
   private CDSBallManagementCommand ballManagementCommand;
   private CombinedIntakeCDSForwardCommand combinedIntakeCDS;
+  private IntakeDeploy intakeDeployCommand;
 
   private ShooterHeld shooterHeldLow, shooterHeldAuto;
   private CDSForwardCommand CDSForwardCommand;
@@ -77,11 +77,11 @@ public class RobotContainer {
   private AutonModes autonModes;
   private Command chosenAutonMode = null;
 
-  // Controller Check Variables
-  private NetworkTableEntry sbaxisCount0;
+  // Controller Check VariablesdefaultValue
   private NetworkTableEntry sbaxisCount1;
   private NetworkTableEntry sbbuttonCount0;
   private NetworkTableEntry sbbuttonCount1;
+  private NetworkTableEntry sbaxisCount0;
   private int axisCount0;
   private int buttonCount0;
   private int axisCount1;
@@ -154,8 +154,8 @@ public class RobotContainer {
     if (intakeSubsystem != null && cdsSubsystem != null) {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, cdsSubsystem);
-      deployIntake = new DeployIntake(intakeSubsystem);
       outtakeCommand = new OuttakeCommand(intakeSubsystem, cdsSubsystem);
+      intakeDeployCommand = new IntakeDeploy(intakeSubsystem);
 
       if (Constants.ballManagementEnabled) {
         intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
@@ -202,15 +202,14 @@ public class RobotContainer {
       buttons[Constants.RBumper].whileHeld(outtakeCommand);
     }
 
-    if (deployIntake != null) {
-      buttons[Constants.BButton].whenPressed(deployIntake);
-    }
-
     if (combinedIntakeCDS != null) {
       buttons[Constants.RTriggerButton].whileHeld(combinedIntakeCDS);
     } /*else {
         buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
       }*/
+    if (intakeDeployCommand != null) {
+      buttons2[Constants.RBumper].whenPressed(intakeDeployCommand);
+    }
 
     if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
       // Auto Aim Shot
@@ -297,6 +296,9 @@ public class RobotContainer {
     }
   }
 
+  // TODO: create get methods for other subsystems to pass into TabContainer, or
+  // find a more
+  // efficient way
   public static DriveBaseSubsystem getDriveBase() {
     if (driveBaseSubsystem != null) {
       return driveBaseSubsystem;
