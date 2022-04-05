@@ -44,8 +44,8 @@ public class CDSSubsystem extends SubsystemBase {
   private SimDeviceSim colorSenseSim;
   private SimDouble m_simR, m_simG, m_simB, m_simProx;
 
-  private boolean[] simActivation = new boolean[3];
-  private String[] simColors = new String[3];
+  private boolean[] simActivationArray = new boolean[3];
+  private String[] simColorArray = new String[3];
 
   private int simCount = 0;
 
@@ -236,6 +236,7 @@ public class CDSSubsystem extends SubsystemBase {
         }
       }
 
+      simActivationArray = simProxValues;
       return simProxValues;
     }
 
@@ -317,6 +318,8 @@ public class CDSSubsystem extends SubsystemBase {
         // randomly select color for each sensor
         simColors[i] = colorChoices[rand.nextInt(colorChoices.length)];
       }
+
+      simColorArray = simColors;
 
       return simColors;
     }
@@ -494,7 +497,6 @@ public class CDSSubsystem extends SubsystemBase {
 
   public void newColorSim() {
     if (Robot.isSimulation()) {
-
       // print out state and current random values
     }
   }
