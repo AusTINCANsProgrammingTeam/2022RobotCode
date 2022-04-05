@@ -35,8 +35,8 @@ public class IntakeSubsystem extends SubsystemBase {
       intakeTab.add("Intake deploy I Max Acum", 0).withSize(1, 1).withPosition(0, 4).getEntry();
   private NetworkTableEntry sbintakeDeployCurrenttLimit =
       intakeTab.add("Intake deploy current limit", 0).withSize(1, 1).withPosition(0, 5).getEntry();
-  private NetworkTableEntry sbintakeDeployPosition =
-      intakeTab.add("Intake deploy position", 0).withSize(1, 1).withPosition(1, 1).getEntry();
+  //private NetworkTableEntry sbintakeDeployPosition =
+      //intakeTab.add("Intake deploy position", 0).withSize(1, 1).withPosition(1, 1).getEntry();
   private NetworkTableEntry sbintakeDeployed =
       intakeTab.add("Intake Deployed", false).withSize(1, 1).withPosition(1, 2).getEntry();
 
@@ -122,10 +122,11 @@ public class IntakeSubsystem extends SubsystemBase {
       resetpid();
     }
     sbintakeDeployed.setBoolean(intakeDeployed);
-    sbintakeDeployPosition.setDouble(deployEncoder.getPosition());
+    //sbintakeDeployPosition.setDouble(deployController.getEncoder().getPosition());
 
-    deployController.updateSmartDashboard();
+    //deployController.updateSmartDashboard();
     SmartDashboard.putBoolean("Intake Out?", intakeDeployed);
-    SmartDashboard.putNumber("Deploy Encoder", deployEncoder.getPosition());
+    //System.out.println("encoder: " + deployController.getEncoder().getPosition());
+    SmartDashboard.putNumber("Deploy Encoder", deployController.getEncoder().getPosition());
   }
 }
