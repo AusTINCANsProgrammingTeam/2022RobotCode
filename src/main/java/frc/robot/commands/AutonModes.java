@@ -57,6 +57,8 @@ public class AutonModes {
     this.cdsSubsystem = cds;
     this.intakeSubsystem = intake;
     this.climbSubsystem = climb;
+
+    initializeAutonCommand();
   }
 
   private Trajectory[] getTrajectories(Constants.Auton mode) {

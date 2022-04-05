@@ -72,10 +72,6 @@ public class RobotContainer {
   private ClimbPeriodic ClimbPeriodic;
   private Command HaDeploy;
 
-  // auton
-  private AutonModes autonModes;
-  private Command chosenAutonMode = null;
-
   // Controller Check Variables
   private NetworkTableEntry sbaxisCount0;
   private NetworkTableEntry sbaxisCount1;
