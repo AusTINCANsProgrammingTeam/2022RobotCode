@@ -190,8 +190,8 @@ public class ClimbSubsystem extends SubsystemBase {
     resetClimbHeights();
 
     // servos
-    // servoOne = new Servo(Constants.climbServoIDOne);
-    // servoTwo = new Servo(Constants.climbServoIDTwo);
+    servoOne = new Servo(Constants.climbServoIDOne);
+    servoTwo = new Servo(Constants.climbServoIDTwo);
   }
 
   public void resetClimbHeights() {
@@ -350,9 +350,14 @@ public class ClimbSubsystem extends SubsystemBase {
         .setReference(Constants.poleHeightDeploy, CANSparkMax.ControlType.kPosition);
   }
 
-  public void deployHooks() {
-    // servoOne.set(Constants.climbServoSetPoint);
-    // servoTwo.set(Constants.climbServoSetPoint);
+  public void unlockHooks() {
+    servoOne.setAngle(Constants.climbServo1Unlocked);
+    servoTwo.setAngle(Constants.climbServo2Unlocked);
+  }
+
+  public void lockHooks() {
+    servoOne.setAngle(Constants.climbServo1Locked);
+    servoTwo.setAngle(Constants.climbServo2Locked);
   }
 
   public void setAutoBoolean(boolean a) {

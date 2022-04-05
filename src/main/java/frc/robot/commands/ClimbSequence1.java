@@ -23,7 +23,7 @@ public class ClimbSequence1 extends CommandBase {
   public void initialize() {
     climbSubsystem.setAutoBoolean(true);
     climbSubsystem.deployPoles();
-    climbSubsystem.deployHooks();
+    climbSubsystem.unlockHooks();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
