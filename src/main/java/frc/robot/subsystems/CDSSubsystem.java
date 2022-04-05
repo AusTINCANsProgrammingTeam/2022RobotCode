@@ -21,6 +21,7 @@ import frc.robot.Robot;
 import frc.robot.common.hardware.ColorSensorMuxed;
 import frc.robot.common.hardware.ColorSensorMuxed.MeasurementRate;
 import frc.robot.common.hardware.MotorController;
+import java.util.Random;
 
 public class CDSSubsystem extends SubsystemBase {
   public enum ManagementState {
@@ -42,6 +43,10 @@ public class CDSSubsystem extends SubsystemBase {
 
   private SimDeviceSim colorSenseSim;
   private SimDouble m_simR, m_simG, m_simB, m_simProx;
+
+  private boolean[] simActivation = new boolean[3];
+  private String[] simColors = new String[3];
+
   private int simCount = 0;
 
   private int msCurrent = 0;
@@ -106,6 +111,7 @@ public class CDSSubsystem extends SubsystemBase {
     allianceColor = DriverStation.getAlliance().toString();
     SmartDashboard.putString("Alliance Color", allianceColor);
     state = ManagementState.IDLE;
+
     if (Robot.isSimulation()) {
       colorSenseSim = new SimDeviceSim("REV Color Sensor V3", I2C.Port.kMXP.value, 82);
       m_simR = colorSenseSim.getDouble("Red");
@@ -212,6 +218,27 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public boolean[] getSensorStatus() {
+    if (Robot.isSimulation()) {
+      boolean[] simProxValues = new boolean[3];
+
+      Random rand = new Random();
+
+      for (int i = 0; i < 3; i++) {
+        // fill in random proximity values that are either greater than or less than the sensor
+        // threshold values
+        simProxValues[i] = rand.nextBoolean();
+      }
+
+      ballCount = 0;
+      for (boolean status : activationArray) {
+        if (status) {
+          ballCount++;
+        }
+      }
+
+      return simProxValues;
+    }
+
     if (currentProxCycle % cycleWait == 0) {
       currentProxCycle = 0;
       sensorStatuses = colorSensors.getProximities();
@@ -254,12 +281,11 @@ public class CDSSubsystem extends SubsystemBase {
     if (currentColorCycle % cycleWait == 0) {
       currentColorCycle = 0;
       colors = colorSensors.getColors();
-      
 
       double magnitude = colors[2].red + colors[2].green + colors[2].blue;
       double redRatio = colors[2].red / magnitude;
       double blueRatio = colors[2].blue / magnitude;
-      SmartDashboard.putNumber("Front Sense B",  blueRatio);
+      SmartDashboard.putNumber("Front Sense B", blueRatio);
       SmartDashboard.putNumber("Front Sense R", redRatio);
 
       // Only sensing colors for first sensor so that we can handle it when it's coming in and not
@@ -267,7 +293,7 @@ public class CDSSubsystem extends SubsystemBase {
       if (redRatio > colorThreshold) {
         ballColor.setString("Red");
         lastBallColor = "Red";
-      } else if (blueRatio > colorThreshold){
+      } else if (blueRatio > colorThreshold) {
         ballColor.setString("Blue");
         lastBallColor = "Blue";
       } else {
@@ -278,32 +304,46 @@ public class CDSSubsystem extends SubsystemBase {
 
     currentColorCycle++;
     return lastBallColor;
-}
-
-public String[] senseAllColors() {
-  if (currentColorCycle % cycleWait == 0) {
-    Color[] colors = colorSensors.getColors();
-    currentColorCycle = 0;
-  } 
-
-  String[] sensedColors = new String[3];
-
-  for (int i = 0; i<3; i++) {
-    double magnitude = colors[i].red + colors[2].green + colors[2].blue;
-    double redRatio = colors[i].red / magnitude;
-    double blueRatio = colors[i].blue / magnitude;
-
-    if (redRatio > colorThreshold) {
-      sensedColors[i] = "Red";
-    } else if (blueRatio > colorThreshold){
-      sensedColors[i] = "Blue";
-    } else {
-      sensedColors[i] = "None";
-    }
   }
 
-  return sensedColors;
-}
+  public String[] senseAllColors() {
+    if (Robot.isSimulation()) {
+      // on or off prox
+      String[] simColors = new String[3];
+      Random rand = new Random();
+
+      String[] colorChoices = new String[] {"Red", "Blue"};
+      for (int i = 0; i < 3; i++) {
+        // randomly select color for each sensor
+        simColors[i] = colorChoices[rand.nextInt(colorChoices.length)];
+      }
+
+      return simColors;
+    }
+
+    if (currentColorCycle % cycleWait == 0) {
+      Color[] colors = colorSensors.getColors();
+      currentColorCycle = 0;
+    }
+
+    String[] sensedColors = new String[3];
+
+    for (int i = 0; i < 3; i++) {
+      double magnitude = colors[i].red + colors[2].green + colors[2].blue;
+      double redRatio = colors[i].red / magnitude;
+      double blueRatio = colors[i].blue / magnitude;
+
+      if (redRatio > colorThreshold) {
+        sensedColors[i] = "Red";
+      } else if (blueRatio > colorThreshold) {
+        sensedColors[i] = "Blue";
+      } else {
+        sensedColors[i] = "None";
+      }
+    }
+
+    return sensedColors;
+  }
 
   public boolean sensorsOnline() {
     boolean isOnline = true;
@@ -353,7 +393,7 @@ public String[] senseAllColors() {
     boolean middleBallPresent = activationArray[1];
     boolean bottomBallPresent = activationArray[0];
 
-    if (managementEnabled()){
+    if (managementEnabled()) {
       switch (state) {
         case IDLE:
           nextOpenSensor = -1;
@@ -366,24 +406,27 @@ public String[] senseAllColors() {
             state = ManagementState.SHOOTER_EJECT;
           } else if (!middleColorMatching && middleBallPresent && ballCount == 1) {
             state = ManagementState.SHOOTER_EJECT;
-          } 
-          
+          }
+
           // intake eject
           else if (!middleColorMatching && middleBallPresent && topBallPresent) {
             state = ManagementState.EJECT;
-          } else if (!bottomColorMatching && ballCount > 1)  {
+          } else if (!bottomColorMatching && ballCount > 1) {
             state = ManagementState.EJECT;
-          } else if (!middleColorMatching && middleBallPresent && !topColorMatching && topBallPresent) {
+          } else if (!middleColorMatching
+              && middleBallPresent
+              && !topColorMatching
+              && topBallPresent) {
             state = ManagementState.EJECT;
           } else if (ballCount > 2 && bottomBallPresent) {
             state = ManagementState.EJECT;
           }
 
-          // advance 
+          // advance
           if (bottomBallPresent && currentOpenSensor != -1 && bottomColorMatching) {
             state = ManagementState.ADVANCE;
             nextOpenSensor = currentOpenSensor;
-          } 
+          }
 
           /*
           if (ballCount == 1 && sensedBallColor != allianceColor && ballPresent && sensedBallColor != "None") {
@@ -397,13 +440,13 @@ public String[] senseAllColors() {
 
           break;
         case ADVANCE:
-        /*
+          /*
           if (ballCount == 1 && sensedBallColor != allianceColor && ballPresent && sensedBallColor != "None") {
             state = ManagementState.SHOOTER_EJECT;
           } else if (sensedBallColor != allianceColor && ballPresent && sensedBallColor != "None") {
             state = ManagementState.EJECT;
             msCurrent = 0;
-          }*/ 
+          }*/
 
           if (activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) {
             state = ManagementState.IDLE;
@@ -413,14 +456,14 @@ public String[] senseAllColors() {
 
           break;
         case SHOOTER_EJECT:
-        /*
+          /*
           if (msCurrent >= shooterEjectRuntime
               || (activationArray[0] && topBallColor == allianceColor)) {
             state = ManagementState.IDLE;
           } else {
             msCurrent += 20;
           }*/
-          
+
           if (activationArray[0] && topColorMatching) {
             state = ManagementState.IDLE;
           }
@@ -445,8 +488,15 @@ public String[] senseAllColors() {
 
           break;
       }
-  }
+    }
     CDSState.setString(state.toString());
+  }
+
+  public void newColorSim() {
+    if (Robot.isSimulation()) {
+
+      // print out state and current random values
+    }
   }
 
   public void simulateColorSense() {

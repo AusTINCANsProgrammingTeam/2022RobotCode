@@ -134,8 +134,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     RobotContainer.getCDSSubsystem().changeState();
-    // RobotContainer.getCDSSubsystem().simulateColorSense();
-
+    RobotContainer.getCDSSubsystem().simulateColorSense();
   }
 
   @Override
