@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
+import frc.robot.Constants.AimModes;
 import frc.robot.Constants.Auton;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -51,7 +52,6 @@ public class AutonModes {
     this.mode = mode;
     this.driveBaseSubsystem = drive;
     this.shooterSubsystem = shooter;
-    this.shooterSubsystem.setAimMode(Constants.AimModes.TARMAC);
     this.limelightSubsystem = limelight;
     this.cdsSubsystem = cds;
     this.intakeSubsystem = intake;
@@ -160,6 +160,33 @@ public class AutonModes {
                 parallels[0],
                 parallels[1],
                 new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
+        break;
+
+      case TWOBALLSTEAL1:
+        autonCommand =
+            new SequentialCommandGroup(
+                new WaitCommand(initialWaitTime),
+                parallels[0],
+                parallels[1],
+                new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
+                parallels[2],
+                new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false)
+                    .beforeStarting(
+                        () ->
+                            this.shooterSubsystem.setAimMode(
+                                AimModes.EJECT))); // eject the ball to far side of our field
+        break;
+
+      case TWOBALLSTEAL2:
+        autonCommand =
+            new SequentialCommandGroup(
+                new WaitCommand(initialWaitTime),
+                parallels[0],
+                parallels[1],
+                new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
+                parallels[2],
+                new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false)
+                    .beforeStarting(() -> this.shooterSubsystem.setAimMode(AimModes.EJECT)));
         break;
 
       case THREEBALL:
