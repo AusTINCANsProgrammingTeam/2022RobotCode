@@ -57,7 +57,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private SimpleMotorFeedforward simpleMotorFF;
 
   private final DifferentialDriveOdometry odometry;
-  public static AHRS gyro;
+S  public static AHRS gyro;
 
   private boolean usingExternal;
 
