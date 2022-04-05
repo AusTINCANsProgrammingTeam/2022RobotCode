@@ -44,10 +44,8 @@ public class CDSSubsystem extends SubsystemBase {
   private SimDeviceSim colorSenseSim;
   private SimDouble m_simR, m_simG, m_simB, m_simProx;
 
-  private boolean[] simActivationArray = new boolean[3];
-  private String[] simColorArray = new String[3];
-
   private int simCount = 0;
+  private String[] simColorArray = new String[3];
 
   private int msCurrent = 0;
   private int ejectRuntime = 2000; // amount of time auto eject will run intake backwards for in ms
@@ -219,14 +217,12 @@ public class CDSSubsystem extends SubsystemBase {
 
   public boolean[] getSensorStatus() {
     if (Robot.isSimulation()) {
-      boolean[] simProxValues = new boolean[3];
-
       Random rand = new Random();
 
       for (int i = 0; i < 3; i++) {
         // fill in random proximity values that are either greater than or less than the sensor
         // threshold values
-        simProxValues[i] = rand.nextBoolean();
+        activationArray[i] = rand.nextBoolean();
       }
 
       ballCount = 0;
@@ -236,8 +232,7 @@ public class CDSSubsystem extends SubsystemBase {
         }
       }
 
-      simActivationArray = simProxValues;
-      return simProxValues;
+      return activationArray;
     }
 
     if (currentProxCycle % cycleWait == 0) {
@@ -319,13 +314,11 @@ public class CDSSubsystem extends SubsystemBase {
         simColors[i] = colorChoices[rand.nextInt(colorChoices.length)];
       }
 
-      simColorArray = simColors;
-
       return simColors;
     }
 
     if (currentColorCycle % cycleWait == 0) {
-      Color[] colors = colorSensors.getColors();
+      colors = colorSensors.getColors();
       currentColorCycle = 0;
     }
 
@@ -386,6 +379,8 @@ public class CDSSubsystem extends SubsystemBase {
     ballCount = getBallCount();
     String[] sensedBallColors = senseAllColors();
     int currentOpenSensor = getNextOpenSensor();
+
+    simColorArray = sensedBallColors;
 
     // wrapper variables for clarity :)
     boolean topColorMatching = sensedBallColors[0] == allianceColor;
@@ -481,7 +476,7 @@ public class CDSSubsystem extends SubsystemBase {
             msCurrent += 20;
           }*/
 
-          if (bottomBallPresent && bottomColorMatching) {
+          if (bottomBallPresent && bottomColorMatching && Robot.isReal()) {
             state = ManagementState.ADVANCE;
           } else if (msCurrent >= ejectRuntime) {
             state = ManagementState.IDLE;
@@ -497,17 +492,27 @@ public class CDSSubsystem extends SubsystemBase {
 
   public void newColorSim() {
     if (Robot.isSimulation()) {
-      String[] stateNumber = new String[]{"0", "0", "0"};
+      if (simCount == 250) {
+        String[] stateNumber = new String[]{"0", "0", "0"};
 
-      for (int i = 0; i < 3; i++) {
-        if (simActivationArray[i] && simColorArray[i] == allianceColor) {
-          stateNumber[i] = "2";
-        } else if (simActivationArray[i] && simColorArray[i] != allianceColor) {
-          stateNumber[i] = "1";
+        for (int i = 0; i < 3; i++) {
+          if (activationArray[i] && simColorArray[i] == allianceColor) {
+            stateNumber[i] = "2";
+          } else if (activationArray[i] && simColorArray[i] != allianceColor) {
+            stateNumber[i] = "1";
+          }
         }
-      }
 
-      System.out.printf("%s%s%s - %s", stateNumber[0], stateNumber[1], stateNumber[2], state.toString());
+        String ballLayout = String.format("%s%s%s", stateNumber[0], stateNumber[1], stateNumber[2]);
+        
+        SmartDashboard.putString("CDS Sim Ball Layout", ballLayout);
+        SmartDashboard.putString("CDS Sim State", state.toString());
+
+        simCount = 0;
+        // System.out.printf("%s%s%s - %s", stateNumber[0], stateNumber[1], stateNumber[2], state.toString());
+      } else {
+        simCount++;
+      }
     }
   }
 
