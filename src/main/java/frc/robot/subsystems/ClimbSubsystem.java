@@ -362,21 +362,11 @@ public class ClimbSubsystem extends SubsystemBase {
       climbEnable();
     }
 
-    if (sbarmHeightOne.getDouble(0) != armHeightOne) {
-      armHeightOne = sbarmHeightOne.getDouble(0);
-    }
-
-    if (sbarmHeightTwo.getDouble(0) != armHeightTwo) {
-      armHeightTwo = sbarmHeightTwo.getDouble(0);
-    }
-
     BClimbEnabled.setBoolean(climbEnable);
     DClimbHeight1.setNumber(armOne.getEncoder().getPosition());
     DClimbHeight2.setNumber(armTwo.getEncoder().getPosition());
     DClimbHeight3.setNumber(poleOne.getEncoder().getPosition());
     DClimbHeight4.setNumber(poleTwo.getEncoder().getPosition());
-
-    sbClimbEnable.setBoolean(climbEnable);
 
     armEncoderHeightOne = armOne.getEncoder().getPosition();
     armEncoderHeightTwo = armTwo.getEncoder().getPosition();
