@@ -20,7 +20,6 @@ import frc.robot.commands.ClimbEnable;
 import frc.robot.commands.ClimbPeriodic;
 import frc.robot.commands.CombinedIntakeCDSForwardCommand;
 import frc.robot.commands.DriveBaseTeleopCommand;
-import frc.robot.commands.IntakeDeploy;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
@@ -63,7 +62,6 @@ public class RobotContainer {
   private IntakeReverseCommand intakeReverseCommand;
   private CDSBallManagementCommand ballManagementCommand;
   private CombinedIntakeCDSForwardCommand combinedIntakeCDS;
-  private IntakeDeploy intakeDeployCommand;
 
   private ShooterHeld shooterHeldLow, shooterHeldAuto;
   private CDSForwardCommand CDSForwardCommand;
@@ -155,7 +153,6 @@ public class RobotContainer {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, cdsSubsystem);
       outtakeCommand = new OuttakeCommand(intakeSubsystem, cdsSubsystem);
-      intakeDeployCommand = new IntakeDeploy(intakeSubsystem);
 
       if (Constants.ballManagementEnabled) {
         intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
@@ -207,9 +204,6 @@ public class RobotContainer {
     } /*else {
         buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
       }*/
-    if (intakeDeployCommand != null) {
-      buttons2[Constants.RBumper].whenPressed(intakeDeployCommand);
-    }
 
     if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
       // Auto Aim Shot
