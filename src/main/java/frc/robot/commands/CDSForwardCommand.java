@@ -27,7 +27,7 @@ public class CDSForwardCommand extends CommandBase {
   @Override
   public void initialize() {
     mCDSSubsystem.CDSWheelToggle(false);
-    mCDSSubsystem.CDSBeltToggle(false);
+    mCDSSubsystem.CDSBeltToggle(false, Constants.CDSBeltSpeed);
     mShooterSubsystem.runCargo(Constants.reverseStopperWheelSpeed);
   }
 
