@@ -72,10 +72,6 @@ public class RobotContainer {
   private ClimbPeriodic ClimbPeriodic;
   private Command HaDeploy;
 
-  // auton
-  private AutonModes autonModes;
-  private Command chosenAutonMode = null;
-
   // Controller Check Variables
   private NetworkTableEntry sbaxisCount0;
   private NetworkTableEntry sbaxisCount1;
@@ -138,7 +134,7 @@ public class RobotContainer {
 
     limelightSubsystem = new LimelightSubsystem();
 
-    climbSubsystem = new ClimbSubsystem(operatorJoystick);
+    // climbSubsystem = new ClimbSubsystem(operatorJoystick);
   }
 
   private void initCommands() {
@@ -272,7 +268,7 @@ public class RobotContainer {
             limelightSubsystem,
             cdsSubsystem,
             intakeSubsystem,
-            climbSubsystem);
+            null);
     return autonMode.getAutonCommand();
   }
 
