@@ -314,7 +314,7 @@ public class ClimbSubsystem extends SubsystemBase {
   // functions for ClimbSequence1
   public void deployArms() {
     if (armEncoderHeightOne < Constants.armHeightFeather
-        && armEncoderHeightTwo < Constants.armHeightFeather) {
+        || armEncoderHeightTwo < Constants.armHeightFeather) {
       armOne
           .getPIDCtrl()
           .setReference(
