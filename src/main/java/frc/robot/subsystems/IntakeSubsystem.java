@@ -35,8 +35,8 @@ public class IntakeSubsystem extends SubsystemBase {
       intakeTab.add("Intake deploy I Max Acum", 0).withSize(1, 1).withPosition(0, 4).getEntry();
   private NetworkTableEntry sbintakeDeployCurrenttLimit =
       intakeTab.add("Intake deploy current limit", 0).withSize(1, 1).withPosition(0, 5).getEntry();
-  //private NetworkTableEntry sbintakeDeployPosition =
-      //intakeTab.add("Intake deploy position", 0).withSize(1, 1).withPosition(1, 1).getEntry();
+  // private NetworkTableEntry sbintakeDeployPosition =
+  // intakeTab.add("Intake deploy position", 0).withSize(1, 1).withPosition(1, 1).getEntry();
   private NetworkTableEntry sbintakeDeployed =
       intakeTab.add("Intake Deployed", false).withSize(1, 1).withPosition(1, 2).getEntry();
 
@@ -100,19 +100,13 @@ public class IntakeSubsystem extends SubsystemBase {
   public void deployIntake() {
     deployPID.setReference(0.2, CANSparkMax.ControlType.kPosition);
     intakeDeployed = true;
-    
   }
+
   public void retractIntake() {
     deployPID.setReference(0, CANSparkMax.ControlType.kPosition);
     intakeDeployed = false;
   }
-  /*
-  intakeDeployed = !intakeDeployed;
-    if (intakeDeployed) {
-      deployPID.setReference(10, CANSparkMax.ControlType.kPosition);
-    } else {
-      deployPID.setReference(0, CANSparkMax.ControlType.kPosition);
-    }*/
+
   public void stopIntake() {
     intakeMotorControllerOne.set(0.0);
     DIntakeSpeed.setDouble(0);
@@ -129,11 +123,11 @@ public class IntakeSubsystem extends SubsystemBase {
       resetpid();
     }
     sbintakeDeployed.setBoolean(intakeDeployed);
-    //sbintakeDeployPosition.setDouble(deployController.getEncoder().getPosition());
+    // sbintakeDeployPosition.setDouble(deployController.getEncoder().getPosition());
 
-    //deployController.updateSmartDashboard();
+    // deployController.updateSmartDashboard();
     SmartDashboard.putBoolean("Intake Out?", intakeDeployed);
-    //System.out.println("encoder: " + deployController.getEncoder().getPosition());
+    // System.out.println("encoder: " + deployController.getEncoder().getPosition());
     SmartDashboard.putNumber("Deploy Encoder", deployController.getEncoder().getPosition());
   }
 }
