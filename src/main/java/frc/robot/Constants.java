@@ -27,8 +27,8 @@ public final class Constants {
     },
     EJECT(1500.0, 0.0),
     LAUNCH(0.0, 0.0),
-    TARMAC(1400.0, 0.0),
-    ATARMAC(1400.0, 0.0),
+    TARMAC(1440.0, 0.0),
+    ATARMAC(1440.0, 0.0),
     TEST {
       @Override
       public AimModes next() {
@@ -232,7 +232,7 @@ public final class Constants {
   public static final int CDSWheelControllerOneID = 2;
   public static final int CDSWheelControllerTwoID = 9;
   public static final double CDSBeltSpeed = .75;
-  public static final double CDSAutoBeltSpeed = .95;
+  public static final double CDSAutoBeltSpeed = .75;
   public static final double CDSWheelControllerSpeed = 0.80;
   public static final int frontSensorActivation = 200;
   public static final int middleSensorActivation = 450;
@@ -308,7 +308,8 @@ public final class Constants {
 
     // PID settings
     // 2.5e-4, 2.5e-7, 2e-6, 1e-4
-    public static final double kPIDFArray[] = {1.9516e-09, 0, 0};
+    //public static final double kPIDFArray[] = {1.9516e-09, 3.0E-8, 0};
+    public static final double kPIDFArray[] = {0.000003, 0.000000035, 0};
     // public static final double kPIDFArray[] = {2.5e-8, 5.5e-8, 0}; 7e-9
     public static final double kMaxIAccum = 0.9;
     public static final int kMaxISlot = 0;
