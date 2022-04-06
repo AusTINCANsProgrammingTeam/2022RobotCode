@@ -176,9 +176,9 @@ public class DriveBaseSubsystem extends SubsystemBase {
     resetEncoders(); // reset encoders to reset position and velocity values
 
     odometry = new DifferentialDriveOdometry(gyro.getRotation2d());
-    //if (Constants.DebugMode) {
-      initShuffleboard();
-    //}
+    // if (Constants.DebugMode) {
+    initShuffleboard();
+    // }
 
   }
 
@@ -234,12 +234,12 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     odometry.update(gyro.getRotation2d(), leftPosition, rightPosition);
 
-    //if (Constants.DebugMode) {
-      sbLeftEncoderSpeed.setDouble(leftEncoder.getVelocity());
-      sbRightEncoderSpeed.setDouble(rightEncoder.getVelocity());
-      sbLeftPosition.setDouble(leftEncoder.getPosition()); // in meters
-      sbRightPosition.setDouble(rightEncoder.getPosition());
-    //}
+    // if (Constants.DebugMode) {
+    sbLeftEncoderSpeed.setDouble(leftEncoder.getVelocity());
+    sbRightEncoderSpeed.setDouble(rightEncoder.getVelocity());
+    sbLeftPosition.setDouble(leftEncoder.getPosition()); // in meters
+    sbRightPosition.setDouble(rightEncoder.getPosition());
+    // }
 
     // Update the smart dashboard here
     // updates pid values of leaders, followers not needed

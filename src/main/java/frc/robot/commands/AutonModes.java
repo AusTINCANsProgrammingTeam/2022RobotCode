@@ -135,6 +135,7 @@ public class AutonModes {
           autonCommand = autonCommand.andThen(ramsetes[i]); // adding ramsetes on to each other
           i++;
         }
+        break;
 
       case PUSHTAXI:
         autonCommand =

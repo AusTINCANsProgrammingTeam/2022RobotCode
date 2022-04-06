@@ -248,34 +248,34 @@ public class RobotContainer {
   public Command getAutonomousCommand(Auton mode) {
     switch (mode) {
       case TEST:
-        System.out.println(Auton.TEST.getName() + "mode selected.");
+        System.out.println(Auton.TEST.getName() + " mode selected.");
         break;
       case PUSHTAXI:
-        System.out.println(Auton.PUSHTAXI.getName() + "mode selected.");
+        System.out.println(Auton.PUSHTAXI.getName() + " mode selected.");
         break;
       case INTAKETAXI:
-        System.out.println(Auton.INTAKETAXI.getName() + "mode selected.");
+        System.out.println(Auton.INTAKETAXI.getName() + " mode selected.");
         break;
       case ONEBALL:
-        System.out.println(Auton.ONEBALL.getName() + "mode selected.");
+        System.out.println(Auton.ONEBALL.getName() + " mode selected.");
         break;
       case TWOBALL:
-        System.out.println(Auton.TWOBALL.getName() + "mode selected.");
+        System.out.println(Auton.TWOBALL.getName() + " mode selected.");
         break;
       case TWOBALLSTEAL1:
-        System.out.println(Auton.TWOBALLSTEAL1.getName() + "mode selected.");
+        System.out.println(Auton.TWOBALLSTEAL1.getName() + " mode selected.");
         break;
       case TWOBALLSTEAL2:
-        System.out.println(Auton.TWOBALLSTEAL2.getName() + "mode selected.");
+        System.out.println(Auton.TWOBALLSTEAL2.getName() + " mode selected.");
         break;
       case THREEBALL:
-        System.out.println(Auton.THREEBALL.getName() + "mode selected.");
+        System.out.println(Auton.THREEBALL.getName() + " mode selected.");
         break;
       case FOURBALL:
-        System.out.println(Auton.FOURBALL.getName() + "mode selected.");
+        System.out.println(Auton.FOURBALL.getName() + " mode selected.");
         break;
       case FIVEBALL:
-        System.out.println(Auton.FIVEBALL.getName() + "mode selected.");
+        System.out.println(Auton.FIVEBALL.getName() + " mode selected.");
         break;
       default:
         System.out.println("Auton: No mode selected.");

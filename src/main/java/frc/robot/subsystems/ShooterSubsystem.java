@@ -93,7 +93,6 @@ public class ShooterSubsystem extends SubsystemBase {
     // Initializes Additional PID for the shooter
     flywheelPID.setIMaxAccum(Constants.Shooter.kMaxIAccum, Constants.Shooter.kMaxISlot);
     flywheelPID.setOutputRange(Constants.Shooter.kMinOutput, Constants.Shooter.kMaxOutput);
-    
 
     // flywheelPID.setFF(Constants.Shooter.kF);
 
@@ -103,7 +102,6 @@ public class ShooterSubsystem extends SubsystemBase {
     DistanceArray[2] = new ShooterConfig(15, 82, 3420);
     // TODO:FIll lookup table
     DSmoothRPM = shooterTab.add("Smooth RPM", 0.0).getEntry();
-
   }
 
   private void instantiateDebugTab() {
