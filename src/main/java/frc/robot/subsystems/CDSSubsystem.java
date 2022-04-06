@@ -45,8 +45,6 @@ public class CDSSubsystem extends SubsystemBase {
   private SimDouble m_simR, m_simG, m_simB, m_simProx;
 
   private int simCount = 0;
-  private String[] simColorArray = new String[3];
-
   private String ballLayout;
 
   private int msCurrent = 0;
@@ -383,7 +381,6 @@ public class CDSSubsystem extends SubsystemBase {
     getSensorStatus();
     ballCount = getBallCount();
     String[] sensedBallColors = senseAllColors();
-    int currentOpenSensor = getNextOpenSensor();
 
     String[] ballLayoutArray = new String[] {"0", "0", "0"};
     for (int i = 0; i < 3; i++) {
@@ -414,10 +411,13 @@ public class CDSSubsystem extends SubsystemBase {
 
       if (Arrays.asList(Constants.advanceStates).contains(ballLayout)) {
         state = ManagementState.ADVANCE;
+        msCurrent = 0;
       } else if (Arrays.asList(Constants.intakeEjectStates).contains(ballLayout)) {
         state = ManagementState.EJECT;
+        msCurrent = 0;
       } else if (Arrays.asList(Constants.shooterEjectStates).contains(ballLayout)) {
         state = ManagementState.SHOOTER_EJECT;
+        msCurrent = 0;
       }
 
       CDSState.setString(state.toString());
