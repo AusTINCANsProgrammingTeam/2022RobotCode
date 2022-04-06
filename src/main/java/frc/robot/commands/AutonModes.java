@@ -118,7 +118,7 @@ public class AutonModes {
               new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
     }
     parallels[0] =
-        parallels[0].alongWith(new InstantCommand(climbSubsystem::deployHA, climbSubsystem));
+        parallels[0].alongWith(new InstantCommand(climbSubsystem::retractPoles, climbSubsystem));
 
     return parallels;
   }
