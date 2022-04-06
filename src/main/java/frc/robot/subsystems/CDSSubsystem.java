@@ -45,8 +45,6 @@ public class CDSSubsystem extends SubsystemBase {
   private SimDouble m_simR, m_simG, m_simB, m_simProx;
 
   private int simCount = 0;
-  private String[] simColorArray = new String[3];
-
   private String ballLayout;
 
   private int msCurrent = 0;
@@ -57,7 +55,7 @@ public class CDSSubsystem extends SubsystemBase {
   private int advanceTimeout = 2000; // how long CDS should run before it times out*/
 
   private int ballCount = 0;
-  private double colorThreshold = 0.3; // TODO: change during testing
+  private double colorThreshold = 0.1; // TODO: change during testing
 
   private int[] sensorStatuses;
   private boolean[] activationArray = new boolean[3];
@@ -92,6 +90,7 @@ public class CDSSubsystem extends SubsystemBase {
           .withWidget(BuiltInWidgets.kToggleButton)
           .withPosition(1, 2)
           .getEntry();
+  private NetworkTableEntry ballLayoutEntry = CDSTab.add("CDS Ball Layout", "000").getEntry();
 
   public CDSSubsystem() {
     // BManualCDS.setBoolean(Constants.); TODO: setup when manual cds toggle is merged
@@ -383,7 +382,6 @@ public class CDSSubsystem extends SubsystemBase {
     getSensorStatus();
     ballCount = getBallCount();
     String[] sensedBallColors = senseAllColors();
-    int currentOpenSensor = getNextOpenSensor();
 
     String[] ballLayoutArray = new String[] {"0", "0", "0"};
     for (int i = 0; i < 3; i++) {
@@ -394,8 +392,7 @@ public class CDSSubsystem extends SubsystemBase {
       }
     }
 
-    ballLayout =
-        String.format("%s%s%s", ballLayoutArray[0], ballLayoutArray[1], ballLayoutArray[2]);
+    ballLayout = ballLayoutArray[0] + ballLayoutArray[1] + ballLayoutArray[2];
 
     // offset for entering idle so that we don't enter it while balls are in transit
     if (managementEnabled()) {
@@ -414,13 +411,17 @@ public class CDSSubsystem extends SubsystemBase {
 
       if (Arrays.asList(Constants.advanceStates).contains(ballLayout)) {
         state = ManagementState.ADVANCE;
+        msCurrent = 0;
       } else if (Arrays.asList(Constants.intakeEjectStates).contains(ballLayout)) {
         state = ManagementState.EJECT;
+        msCurrent = 0;
       } else if (Arrays.asList(Constants.shooterEjectStates).contains(ballLayout)) {
         state = ManagementState.SHOOTER_EJECT;
+        msCurrent = 0;
       }
 
       CDSState.setString(state.toString());
+      ballLayoutEntry.setString(ballLayout);
     }
   }
 
