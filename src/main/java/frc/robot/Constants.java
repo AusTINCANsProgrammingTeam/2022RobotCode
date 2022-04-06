@@ -324,37 +324,60 @@ public final class Constants {
   // Climb Constants
 
   // mode
-  public static final int McMotorOne = 5;
-  public static final int McMotorTwo = 12;
-  public static final int McHeightMax = 0;
-  public static final int McHeightFeather = -20;
-  public static final int McHeightMin = -128;
-  public static final double[] McRightPID = {0.25, 0.005, 1.0};
-  public static final double[] McLeftPID = {0.25, 0.005, 1.0};
-  // Ha = High Arms                          Mc = Mid Climb;
-  public static final double[] HaLeftPID = {0.25, 0.005, 1.0};
-  public static final double[] HaRightPID = {0.25, 0.005, 1.0};
-  public static final double HaHeightMax = 6;
-  public static final int HaHeightMin = -70;
-  public static final int HaMotorTwo = 16;
-  public static final int HaMotorOne = 15;
 
-  public static final int ClimbHaLowCurrent = 15;
-  public static final int ClimbMcLowCurrent = 10;
-  public static final int ClimbHaHighCurrent = 50;
-  public static final int ClimbMcHighCurrent = 60;
+  // climb motor ids
+  public static final int armMotorOne = 5;
+  public static final int armMotorTwo = 12;
+  public static final int poleMotorOne = 15;
+  public static final int poleMotorTwo = 16;
 
-  public static final double DriveSpeedHigh = 1;
-  public static final double DriveSpeedLow = 1;
+  public static final int armHeightMax = 0;
+  public static final int armHeightMin = -128;
+  public static final int armHeightFeather1 = -20;
+  public static final int armHeightFeather2 = -35;
+  public static final int armFeatherRPM1 = -3300;
+  public static final int armFeatherRPM2 = -5000;
+  public static final int poleHeightMax = 6;
+  public static final int poleHeightMin = -70;
+  public static final int poleHeightDeploy = -17;
 
-  public static final double ControllerDeadZone = 0.1;
+  public static final double[] armPosPID = {0.125, 0, 0};
+  public static final double[] armVelocityPID = {4e-5, 0, 0};
+  public static final double[] polePosPID = {0.125, 0, 0};
+  public static final int armPosPIDSlot = 1;
+  public static final int armVelPIDSlot = 2;
 
-  public static final double McUpSpeed = -1;
-  public static final double McDownSpeed = -0.65;
+  public static final double climbMaxOutput = 1.0;
+  public static final int climbPoleLowCurrent = 15;
+  public static final int climbArmLowCurrent = 10;
+  public static final int climbPoleHighCurrent = 50;
+  public static final int climbArmHighCurrent = 60;
 
-  public static final double HaInSpeed = 0.5;
-  public static final double HaOutSpeed = 0.6;
+  // servo for hooks
+  // TODO: find the real ids as well as make sure the set point is correct
+  public static final int climbServoIDOne = 0;
+  public static final int climbServoIDTwo = 1;
+  public static final double climbServo1Locked = 0.35;
+  public static final double climbServo1Unlocked = 1;
+  public static final double climbServo2Locked = 0.65;
+  public static final double climbServo2Unlocked = 0;
 
-  public static final double McsetIMaxAccum = 0.45;
-  public static final double HasetIMaxAccum = 0.25;
+  public static final double climbServoSetPoint = 0.5;
+
+  public static final double driveSpeedHigh = 1;
+  public static final double driveSpeedLow = 0.6;
+
+  public static final double controllerDeadZone = 0.1;
+
+  public static final double climbSequence1Timeout = 20.0;
+
+  public static final double armUpSpeed = -1;
+  public static final double armDownSpeed = -0.65;
+  public static final double poleInSpeed = 0.5;
+  public static final double poleOutSpeed = 0.6;
+
+  public static final double armSetIMaxAccum = 0.45;
+  public static final double poleSetIMaxAccum = 0.25;
+
+  public static final int climbArmDeadband = 1;
 }

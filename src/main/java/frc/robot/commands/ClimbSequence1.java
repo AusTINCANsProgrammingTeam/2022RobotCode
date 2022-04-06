@@ -5,47 +5,48 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.ClimbSubsystem;
-import frc.robot.subsystems.DriveBaseSubsystem;
 
-public class ClimbEnable extends CommandBase {
-  private final ClimbSubsystem m_subsystem;
-  private final DriveBaseSubsystem m_drivesubsystem;
+public class ClimbSequence1 extends CommandBase {
+  private final ClimbSubsystem climbSubsystem;
+  private int i;
 
-  /** Creates a new ClimbEnable. */
-  public ClimbEnable(ClimbSubsystem s, DriveBaseSubsystem d) {
+  /** Creates a new ClimbKeepDown. */
+  public ClimbSequence1(ClimbSubsystem s) {
     addRequirements(s);
-    addRequirements(d);
-    m_subsystem = s;
-    m_drivesubsystem = d;
+    i = 0;
+    this.climbSubsystem = s;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.climbEnable();
-    m_subsystem.resetClimbHeights();
-
-    if (m_subsystem.getclimbingenable()) {
-      m_drivesubsystem.setDriveBaseSpeed(Constants.driveSpeedLow);
-    } else {
-      m_drivesubsystem.setDriveBaseSpeed(Constants.driveSpeedHigh);
-    }
+    climbSubsystem.setAutoBoolean(true);
+    climbSubsystem.deployPoles();
+    climbSubsystem.unlockHooks();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if (i > 5) {
+      climbSubsystem.deployArms();
+    }
+    climbSubsystem.resetClimbHeights();
+    i++;
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    climbSubsystem.setAutoBoolean(false);
+    climbSubsystem.resetClimbHeights();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return climbSubsystem.atFirstSetpoint();
   }
 }
