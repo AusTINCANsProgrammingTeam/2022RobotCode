@@ -4,6 +4,10 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -18,21 +22,42 @@ import frc.robot.common.hardware.MotorController;
 public class IntakeSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-
+  private boolean intakeDeployed;
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
+  private ShuffleboardTab intakeTab = Shuffleboard.getTab("Intake Tab");
+
   private NetworkTableEntry DIntakeSpeed =
       operatorTab
           .add("Intake Speed", 0)
           .withWidget(BuiltInWidgets.kNumberBar)
-          .withPosition(3, 0)
+          .withPosition(1, 3)
           .withSize(2, 1)
           .getEntry();
 
   private MotorController intakeMotorControllerOne;
+  private MotorController deployController;
+  private SparkMaxPIDController deployPID;
+  private RelativeEncoder deployEncoder;
 
   public IntakeSubsystem() {
+    intakeDeployed = false;
     intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID);
+    deployController =
+        new MotorController(
+            "Intake Deploy", Constants.intakeDeployMotorID, Constants.intakeDeployPID);
+    deployController.setSmartCurrentLimit(Constants.intakeDeployCurrent);
+    deployPID = deployController.getPIDCtrl();
+    deployEncoder = deployController.getEncoder();
+    deployController.setIdleMode(IdleMode.kBrake);
+    deployEncoder.setPosition(0);
+
     intakeMotorControllerOne.setInverted(true);
+  }
+
+  public void resetpid() {}
+
+  public boolean getIntakeDeployed() {
+    return intakeDeployed;
   }
 
   public void toggleIntake(boolean reverse) {
@@ -54,6 +79,16 @@ public class IntakeSubsystem extends SubsystemBase {
     }
   }
 
+  public void deployIntake() {
+    deployPID.setReference(Constants.intakeDeployPos, CANSparkMax.ControlType.kPosition);
+    intakeDeployed = true;
+  }
+
+  public void retractIntake() {
+    deployPID.setReference(Constants.intakeRetractPos, CANSparkMax.ControlType.kPosition);
+    intakeDeployed = false;
+  }
+
   public void stopIntake() {
     intakeMotorControllerOne.set(0.0);
     DIntakeSpeed.setDouble(0);
@@ -62,5 +97,9 @@ public class IntakeSubsystem extends SubsystemBase {
     }
   }
 
-  public void periodic() {}
+  public void periodic() {
+    SmartDashboard.putBoolean("Intake Out?", intakeDeployed);
+    SmartDashboard.putNumber("Deploy Encoder", deployController.getEncoder().getPosition());
+    SmartDashboard.putNumber("Applied Output, deploy", deployController.getAppliedOutput());
+  }
 }

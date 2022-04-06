@@ -71,11 +71,15 @@ public class RobotContainer {
   private ClimbPeriodic ClimbPeriodic;
   private Command HaDeploy;
 
-  // Controller Check Variables
-  private NetworkTableEntry sbaxisCount0;
+  // auton
+  private AutonModes autonModes;
+  private Command chosenAutonMode = null;
+
+  // Controller Check VariablesdefaultValue
   private NetworkTableEntry sbaxisCount1;
   private NetworkTableEntry sbbuttonCount0;
   private NetworkTableEntry sbbuttonCount1;
+  private NetworkTableEntry sbaxisCount0;
   private int axisCount0;
   private int buttonCount0;
   private int axisCount1;
@@ -276,6 +280,9 @@ public class RobotContainer {
     return autonMode.getAutonCommand();
   }
 
+  // TODO: create get methods for other subsystems to pass into TabContainer, or
+  // find a more
+  // efficient way
   public static DriveBaseSubsystem getDriveBase() {
     if (driveBaseSubsystem != null) {
       return driveBaseSubsystem;
