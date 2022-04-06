@@ -263,16 +263,26 @@ public class ClimbSubsystem extends SubsystemBase {
 
   // functions for ClimbSequence1
   public void deployArms() {
-    if (armEncoderHeightOne > Constants.armHeightFeather
-        || armEncoderHeightTwo < Constants.armHeightFeather) {
+    if (armEncoderHeightOne > Constants.armHeightFeather1
+        || armEncoderHeightTwo > Constants.armHeightFeather1) {
       armOne
           .getPIDCtrl()
           .setReference(
-              Constants.armFeatherRPM, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
+              Constants.armFeatherRPM1, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
       armTwo
           .getPIDCtrl()
           .setReference(
-              Constants.armFeatherRPM, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
+              Constants.armFeatherRPM1, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
+    } else if(armEncoderHeightOne > Constants.armHeightFeather2
+    || armEncoderHeightTwo > Constants.armHeightFeather2){
+      armOne
+      .getPIDCtrl()
+      .setReference(
+          Constants.armFeatherRPM2, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
+      armTwo
+      .getPIDCtrl()
+      .setReference(
+          Constants.armFeatherRPM2, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
     } else {
       armOne
           .getPIDCtrl()
@@ -329,6 +339,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("arm vel", armOne.getEncoder().getVelocity());
     SmartDashboard.putNumber("arm pos", armOne.getEncoder().getPosition());
+    SmartDashboard.putNumber("arm output", armOne.getAppliedOutput());
 
     armOne.updateSmartDashboard();
     armTwo.updateSmartDashboard();

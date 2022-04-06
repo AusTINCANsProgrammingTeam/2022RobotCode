@@ -302,11 +302,13 @@ public final class Constants {
 
   public static final int armHeightMax = 0;
   public static final int armHeightMin = -128;
-  public static final int armHeightFeather = -20;
-  public static final int armFeatherRPM = 2000;
+  public static final int armHeightFeather1 = -20;
+  public static final int armHeightFeather2 = -35;
+  public static final int armFeatherRPM1 = -3300;
+  public static final int armFeatherRPM2 = -5000;
   public static final int poleHeightMax = 6;
   public static final int poleHeightMin = -70;
-  public static final int poleHeightDeploy = -37;
+  public static final int poleHeightDeploy = -17;
 
   public static final double[] armPosPID = {0.125, 0, 0};
   public static final double[] armVelocityPID = {4e-5, 0, 0};
@@ -314,7 +316,7 @@ public final class Constants {
   public static final int armPosPIDSlot = 1;
   public static final int armVelPIDSlot = 2;
 
-  public static final double climbMaxOutput = 0.8;
+  public static final double climbMaxOutput = 1.0;
   public static final int climbPoleLowCurrent = 15;
   public static final int climbArmLowCurrent = 10;
   public static final int climbPoleHighCurrent = 50;
@@ -331,7 +333,7 @@ public final class Constants {
 
   public static final double controllerDeadZone = 0.1;
 
-  public static final double climbSequence1Timeout = 5.0;
+  public static final double climbSequence1Timeout = 20.0;
 
   public static final double armUpSpeed = -1;
   public static final double armDownSpeed = -0.65;
