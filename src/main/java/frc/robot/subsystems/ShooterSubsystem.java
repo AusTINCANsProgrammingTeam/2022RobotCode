@@ -93,8 +93,8 @@ public class ShooterSubsystem extends SubsystemBase {
     // Initializes Additional PID for the shooter
     flywheelPID.setIMaxAccum(Constants.Shooter.kMaxIAccum, Constants.Shooter.kMaxISlot);
     flywheelPID.setOutputRange(Constants.Shooter.kMinOutput, Constants.Shooter.kMaxOutput);
-    flywheelPID.setFF(0.0002);
-    
+    flywheelPID.setFF(0.00025);
+
     // flywheelPID.setFF(Constants.Shooter.kF);
 
     DistanceArray = new ShooterConfig[3];
@@ -102,6 +102,8 @@ public class ShooterSubsystem extends SubsystemBase {
     DistanceArray[1] = new ShooterConfig(10, 80, 3065);
     DistanceArray[2] = new ShooterConfig(15, 82, 3420);
     // TODO:FIll lookup table
+    DSmoothRPM = shooterTab.add("Smooth RPM", 0.0).getEntry();
+
   }
 
   private void instantiateDebugTab() {
@@ -109,7 +111,6 @@ public class ShooterSubsystem extends SubsystemBase {
     PID_P = shooterTab.add("PID P", Constants.Shooter.kPIDFArray[0]).withPosition(0, 1).getEntry();
     PID_I = shooterTab.add("PID I", Constants.Shooter.kPIDFArray[1]).withPosition(0, 2).getEntry();
     PID_D = shooterTab.add("PID D", Constants.Shooter.kPIDFArray[2]).withPosition(0, 3).getEntry();
-    DSmoothRPM = shooterTab.add("Smooth RPM", 0.0).getEntry();
   }
 
   public void updatePID() {
@@ -239,6 +240,7 @@ public class ShooterSubsystem extends SubsystemBase {
     currentRPM = flywheelEncoder.getVelocity();
     smoothRPM = Constants.Shooter.kA * currentRPM + smoothRPM * (1 - Constants.Shooter.kA);
 
+    DSmoothRPM.setDouble(smoothRPM);
     DRPM.setDouble(currentRPM);
 
     if (Constants.DebugMode) {
