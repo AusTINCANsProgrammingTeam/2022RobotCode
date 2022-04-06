@@ -74,11 +74,11 @@ public class RobotContainer {
   private AutonModes autonModes;
   private Command chosenAutonMode = null;
 
-  // Controller Check Variables
-  private NetworkTableEntry sbaxisCount0;
+  // Controller Check VariablesdefaultValue
   private NetworkTableEntry sbaxisCount1;
   private NetworkTableEntry sbbuttonCount0;
   private NetworkTableEntry sbbuttonCount1;
+  private NetworkTableEntry sbaxisCount0;
   private int axisCount0;
   private int buttonCount0;
   private int axisCount1;
@@ -276,6 +276,9 @@ public class RobotContainer {
     }
   }
 
+  // TODO: create get methods for other subsystems to pass into TabContainer, or
+  // find a more
+  // efficient way
   public static DriveBaseSubsystem getDriveBase() {
     if (driveBaseSubsystem != null) {
       return driveBaseSubsystem;

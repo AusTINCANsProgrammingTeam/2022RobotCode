@@ -179,8 +179,14 @@ public final class Constants {
   public static final boolean usingExternal = false;
   public static final int encoderCountsPerRev = 8192;
 
-  // Intake Contstants
+  // Intake Constants
   public static final int intakeMotorOneID = 1;
+  public static final int intakeDeployMotorID = 8;
+  public static final double[] intakeDeployPID = {0.25, 0, 1};
+  public static final double intakeDeployPos = 72;
+  public static final double intakeRetractPos = 5;
+  public static final int intakeDeployCurrent = 30;
+
   public static final double intakeMotorSpeed = 1.0;
   public static final int initialBallSensorChannel = 0;
   public static final int middleBallSensorChannel = 1;

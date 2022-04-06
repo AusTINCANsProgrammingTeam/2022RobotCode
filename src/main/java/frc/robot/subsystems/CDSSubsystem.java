@@ -79,7 +79,7 @@ public class CDSSubsystem extends SubsystemBase {
   private NetworkTableEntry CDSState = CDSTab.add("CDS State", "IDLE").getEntry();
   private NetworkTableEntry managementOnOff =
       operatorTab
-          .add("Run Auto Intake and Eject", false)
+          .add("Run Auto Intake and Eject", true)
           .withWidget(BuiltInWidgets.kToggleButton)
           .withPosition(5, 1)
           .getEntry();

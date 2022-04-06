@@ -29,6 +29,7 @@ public class OuttakeCommand extends CommandBase {
     CDSSubsystem.CDSBeltToggle(true, Constants.CDSBeltSpeed);
     CDSSubsystem.CDSWheelToggle(true);
     intakeSubsystem.toggleIntake(true);
+    intakeSubsystem.deployIntake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,6 +41,7 @@ public class OuttakeCommand extends CommandBase {
   public void end(boolean interrupted) {
     CDSSubsystem.stopCDS();
     intakeSubsystem.stopIntake();
+    intakeSubsystem.retractIntake();
   }
 
   // Returns true when the command should end.
