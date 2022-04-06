@@ -233,9 +233,8 @@ public class RobotContainer {
 
     if (climbSubsystem != null) {
       // enable climb and spool out arms
-      buttons2[Constants.startButton].whenPressed(
-          new SequentialCommandGroup(climbEnabling, climbSequence1)
-              .withTimeout(Constants.climbSequence1Timeout));
+      buttons2[Constants.startButton].whenPressed(climbEnabling);
+          buttons2[Constants.XButton].whileHeld(climbSequence1);
 
       buttons2[Constants.XButton].whenPressed(hookUnlock);
       buttons2[Constants.BButton].whenPressed(hookLock);
