@@ -55,7 +55,7 @@ public class CDSSubsystem extends SubsystemBase {
   private int advanceTimeout = 2000; // how long CDS should run before it times out*/
 
   private int ballCount = 0;
-  private double colorThreshold = 0.3; // TODO: change during testing
+  private double colorThreshold = 0.1; // TODO: change during testing
 
   private int[] sensorStatuses;
   private boolean[] activationArray = new boolean[3];
@@ -90,6 +90,7 @@ public class CDSSubsystem extends SubsystemBase {
           .withWidget(BuiltInWidgets.kToggleButton)
           .withPosition(1, 2)
           .getEntry();
+  private NetworkTableEntry ballLayoutEntry = CDSTab.add("CDS Ball Layout", "000").getEntry();
 
   public CDSSubsystem() {
     // BManualCDS.setBoolean(Constants.); TODO: setup when manual cds toggle is merged
@@ -421,6 +422,7 @@ public class CDSSubsystem extends SubsystemBase {
       }
 
       CDSState.setString(state.toString());
+      ballLayoutEntry.setString(ballLayout);
     }
   }
 
