@@ -177,7 +177,7 @@ public class AutonModes {
                     new WaitCommand(1.5), new OuttakeCommand(intakeSubsystem, cdsSubsystem)));
         break;
 
-      case TWOBALLSTEAL2:
+      case TWOBALLSTEAL2: // same as twoBallSteal1 for now (placeholder)
         autonCommand =
             new SequentialCommandGroup(
                 new WaitCommand(initialWaitTime),
@@ -185,8 +185,9 @@ public class AutonModes {
                 parallels[1],
                 new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
                 parallels[2],
-                new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false)
-                    .beforeStarting(() -> this.shooterSubsystem.setAimMode(AimModes.EJECT)));
+                parallels[3],
+                new ParallelDeadlineGroup(
+                    new WaitCommand(1.5), new OuttakeCommand(intakeSubsystem, cdsSubsystem)));
         break;
 
       case THREEBALL:
@@ -216,7 +217,7 @@ public class AutonModes {
                 new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
         break;
 
-      case FIVEBALL:
+      case FIVEBALL: // placeholder as fourball for now
         autonCommand =
             new SequentialCommandGroup(
                 parallels[0],
@@ -224,9 +225,6 @@ public class AutonModes {
                 new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
                 parallels[2],
                 parallels[3],
-                new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
-                parallels[4],
-                parallels[5],
                 new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
         break;
 

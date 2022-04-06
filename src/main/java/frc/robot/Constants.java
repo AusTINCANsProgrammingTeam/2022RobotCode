@@ -219,7 +219,8 @@ public final class Constants {
   public static final int sensorsDownLimit = 3;
 
   // CDS Constants
-  public static final boolean ballManagementEnabled = false;
+  public static final boolean ballManagementEnabled =
+      true; // TODO: turning it on messes with shooter on the test bot
 
   public static final int CDSBeltID = 3;
   public static final int CDSWheelControllerOneID = 2;

@@ -58,14 +58,14 @@ public class Robot extends TimedRobot {
     robotContainer = new RobotContainer();
 
     chooser.setDefaultOption(
-        Auton.TWOBALLSTEAL1.getName(), Auton.TWOBALLSTEAL1); // default is four ball mode for now
+        Auton.FOURBALL.getName(), Auton.FOURBALL); // default is four ball mode for now
 
     chooser.addOption(Auton.INTAKETAXI.getName(), Auton.INTAKETAXI);
     chooser.addOption(Auton.PUSHTAXI.getName(), Auton.PUSHTAXI);
     chooser.addOption(Auton.ONEBALL.getName(), Auton.ONEBALL);
     chooser.addOption(Auton.TWOBALL.getName(), Auton.TWOBALL);
     chooser.addOption(Auton.TWOBALLSTEAL1.getName(), Auton.TWOBALLSTEAL1);
-    chooser.addOption(Auton.TWOBALLSTEAL2.getName(), Auton.TWOBALLSTEAL2);
+    // chooser.addOption(Auton.TWOBALLSTEAL2.getName(), Auton.TWOBALLSTEAL2); // not ready
     chooser.addOption(Auton.THREEBALL.getName(), Auton.THREEBALL);
     chooser.addOption(Auton.FOURBALL.getName(), Auton.FOURBALL);
     // chooser.addOption(Auton.FIVEBALL.getName(), Auton.FIVEBALL);
