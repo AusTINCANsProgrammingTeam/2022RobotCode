@@ -392,8 +392,7 @@ public class CDSSubsystem extends SubsystemBase {
       }
     }
 
-    ballLayout =
-        String.format("%s%s%s", ballLayoutArray[0], ballLayoutArray[1], ballLayoutArray[2]);
+    ballLayout = ballLayoutArray[0] + ballLayoutArray[1] + ballLayoutArray[2];
 
     // offset for entering idle so that we don't enter it while balls are in transit
     if (managementEnabled()) {
