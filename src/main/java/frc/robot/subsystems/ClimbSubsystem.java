@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
@@ -94,14 +95,14 @@ public class ClimbSubsystem extends SubsystemBase {
           .add("Pole Height 1", 0)
           .withWidget(BuiltInWidgets.kNumberBar)
           .withSize(2, 1)
-          .withPosition(6, 2)
+          .withPosition(8, 0)
           .getEntry();
   private NetworkTableEntry DClimbHeight4 =
       operatorTab
           .add("Pole Height 2", 0)
           .withWidget(BuiltInWidgets.kNumberBar)
           .withSize(2, 1)
-          .withPosition(6, 3)
+          .withPosition(8, 1)
           .getEntry();
   private NetworkTableEntry BClimbEnabled =
       operatorTab
@@ -112,7 +113,7 @@ public class ClimbSubsystem extends SubsystemBase {
   private NetworkTableEntry BAutomaticControl =
       operatorTab
           .add("Auto Climb Active", false)
-          .withPosition(5, 2)
+          .withPosition(5, 1)
           .withWidget(BuiltInWidgets.kBooleanBox)
           .getEntry();
 
@@ -214,18 +215,14 @@ public class ClimbSubsystem extends SubsystemBase {
   public void climbKeepDownFunction() {
     armOne.getPIDCtrl().setReference(armHeightOne, CANSparkMax.ControlType.kPosition);
     armOne.getPIDCtrl().setIMaxAccum(Constants.armSetIMaxAccum, 0);
-    sbarmHeightOne.setNumber(armHeightOne);
 
     armTwo.getPIDCtrl().setReference(armHeightTwo, CANSparkMax.ControlType.kPosition);
-    sbarmHeightTwo.setNumber(armHeightTwo);
     armTwo.getPIDCtrl().setIMaxAccum(Constants.armSetIMaxAccum, 0);
 
     poleOne.getPIDCtrl().setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
-    sbpoleHeightOne.setNumber(poleHeightOne);
     poleOne.getPIDCtrl().setIMaxAccum(Constants.poleSetIMaxAccum, 0);
 
     poleTwo.getPIDCtrl().setReference(poleHeightTwo, CANSparkMax.ControlType.kPosition);
-    sbpoleHeightTwo.setNumber(poleHeightTwo);
     poleTwo.getPIDCtrl().setIMaxAccum(Constants.poleSetIMaxAccum, 0);
   }
 
@@ -279,10 +276,8 @@ public class ClimbSubsystem extends SubsystemBase {
         }
       }
       armOne.getPIDCtrl().setReference(armHeightOne, CANSparkMax.ControlType.kPosition);
-      sbarmHeightOne.setNumber(armHeightOne);
 
       armTwo.getPIDCtrl().setReference(armHeightTwo, CANSparkMax.ControlType.kPosition);
-      sbarmHeightTwo.setNumber(armHeightTwo);
     }
   }
 
@@ -313,10 +308,8 @@ public class ClimbSubsystem extends SubsystemBase {
         }
       }
       poleOne.getPIDCtrl().setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
-      sbpoleHeightOne.setNumber(poleHeightOne);
 
       poleTwo.getPIDCtrl().setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
-      sbpoleHeightTwo.setNumber(poleHeightOne);
     }
   }
 
@@ -328,7 +321,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
   // functions for ClimbSequence1
   public void deployArms() {
-    if (armEncoderHeightOne < Constants.armHeightFeather
+    if (armEncoderHeightOne > Constants.armHeightFeather
         || armEncoderHeightTwo < Constants.armHeightFeather) {
       armOne
           .getPIDCtrl()
@@ -378,7 +371,7 @@ public class ClimbSubsystem extends SubsystemBase {
     return (armEncoderHeightOne > Constants.armHeightMin - Constants.climbArmDeadband
             && armEncoderHeightOne < Constants.armHeightMin + Constants.climbArmDeadband)
         && (armEncoderHeightTwo > Constants.armHeightMin - Constants.climbArmDeadband
-            && armEncoderHeightTwo < Constants.climbArmDeadband + Constants.climbArmDeadband);
+            && armEncoderHeightTwo < Constants.armHeightMin + Constants.climbArmDeadband);
   }
 
   public void periodic() {
@@ -399,6 +392,9 @@ public class ClimbSubsystem extends SubsystemBase {
     armEncoderHeightTwo = armTwo.getEncoder().getPosition();
     poleEncoderHeightOne = poleOne.getEncoder().getPosition();
     poleEncoderHeightTwo = poleTwo.getEncoder().getPosition();
+
+    SmartDashboard.putNumber("arm vel", armOne.getEncoder().getVelocity());
+    SmartDashboard.putNumber("arm pos", armOne.getEncoder().getPosition());
 
     armOne.updateSmartDashboard();
     armTwo.updateSmartDashboard();
