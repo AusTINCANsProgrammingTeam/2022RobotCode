@@ -27,8 +27,8 @@ public final class Constants {
     },
     EJECT(1500.0, 0.0),
     LAUNCH(0.0, 0.0),
-    TARMAC(1430.0, 0.0),
-    ATARMAC(1430.0, 0.0),
+    TARMAC(1380.0, 0.0),
+    ATARMAC(1380.0, 0.0),
     TEST {
       @Override
       public AimModes next() {
