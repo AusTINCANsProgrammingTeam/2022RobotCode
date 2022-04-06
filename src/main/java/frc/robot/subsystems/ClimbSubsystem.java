@@ -386,7 +386,6 @@ public class ClimbSubsystem extends SubsystemBase {
       climbEnable();
     }
 
-    hookServos = Shuffleboard.getTab("Hook Servos");
     servo1.setNumber(servoOne.getAngle());
     servo2.setNumber(servoTwo.getAngle());
 
