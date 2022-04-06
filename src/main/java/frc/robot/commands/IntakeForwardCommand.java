@@ -45,7 +45,7 @@ public class IntakeForwardCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    mIntakeSubsystem.retractIntake();
+    //mIntakeSubsystem.retractIntake();
     return false;
   }
 }

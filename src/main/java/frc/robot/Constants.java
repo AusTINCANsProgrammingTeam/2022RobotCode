@@ -188,6 +188,9 @@ public final class Constants {
   public static final int middleBallSensorChannel = 1;
   public static final int finalBallSensorChannel = 2;
   public static final int sensorsDownLimit = 3;
+  public static final double intakedeployP= 0.25;
+  public static final double intakedeployI = 0.005;
+  public static final double intakedeployD = 1.0;
 
   // CDS Constants
   public static final boolean ballManagementEnabled = true;

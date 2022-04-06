@@ -20,6 +20,7 @@ import frc.robot.commands.ClimbEnable;
 import frc.robot.commands.ClimbPeriodic;
 import frc.robot.commands.CombinedIntakeCDSForwardCommand;
 import frc.robot.commands.DriveBaseTeleopCommand;
+import frc.robot.commands.IntakeDeploy;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
@@ -204,6 +205,7 @@ public class RobotContainer {
     } /*else {
         buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
       }*/
+ 
 
     if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
       // Auto Aim Shot

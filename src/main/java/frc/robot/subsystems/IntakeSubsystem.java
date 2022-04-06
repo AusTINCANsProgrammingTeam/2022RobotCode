@@ -26,11 +26,11 @@ public class IntakeSubsystem extends SubsystemBase {
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
   private ShuffleboardTab intakeTab = Shuffleboard.getTab("Intake Tab");
   private NetworkTableEntry sbintakeDeployP =
-      intakeTab.add("Intake deploy P", 0).withSize(1, 1).withPosition(0, 1).getEntry();
+      intakeTab.add("Intake deploy P", Constants.intakedeployP).withSize(1, 1).withPosition(0, 1).getEntry();
   private NetworkTableEntry sbintakeDeployI =
-      intakeTab.add("Intake deploy I", 0).withSize(1, 1).withPosition(0, 2).getEntry();
+      intakeTab.add("Intake deploy I", Constants.intakedeployI).withSize(1, 1).withPosition(0, 2).getEntry();
   private NetworkTableEntry sbintakeDeployD =
-      intakeTab.add("Intake deploy D", 0).withSize(1, 1).withPosition(0, 3).getEntry();
+      intakeTab.add("Intake deploy D", Constants.intakedeployD).withSize(1, 1).withPosition(0, 3).getEntry();
   private NetworkTableEntry sbintakeDeployMaxIAcum =
       intakeTab.add("Intake deploy I Max Acum", 0).withSize(1, 1).withPosition(0, 4).getEntry();
   private NetworkTableEntry sbintakeDeployCurrenttLimit =
@@ -98,12 +98,12 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void deployIntake() {
-    deployPID.setReference(0, CANSparkMax.ControlType.kPosition);
+    deployPID.setReference(0.2, CANSparkMax.ControlType.kPosition);
     intakeDeployed = true;
     
   }
   public void retractIntake() {
-    deployPID.setReference(10, CANSparkMax.ControlType.kPosition);
+    deployPID.setReference(0, CANSparkMax.ControlType.kPosition);
     intakeDeployed = false;
   }
   /*
