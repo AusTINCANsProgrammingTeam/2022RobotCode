@@ -27,8 +27,8 @@ public final class Constants {
     },
     EJECT(1500.0, 0.0),
     LAUNCH(0.0, 0.0),
-    TARMAC(1440.0, 0.0),
-    ATARMAC(1440.0, 0.0),
+    TARMAC(1430.0, 0.0),
+    ATARMAC(1430.0, 0.0),
     TEST {
       @Override
       public AimModes next() {
@@ -308,7 +308,7 @@ public final class Constants {
 
     // PID settings
     // 2.5e-4, 2.5e-7, 2e-6, 1e-4
-    public static final double kPIDFArray[] = {1.9516e-09, 6.0E-8, 0};
+    public static final double kPIDFArray[] = {1.4e-09, 4.0E-8, 0};
     //public static final double kPIDFArray[] = {0.000003, 0.00000004, 0};
     // public static final double kPIDFArray[] = {2.5e-8, 5.5e-8, 0}; 7e-9
     public static final double kMaxIAccum = 0.9;

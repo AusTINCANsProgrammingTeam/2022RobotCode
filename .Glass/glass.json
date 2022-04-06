@@ -1,13 +1,12 @@
 {
   "NetworkTables": {
     "Shuffleboard": {
-      "DriveBase": {
-        "open": true
-      },
       "open": true
     },
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/LiveWindow/ClimbSubsystem": "Subsystem",
+      "/LiveWindow/IntakeSubsystem": "Subsystem",
       "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
       "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
@@ -56,7 +55,7 @@
               "id": "NT:/Shuffleboard/DriveBase/Left Encoder Speed"
             }
           ],
-          "viewTime": 2.0
+          "viewTime": 20.0
         }
       ]
     },
@@ -90,6 +89,13 @@
             }
           ],
           "viewTime": 20.0
+        }
+      ]
+    },
+    "Plot <2>": {
+      "plots": [
+        {
+          "height": 332
         }
       ]
     }
