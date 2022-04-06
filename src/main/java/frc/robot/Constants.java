@@ -181,16 +181,16 @@ public final class Constants {
   // Intake Constants
   public static final int intakeMotorOneID = 1;
   public static final int intakeDeployMotorID = 8;
-  public static final double[] intakeDeployPID = {0.001, 0, 0};
+  public static final double[] intakeDeployPID = {0.25, 0, 1};
+  public static final double intakeDeployPos = 72;
+  public static final double intakeRetractPos = 5;
+  public static final int intakeDeployCurrent = 30;
 
   public static final double intakeMotorSpeed = 1.0;
   public static final int initialBallSensorChannel = 0;
   public static final int middleBallSensorChannel = 1;
   public static final int finalBallSensorChannel = 2;
   public static final int sensorsDownLimit = 3;
-  public static final double intakedeployP= 0.25;
-  public static final double intakedeployI = 0.005;
-  public static final double intakedeployD = 1.0;
 
   // CDS Constants
   public static final boolean ballManagementEnabled = true;

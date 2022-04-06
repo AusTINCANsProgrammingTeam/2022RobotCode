@@ -27,7 +27,6 @@ public class IntakeForwardCommand extends CommandBase {
   public void initialize() {
     mIntakeSubsystem.toggleIntake(false);
     mCdsSubsystem.CDSWheelToggle(false);
-    mIntakeSubsystem.deployIntake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -45,7 +44,7 @@ public class IntakeForwardCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //mIntakeSubsystem.retractIntake();
+    // mIntakeSubsystem.retractIntake();
     return false;
   }
 }

@@ -25,20 +25,6 @@ public class IntakeSubsystem extends SubsystemBase {
   private boolean intakeDeployed;
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
   private ShuffleboardTab intakeTab = Shuffleboard.getTab("Intake Tab");
-  private NetworkTableEntry sbintakeDeployP =
-      intakeTab.add("Intake deploy P", Constants.intakedeployP).withSize(1, 1).withPosition(0, 1).getEntry();
-  private NetworkTableEntry sbintakeDeployI =
-      intakeTab.add("Intake deploy I", Constants.intakedeployI).withSize(1, 1).withPosition(0, 2).getEntry();
-  private NetworkTableEntry sbintakeDeployD =
-      intakeTab.add("Intake deploy D", Constants.intakedeployD).withSize(1, 1).withPosition(0, 3).getEntry();
-  private NetworkTableEntry sbintakeDeployMaxIAcum =
-      intakeTab.add("Intake deploy I Max Acum", 0).withSize(1, 1).withPosition(0, 4).getEntry();
-  private NetworkTableEntry sbintakeDeployCurrenttLimit =
-      intakeTab.add("Intake deploy current limit", 0).withSize(1, 1).withPosition(0, 5).getEntry();
-  // private NetworkTableEntry sbintakeDeployPosition =
-  // intakeTab.add("Intake deploy position", 0).withSize(1, 1).withPosition(1, 1).getEntry();
-  private NetworkTableEntry sbintakeDeployed =
-      intakeTab.add("Intake Deployed", false).withSize(1, 1).withPosition(1, 2).getEntry();
 
   private NetworkTableEntry DIntakeSpeed =
       operatorTab
@@ -55,10 +41,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public IntakeSubsystem() {
     intakeDeployed = false;
-    intakeMotorControllerOne =
+    intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID);
+    deployController =
         new MotorController(
-            "Intake Motor One", Constants.intakeMotorOneID, Constants.intakeDeployPID);
-    deployController = new MotorController("Intake Deploy", Constants.intakeDeployMotorID);
+            "Intake Deploy", Constants.intakeDeployMotorID, Constants.intakeDeployPID);
+    deployController.setSmartCurrentLimit(Constants.intakeDeployCurrent);
     deployPID = deployController.getPIDCtrl();
     deployEncoder = deployController.getEncoder();
     deployController.setIdleMode(IdleMode.kBrake);
@@ -67,12 +54,7 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeMotorControllerOne.setInverted(true);
   }
 
-  public void resetpid() {
-    deployPID.setP(sbintakeDeployP.getDouble(0));
-    deployPID.setI(sbintakeDeployI.getDouble(0));
-    deployPID.setD(sbintakeDeployD.getDouble(0));
-    deployPID.setIMaxAccum(sbintakeDeployMaxIAcum.getDouble(0), 0);
-  }
+  public void resetpid() {}
 
   public boolean getIntakeDeployed() {
     return intakeDeployed;
@@ -98,12 +80,12 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void deployIntake() {
-    deployPID.setReference(0.2, CANSparkMax.ControlType.kPosition);
+    deployPID.setReference(Constants.intakeDeployPos, CANSparkMax.ControlType.kPosition);
     intakeDeployed = true;
   }
 
   public void retractIntake() {
-    deployPID.setReference(0, CANSparkMax.ControlType.kPosition);
+    deployPID.setReference(Constants.intakeRetractPos, CANSparkMax.ControlType.kPosition);
     intakeDeployed = false;
   }
 
@@ -116,18 +98,8 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void periodic() {
-    if ((sbintakeDeployP.getDouble(0) != deployPID.getP())
-        | (sbintakeDeployI.getDouble(0) != deployPID.getI())
-        | (sbintakeDeployD.getDouble(0) != deployPID.getD())
-        | (sbintakeDeployMaxIAcum.getDouble(0) != deployPID.getIMaxAccum(0))) {
-      resetpid();
-    }
-    sbintakeDeployed.setBoolean(intakeDeployed);
-    // sbintakeDeployPosition.setDouble(deployController.getEncoder().getPosition());
-
-    // deployController.updateSmartDashboard();
     SmartDashboard.putBoolean("Intake Out?", intakeDeployed);
-    // System.out.println("encoder: " + deployController.getEncoder().getPosition());
     SmartDashboard.putNumber("Deploy Encoder", deployController.getEncoder().getPosition());
+    SmartDashboard.putNumber("Applied Output, deploy", deployController.getAppliedOutput());
   }
 }
