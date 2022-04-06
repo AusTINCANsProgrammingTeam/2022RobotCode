@@ -147,7 +147,7 @@ public class ShooterSubsystem extends SubsystemBase {
           rpm,
           CANSparkMax.ControlType.kVelocity,
           Constants.Shooter.kMaxISlot,
-          flywheelFF.calculate(rpm / 60.0));
+          flywheelFF.calculate(rpm / 62.0));
     }
   }
 

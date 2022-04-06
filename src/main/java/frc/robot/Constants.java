@@ -27,8 +27,8 @@ public final class Constants {
     },
     EJECT(2500.0, 0.0),
     LAUNCH(0.0, 0.0),
-    TARMAC(2480.0, 0.0),
-    ATARMAC(2480.0, 0.0),
+    TARMAC(1400.0, 0.0),
+    ATARMAC(1400.0, 0.0),
     TEST {
       @Override
       public AimModes next() {
@@ -179,8 +179,14 @@ public final class Constants {
   public static final boolean usingExternal = false;
   public static final int encoderCountsPerRev = 8192;
 
-  // Intake Contstants
+  // Intake Constants
   public static final int intakeMotorOneID = 1;
+  public static final int intakeDeployMotorID = 8;
+  public static final double[] intakeDeployPID = {0.25, 0, 1};
+  public static final double intakeDeployPos = 72;
+  public static final double intakeRetractPos = 5;
+  public static final int intakeDeployCurrent = 30;
+
   public static final double intakeMotorSpeed = 1.0;
   public static final int initialBallSensorChannel = 0;
   public static final int middleBallSensorChannel = 1;
@@ -270,17 +276,17 @@ public final class Constants {
 
     // PID settings
     // 2.5e-4, 2.5e-7, 2e-6, 1e-4
-    public static final double kPIDFArray[] = {8.0383e-8, 7e-9, 0};
-    // public static final double kPIDFArray[] = {2.5e-8, 5.5e-8, 0};
+    public static final double kPIDFArray[] = {1.9516e-09, 0, 0};
+    // public static final double kPIDFArray[] = {2.5e-8, 5.5e-8, 0}; 7e-9
     public static final double kMaxIAccum = 0.9;
     public static final int kMaxISlot = 0;
     public static final double kMaxOutput = 1.0;
     public static final double kMinOutput = 0;
     public static final double kA = 0.35; // Smoothing alpha, do not cofuse with kAg
     // PID FF gains
-    public static final double kSg = 0.035516;
-    public static final double kVg = 0.14324;
-    public static final double kAg = 0.041994;
+    public static final double kSg = 0.56246;
+    public static final double kVg = 0.13981;
+    public static final double kAg = 0.0087876;
   }
 
   // Climb Constants

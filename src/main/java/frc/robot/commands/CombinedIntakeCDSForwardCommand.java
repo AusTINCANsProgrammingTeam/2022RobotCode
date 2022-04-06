@@ -52,6 +52,8 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
       CDSSubsystem.CDSWheelToggle(false);
       intakeSubsystem.toggleIntake(false);
       shooterSubsystem.runCargo(Constants.Shooter.cargoReverse);
+      intakeSubsystem.deployIntake();
+
     } else {
       // run ball management if it's in the middle of doing something
       ballManagement.execute();
@@ -65,6 +67,7 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
     CDSSubsystem.stopCDS();
     intakeSubsystem.stopIntake();
     shooterSubsystem.runCargo(0.0);
+    intakeSubsystem.retractIntake();
   }
 
   // Returns true when the command should end.
