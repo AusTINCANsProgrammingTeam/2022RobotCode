@@ -324,10 +324,10 @@ public final class Constants {
   // TODO: find the real ids as well as make sure the set point is correct
   public static final int climbServoIDOne = 0;
   public static final int climbServoIDTwo = 1;
-  public static final double climbServo1Locked = 0.1;
-  public static final double climbServo1Unlocked = 0.5;
-  public static final double climbServo2Locked = 0.1;
-  public static final double climbServo2Unlocked = 0.5;
+  public static final double climbServo1Locked = 0;
+  public static final double climbServo1Unlocked = 1;
+  public static final double climbServo2Locked = 0;
+  public static final double climbServo2Unlocked = 1;
 
   public static final double climbServoSetPoint = 0.5;
 

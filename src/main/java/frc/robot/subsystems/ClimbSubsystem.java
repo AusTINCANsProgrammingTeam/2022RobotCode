@@ -29,7 +29,7 @@ public class ClimbSubsystem extends SubsystemBase {
   private Servo servoOne;
   private Servo servoTwo;
 
-  private boolean climbEnable;
+  private boolean climbEnable, hookLocked;
 
   private double armHeightOne;
   private double armHeightTwo;
@@ -145,8 +145,8 @@ public class ClimbSubsystem extends SubsystemBase {
     sbPoleSpeedTwo = climbTab.add("Pole2 Speed", 0).withSize(2, 1).withPosition(5, 1).getEntry();
 
     hookServos = Shuffleboard.getTab("Hook Servos");
-    servo1 = hookServos.add("Servo 1", 0).withSize(2, 2).withPosition(0, 0).getEntry();
-    servo2 = hookServos.add("Servo 2", 0).withSize(2, 2).withPosition(2, 0).getEntry();
+    servo1 = hookServos.add("Servo 1", 0.35).withSize(2, 2).withPosition(0, 0).getEntry();
+    servo2 = hookServos.add("Servo 2", 1).withSize(2, 2).withPosition(2, 0).getEntry();
 
     // Arm 1 MotorController
     armOne = new MotorController("Arm1 Motor", Constants.armMotorOne, Constants.armPosPID);
@@ -202,6 +202,8 @@ public class ClimbSubsystem extends SubsystemBase {
     // servos
     servoOne = new Servo(Constants.climbServoIDOne);
     servoTwo = new Servo(Constants.climbServoIDTwo);
+
+    lockHooks();
   }
 
   public void resetClimbHeights() {
@@ -353,13 +355,15 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void unlockHooks() {
-    servoOne.setAngle(Constants.climbServo1Unlocked);
-    servoTwo.setAngle(Constants.climbServo2Unlocked);
+    hookLocked = false;
+    servoOne.set(1);
+    servoTwo.set(0);
   }
 
   public void lockHooks() {
-    servoOne.setAngle(Constants.climbServo1Locked);
-    servoTwo.setAngle(Constants.climbServo2Locked);
+    hookLocked = true;
+    servoOne.set(0.35);
+    servoTwo.set(0.65);
   }
 
   public void setAutoBoolean(boolean a) {
@@ -379,8 +383,12 @@ public class ClimbSubsystem extends SubsystemBase {
       climbEnable();
     }
 
-    servo1.setNumber(servoOne.getAngle());
-    servo2.setNumber(servoTwo.getAngle());
+    if (DriverStation.isDisabled() ) {
+      hookLocked = true;
+    }
+    if (hookLocked) {
+      lockHooks();
+    }
 
     BClimbEnabled.setBoolean(climbEnable);
     DClimbHeight1.setNumber(armOne.getEncoder().getPosition());
