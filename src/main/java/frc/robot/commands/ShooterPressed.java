@@ -49,11 +49,11 @@ public class ShooterPressed extends CommandBase {
       // If below will bypass the LL check if the stopper is already running, or the LL is disabled.
       // Otherwise, alignment is checked.
       if (i > 0 || !LLEnabled || m_LimelightSubsystem.calculatePID() == 0.0) {
-        if (i == 0) {
-          m_CDSSubsystem.CDSBeltToggle(false, Constants.CDSAutoBeltSpeed);
-          m_ShooterSubsystem.runCargo(Constants.Shooter.cargoForward);
-          m_ShooterSubsystem.setCargoBoolean(true);
-        }
+        // if (i == 0) {
+        m_CDSSubsystem.CDSBeltToggle(false, Constants.CDSAutoBeltSpeed);
+        m_ShooterSubsystem.runCargo(Constants.Shooter.cargoForward);
+        m_ShooterSubsystem.setCargoBoolean(true);
+        // }
         i++;
       }
     } else if (i == 0) {
@@ -78,7 +78,7 @@ public class ShooterPressed extends CommandBase {
   public boolean isFinished() {
     // TODO: use CDSSubsystem getBallCount to check if all balls are shot yet
 
-    if (i >= 20) { // 20 * 20 = 400 miliseconds timeout
+    if (i >= 24) { // 20 * 20 = 400 miliseconds timeout
       return true;
     }
     return false;

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.Auton;
 import frc.robot.commands.AutonModes;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public class Robot extends TimedRobot {
           .withWidget(BuiltInWidgets.kNumberSlider)
           .withProperties(Map.of("Min", 0, "Max", 10))
           .getEntry();
-  private SendableChooser<Constants.Auton> chooser = new SendableChooser<>();
+  private SendableChooser<Auton> chooser = new SendableChooser<>();
 
   private RobotContainer robotContainer;
   public UsbCamera usbCamera;
@@ -57,16 +58,18 @@ public class Robot extends TimedRobot {
     robotContainer = new RobotContainer();
 
     chooser.setDefaultOption(
-        "Four Ball", Constants.Auton.FOURBALL); // default is four ball mode for now
+        Auton.FOURBALL.getName(), Auton.FOURBALL); // default is four ball mode for now
 
-    chooser.addOption("Intake Taxi", Constants.Auton.INTAKETAXI);
-    chooser.addOption("Push Taxi", Constants.Auton.PUSHTAXI);
-    chooser.addOption("One Ball", Constants.Auton.ONEBALL);
-    chooser.addOption("Two Ball", Constants.Auton.TWOBALL);
-    chooser.addOption("Three Ball", Constants.Auton.THREEBALL);
-    chooser.addOption("Four Ball", Constants.Auton.FOURBALL);
-    // chooser.addOption("Five Ball", Constants.Auton.FIVEBALL);
-    // chooser.addOption("Test Mode", Constants.Auton.TEST);      // don't need to show during
+    chooser.addOption(Auton.INTAKETAXI.getName(), Auton.INTAKETAXI);
+    chooser.addOption(Auton.PUSHTAXI.getName(), Auton.PUSHTAXI);
+    chooser.addOption(Auton.ONEBALL.getName(), Auton.ONEBALL);
+    chooser.addOption(Auton.TWOBALL.getName(), Auton.TWOBALL);
+    chooser.addOption(Auton.TWOBALLSTEAL1.getName(), Auton.TWOBALLSTEAL1);
+    // chooser.addOption(Auton.TWOBALLSTEAL2.getName(), Auton.TWOBALLSTEAL2); // not ready
+    chooser.addOption(Auton.THREEBALL.getName(), Auton.THREEBALL);
+    chooser.addOption(Auton.FOURBALL.getName(), Auton.FOURBALL);
+    // chooser.addOption(Auton.FIVEBALL.getName(), Auton.FIVEBALL);
+    // chooser.addOption(Auton.TEST.getName(), Auton.TEST);      // don't need to show during
     // competition
 
     configTab.add("Auton mode", chooser).withPosition(0, 1).withSize(2, 2);
@@ -105,7 +108,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     AutonModes.setWaitTime(waitTimeSlider.getDouble(Constants.defaultInitialWaitTime));
-    robotContainer.initAuton(chooser.getSelected());
     autonomousCommand = robotContainer.getAutonomousCommand(chooser.getSelected());
 
     // schedule the autonomous command (example)

@@ -50,12 +50,12 @@ public class ShooterHeld extends CommandBase {
       // If below will bypass the LL check if the stopper is already running, or the LL is disabled.
       // Otherwise, alignment is checked.
       if (i > 0 || !LLEnabled || m_LimelightSubsystem.calculatePID() == 0.0) {
-        if (i > 5) {
-          m_CDSSubsystem.CDSBeltToggle(false, Constants.CDSBeltSpeed);
-          m_ShooterSubsystem.runCargo(Constants.Shooter.cargoForward);
-          m_ShooterSubsystem.setCargoBoolean(true);
-        }
-        i++;
+        // if (i > 1) {
+        m_CDSSubsystem.CDSBeltToggle(false, Constants.CDSBeltSpeed);
+        m_ShooterSubsystem.runCargo(Constants.Shooter.cargoForward);
+        m_ShooterSubsystem.setCargoBoolean(true);
+        // }
+        // i++;
         /*if (i >= 50) { // 1000 miliseconds delay TODO: Use a CDS method for this when possible
           i = 0;
           m_CDSSubsystem.stopCDS();
@@ -64,10 +64,10 @@ public class ShooterHeld extends CommandBase {
         }*/
       }
     } else {
-      m_ShooterSubsystem.setCargoBoolean(false);
+      /* m_ShooterSubsystem.setCargoBoolean(false);
       m_CDSSubsystem.stopCDS();
       m_ShooterSubsystem.runCargo(Constants.Shooter.cargoReverse);
-      i = 0;
+      i = 0;*/
     }
   }
 

@@ -25,10 +25,10 @@ public final class Constants {
         return values()[values().length - 1];
       }
     },
-    EJECT(2500.0, 0.0),
+    EJECT(1500.0, 0.0),
     LAUNCH(0.0, 0.0),
-    TARMAC(1400.0, 0.0),
-    ATARMAC(1400.0, 0.0),
+    TARMAC(1380.0, 0.0),
+    ATARMAC(1380.0, 0.0),
     TEST {
       @Override
       public AimModes next() {
@@ -113,20 +113,48 @@ public final class Constants {
   public static final double driveBaseTurnRate = 0.85;
 
   // drive base pid values
-  public static final double[] driveRightPID = {0.00035, 0.00000085, 0};
-  public static final double[] driveLeftPID = {0.00035, 0.000001, 0};
+  public static final double[] driveRightPID = {0.00045, 0.00000085, 0};
+  public static final double[] driveLeftPID = {0.00045, 0.0000025, 0};
 
   // AUTONOMOUS Constants
 
   public enum Auton {
     // spotless:off
-    PUSHTAXI("PushTaxi", "paths/TaxiOutPushBall.wpilib.json"),
-    INTAKETAXI("IntakeTaxi", "paths/TaxiOutGrabBall.wpilib.json"),
-    ONEBALL("OneBall", "paths/OneBall.wpilib.json"),
-    TWOBALL("TwoBall", "paths/TwoBall1.wpilib.json", "paths/TwoBall2.wpilib.json"),
-    THREEBALL("ThreeBall", "paths/Three1.wpilib.json", "paths/Three2.wpilib.json", "paths/Three3.wpilib.json", "paths/Three4.wpilib.json"),
-    FOURBALL("FourBall", "paths/Four1.wpilib.json", "paths/Four2.wpilib.json", "paths/Four3.wpilib.json", "paths/Four4.wpilib.json"),
-    FIVEBALL("FiveBall", "paths/Five1.wpilib.json", "paths/Five2.wpilib.json", "paths/Five3.wpilib.json", "paths/Five4.wpilib.json", "paths/Five5.wpilib.json", "paths/Five6.wpilib.json"),
+    PUSHTAXI("Push Taxi", "paths/TaxiOutPushBall.wpilib.json"),
+    
+    INTAKETAXI("Intake Taxi", "paths/TaxiOutGrabBall.wpilib.json"),
+
+    ONEBALL("One Ball", "paths/OneBall.wpilib.json"),
+
+    TWOBALL("Two Ball", "paths/TwoBall1.wpilib.json", 
+                        "paths/TwoBall2.wpilib.json"),
+
+    TWOBALLSTEAL1("Two Ball Steal 1", "paths/TwoBall1.wpilib.json", 
+                                      "paths/TwoBall2.wpilib.json",
+                                      "paths/TwoBallSteal1.wpilib.json",
+                                      "paths/TwoBallSteal1Pt2.wpilib.json"),
+
+    TWOBALLSTEAL2("Two Ball Steal 2", "paths/TwoBall1.wpilib.json", 
+                                      "paths/TwoBall2.wpilib.json",
+                                      "paths/TwoBallSteal2.wpilib.json"),
+
+    THREEBALL("Three Ball", "paths/Three1.wpilib.json", 
+                            "paths/Three2.wpilib.json", 
+                            "paths/Three3.wpilib.json", 
+                            "paths/Three4.wpilib.json"),
+
+    FOURBALL("Four Ball", "paths/Four1.wpilib.json", 
+                          "paths/Four2.wpilib.json", 
+                          "paths/Four3.wpilib.json", 
+                          "paths/Four4.wpilib.json"),
+
+    FIVEBALL("Five Ball", "paths/Five1.wpilib.json", 
+                          "paths/Five2.wpilib.json", 
+                          "paths/Five3.wpilib.json", 
+                          "paths/Five4.wpilib.json", 
+                          "paths/Five5.wpilib.json", 
+                          "paths/Five6.wpilib.json"),
+
     TEST("Test", THREEBALL);
     // change according to what mode you want to test
     // spotless:on
@@ -155,13 +183,16 @@ public final class Constants {
   }
 
   // Volts, constants for ramseteCommand
-  public static final double ksVolts = 0.2358; // Ks
-  public static final double kvVoltSecondsPerMeter = 0.81588; // Kv, Velocity
-  public static final double kaVoltSecondsSquaredPerMeter = 0.129; // Ka, Accelleration
+  public static final double ksVolts = 0.26514; // Ks
+  public static final double kvVoltSecondsPerMeter = 0.81633; // Kv, Velocity
+  public static final double kaVoltSecondsSquaredPerMeter = 0.15052; // Ka, Accelleration
 
   public static final double trackWidth = 0.559; // track width of kitbot
   public static final DifferentialDriveKinematics driveKinematics =
       new DifferentialDriveKinematics(trackWidth);
+
+  public static final double arbFeedForward =
+      2.5778E-07; // voltage applied to the motor after the result of the specified control
 
   // Pathweaver constants, baselind values, units: meters per second
   public static final double ramseteB = 2; // Convergence, larger values are more aggressive
@@ -194,13 +225,14 @@ public final class Constants {
   public static final int sensorsDownLimit = 3;
 
   // CDS Constants
-  public static final boolean ballManagementEnabled = true;
+  public static final boolean ballManagementEnabled =
+      true; // TODO: turning it on messes with shooter on the test bot
 
   public static final int CDSBeltID = 3;
   public static final int CDSWheelControllerOneID = 2;
   public static final int CDSWheelControllerTwoID = 9;
   public static final double CDSBeltSpeed = .75;
-  public static final double CDSAutoBeltSpeed = .95;
+  public static final double CDSAutoBeltSpeed = .75;
   public static final double CDSWheelControllerSpeed = 0.80;
   public static final int frontSensorActivation = 200;
   public static final int middleSensorActivation = 450;
@@ -276,7 +308,8 @@ public final class Constants {
 
     // PID settings
     // 2.5e-4, 2.5e-7, 2e-6, 1e-4
-    public static final double kPIDFArray[] = {1.9516e-09, 0, 0};
+    public static final double kPIDFArray[] = {1.4e-09, 3.0E-8, 0};
+    // public static final double kPIDFArray[] = {0.000003, 0.00000004, 0};
     // public static final double kPIDFArray[] = {2.5e-8, 5.5e-8, 0}; 7e-9
     public static final double kMaxIAccum = 0.9;
     public static final int kMaxISlot = 0;
@@ -290,14 +323,7 @@ public final class Constants {
   }
 
   // Climb Constants
-  public static final boolean usingTraversal = true; // traversal climb on robot
-  // todo: change if mid climb comes back on
 
-  // use correct arbFeedForward according to which climb being used
-  public static final double arbFeedForward =
-      (usingTraversal)
-          ? 2.5778E-07
-          : 1.9829E-07; // voltage applied to the motor after the result of the specified control
   // mode
 
   // climb motor ids

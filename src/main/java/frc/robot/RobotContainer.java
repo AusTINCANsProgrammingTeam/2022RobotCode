@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.Auton;
 import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
@@ -244,50 +245,53 @@ public class RobotContainer {
     }
   }
 
-  public Command getAutonomousCommand(Constants.Auton a) {
-    if (autonModes != null) {
-      chosenAutonMode = autonModes.getChosenCommand(a);
-      return chosenAutonMode;
-    }
-    return null;
-  }
-
-  public void initAuton(Constants.Auton mode) {
-    // switch for readibility
-    boolean success = true;
+  public Command getAutonomousCommand(Auton mode) {
     switch (mode) {
       case TEST:
-      case PUSHTAXI: // the two taxis
+        System.out.println(Auton.TEST.getName() + " mode selected.");
+        break;
+      case PUSHTAXI:
+        System.out.println(Auton.PUSHTAXI.getName() + " mode selected.");
+        break;
       case INTAKETAXI:
-      case ONEBALL: // all of these modes go down to the FIVEBALL case
+        System.out.println(Auton.INTAKETAXI.getName() + " mode selected.");
+        break;
+      case ONEBALL:
+        System.out.println(Auton.ONEBALL.getName() + " mode selected.");
+        break;
       case TWOBALL:
+        System.out.println(Auton.TWOBALL.getName() + " mode selected.");
+        break;
+      case TWOBALLSTEAL1:
+        System.out.println(Auton.TWOBALLSTEAL1.getName() + " mode selected.");
+        break;
+      case TWOBALLSTEAL2:
+        System.out.println(Auton.TWOBALLSTEAL2.getName() + " mode selected.");
+        break;
       case THREEBALL:
+        System.out.println(Auton.THREEBALL.getName() + " mode selected.");
+        break;
       case FOURBALL:
+        System.out.println(Auton.FOURBALL.getName() + " mode selected.");
+        break;
       case FIVEBALL:
-        if (shooterSubsystem != null
-            && driveBaseSubsystem != null
-            && intakeSubsystem != null
-            && cdsSubsystem != null
-            && climbSubsystem != null) {
-          autonModes =
-              new AutonModes(
-                  driveBaseSubsystem,
-                  shooterSubsystem,
-                  limelightSubsystem,
-                  cdsSubsystem,
-                  intakeSubsystem,
-                  climbSubsystem);
-        } else {
-          success = false;
-        }
+        System.out.println(Auton.FIVEBALL.getName() + " mode selected.");
         break;
       default:
-        System.out.println("No mode selected");
-        break;
+        System.out.println("Auton: No mode selected.");
+        return null;
     }
-    if (success == false) {
-      System.out.println(mode.getName() + " mode unable to be created.");
-    }
+
+    AutonModes autonMode =
+        new AutonModes(
+            mode,
+            driveBaseSubsystem,
+            shooterSubsystem,
+            limelightSubsystem,
+            cdsSubsystem,
+            intakeSubsystem,
+            climbSubsystem);
+    return autonMode.getAutonCommand();
   }
 
   // TODO: create get methods for other subsystems to pass into TabContainer, or
