@@ -25,7 +25,7 @@ public final class Constants {
         return values()[values().length - 1];
       }
     },
-    EJECT(2500.0, 0.0),
+    EJECT(1500.0, 0.0),
     LAUNCH(0.0, 0.0),
     TARMAC(2480.0, 0.0),
     ATARMAC(2480.0, 0.0),
@@ -131,7 +131,8 @@ public final class Constants {
 
     TWOBALLSTEAL1("Two Ball Steal 1", "paths/TwoBall1.wpilib.json", 
                                       "paths/TwoBall2.wpilib.json",
-                                      "paths/TwoBallSteal1.wpilib.json"),
+                                      "paths/TwoBallSteal1.wpilib.json",
+                                      "paths/TwoBallSteal1Pt2.wpilib.json"),
 
     TWOBALLSTEAL2("Two Ball Steal 2", "paths/TwoBall1.wpilib.json", 
                                       "paths/TwoBall2.wpilib.json",

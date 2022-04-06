@@ -155,7 +155,7 @@ public class AutonModes {
         break;
 
       case TWOBALL:
-        autonCommand = 
+        autonCommand =
             new SequentialCommandGroup(
                 new WaitCommand(initialWaitTime),
                 parallels[0],
@@ -171,11 +171,9 @@ public class AutonModes {
                 parallels[1],
                 new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false),
                 parallels[2],
-                new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false)
-                    .beforeStarting(
-                        () ->
-                            this.shooterSubsystem.setAimMode(
-                                AimModes.EJECT))); // eject the ball to far side of our field
+                parallels[3],
+                new ParallelDeadlineGroup(
+                    new WaitCommand(1.5), new OuttakeCommand(intakeSubsystem, cdsSubsystem)));
         break;
 
       case TWOBALLSTEAL2:
