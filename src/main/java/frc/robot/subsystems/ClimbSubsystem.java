@@ -383,7 +383,7 @@ public class ClimbSubsystem extends SubsystemBase {
       climbEnable();
     }
 
-    if (DriverStation.isDisabled() ) {
+    if (DriverStation.isDisabled()) {
       hookLocked = true;
     }
     if (hookLocked) {
