@@ -17,8 +17,11 @@ import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbEnable;
 import frc.robot.commands.ClimbPeriodic;
+import frc.robot.commands.ClimbSequence1;
 import frc.robot.commands.CombinedIntakeCDSForwardCommand;
 import frc.robot.commands.DriveBaseTeleopCommand;
+import frc.robot.commands.HookLock;
+import frc.robot.commands.HookUnlock;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
@@ -66,9 +69,13 @@ public class RobotContainer {
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
+  // ----------climb---------
   private ClimbEnable climbEnabling;
+  private ClimbSequence1 climbSequence1;
   private ClimbPeriodic ClimbPeriodic;
   private Command HaDeploy;
+  private Command hookUnlock;
+  private Command hookLock;
 
   // auton
   private AutonModes autonModes;
@@ -178,6 +185,9 @@ public class RobotContainer {
     if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
       climbEnabling = new ClimbEnable(climbSubsystem, driveBaseSubsystem);
       ClimbPeriodic = new ClimbPeriodic(climbSubsystem);
+      climbSequence1 = new ClimbSequence1(climbSubsystem);
+      hookUnlock = new HookUnlock(climbSubsystem);
+      hookLock = new HookLock(climbSubsystem);
       climbSubsystem.setDefaultCommand(ClimbPeriodic);
     }
   }
@@ -221,7 +231,11 @@ public class RobotContainer {
     }
 
     if (climbSubsystem != null) {
+      // enable climb and spool out arms
       buttons2[Constants.startButton].whenPressed(climbEnabling);
+      buttons2[Constants.XButton].whileHeld(climbSequence1);
+
+      // whenHeld button for ClimbSequence2
     }
 
     if (outtakeCommand != null && intakeForwardCommand != null) {
