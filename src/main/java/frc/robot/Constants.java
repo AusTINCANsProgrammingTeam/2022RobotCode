@@ -113,8 +113,8 @@ public final class Constants {
   public static final double driveBaseTurnRate = 0.85;
 
   // drive base pid values
-  public static final double[] driveRightPID = {0.00035, 0.00000085, 0};
-  public static final double[] driveLeftPID = {0.00035, 0.0000015, 0};
+  public static final double[] driveRightPID = {0.00045, 0.00000085, 0};
+  public static final double[] driveLeftPID = {0.00045, 0.0000025, 0};
 
   // AUTONOMOUS Constants
 
