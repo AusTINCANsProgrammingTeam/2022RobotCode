@@ -7,6 +7,7 @@ import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -116,8 +117,8 @@ public class AutonModes {
               ramsetes[i],
               new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
     }
-    // parallels[0] =
-    //     parallels[0].alongWith(new InstantCommand(climbSubsystem::deployHA, climbSubsystem));
+    parallels[0] =
+        parallels[0].alongWith(new InstantCommand(climbSubsystem::deployHA, climbSubsystem));
 
     return parallels;
   }

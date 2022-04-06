@@ -133,7 +133,7 @@ public class RobotContainer {
 
     limelightSubsystem = new LimelightSubsystem();
 
-    // climbSubsystem = new ClimbSubsystem(operatorJoystick);
+    climbSubsystem = new ClimbSubsystem(operatorJoystick);
   }
 
   private void initCommands() {
@@ -272,7 +272,7 @@ public class RobotContainer {
             limelightSubsystem,
             cdsSubsystem,
             intakeSubsystem,
-            null);
+            climbSubsystem);
     return autonMode.getAutonCommand();
   }
 
