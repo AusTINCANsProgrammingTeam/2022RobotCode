@@ -95,7 +95,7 @@ public class AutonModes {
 
     this.driveBaseSubsystem = d;
     this.shooterSubsystem = s;
-    this.shooterSubsystem.setAimMode(Constants.AimModes.TARMAC);
+    this.shooterSubsystem.setAimMode(Constants.AimModes.ATARMAC);
     this.limelightSubsystem = l;
     this.cdsSubsystem = c;
     this.intakeSubsystem = i;
@@ -221,7 +221,10 @@ public class AutonModes {
       CommandGroupBase[] twoBallParallels = getParallelCommands(twoBallRamseteCommands);
       twoBallCommand =
           new SequentialCommandGroup(
-              new WaitCommand(initialWaitTime), twoBallParallels[0], twoBallParallels[1]);
+              new WaitCommand(initialWaitTime),
+              twoBallParallels[0],
+              twoBallParallels[1],
+              new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
 
       // -------------------------------------------
 

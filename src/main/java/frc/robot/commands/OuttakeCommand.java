@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
@@ -25,7 +26,7 @@ public class OuttakeCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    CDSSubsystem.CDSBeltToggle(true);
+    CDSSubsystem.CDSBeltToggle(true, Constants.CDSBeltSpeed);
     CDSSubsystem.CDSWheelToggle(true);
     intakeSubsystem.toggleIntake(true);
     intakeSubsystem.deployIntake();
