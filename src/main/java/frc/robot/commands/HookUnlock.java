@@ -29,6 +29,6 @@ public class HookUnlock extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }
