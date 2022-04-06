@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
@@ -234,7 +233,7 @@ public class RobotContainer {
     if (climbSubsystem != null) {
       // enable climb and spool out arms
       buttons2[Constants.startButton].whenPressed(climbEnabling);
-          buttons2[Constants.XButton].whileHeld(climbSequence1);
+      buttons2[Constants.XButton].whileHeld(climbSequence1);
 
       // whenHeld button for ClimbSequence2
     }

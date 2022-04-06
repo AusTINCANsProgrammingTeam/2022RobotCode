@@ -30,8 +30,8 @@ public class ClimbSequence1 extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(i>5){
-    climbSubsystem.deployArms();
+    if (i > 5) {
+      climbSubsystem.deployArms();
     }
     climbSubsystem.resetClimbHeights();
     i++;

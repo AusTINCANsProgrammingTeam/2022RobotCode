@@ -333,16 +333,16 @@ public class ClimbSubsystem extends SubsystemBase {
           .getPIDCtrl()
           .setReference(
               Constants.armFeatherRPM1, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
-    } else if(armEncoderHeightOne > Constants.armHeightFeather2
-    || armEncoderHeightTwo > Constants.armHeightFeather2){
+    } else if (armEncoderHeightOne > Constants.armHeightFeather2
+        || armEncoderHeightTwo > Constants.armHeightFeather2) {
       armOne
-      .getPIDCtrl()
-      .setReference(
-          Constants.armFeatherRPM2, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
+          .getPIDCtrl()
+          .setReference(
+              Constants.armFeatherRPM2, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
       armTwo
-      .getPIDCtrl()
-      .setReference(
-          Constants.armFeatherRPM2, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
+          .getPIDCtrl()
+          .setReference(
+              Constants.armFeatherRPM2, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
     } else {
       armOne
           .getPIDCtrl()
