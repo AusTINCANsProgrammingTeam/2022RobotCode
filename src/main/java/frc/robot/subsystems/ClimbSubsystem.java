@@ -356,14 +356,14 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public void unlockHooks() {
     hookLocked = false;
-    servoOne.set(1);
-    servoTwo.set(0);
+    servoOne.set(Constants.climbServo1Unlocked);
+    servoTwo.set(Constants.climbServo2Unlocked);
   }
 
   public void lockHooks() {
     hookLocked = true;
-    servoOne.set(0.35);
-    servoTwo.set(0.65);
+    servoOne.set(Constants.climbServo1Locked);
+    servoTwo.set(Constants.climbServo2Locked);
   }
 
   public void setAutoBoolean(boolean a) {
