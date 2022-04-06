@@ -252,7 +252,7 @@ public final class Constants {
   // Shooter Constants
   public static final class Shooter {
     // Motor IDs
-    public static final int shooterID = 30; // ID of the shooter
+    public static final int shooterID = 10; // ID of the shooter
     public static final int shooter2ID = 11; // ID of the second shooter motor
     // public static final int hoodID = 0; // ID of the hood;
     public static final int shooterCargoID = 4;
