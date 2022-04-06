@@ -9,7 +9,7 @@ import frc.robot.subsystems.ClimbSubsystem;
 
 public class HookLock extends CommandBase {
   private final ClimbSubsystem climbSubsystem;
-  
+
   public HookLock(ClimbSubsystem s) {
     addRequirements(s);
 

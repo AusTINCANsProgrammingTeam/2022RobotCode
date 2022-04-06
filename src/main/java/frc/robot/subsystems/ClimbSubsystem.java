@@ -65,6 +65,11 @@ public class ClimbSubsystem extends SubsystemBase {
   private NetworkTableEntry sbPoleSpeedTwo;
   private NetworkTableEntry sbPoleTargettedTwo;
 
+  // hook Servos
+  private ShuffleboardTab hookServos;
+  private NetworkTableEntry servo1;
+  private NetworkTableEntry servo2;
+
   // Other
   private NetworkTableEntry sbClimbEnable; // Displays ClimbEnable Boolean
 
@@ -137,6 +142,10 @@ public class ClimbSubsystem extends SubsystemBase {
     sbPoleTargettedTwo =
         climbTab.add("Pole2 targetted", 0).withSize(3, 1).withPosition(2, 1).getEntry();
     sbPoleSpeedTwo = climbTab.add("Pole2 Speed", 0).withSize(2, 1).withPosition(5, 1).getEntry();
+
+    hookServos = Shuffleboard.getTab("Hook Servos");
+    servo1 = hookServos.add("Servo 1", 0).withSize(2, 2).withPosition(0, 0).getEntry();
+    servo2 = hookServos.add("Servo 2", 0).withSize(2, 2).withPosition(2, 0).getEntry();
 
     // Arm 1 MotorController
     armOne = new MotorController("Arm1 Motor", Constants.armMotorOne, Constants.armPosPID);
@@ -376,6 +385,10 @@ public class ClimbSubsystem extends SubsystemBase {
     if (DriverStation.isDisabled() && climbEnable) {
       climbEnable();
     }
+
+    hookServos = Shuffleboard.getTab("Hook Servos");
+    servo1.setNumber(servoOne.getAngle());
+    servo2.setNumber(servoTwo.getAngle());
 
     BClimbEnabled.setBoolean(climbEnable);
     DClimbHeight1.setNumber(armOne.getEncoder().getPosition());
