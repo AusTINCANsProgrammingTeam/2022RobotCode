@@ -9,11 +9,12 @@ import frc.robot.subsystems.ClimbSubsystem;
 
 public class ClimbSequence1 extends CommandBase {
   private final ClimbSubsystem climbSubsystem;
+  private int i;
 
   /** Creates a new ClimbKeepDown. */
   public ClimbSequence1(ClimbSubsystem s) {
     addRequirements(s);
-
+    i = 0;
     this.climbSubsystem = s;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -29,8 +30,11 @@ public class ClimbSequence1 extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if(i>5){
     climbSubsystem.deployArms();
+    }
     climbSubsystem.resetClimbHeights();
+    i++;
   }
 
   // Called once the command ends or is interrupted.
