@@ -236,8 +236,6 @@ public class RobotContainer {
       buttons2[Constants.startButton].whenPressed(climbEnabling);
           buttons2[Constants.XButton].whileHeld(climbSequence1);
 
-      buttons2[Constants.XButton].whenPressed(hookUnlock);
-      buttons2[Constants.BButton].whenPressed(hookLock);
       // whenHeld button for ClimbSequence2
     }
 
