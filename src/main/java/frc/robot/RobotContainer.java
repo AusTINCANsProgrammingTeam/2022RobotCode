@@ -21,6 +21,8 @@ import frc.robot.commands.ClimbPeriodic;
 import frc.robot.commands.ClimbSequence1;
 import frc.robot.commands.CombinedIntakeCDSForwardCommand;
 import frc.robot.commands.DriveBaseTeleopCommand;
+import frc.robot.commands.HookLock;
+import frc.robot.commands.HookUnlock;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
@@ -73,6 +75,8 @@ public class RobotContainer {
   private ClimbSequence1 climbSequence1;
   private ClimbPeriodic ClimbPeriodic;
   private Command HaDeploy;
+  private Command hookUnlock;
+  private Command hookLock;
 
   // auton
   private AutonModes autonModes;
@@ -183,6 +187,8 @@ public class RobotContainer {
       climbEnabling = new ClimbEnable(climbSubsystem, driveBaseSubsystem);
       ClimbPeriodic = new ClimbPeriodic(climbSubsystem);
       climbSequence1 = new ClimbSequence1(climbSubsystem);
+      hookUnlock = new HookUnlock(climbSubsystem);
+      hookLock = new HookLock(climbSubsystem);
       climbSubsystem.setDefaultCommand(ClimbPeriodic);
     }
   }
@@ -230,6 +236,8 @@ public class RobotContainer {
       buttons2[Constants.startButton].whenPressed(climbEnabling);
           buttons2[Constants.XButton].whileHeld(climbSequence1);
 
+      buttons2[Constants.XButton].whenPressed(hookUnlock);
+      buttons2[Constants.BButton].whenPressed(hookLock);
       // whenHeld button for ClimbSequence2
     }
 

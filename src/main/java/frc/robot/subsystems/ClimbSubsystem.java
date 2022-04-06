@@ -29,7 +29,7 @@ public class ClimbSubsystem extends SubsystemBase {
   private Servo servoOne;
   private Servo servoTwo;
 
-  private boolean climbEnable;
+  private boolean climbEnable, hookLocked;
 
   private double armHeightOne;
   private double armHeightTwo;
@@ -42,6 +42,37 @@ public class ClimbSubsystem extends SubsystemBase {
 
   private double armJoystickAxis;
   private double poleJoystickAxis;
+
+  // 1 = Right Side, 2 = Left Side
+  private ShuffleboardTab climbTab;
+
+  // Arm 1
+  private NetworkTableEntry sbArmSpeedOne;
+  private NetworkTableEntry sbArmTargettedOne;
+  private NetworkTableEntry sbarmHeightOne;
+
+  // Arm 2
+  private NetworkTableEntry sbArmSpeedTwo;
+  private NetworkTableEntry sbArmTargettedTwo;
+  private NetworkTableEntry sbarmHeightTwo;
+
+  // Pole 1
+  private NetworkTableEntry sbpoleHeightOne;
+  private NetworkTableEntry sbPoleSpeedOne;
+  private NetworkTableEntry sbPoleTargettedOne;
+
+  // Pole 2
+  private NetworkTableEntry sbpoleHeightTwo;
+  private NetworkTableEntry sbPoleSpeedTwo;
+  private NetworkTableEntry sbPoleTargettedTwo;
+
+  // hook Servos
+  private ShuffleboardTab hookServos;
+  private NetworkTableEntry servo1;
+  private NetworkTableEntry servo2;
+
+  // Other
+  private NetworkTableEntry sbClimbEnable; // Displays ClimbEnable Boolean
 
   // Operator Tab
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
@@ -89,6 +120,33 @@ public class ClimbSubsystem extends SubsystemBase {
   public ClimbSubsystem(Joystick joystick) {
     climbJoystick = joystick;
     climbEnable = false;
+
+    // Shuffle Board Widgets
+    climbTab = Shuffleboard.getTab("ClimbBase");
+
+    // Arm 1
+    sbArmTargettedOne =
+        climbTab.add("Arm1 targetted", 0).withSize(3, 1).withPosition(2, 3).getEntry();
+    sbArmSpeedOne = climbTab.add("Arm1 Speed", 0).withSize(2, 1).withPosition(5, 3).getEntry();
+
+    // Arm 2
+    sbArmTargettedTwo =
+        climbTab.add("Arm2 targetted", 0).withSize(3, 1).withPosition(2, 4).getEntry();
+    sbArmSpeedTwo = climbTab.add("Arm2 Speed", 0).withSize(2, 1).withPosition(5, 4).getEntry();
+
+    // Pole 1
+    sbPoleTargettedOne =
+        climbTab.add("Pole1 targetted", 0).withSize(3, 1).withPosition(2, 0).getEntry();
+    sbPoleSpeedOne = climbTab.add("Pole1 Speed", 0).withSize(2, 1).withPosition(5, 0).getEntry();
+
+    // Pole 2
+    sbPoleTargettedTwo =
+        climbTab.add("Pole2 targetted", 0).withSize(3, 1).withPosition(2, 1).getEntry();
+    sbPoleSpeedTwo = climbTab.add("Pole2 Speed", 0).withSize(2, 1).withPosition(5, 1).getEntry();
+
+    hookServos = Shuffleboard.getTab("Hook Servos");
+    servo1 = hookServos.add("Servo 1", 0.35).withSize(2, 2).withPosition(0, 0).getEntry();
+    servo2 = hookServos.add("Servo 2", 1).withSize(2, 2).withPosition(2, 0).getEntry();
 
     // Arm 1 MotorController
     armOne = new MotorController("Arm1 Motor", Constants.armMotorOne, Constants.armPosPID);
@@ -142,8 +200,10 @@ public class ClimbSubsystem extends SubsystemBase {
     resetClimbHeights();
 
     // servos
-    // servoOne = new Servo(Constants.climbServoIDOne);
-    // servoTwo = new Servo(Constants.climbServoIDTwo);
+    servoOne = new Servo(Constants.climbServoIDOne);
+    servoTwo = new Servo(Constants.climbServoIDTwo);
+
+    lockHooks();
   }
 
   public void resetClimbHeights() {
@@ -304,9 +364,16 @@ public class ClimbSubsystem extends SubsystemBase {
         .setReference(Constants.poleHeightDeploy, CANSparkMax.ControlType.kPosition);
   }
 
-  public void deployHooks() {
-    // servoOne.set(Constants.climbServoSetPoint);
-    // servoTwo.set(Constants.climbServoSetPoint);
+  public void unlockHooks() {
+    hookLocked = false;
+    servoOne.set(Constants.climbServo1Unlocked);
+    servoTwo.set(Constants.climbServo2Unlocked);
+  }
+
+  public void lockHooks() {
+    hookLocked = true;
+    servoOne.set(Constants.climbServo1Locked);
+    servoTwo.set(Constants.climbServo2Locked);
   }
 
   public void setAutoBoolean(boolean a) {
@@ -324,6 +391,13 @@ public class ClimbSubsystem extends SubsystemBase {
   public void periodic() {
     if (DriverStation.isDisabled() && climbEnable) {
       climbEnable();
+    }
+
+    if (DriverStation.isDisabled()) {
+      hookLocked = true;
+    }
+    if (hookLocked) {
+      lockHooks();
     }
 
     BClimbEnabled.setBoolean(climbEnable);
