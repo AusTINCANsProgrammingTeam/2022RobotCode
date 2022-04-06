@@ -52,6 +52,7 @@ public class AutonModes {
     this.mode = mode;
     this.driveBaseSubsystem = drive;
     this.shooterSubsystem = shooter;
+    this.shooterSubsystem.setAimMode(AimModes.ATARMAC);
     this.limelightSubsystem = limelight;
     this.cdsSubsystem = cds;
     this.intakeSubsystem = intake;
@@ -154,7 +155,7 @@ public class AutonModes {
         break;
 
       case TWOBALL:
-        autonCommand =
+        autonCommand = 
             new SequentialCommandGroup(
                 new WaitCommand(initialWaitTime),
                 parallels[0],
