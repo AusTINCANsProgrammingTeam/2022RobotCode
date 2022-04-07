@@ -78,7 +78,7 @@ public class ShooterPressed extends CommandBase {
   public boolean isFinished() {
     // TODO: use CDSSubsystem getBallCount to check if all balls are shot yet
 
-    if (i >= 24) { // 20 * 20 = 400 miliseconds timeout
+    if (i >= 26) { // 20 * 20 = 400 miliseconds timeout
       return true;
     }
     return false;

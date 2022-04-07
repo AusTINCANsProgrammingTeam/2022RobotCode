@@ -27,8 +27,8 @@ public final class Constants {
     },
     EJECT(1500.0, 0.0),
     LAUNCH(0.0, 0.0),
-    TARMAC(1380.0, 0.0),
-    ATARMAC(1380.0, 0.0),
+    TARMAC(1400.0, 0.0),
+    ATARMAC(1400.0, 0.0),
     TEST {
       @Override
       public AimModes next() {
@@ -333,14 +333,14 @@ public final class Constants {
   public static final int poleMotorTwo = 16;
 
   public static final int armHeightMax = 0;
-  public static final int armHeightMin = -128;
+  public static final int armHeightMin = -130;
   public static final int armHeightFeather1 = -20;
   public static final int armHeightFeather2 = -35;
-  public static final int armFeatherRPM1 = -3300;
-  public static final int armFeatherRPM2 = -5000;
-  public static final int poleHeightMax = 6;
+  public static final int armFeatherRPM1 = -5000;
+  public static final int armFeatherRPM2 = -6000;
+  public static final int poleHeightMax = 7;
   public static final int poleHeightMin = -70;
-  public static final int poleHeightDeploy = -17;
+  public static final int poleHeightDeploy = -12;
 
   public static final double[] armPosPID = {0.125, 0, 0};
   public static final double[] armVelocityPID = {4e-5, 0, 0};

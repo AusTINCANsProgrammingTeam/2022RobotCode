@@ -284,7 +284,6 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void highArms() {
-    if (climbEnable) {
       poleJoystickAxis = -climbJoystick.getRawAxis(Constants.rightJoystickY);
       if (poleJoystickAxis > Constants.controllerDeadZone
           || poleJoystickAxis < -Constants.controllerDeadZone) {
@@ -312,7 +311,6 @@ public class ClimbSubsystem extends SubsystemBase {
       poleOne.getPIDCtrl().setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
 
       poleTwo.getPIDCtrl().setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
-    }
   }
 
   // called at the start of auton

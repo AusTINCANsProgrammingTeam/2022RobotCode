@@ -21,7 +21,7 @@ public class ClimbPeriodic extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // m_subsystem.resetTargetedHeight();
+    m_subsystem.resetClimbHeights();
     m_subsystem.climbKeepDownFunction();
   }
 

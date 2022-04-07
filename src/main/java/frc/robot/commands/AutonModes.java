@@ -141,7 +141,7 @@ public class AutonModes {
         autonCommand =
             new SequentialCommandGroup(
                 new WaitCommand(initialWaitTime),
-                ramsetes[0]); // this auton mode doesn't need to use intake
+                parallels[0]); // this auton mode doesn't need to use intake
         break;
 
       case INTAKETAXI:

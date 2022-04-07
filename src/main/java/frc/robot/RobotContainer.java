@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Auton;
 import frc.robot.commands.AutonModes;
@@ -160,6 +162,7 @@ public class RobotContainer {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, cdsSubsystem);
       outtakeCommand = new OuttakeCommand(intakeSubsystem, cdsSubsystem);
+      
 
       if (Constants.ballManagementEnabled) {
         intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
@@ -241,7 +244,6 @@ public class RobotContainer {
 
     if (outtakeCommand != null && intakeForwardCommand != null) {
       buttons2[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
-      buttons2[Constants.RBumper].whileHeld(outtakeCommand);
     }
   }
 
