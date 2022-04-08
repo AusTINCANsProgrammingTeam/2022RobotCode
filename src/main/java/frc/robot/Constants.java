@@ -338,8 +338,8 @@ public final class Constants {
   public static final int armHeightFeather2 = -35;
   public static final int armFeatherRPM1 = -5000;
   public static final int armFeatherRPM2 = -6000;
-  public static final int poleHeightMax = 7;
-  public static final int poleHeightMin = -70;
+  public static final double poleHeightMax = 5;
+  public static final int poleHeightMin = -60;
   public static final int poleHeightDeploy = -12;
 
   public static final double[] armPosPID = {0.125, 0, 0};
