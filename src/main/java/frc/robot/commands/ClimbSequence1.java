@@ -31,7 +31,7 @@ public class ClimbSequence1 extends CommandBase {
   @Override
   public void execute() {
     if (i > 5) {
-      //climbSubsystem.deployArms();
+      // climbSubsystem.deployArms();
     }
     climbSubsystem.resetClimbHeights();
     i++;

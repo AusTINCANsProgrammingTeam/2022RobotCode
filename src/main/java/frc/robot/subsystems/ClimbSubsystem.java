@@ -284,33 +284,31 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void highArms() {
-      poleJoystickAxis = -climbJoystick.getRawAxis(Constants.rightJoystickY);
-      if (poleJoystickAxis > Constants.controllerDeadZone
-          || poleJoystickAxis < -Constants.controllerDeadZone) {
-        if (poleJoystickAxis > 0) {
-          if (poleHeightOne + (poleJoystickAxis * Constants.poleInSpeed)
-              <= Constants.poleHeightMax) {
-            poleHeightOne = poleHeightOne + (poleJoystickAxis * Constants.poleInSpeed);
-          }
-          if (poleHeightTwo + (poleJoystickAxis * Constants.poleInSpeed)
-              <= Constants.poleHeightMax) {
-            poleHeightTwo = poleHeightTwo + (poleJoystickAxis * Constants.poleInSpeed);
-          }
+    poleJoystickAxis = -climbJoystick.getRawAxis(Constants.rightJoystickY);
+    if (poleJoystickAxis > Constants.controllerDeadZone
+        || poleJoystickAxis < -Constants.controllerDeadZone) {
+      if (poleJoystickAxis > 0) {
+        if (poleHeightOne + (poleJoystickAxis * Constants.poleInSpeed) <= Constants.poleHeightMax) {
+          poleHeightOne = poleHeightOne + (poleJoystickAxis * Constants.poleInSpeed);
         }
-        if (poleJoystickAxis < 0) {
-          if (poleHeightOne + (poleJoystickAxis * Constants.poleOutSpeed)
-              >= Constants.poleHeightMin) {
-            poleHeightOne = poleHeightOne + (poleJoystickAxis * Constants.poleOutSpeed);
-          }
-          if (poleHeightTwo + (poleJoystickAxis * Constants.poleOutSpeed)
-              >= Constants.poleHeightMin) {
-            poleHeightTwo = poleHeightTwo + (poleJoystickAxis * Constants.poleOutSpeed);
-          }
+        if (poleHeightTwo + (poleJoystickAxis * Constants.poleInSpeed) <= Constants.poleHeightMax) {
+          poleHeightTwo = poleHeightTwo + (poleJoystickAxis * Constants.poleInSpeed);
         }
       }
-      poleOne.getPIDCtrl().setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
+      if (poleJoystickAxis < 0) {
+        if (poleHeightOne + (poleJoystickAxis * Constants.poleOutSpeed)
+            >= Constants.poleHeightMin) {
+          poleHeightOne = poleHeightOne + (poleJoystickAxis * Constants.poleOutSpeed);
+        }
+        if (poleHeightTwo + (poleJoystickAxis * Constants.poleOutSpeed)
+            >= Constants.poleHeightMin) {
+          poleHeightTwo = poleHeightTwo + (poleJoystickAxis * Constants.poleOutSpeed);
+        }
+      }
+    }
+    poleOne.getPIDCtrl().setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
 
-      poleTwo.getPIDCtrl().setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
+    poleTwo.getPIDCtrl().setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
   }
 
   // called at the start of auton
