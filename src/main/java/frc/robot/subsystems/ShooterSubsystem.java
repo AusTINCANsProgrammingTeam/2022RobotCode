@@ -68,7 +68,7 @@ public class ShooterSubsystem extends SubsystemBase {
     aimMode = AimModes.TEST;
     // Initializes the SparkMAX for the flywheel motors
     flywheelController =
-        new MotorController("Flywheel", Constants.Shooter.shooterID, Constants.Shooter.kPIDFArray);
+        new MotorController("Flywheel", Constants.Shooter.shooterID, Constants.Shooter.kWheelPIDArray);
     flywheel2Controller = new MotorController("Flywheel 2", Constants.Shooter.shooter2ID);
     flywheelFF =
         new SimpleMotorFeedforward(
@@ -78,18 +78,12 @@ public class ShooterSubsystem extends SubsystemBase {
     flywheelController.enableVoltageCompensation(11);
     flywheel2Controller.enableVoltageCompensation(11);
     flywheel2Controller.follow(flywheelController, true);
-
     // Initializes the SparkMAX for the hood TODO: Set this up when possible
-    /*hoodController = new  MotorController("Hood", Constants.hoodID);
-    hoodPID = hoodController.getPID();
-    hoodEncoder = hoodController.getEncoder();*/
+    hoodController = new  MotorController("Hood", Constants.Shooter.hoodID, Constants.Shooter.kHoodPIDArray);
+    hoodPID = hoodController.getPIDCtrl();
+    hoodEncoder = hoodController.getEncoder();
     // Initializes the SparkMAX for the cargo stopper
     stopperController = new MotorController("Shooter Cargo", Constants.Shooter.shooterCargoID);
-    // Initializes PID for the hood TODO: Set this up when possible
-    /*hoodPID.setP(0.0);
-    hoodPID.setI(0.0);
-    hoodPID.setD(0.0);
-    hoodPID.setOutputRange(0, 1);*/
     // Initializes Additional PID for the shooter
     flywheelPID.setIMaxAccum(Constants.Shooter.kMaxIAccum, Constants.Shooter.kMaxISlot);
     flywheelPID.setOutputRange(Constants.Shooter.kMinOutput, Constants.Shooter.kMaxOutput);
@@ -97,18 +91,17 @@ public class ShooterSubsystem extends SubsystemBase {
     // flywheelPID.setFF(Constants.Shooter.kF);
 
     DistanceArray = new ShooterConfig[3];
-    DistanceArray[0] = new ShooterConfig(5, 64, 2263);
-    DistanceArray[1] = new ShooterConfig(10, 80, 3065);
-    DistanceArray[2] = new ShooterConfig(15, 82, 3420);
+    DistanceArray[0] = new ShooterConfig(0, 0, 2400);
     // TODO:FIll lookup table
+
     DSmoothRPM = shooterTab.add("Smooth RPM", 0.0).getEntry();
   }
 
   private void instantiateDebugTab() {
     shooterTab = Shuffleboard.getTab("Shooter Tab");
-    PID_P = shooterTab.add("PID P", Constants.Shooter.kPIDFArray[0]).withPosition(0, 1).getEntry();
-    PID_I = shooterTab.add("PID I", Constants.Shooter.kPIDFArray[1]).withPosition(0, 2).getEntry();
-    PID_D = shooterTab.add("PID D", Constants.Shooter.kPIDFArray[2]).withPosition(0, 3).getEntry();
+    PID_P = shooterTab.add("PID P", Constants.Shooter.kWheelPIDArray[0]).withPosition(0, 1).getEntry();
+    PID_I = shooterTab.add("PID I", Constants.Shooter.kWheelPIDArray[1]).withPosition(0, 2).getEntry();
+    PID_D = shooterTab.add("PID D", Constants.Shooter.kWheelPIDArray[2]).withPosition(0, 3).getEntry();
   }
 
   public void updatePID() {
@@ -121,7 +114,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void adjustHood(double a) {
     // Adjusts Hood using PID control to passed angle a
-    // hoodPID.setReference(a, CANSparkMax.ControlType.kPosition); TODO: Set this up when possible
+    hoodPID.setReference(a, CANSparkMax.ControlType.kPosition);
   }
 
   public double[] lookup(double Currentdistance) {
@@ -223,7 +216,7 @@ public class ShooterSubsystem extends SubsystemBase {
           break;
         case AUTO: // aimMode used to automatically shoot into the high goal
           windFlywheel(lookup(getDistance())[0]);
-          // TODO: Also adjust hood here
+          adjustHood(lookup(getDistance())[1]);
           break;
         case TEST: // aimMode to take a RPM from the dashboard
           windFlywheel(DTRPM.getDouble(0));

@@ -288,7 +288,7 @@ public final class Constants {
     // Motor IDs
     public static final int shooterID = 10; // ID of the shooter
     public static final int shooter2ID = 11; // ID of the second shooter motor
-    // public static final int hoodID = 0; // ID of the hood;
+    public static final int hoodID = 0; // ID of the hood; TODO:Find this ID
     public static final int shooterCargoID = 4;
 
     // LL Placement
@@ -307,19 +307,17 @@ public final class Constants {
     public static final double cargoReverse = -0.4;
 
     // PID settings
-    // 2.5e-4, 2.5e-7, 2e-6, 1e-4
-    public static final double kPIDFArray[] = {1.4e-09, 3.0E-8, 0};
-    // public static final double kPIDFArray[] = {0.000003, 0.00000004, 0};
-    // public static final double kPIDFArray[] = {2.5e-8, 5.5e-8, 0}; 7e-9
+    public static final double kWheelPIDArray[] = {0, 0, 0}; //TODO:Recharacterize & tune i term
+    public static final double kHoodPIDArray[] = {1, 0, 0};
     public static final double kMaxIAccum = 0.9;
     public static final int kMaxISlot = 0;
     public static final double kMaxOutput = 1.0;
     public static final double kMinOutput = 0;
     public static final double kA = 0.35; // Smoothing alpha, do not cofuse with kAg
     // PID FF gains
-    public static final double kSg = 0.56246;
-    public static final double kVg = 0.13981;
-    public static final double kAg = 0.0087876;
+    public static final double kSg = 0; //TODO:Recharacterize
+    public static final double kVg = 0; //TODO:Recharacterize
+    public static final double kAg = 0; //TODO:Recharacterize
   }
 
   // Climb Constants
