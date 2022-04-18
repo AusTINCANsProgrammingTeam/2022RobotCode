@@ -71,7 +71,6 @@ public class RobotContainer {
   private ShooterHeld shooterHeld;
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
-  private LimelightAlign limelightAlign;
   // ----------climb---------
   private ClimbEnable climbEnabling;
   private ClimbSequence1 climbSequence1;
@@ -174,11 +173,7 @@ public class RobotContainer {
     }
 
     if(shooterSubsystem != null){
-      shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, cdsSubsystem, true);
-    }
-
-    if (limelightSubsystem != null && driveBaseSubsystem != null) {
-      limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
+      shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, cdsSubsystem, driveBaseSubsystem, true);
     }
 
     if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
@@ -211,10 +206,7 @@ public class RobotContainer {
     }
 
     if (shooterSubsystem != null){
-      // WhileHeld to prime shooter
       buttons[Constants.LTriggerButton].whileHeld(shooterHeld);
-      // WhileHeld to aim with LL
-      buttons[Constants.LBumper].whileHeld(limelightAlign);
     }
 
     if (climbSubsystem != null) {
