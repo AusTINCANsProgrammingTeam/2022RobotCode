@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Auton;
+import frc.robot.Constants.Shooter;
 import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
@@ -28,11 +29,13 @@ import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShooterHeld;
+import frc.robot.commands.ShooterPressed;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.subsystems.ShooterConfig;
 import frc.robot.subsystems.ShooterSubsystem;
 
 // This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -65,8 +68,7 @@ public class RobotContainer {
   private IntakeReverseCommand intakeReverseCommand;
   private CDSBallManagementCommand ballManagementCommand;
   private CombinedIntakeCDSForwardCommand combinedIntakeCDS;
-
-  private ShooterHeld shooterHeldLow, shooterHeldAuto;
+  private ShooterHeld shooterHeld;
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
@@ -171,14 +173,10 @@ public class RobotContainer {
       }
     }
 
-    if (shooterSubsystem != null && cdsSubsystem != null) {
-      shooterHeldAuto =
-          new ShooterHeld(
-              shooterSubsystem, limelightSubsystem, cdsSubsystem, (limelightSubsystem != null));
-      shooterHeldLow =
-          new ShooterHeld(
-              shooterSubsystem, limelightSubsystem, cdsSubsystem, (limelightSubsystem != null));
+    if(shooterSubsystem != null){
+      shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, cdsSubsystem, true);
     }
+
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
     }
@@ -210,25 +208,13 @@ public class RobotContainer {
 
     if (combinedIntakeCDS != null) {
       buttons[Constants.RTriggerButton].whileHeld(combinedIntakeCDS);
-    } /*else {
-        buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
-      }*/
+    }
 
-    if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
-      // Auto Aim Shot
-      buttons[Constants.LTriggerButton].whileHeld(
-          shooterHeldAuto.beforeStarting(
-              () -> {
-                shooterSubsystem.setAimMode(Constants.AimModes.TARMAC);
-              },
-              shooterSubsystem));
-      // Fender Shot
-      buttons[Constants.LBumper].whileHeld(
-          shooterHeldLow.beforeStarting(
-              () -> {
-                shooterSubsystem.setAimMode(Constants.AimModes.LOW);
-              },
-              shooterSubsystem));
+    if (shooterSubsystem != null){
+      // WhileHeld to prime shooter
+      buttons[Constants.LTriggerButton].whileHeld(shooterHeld);
+      // WhileHeld to aim with LL
+      buttons[Constants.LBumper].whileHeld(limelightAlign);
     }
 
     if (climbSubsystem != null) {
