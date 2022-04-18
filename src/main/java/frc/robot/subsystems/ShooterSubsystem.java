@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -25,7 +24,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private MotorController flywheel2Controller;
   private SimpleMotorFeedforward flywheelFF;
   private SparkMaxPIDController flywheelPID;
-  private PIDController flywheelWPID;
   private RelativeEncoder flywheelEncoder;
   private MotorController hoodController;
   private SparkMaxPIDController hoodPID;
@@ -78,7 +76,7 @@ public class ShooterSubsystem extends SubsystemBase {
     flywheelController.enableVoltageCompensation(11);
     flywheel2Controller.enableVoltageCompensation(11);
     flywheel2Controller.follow(flywheelController, true);
-    // Initializes the SparkMAX for the hood TODO: Set this up when possible
+    // Initializes the SparkMAX for the hood
     hoodController = new  MotorController("Hood", Constants.Shooter.hoodID, Constants.Shooter.kHoodPIDArray);
     hoodPID = hoodController.getPIDCtrl();
     hoodEncoder = hoodController.getEncoder();

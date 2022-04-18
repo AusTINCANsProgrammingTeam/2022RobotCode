@@ -308,7 +308,7 @@ public final class Constants {
 
     // PID settings
     public static final double kWheelPIDArray[] = {0, 0, 0}; //TODO:Recharacterize & tune i term
-    public static final double kHoodPIDArray[] = {1, 0, 0};
+    public static final double kHoodPIDArray[] = {0.125, 0, 0};
     public static final double kMaxIAccum = 0.9;
     public static final int kMaxISlot = 0;
     public static final double kMaxOutput = 1.0;
