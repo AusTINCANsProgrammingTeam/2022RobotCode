@@ -66,7 +66,8 @@ public class ShooterSubsystem extends SubsystemBase {
     aimMode = AimModes.TEST;
     // Initializes the SparkMAX for the flywheel motors
     flywheelController =
-        new MotorController("Flywheel", Constants.Shooter.shooterID, Constants.Shooter.kWheelPIDArray);
+        new MotorController(
+            "Flywheel", Constants.Shooter.shooterID, Constants.Shooter.kWheelPIDArray);
     flywheel2Controller = new MotorController("Flywheel 2", Constants.Shooter.shooter2ID);
     flywheelFF =
         new SimpleMotorFeedforward(
@@ -77,7 +78,8 @@ public class ShooterSubsystem extends SubsystemBase {
     flywheel2Controller.enableVoltageCompensation(11);
     flywheel2Controller.follow(flywheelController, true);
     // Initializes the SparkMAX for the hood
-    hoodController = new  MotorController("Hood", Constants.Shooter.hoodID, Constants.Shooter.kHoodPIDArray);
+    hoodController =
+        new MotorController("Hood", Constants.Shooter.hoodID, Constants.Shooter.kHoodPIDArray);
     hoodPID = hoodController.getPIDCtrl();
     hoodEncoder = hoodController.getEncoder();
     // Initializes the SparkMAX for the cargo stopper
@@ -97,9 +99,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private void instantiateDebugTab() {
     shooterTab = Shuffleboard.getTab("Shooter Tab");
-    PID_P = shooterTab.add("PID P", Constants.Shooter.kWheelPIDArray[0]).withPosition(0, 1).getEntry();
-    PID_I = shooterTab.add("PID I", Constants.Shooter.kWheelPIDArray[1]).withPosition(0, 2).getEntry();
-    PID_D = shooterTab.add("PID D", Constants.Shooter.kWheelPIDArray[2]).withPosition(0, 3).getEntry();
+    PID_P =
+        shooterTab.add("PID P", Constants.Shooter.kWheelPIDArray[0]).withPosition(0, 1).getEntry();
+    PID_I =
+        shooterTab.add("PID I", Constants.Shooter.kWheelPIDArray[1]).withPosition(0, 2).getEntry();
+    PID_D =
+        shooterTab.add("PID D", Constants.Shooter.kWheelPIDArray[2]).withPosition(0, 3).getEntry();
   }
 
   public void updatePID() {
@@ -191,8 +196,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double getDistance() {
     // Uses Limelight to find distance to High Goal
-    return Math.floor((Constants.Shooter.highHeight - Constants.Shooter.LLHeight)
-    / Math.tan(Math.toRadians((getTY() + Constants.Shooter.LLAngle))) * 10) / 10; // Return distance in ft, rounded to 1 decimal place
+    return Math.floor(
+            (Constants.Shooter.highHeight - Constants.Shooter.LLHeight)
+                / Math.tan(Math.toRadians((getTY() + Constants.Shooter.LLAngle)))
+                * 10)
+        / 10; // Return distance in ft, rounded to 1 decimal place
   }
 
   public void prime() {

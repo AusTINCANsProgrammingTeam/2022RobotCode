@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Auton;
-import frc.robot.Constants.Shooter;
 import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
@@ -28,13 +27,11 @@ import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShooterHeld;
-import frc.robot.commands.ShooterPressed;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
-import frc.robot.subsystems.ShooterConfig;
 import frc.robot.subsystems.ShooterSubsystem;
 
 // This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -171,8 +168,10 @@ public class RobotContainer {
       }
     }
 
-    if(shooterSubsystem != null){
-      shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, cdsSubsystem, driveBaseSubsystem, true);
+    if (shooterSubsystem != null) {
+      shooterHeld =
+          new ShooterHeld(
+              shooterSubsystem, limelightSubsystem, cdsSubsystem, driveBaseSubsystem, true);
     }
 
     if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
@@ -204,7 +203,7 @@ public class RobotContainer {
       buttons[Constants.RTriggerButton].whileHeld(combinedIntakeCDS);
     }
 
-    if (shooterSubsystem != null){
+    if (shooterSubsystem != null) {
       buttons[Constants.LTriggerButton].whileHeld(shooterHeld);
     }
 

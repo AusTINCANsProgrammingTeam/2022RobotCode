@@ -307,7 +307,7 @@ public final class Constants {
     public static final double cargoReverse = -0.4;
 
     // PID settings
-    public static final double kWheelPIDArray[] = {0, 0, 0}; //TODO:Recharacterize & tune i term
+    public static final double kWheelPIDArray[] = {0, 0, 0}; // TODO:Recharacterize & tune i term
     public static final double kHoodPIDArray[] = {0.125, 0, 0};
     public static final double kMaxIAccum = 0.9;
     public static final int kMaxISlot = 0;
@@ -315,9 +315,9 @@ public final class Constants {
     public static final double kMinOutput = 0;
     public static final double kA = 0.35; // Smoothing alpha, do not cofuse with kAg
     // PID FF gains
-    public static final double kSg = 0; //TODO:Recharacterize
-    public static final double kVg = 0; //TODO:Recharacterize
-    public static final double kAg = 0; //TODO:Recharacterize
+    public static final double kSg = 0; // TODO:Recharacterize
+    public static final double kVg = 0; // TODO:Recharacterize
+    public static final double kAg = 0; // TODO:Recharacterize
   }
 
   // Climb Constants
