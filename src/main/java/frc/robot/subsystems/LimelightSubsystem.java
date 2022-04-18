@@ -22,7 +22,7 @@ public class LimelightSubsystem extends SubsystemBase {
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setDouble(1);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setDouble(1);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("stream").setDouble(0);
-    m_PidController = new PIDController(0.1, 0, 0);
+    m_PidController = new PIDController(0.25, 0.005, 0.25);
     m_PidController.setTolerance(2.0);
     isFinished = false;
   }
