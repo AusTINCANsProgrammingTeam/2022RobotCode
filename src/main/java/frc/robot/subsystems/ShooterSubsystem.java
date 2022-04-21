@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.AimModes;
+import frc.robot.Constants.Shooter;
 import frc.robot.common.hardware.MotorController;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -58,6 +59,12 @@ public class ShooterSubsystem extends SubsystemBase {
   private NetworkTableEntry PID_D;
   private NetworkTableEntry DSmoothRPM;
 
+  private NetworkTableEntry HoodPID_P;
+  private NetworkTableEntry HoodPID_I;
+  private NetworkTableEntry HoodPID_D;
+  private NetworkTableEntry Hoodinput;
+  private NetworkTableEntry HoodPosition;
+
   private ShooterConfig[] DistanceArray;
 
   public ShooterSubsystem() {
@@ -80,9 +87,15 @@ public class ShooterSubsystem extends SubsystemBase {
     flywheel2Controller.follow(flywheelController, true);
 
     // Initializes the SparkMAX for the hood TODO: Set this up when possible
-    /*hoodController = new  MotorController("Hood", Constants.hoodID);
-    hoodPID = hoodController.getPID();
-    hoodEncoder = hoodController.getEncoder();*/
+    hoodController = new  MotorController("Hood", Constants.Shooter.shooterHoodID);
+    hoodPID = hoodController.getPIDController();
+    hoodEncoder = hoodController.getEncoder();
+    hoodPID.setP(Shooter.kHoodPIDFArray[0]);
+    hoodPID.setI(Shooter.kHoodPIDFArray[1]);
+    hoodPID.setD(Shooter.kHoodPIDFArray[2]);
+    hoodController.setSmartCurrentLimit(Constants.Shooter.kHoodSmartCurrentLimit);
+    hoodEncoder.setPosition(0);
+    
     // Initializes the SparkMAX for the cargo stopper
     stopperController = new MotorController("Shooter Cargo", Constants.Shooter.shooterCargoID);
     // Initializes PID for the hood TODO: Set this up when possible
@@ -109,6 +122,14 @@ public class ShooterSubsystem extends SubsystemBase {
     PID_P = shooterTab.add("PID P", Constants.Shooter.kPIDFArray[0]).withPosition(0, 1).getEntry();
     PID_I = shooterTab.add("PID I", Constants.Shooter.kPIDFArray[1]).withPosition(0, 2).getEntry();
     PID_D = shooterTab.add("PID D", Constants.Shooter.kPIDFArray[2]).withPosition(0, 3).getEntry();
+    
+    HoodPID_P = shooterTab.add("Hood PID P",Constants.Shooter.kHoodPIDFArray[0]).withPosition(0, 4).getEntry();
+    HoodPID_I = shooterTab.add("Hood PID I",Constants.Shooter.kHoodPIDFArray[1]).withPosition(0, 5).getEntry();
+    HoodPID_D = shooterTab.add("Hood PID D",Constants.Shooter.kHoodPIDFArray[2]).withPosition(0, 6).getEntry();
+    Hoodinput = shooterTab.add("Hood input position",0).withPosition(0, 7).getEntry();
+    HoodPosition = shooterTab.add("Hood Current position",0).withPosition(0, 8).getEntry();
+    
+
   }
 
   public void updatePID() {
@@ -118,11 +139,19 @@ public class ShooterSubsystem extends SubsystemBase {
       flywheelPID.setD(PID_D.getDouble(0));
     }
   }
-
-  public void adjustHood(double a) {
-    // Adjusts Hood using PID control to passed angle a
-    // hoodPID.setReference(a, CANSparkMax.ControlType.kPosition); TODO: Set this up when possible
+  public void updateHoodPID() {
+    if (Constants.DebugMode) {
+      hoodPID.setP(HoodPID_P.getDouble(0));
+      hoodPID.setI(HoodPID_I.getDouble(0));
+      hoodPID.setD(HoodPID_D.getDouble(0));
+    }
   }
+
+
+  public void adjustHood(double position) {
+    hoodPID.setReference(position, CANSparkMax.ControlType.kPosition);
+  }
+  
 
   public double[] lookup(double Currentdistance) {
     if (Currentdistance < DistanceArray[0].getDistance()) {
@@ -227,6 +256,7 @@ public class ShooterSubsystem extends SubsystemBase {
           break;
         case TEST: // aimMode to take a RPM from the dashboard
           windFlywheel(DTRPM.getDouble(0));
+          adjustHood(Hoodinput.getDouble(0));
           break;
       }
     }
@@ -242,11 +272,19 @@ public class ShooterSubsystem extends SubsystemBase {
     DRPM.setDouble(currentRPM);
 
     if (Constants.DebugMode) {
+      HoodPosition.setDouble(hoodEncoder.getPosition());
       if ((flywheelPID.getP() != PID_P.getDouble(0))
           || (flywheelPID.getI() != PID_I.getDouble(0))
           || (flywheelPID.getD() != PID_D.getDouble(0))) {
         updatePID();
+      
       }
+      if ((hoodPID.getP() != HoodPID_P.getDouble(0))
+      || (hoodPID.getI() != HoodPID_I.getDouble(0))
+      || (hoodPID.getD() != HoodPID_D.getDouble(0))) {
+    updateHoodPID();
+  
+  }
     }
   }
 }

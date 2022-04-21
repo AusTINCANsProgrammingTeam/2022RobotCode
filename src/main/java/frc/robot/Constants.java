@@ -290,6 +290,7 @@ public final class Constants {
     public static final int shooter2ID = 11; // ID of the second shooter motor
     // public static final int hoodID = 0; // ID of the hood;
     public static final int shooterCargoID = 4;
+    public static final int shooterHoodID = 24;
 
     // LL Placement
     public static final double highHeight =
@@ -309,6 +310,10 @@ public final class Constants {
     // PID settings
     // 2.5e-4, 2.5e-7, 2e-6, 1e-4
     public static final double kPIDFArray[] = {1.4e-09, 3.0E-8, 0};
+    public static final double kHoodPIDFArray[] = {0.125, 0, 0};
+    public static final int kHoodSmartCurrentLimit = 40;
+
+
     // public static final double kPIDFArray[] = {0.000003, 0.00000004, 0};
     // public static final double kPIDFArray[] = {2.5e-8, 5.5e-8, 0}; 7e-9
     public static final double kMaxIAccum = 0.9;
