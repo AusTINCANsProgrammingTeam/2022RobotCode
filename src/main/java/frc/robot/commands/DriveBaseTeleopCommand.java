@@ -21,7 +21,7 @@ public class DriveBaseTeleopCommand extends CommandBase {
 
   @Override
   public void execute() {
-    subsystem.arcadeDrive();
+    subsystem.tankDrive();
   }
 
   @Override

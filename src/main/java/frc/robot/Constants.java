@@ -204,46 +204,54 @@ public final class Constants {
 
   public static final double reverseStopperWheelSpeed = -0.125;
 
-  // spotless:off
-  // Controller Constants {
+  // Controller Constaints
   public static final int portNumber0 = 0;
   public static final int portNumber1 = 1;
 
-  // Buttons not in use
   public static final int XButton = 1;
   public static final int AButton = 2;
   public static final int BButton = 3;
   public static final int YButton = 4;
 
-  // Intake Subsystem
-  public static final int LBumper = 5; // Intake forward
-  public static final int RBumper = 6; // Intake reverse
+  public static final int LBumper = 5;
+  public static final int RBumper = 6;
 
-  // CDS Subsystem
-  public static final int LTriggerButton = 7; // CDS forward
-  public static final int RTriggerButton = 8; // CDS reverse
+  public static final int LTriggerButton = 7;
+  public static final int RTriggerButton = 8;
 
-  // Shooter Prime/LimeLight
-  public static final int backButton = 9; // Button starts ShooterPrime
-  public static final int startButton = 10; // Button to align LimeLight
+  public static final int backButton = 9;
+  public static final int startButton = 10;
 
-  // Shooter Subsystem mode change
-  public static final int LJoystickButton = 11; // Button for Shooter mode
-  public static final int RJoystickButton = 12; // BUtton for Shooter mode
+  public static final int LJoystickButton = 9;
+  public static final int RJoystickButton = 10;
 
-  // POV's not in use
   public static final int POVup = 0;
   public static final int POVdown = 180;
   public static final int POVright = 90;
   public static final int POVleft = 270;
 
-  // Joystick
-
-  // Unused but will easily be accidentally activated if used
   public static final int leftJoystickX = 0;
-  public static final int leftJoystickY = 1; // arcade forward / tank left turning
-  public static final int rightJoystickX = 2; // arcade turning
-  public static final int rightJoystickY = 3; // tank right turning
+  public static final int leftJoystickY = 1;
+  public static final int rightJoystickX = 2;
+  public static final int rightJoystickY = 3;
+
+  // Xbox Constaints
+  public static final int leftTriggerAxis = 2;
+  public static final int rightTriggerAxis = 3;
+
+  // Flight Controller
+  public static final int joystickTrigger = 1;
+  public static final int joystickButton2 = 2;
+  public static final int joystickButton3 = 3;
+  public static final int joystickButton4 = 4;
+  public static final int joystickButton5 = 5;
+  public static final int leftBaseButton1 = 6;
+  public static final int leftBaseButton2 = 7;
+  public static final int rightBaseButton1 = 11;
+  public static final int rightBaseButton2 = 10;
+  public static final int backBaseButton1 = 8;
+  public static final int backBaseButton2 = 9;
+  public static final int joystickX = 1;
 
   // Shooter Constants
   public static final class Shooter {

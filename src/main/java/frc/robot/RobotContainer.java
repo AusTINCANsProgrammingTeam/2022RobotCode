@@ -136,7 +136,7 @@ public class RobotContainer {
 
     limelightSubsystem = new LimelightSubsystem();
 
-    climbSubsystem = new ClimbSubsystem(operatorJoystick);
+    // climbSubsystem = new ClimbSubsystem(operatorJoystick);
   }
 
   private void initCommands() {
@@ -194,11 +194,12 @@ public class RobotContainer {
     // Intake / CDS
     if (outtakeCommand != null) {
       // spits ball out
-      buttons[Constants.RBumper].whileHeld(outtakeCommand);
+      buttons[Constants.joystickButton3].whileHeld(outtakeCommand);
+      buttons[Constants.joystickButton2].whileHeld(outtakeCommand);
     }
 
     if (combinedIntakeCDS != null) {
-      buttons[Constants.RTriggerButton].whileHeld(combinedIntakeCDS);
+      buttons[Constants.LJoystickButton].whileHeld(combinedIntakeCDS);
     } /*else {
         buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
       }*/
@@ -224,10 +225,11 @@ public class RobotContainer {
       buttons2[Constants.startButton].whenPressed(climbEnabling);
     }
 
-    if (outtakeCommand != null && intakeForwardCommand != null) {
-      buttons2[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
-      buttons2[Constants.RBumper].whileHeld(outtakeCommand);
-    }
+    // redundant since already initialized above
+    // if (outtakeCommand != null && intakeForwardCommand != null) {
+    //   buttons2[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
+    //   buttons2[Constants.RBumper].whileHeld(outtakeCommand);
+    // }
   }
 
   public Command getAutonomousCommand(Constants.Auton a) {

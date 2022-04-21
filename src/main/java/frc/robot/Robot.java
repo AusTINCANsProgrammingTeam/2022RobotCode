@@ -104,8 +104,10 @@ public class Robot extends TimedRobot {
   // This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    // No auton for octobot
+
     AutonModes.setWaitTime(waitTimeSlider.getDouble(Constants.defaultInitialWaitTime));
-    robotContainer.initAuton(chooser.getSelected());
+    // robotContainer.initAuton(chooser.getSelected());
     autonomousCommand = robotContainer.getAutonomousCommand(chooser.getSelected());
 
     // schedule the autonomous command (example)
