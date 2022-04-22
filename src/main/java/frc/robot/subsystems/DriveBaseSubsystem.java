@@ -272,7 +272,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public void tankDrive() {
     differentialDrive.tankDrive(
         driverJoystick.getRawAxis((Constants.leftTriggerAxis + Constants.rightTriggerAxis) / 2),
-        driverJoystick.getRawAxis(Constants.joystickX));
+        driverJoystick.getRawAxis(Constants.joystickY));
   }
 
   @Override

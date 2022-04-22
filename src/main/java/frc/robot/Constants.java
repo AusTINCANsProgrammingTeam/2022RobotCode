@@ -251,7 +251,8 @@ public final class Constants {
   public static final int rightBaseButton2 = 10;
   public static final int backBaseButton1 = 8;
   public static final int backBaseButton2 = 9;
-  public static final int joystickX = 1;
+  public static final int joystickX = 0;
+  public static final int joystickY = 1;
 
   // Shooter Constants
   public static final class Shooter {

@@ -194,8 +194,8 @@ public class RobotContainer {
     // Intake / CDS
     if (outtakeCommand != null) {
       // spits ball out
-      buttons[Constants.joystickButton3].whileHeld(outtakeCommand);
-      buttons[Constants.joystickButton2].whileHeld(outtakeCommand);
+      buttons2[Constants.joystickButton3].whileHeld(outtakeCommand);
+      buttons2[Constants.joystickButton2].whileHeld(outtakeCommand);
     }
 
     if (combinedIntakeCDS != null) {
