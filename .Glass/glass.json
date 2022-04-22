@@ -1,0 +1,144 @@
+{
+  "NetworkTables": {
+    "LiveWindow": {
+      "CDSSubsystem": {
+        "open": true
+      }
+    },
+    "Shuffleboard": {
+      "CDS Tab": {
+        "open": true
+      },
+      "open": true
+    },
+    "SmartDashboard": {
+      "CDSSubsystem": {
+        "open": true
+      },
+      "open": true
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Ungrouped/AnalogGyro[1]": "Gyro",
+      "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
+      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/LiveWindow/Ungrouped/navX-Sensor[4]": "Gyro",
+      "/Shuffleboard/Config/Auton mode": "String Chooser",
+      "/Shuffleboard/DriveBase/navX-Sensor[4]": "Gyro",
+      "/SmartDashboard/CDSSubsystem": "Subsystem",
+      "/SmartDashboard/ClimbSubsystem": "Subsystem",
+      "/SmartDashboard/DriveBaseSubsystem": "Subsystem",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/IntakeSubsystem": "Subsystem",
+      "/SmartDashboard/LimelightSubsystem": "Subsystem",
+      "/SmartDashboard/ShooterSubsystem": "Subsystem"
+    }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client",
+    "serverTeam": "2158"
+  },
+  "Plots": {
+    "Plot <0>": {
+      "plots": [
+        {
+          "height": 259,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/CDS Tab/Front Proximity"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <1>": {
+      "plots": [
+        {
+          "height": 242,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/CDS Tab/Middle Proximity"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <2>": {
+      "plots": [
+        {
+          "height": 229,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/CDS Tab/Back Proximity"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <3>": {
+      "plots": [
+        {
+          "height": 332
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <4>": {
+      "plots": [
+        {
+          "height": 253,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/CDS Tab/Front Sense Blue"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <5>": {
+      "plots": [
+        {
+          "height": 230,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/Shuffleboard/CDS Tab/Front Sense Red"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

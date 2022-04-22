@@ -77,7 +77,11 @@ public class CDSSubsystem extends SubsystemBase {
           .getEntry();
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
-  private NetworkTableEntry ballColor = CDSTab.add("Ball Color", "Blue").getEntry();
+  private NetworkTableEntry frontBallColor = CDSTab.add("Front Ball Color", "None").getEntry();
+  private NetworkTableEntry middleBallColor = CDSTab.add("Middle Ball Color", "None").getEntry();
+  private NetworkTableEntry topBallColor = CDSTab.add("Top Ball Color", "None").getEntry();
+  private NetworkTableEntry ifSenseBlue = CDSTab.add("Front Sense Blue", 0).getEntry();
+  private NetworkTableEntry ifSenseRed = CDSTab.add("Front Sense Red", 0).getEntry();
   // private NetworkTableEntry CDSBallCount =
   // CDSTab.add("Ball Count", 0).getEntry();
   private NetworkTableEntry frontSensorProx = CDSTab.add("Front Proximity", 0).getEntry();
@@ -282,22 +286,21 @@ public class CDSSubsystem extends SubsystemBase {
       currentColorCycle = 0;
       colors = colorSensors.getColors();
 
-      double magnitude = colors[2].red + colors[2].green + colors[2].blue;
-      double redRatio = colors[2].red / magnitude;
-      double blueRatio = colors[2].blue / magnitude;
-      SmartDashboard.putNumber("Front Sense B", blueRatio);
-      SmartDashboard.putNumber("Front Sense R", redRatio);
+      double redRatio = colors[2].red;
+      double blueRatio = colors[2].blue;
+      ifSenseBlue.setNumber(blueRatio);
+      ifSenseRed.setNumber(redRatio);
 
       // Only sensing colors for first sensor so that we can handle it when it's coming in and not
       // dealing with any other complexities
       if (redRatio > colorThreshold) {
-        ballColor.setString("Red");
+        frontBallColor.setString("Red");
         lastBallColor = "Red";
       } else if (blueRatio > colorThreshold) {
-        ballColor.setString("Blue");
+        frontBallColor.setString("Blue");
         lastBallColor = "Blue";
       } else {
-        ballColor.setString("None");
+        frontBallColor.setString("None");
         lastBallColor = "None";
       }
     }
@@ -317,6 +320,9 @@ public class CDSSubsystem extends SubsystemBase {
         // randomly select color for each sensor
         simColors[i] = colorChoices[rand.nextInt(colorChoices.length)];
       }
+      frontBallColor.setString(simColors[0]);
+      middleBallColor.setString(simColors[1]);
+      topBallColor.setString(simColors[2]);
 
       return simColors;
     }
@@ -341,6 +347,9 @@ public class CDSSubsystem extends SubsystemBase {
         sensedColors[i] = "None";
       }
     }
+    frontBallColor.setString(sensedColors[0]);
+    middleBallColor.setString(sensedColors[1]);
+    topBallColor.setString(sensedColors[2]);
 
     return sensedColors;
   }
