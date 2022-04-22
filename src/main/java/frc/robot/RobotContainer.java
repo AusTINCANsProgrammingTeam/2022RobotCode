@@ -207,7 +207,7 @@ public class RobotContainer {
 
     if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
 
-      buttons[0].whenPressed(
+      buttons[Constants.joystickTrigger].whenPressed(
           new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
 
       // // Auto Aim Shot

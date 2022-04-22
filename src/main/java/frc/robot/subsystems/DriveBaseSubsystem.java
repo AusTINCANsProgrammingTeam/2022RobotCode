@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.common.hardware.MotorController;
@@ -40,6 +41,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private final DifferentialDrive differentialDrive;
   private DifferentialDrivetrainSim differentialDrivetrainSim;
   public final Field2d m_field = new Field2d();
+
+  private static final Joystick operatorJoystick = new Joystick(Constants.portNumber1);
 
   private AnalogGyroSim gyroSim;
   public static ADIS16448_IMU gyro2; // Non-native gyro, might use later
@@ -72,9 +75,15 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private NetworkTableEntry sbRightPosition;
   private NetworkTableEntry sbGyroInfo;
 
+  private JoystickButton[] Buttons2;
+
   public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {
     driveBaseSpeed = 1;
     driverJoystick = joystick;
+
+    for (int i = 1; i < 13; i++) {
+      Buttons2[i] = new JoystickButton(operatorJoystick, i);
+    }
 
     motorControllers = new MotorController[4];
     gyro = new AHRS(SPI.Port.kMXP);
@@ -272,7 +281,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public void tankDrive() {
     differentialDrive.tankDrive(
         driverJoystick.getRawAxis((Constants.leftTriggerAxis + Constants.rightTriggerAxis) / 2),
-        driverJoystick.getRawAxis(Constants.joystickY));
+        driverJoystick.getRawAxis(0));
   }
 
   @Override
