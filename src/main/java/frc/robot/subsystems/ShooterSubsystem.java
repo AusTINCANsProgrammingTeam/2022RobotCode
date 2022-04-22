@@ -15,8 +15,10 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
 import frc.robot.Constants.AimModes;
+import frc.robot.RobotContainer;
 import frc.robot.common.hardware.MotorController;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -57,6 +59,9 @@ public class ShooterSubsystem extends SubsystemBase {
   private NetworkTableEntry PID_I;
   private NetworkTableEntry PID_D;
   private NetworkTableEntry DSmoothRPM;
+
+  private JoystickButton[] buttons;
+  private int shooterChargeCount = 0;
 
   private ShooterConfig[] DistanceArray;
 
@@ -100,6 +105,24 @@ public class ShooterSubsystem extends SubsystemBase {
     DistanceArray[1] = new ShooterConfig(10, 80, 3065);
     DistanceArray[2] = new ShooterConfig(15, 82, 3420);
     // TODO:FIll lookup table
+
+    buttons = RobotContainer.getJoystickButtons1();
+  }
+
+  public void updateShooterCharge() {
+    if (buttons[Constants.rightBaseButton1].get() == true) {
+      shooterChargeCount++;
+    }
+    if (buttons[Constants.rightBaseButton2].get() == true) {
+      shooterChargeCount++;
+    }
+  }
+
+  public boolean getChargeReady() {
+    if (shooterChargeCount >= 20) {
+      return true;
+    }
+    return false;
   }
 
   private void instantiateDebugTab() {
@@ -246,5 +269,7 @@ public class ShooterSubsystem extends SubsystemBase {
         updatePID();
       }
     }
+
+    updateShooterCharge();
   }
 }

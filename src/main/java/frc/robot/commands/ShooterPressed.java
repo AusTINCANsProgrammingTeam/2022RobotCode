@@ -37,8 +37,12 @@ public class ShooterPressed extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    i = 0;
-    m_ShooterSubsystem.resetIAccum();
+    if (m_ShooterSubsystem.getChargeReady()) {
+      i = 0;
+      m_ShooterSubsystem.resetIAccum();
+    } else {
+      i = 21;
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.

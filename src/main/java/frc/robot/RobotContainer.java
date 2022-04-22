@@ -24,6 +24,7 @@ import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShooterHeld;
+import frc.robot.commands.ShooterPressed;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveBaseSubsystem;
@@ -44,8 +45,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private static final Joystick driverJoystick = new Joystick(Constants.portNumber0);
   private static final Joystick operatorJoystick = new Joystick(Constants.portNumber1);
-  private JoystickButton[] buttons = new JoystickButton[13];
-  private JoystickButton[] buttons2 = new JoystickButton[13];
+  public static JoystickButton[] buttons = new JoystickButton[13];
+  public static JoystickButton[] buttons2 = new JoystickButton[13];
 
   // subsystems
   private static ClimbSubsystem climbSubsystem;
@@ -205,20 +206,24 @@ public class RobotContainer {
       }*/
 
     if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
-      // Auto Aim Shot
-      buttons[Constants.LTriggerButton].whileHeld(
-          shooterHeldAuto.beforeStarting(
-              () -> {
-                shooterSubsystem.setAimMode(Constants.AimModes.TARMAC);
-              },
-              shooterSubsystem));
-      // Fender Shot
-      buttons[Constants.LBumper].whileHeld(
-          shooterHeldLow.beforeStarting(
-              () -> {
-                shooterSubsystem.setAimMode(Constants.AimModes.LOW);
-              },
-              shooterSubsystem));
+
+      buttons[0].whenPressed(
+          new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
+
+      // // Auto Aim Shot
+      // buttons[Constants.LTriggerButton].whileHeld(
+      //     shooterHeldAuto.beforeStarting(
+      //         () -> {
+      //           shooterSubsystem.setAimMode(Constants.AimModes.TARMAC);
+      //         },
+      //         shooterSubsystem));
+      // // Fender Shot
+      // buttons[Constants.LBumper].whileHeld(
+      //     shooterHeldLow.beforeStarting(
+      //         () -> {
+      //           shooterSubsystem.setAimMode(Constants.AimModes.LOW);
+      //         },
+      //         shooterSubsystem));
     }
 
     if (climbSubsystem != null) {
@@ -299,5 +304,9 @@ public class RobotContainer {
     SmartDashboard.putData(intakeSubsystem);
     SmartDashboard.putData(shooterSubsystem);
     SmartDashboard.putData(limelightSubsystem);
+  }
+
+  public static JoystickButton[] getJoystickButtons1() {
+    return buttons;
   }
 }
