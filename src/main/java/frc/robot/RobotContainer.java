@@ -226,6 +226,8 @@ public class RobotContainer {
       //         shooterSubsystem));
     }
 
+    //Fix things pls
+
     if (climbSubsystem != null) {
       buttons2[Constants.startButton].whenPressed(climbEnabling);
     }
