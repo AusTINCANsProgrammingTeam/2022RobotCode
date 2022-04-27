@@ -127,7 +127,7 @@ public class RobotContainer {
     // subsystems
     controllerCheck();
 
-    driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, Constants.usingExternal);
+    driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, operatorJoystick, Constants.usingExternal);
 
     cdsSubsystem = new CDSSubsystem();
 
@@ -207,7 +207,7 @@ public class RobotContainer {
 
     if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
 
-      buttons[Constants.joystickTrigger].whenPressed(
+      buttons2[Constants.joystickTrigger].whenPressed(
           new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
 
       // // Auto Aim Shot

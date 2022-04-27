@@ -37,12 +37,11 @@ import frc.robot.common.hardware.MotorController;
 public class DriveBaseSubsystem extends SubsystemBase {
   private double driveBaseSpeed;
   private final Joystick driverJoystick;
+  private final Joystick operatorJoystick;
   private final MotorController[] motorControllers;
   private final DifferentialDrive differentialDrive;
   private DifferentialDrivetrainSim differentialDrivetrainSim;
   public final Field2d m_field = new Field2d();
-
-  private static final Joystick operatorJoystick = new Joystick(Constants.portNumber1);
 
   private AnalogGyroSim gyroSim;
   public static ADIS16448_IMU gyro2; // Non-native gyro, might use later
@@ -75,15 +74,16 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private NetworkTableEntry sbRightPosition;
   private NetworkTableEntry sbGyroInfo;
 
-  private JoystickButton[] Buttons2;
+  //private JoystickButton[] Buttons2;
 
-  public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {
+  public DriveBaseSubsystem(Joystick joystick, Joystick joystick2, boolean usingExternal) {
     driveBaseSpeed = 1;
     driverJoystick = joystick;
+    operatorJoystick = joystick2;
 
-    for (int i = 1; i < 13; i++) {
-      Buttons2[i] = new JoystickButton(operatorJoystick, i);
-    }
+    // for (int i = 1; i < 13; i++) {
+    //   Buttons2[i] = new JoystickButton(operatorJoystick, i);
+    // }
 
     motorControllers = new MotorController[4];
     gyro = new AHRS(SPI.Port.kMXP);
@@ -281,7 +281,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public void tankDrive() {
     differentialDrive.tankDrive(
         driverJoystick.getRawAxis((Constants.leftTriggerAxis + Constants.rightTriggerAxis) / 2),
-        driverJoystick.getRawAxis(0));
+        operatorJoystick.getRawAxis(Constants.joystickY));
   }
 
   @Override
