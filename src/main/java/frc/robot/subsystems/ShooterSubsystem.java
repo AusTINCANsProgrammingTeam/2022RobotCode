@@ -61,6 +61,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private NetworkTableEntry DSmoothRPM;
 
   private JoystickButton[] buttons;
+  private JoystickButton[] buttons2;
   private int shooterChargeCount = 0;
 
   private ShooterConfig[] DistanceArray;
@@ -107,13 +108,14 @@ public class ShooterSubsystem extends SubsystemBase {
     // TODO:FIll lookup table
 
     buttons = RobotContainer.getJoystickButtons1();
+    buttons2 = RobotContainer.getJoystickButtons2();
   }
 
   public void updateShooterCharge() {
-    if (buttons[Constants.rightBaseButton1].get() == true) {
+    if (buttons2[Constants.rightBaseButton1].get() == true) {
       shooterChargeCount++;
     }
-    if (buttons[Constants.rightBaseButton2].get() == true) {
+    if (buttons2[Constants.rightBaseButton2].get() == true) {
       shooterChargeCount++;
     }
   }

@@ -312,4 +312,8 @@ public class RobotContainer {
   public static JoystickButton[] getJoystickButtons1() {
     return buttons;
   }
+
+  public static JoystickButton[] getJoystickButtons2() {
+    return buttons2;
+  }
 }
