@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.common.hardware.MotorController;
@@ -74,7 +73,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private NetworkTableEntry sbRightPosition;
   private NetworkTableEntry sbGyroInfo;
 
-  //private JoystickButton[] Buttons2;
+  // private JoystickButton[] Buttons2;
 
   public DriveBaseSubsystem(Joystick joystick, Joystick joystick2, boolean usingExternal) {
     driveBaseSpeed = 1;
@@ -280,7 +279,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   // TODO: check tankdrive if joystick axes are working
   public void tankDrive() {
     differentialDrive.tankDrive(
-        driverJoystick.getRawAxis((Constants.leftTriggerAxis + Constants.rightTriggerAxis) / 2),
+        driverJoystick.getRawAxis(Constants.leftTriggerAxis)+(-1*(driverJoystick.getRawAxis(Constants.rightTriggerAxis))),
         operatorJoystick.getRawAxis(Constants.joystickY));
   }
 

@@ -127,7 +127,8 @@ public class RobotContainer {
     // subsystems
     controllerCheck();
 
-    driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, operatorJoystick, Constants.usingExternal);
+    driveBaseSubsystem =
+        new DriveBaseSubsystem(driverJoystick, operatorJoystick, Constants.usingExternal);
 
     cdsSubsystem = new CDSSubsystem();
 
@@ -226,7 +227,7 @@ public class RobotContainer {
       //         shooterSubsystem));
     }
 
-    //Fix things pls
+    // Fix things pls
 
     if (climbSubsystem != null) {
       buttons2[Constants.startButton].whenPressed(climbEnabling);

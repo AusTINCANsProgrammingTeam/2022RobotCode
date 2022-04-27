@@ -98,10 +98,10 @@ public class CDSSubsystem extends SubsystemBase {
 
     CDSBeltController.setIdleMode(IdleMode.kBrake);
     CDSWheelControllerOne.setIdleMode(IdleMode.kCoast);
-
+    /*
     colorSensors = new ColorSensorMuxed(1, 2, 0); // front to back color sensor ports on new robotn
     colorSensors.configureMeasurementRates(MeasurementRate.kRate40Hz);
-    sensorStatuses = colorSensors.getProximities();
+    sensorStatuses = colorSensors.getProximities();*/
     allianceColor = DriverStation.getAlliance().toString();
     SmartDashboard.putString("Alliance Color", allianceColor);
     state = ManagementState.IDLE;
@@ -213,16 +213,16 @@ public class CDSSubsystem extends SubsystemBase {
   public boolean[] getSensorStatus() {
     if (currentProxCycle % cycleWait == 0) {
       currentProxCycle = 0;
-      sensorStatuses = colorSensors.getProximities();
+      //sensorStatuses = colorSensors.getProximities();
       // if (Constants.DebugMode) {
-      frontSensorProx.setNumber(sensorStatuses[2]);
+      /*frontSensorProx.setNumber(sensorStatuses[2]);
       middleSensorProx.setNumber(sensorStatuses[1]);
-      backSensorProx.setNumber(sensorStatuses[0]);
+      backSensorProx.setNumber(sensorStatuses[0]);*/
       // }
-
+      /*
       activationArray[0] = sensorStatuses[0] > Constants.backSensorActivation;
       activationArray[1] = sensorStatuses[1] > Constants.middleSensorActivation;
-      activationArray[2] = sensorStatuses[2] > Constants.frontSensorActivation;
+      activationArray[2] = sensorStatuses[2] > Constants.frontSensorActivation;*/
 
       ballCount = 0;
       for (boolean status : activationArray) {
@@ -250,6 +250,7 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public String senseColor() {
+    /*
     if (currentColorCycle % cycleWait == 0) {
       currentColorCycle = 0;
       colors = colorSensors.getColors();
@@ -266,17 +267,15 @@ public class CDSSubsystem extends SubsystemBase {
       } else {
         ballColor.setString("Blue");
         lastBallColor = "Blue";
-      }
-    }
-
-    currentColorCycle++;
-    return lastBallColor;
+      }*/
+    return "FILLER";
+    
   }
 
   public boolean sensorsOnline() {
     boolean isOnline = true;
     sensorsDown = 0;
-
+    /*
     sensorStatuses = colorSensors.getProximities();
     for (int prox : sensorStatuses) {
       if (prox == 0) {
@@ -284,7 +283,8 @@ public class CDSSubsystem extends SubsystemBase {
         isOnline = false;
       }
     }
-    return isOnline;
+    return isOnline;*/
+    return true;
   }
 
   public int getSensorDown() {
