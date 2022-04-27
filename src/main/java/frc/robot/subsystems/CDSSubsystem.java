@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.common.hardware.ColorSensorMuxed;
-import frc.robot.common.hardware.ColorSensorMuxed.MeasurementRate;
 import frc.robot.common.hardware.MotorController;
 
 public class CDSSubsystem extends SubsystemBase {
@@ -213,7 +212,7 @@ public class CDSSubsystem extends SubsystemBase {
   public boolean[] getSensorStatus() {
     if (currentProxCycle % cycleWait == 0) {
       currentProxCycle = 0;
-      //sensorStatuses = colorSensors.getProximities();
+      // sensorStatuses = colorSensors.getProximities();
       // if (Constants.DebugMode) {
       /*frontSensorProx.setNumber(sensorStatuses[2]);
       middleSensorProx.setNumber(sensorStatuses[1]);
@@ -269,7 +268,6 @@ public class CDSSubsystem extends SubsystemBase {
         lastBallColor = "Blue";
       }*/
     return "FILLER";
-    
   }
 
   public boolean sensorsOnline() {

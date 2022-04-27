@@ -279,7 +279,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
   // TODO: check tankdrive if joystick axes are working
   public void tankDrive() {
     differentialDrive.tankDrive(
-        driverJoystick.getRawAxis(Constants.leftTriggerAxis)+(-1*(driverJoystick.getRawAxis(Constants.rightTriggerAxis))),
+        driverJoystick.getRawAxis(Constants.leftTriggerAxis)
+            + (-1 * (driverJoystick.getRawAxis(Constants.rightTriggerAxis))),
         operatorJoystick.getRawAxis(Constants.joystickY));
   }
 

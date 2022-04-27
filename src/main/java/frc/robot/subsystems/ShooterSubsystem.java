@@ -66,6 +66,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private ShooterConfig[] DistanceArray;
 
+  private int index;
+
   public ShooterSubsystem() {
     if (Constants.DebugMode) {
       instantiateDebugTab();
@@ -109,22 +111,17 @@ public class ShooterSubsystem extends SubsystemBase {
 
     buttons = RobotContainer.getJoystickButtons1();
     buttons2 = RobotContainer.getJoystickButtons2();
+
+    index = 1;
   }
 
   public void updateShooterCharge() {
     if (buttons2[Constants.rightBaseButton1].get() == true) {
-      shooterChargeCount++;
+      targetRPM += 100;
     }
     if (buttons2[Constants.rightBaseButton2].get() == true) {
-      shooterChargeCount++;
+      targetRPM += 100;
     }
-  }
-
-  public boolean getChargeReady() {
-    if (shooterChargeCount >= 20) {
-      return true;
-    }
-    return false;
   }
 
   private void instantiateDebugTab() {
@@ -270,6 +267,13 @@ public class ShooterSubsystem extends SubsystemBase {
           || (flywheelPID.getD() != PID_D.getDouble(0))) {
         updatePID();
       }
+    }
+
+    if (index == 5) {
+      targetRPM -= 10;
+      index = 1;
+    } else {
+      index++;
     }
 
     updateShooterCharge();
