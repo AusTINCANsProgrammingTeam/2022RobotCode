@@ -269,11 +269,13 @@ public class ShooterSubsystem extends SubsystemBase {
       }
     }
 
-    if (index == 5) {
-      targetRPM -= 10;
-      index = 1;
-    } else {
-      index++;
+    if (targetRPM > 0) {
+      if (index == 5) {
+        targetRPM -= 10;
+        index = 1;
+      } else {
+        index++;
+      }
     }
 
     updateShooterCharge();
