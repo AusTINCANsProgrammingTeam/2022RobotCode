@@ -372,10 +372,10 @@ public final class Constants {
 
   public static final double climbSequence1Timeout = 20.0;
 
-  public static final double armUpSpeed = -1;
-  public static final double armDownSpeed = -0.65;
-  public static final double poleInSpeed = 0.5;
-  public static final double poleOutSpeed = 0.6;
+  public static final double armUpSpeed = -1.5;
+  public static final double armDownSpeed = -3;
+  public static final double poleInSpeed = 1.5;
+  public static final double poleOutSpeed = 1.5;
 
   public static final double armSetIMaxAccum = 0.45;
   public static final double poleSetIMaxAccum = 0.25;
