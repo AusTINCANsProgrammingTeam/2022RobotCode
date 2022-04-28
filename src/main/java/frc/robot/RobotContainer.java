@@ -22,9 +22,9 @@ import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
+import frc.robot.commands.OctoShooter;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShooterHeld;
-import frc.robot.commands.ShooterPressed;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveBaseSubsystem;
@@ -70,6 +70,7 @@ public class RobotContainer {
   private ClimbEnable climbEnabling;
   private ClimbPeriodic ClimbPeriodic;
   private Command HaDeploy;
+  private OctoShooter OctoShooter;
 
   // auton
   private AutonModes autonModes;
@@ -160,9 +161,10 @@ public class RobotContainer {
         ballManagementCommand =
             new CDSBallManagementCommand(cdsSubsystem, intakeSubsystem, shooterSubsystem);
         cdsSubsystem.setDefaultCommand(ballManagementCommand);
-        combinedIntakeCDS =
-            new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem);
       }
+
+      combinedIntakeCDS =
+          new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem);
     }
 
     if (shooterSubsystem != null && cdsSubsystem != null) {
@@ -172,6 +174,8 @@ public class RobotContainer {
       shooterHeldLow =
           new ShooterHeld(
               shooterSubsystem, limelightSubsystem, cdsSubsystem, (limelightSubsystem != null));
+      OctoShooter = new OctoShooter(shooterSubsystem, cdsSubsystem);
+      shooterSubsystem.setDefaultCommand(OctoShooter);
     }
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
@@ -200,32 +204,32 @@ public class RobotContainer {
       buttons2[Constants.joystickButton2].whileHeld(outtakeCommand);
     }
 
-    if (combinedIntakeCDS != null) {
-      buttons[Constants.LJoystickButton].whileHeld(combinedIntakeCDS);
-    } /*else {
-        buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
-      }*/
+    // if (combinedIntakeCDS != null) {
+    buttons[Constants.XButton].whileHeld(combinedIntakeCDS);
+    // } /*else {
+    //     buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
+    //   }*/
 
-    if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
+    // if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
 
-      buttons2[Constants.joystickTrigger].whenPressed(
-          new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
+    //   buttons2[Constants.joystickTrigger].whenPressed(
+    //       new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
 
-      // // Auto Aim Shot
-      // buttons[Constants.LTriggerButton].whileHeld(
-      //     shooterHeldAuto.beforeStarting(
-      //         () -> {
-      //           shooterSubsystem.setAimMode(Constants.AimModes.TARMAC);
-      //         },
-      //         shooterSubsystem));
-      // // Fender Shot
-      // buttons[Constants.LBumper].whileHeld(
-      //     shooterHeldLow.beforeStarting(
-      //         () -> {
-      //           shooterSubsystem.setAimMode(Constants.AimModes.LOW);
-      //         },
-      //         shooterSubsystem));
-    }
+    // // Auto Aim Shot
+    // buttons[Constants.LTriggerButton].whileHeld(
+    //     shooterHeldAuto.beforeStarting(
+    //         () -> {
+    //           shooterSubsystem.setAimMode(Constants.AimModes.TARMAC);
+    //         },
+    //         shooterSubsystem));
+    // // Fender Shot
+    // buttons[Constants.LBumper].whileHeld(
+    //     shooterHeldLow.beforeStarting(
+    //         () -> {
+    //           shooterSubsystem.setAimMode(Constants.AimModes.LOW);
+    //         },
+    //         shooterSubsystem));
+    // }
 
     // Fix things pls
 
