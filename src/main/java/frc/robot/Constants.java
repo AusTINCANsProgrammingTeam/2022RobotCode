@@ -333,6 +333,7 @@ public final class Constants {
   public static final int poleMotorTwo = 16;
 
   public static final int armHeightMax = 132;
+  public static final int armHeightRetract = 72;
   public static final int armHeightMin = 0;
   public static final int armHeightFeather1 = -20;
   public static final int armHeightFeather2 = -35;
@@ -341,6 +342,7 @@ public final class Constants {
   public static final double poleHeightMax = 6;
   public static final int poleHeightMin = -60;
   public static final int poleHeightDeploy = -12;
+  public static final int poleHeightRetracted = -40;
 
   public static final double[] armPosPID = {0.125, 0, 0};
   public static final double[] armVelocityPID = {4e-5, 0, 0};
@@ -348,7 +350,7 @@ public final class Constants {
   public static final int armPosPIDSlot = 1;
   public static final int armVelPIDSlot = 2;
 
-  public static final double climbMaxOutput = 1.0;
+  public static final double climbMaxOutput = 0.4;
   public static final int climbPoleLowCurrent = 15;
   public static final int climbArmLowCurrent = 10;
   public static final int climbPoleHighCurrent = 50;

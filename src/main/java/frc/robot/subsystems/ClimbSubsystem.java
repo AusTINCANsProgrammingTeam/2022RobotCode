@@ -318,37 +318,15 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   // functions for ClimbSequence1
-  public void deployArms() {
-    if (armEncoderHeightOne > Constants.armHeightFeather1
-        || armEncoderHeightTwo > Constants.armHeightFeather1) {
-      armOne
-          .getPIDCtrl()
-          .setReference(
-              Constants.armFeatherRPM1, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
-      armTwo
-          .getPIDCtrl()
-          .setReference(
-              Constants.armFeatherRPM1, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
-    } else if (armEncoderHeightOne > Constants.armHeightFeather2
-        || armEncoderHeightTwo > Constants.armHeightFeather2) {
-      armOne
-          .getPIDCtrl()
-          .setReference(
-              Constants.armFeatherRPM2, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
-      armTwo
-          .getPIDCtrl()
-          .setReference(
-              Constants.armFeatherRPM2, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
-    } else {
-      armOne
-          .getPIDCtrl()
-          .setReference(
-              Constants.armHeightMin, CANSparkMax.ControlType.kPosition, Constants.armPosPIDSlot);
-      armTwo
-          .getPIDCtrl()
-          .setReference(
-              Constants.armHeightMin, CANSparkMax.ControlType.kPosition, Constants.armPosPIDSlot);
-    }
+  public void retractArms() {
+    armOne
+        .getPIDCtrl()
+        .setReference(
+            Constants.armHeightRetract, CANSparkMax.ControlType.kPosition, Constants.armPosPIDSlot);
+    armTwo
+        .getPIDCtrl()
+        .setReference(
+            Constants.armHeightRetract, CANSparkMax.ControlType.kPosition, Constants.armPosPIDSlot);
   }
 
   public void deployPoles() {
@@ -358,6 +336,19 @@ public class ClimbSubsystem extends SubsystemBase {
     poleTwo
         .getPIDCtrl()
         .setReference(Constants.poleHeightDeploy, CANSparkMax.ControlType.kPosition);
+  }
+
+  public void weightTransfer() {
+    poleOne
+        .getPIDCtrl()
+        .setReference(Constants.poleHeightDeploy, CANSparkMax.ControlType.kPosition);
+    poleTwo
+        .getPIDCtrl()
+        .setReference(Constants.poleHeightDeploy, CANSparkMax.ControlType.kPosition);
+  }
+
+  public boolean getArmReady() {
+    return armEncoderHeightOne < 90 && armEncoderHeightTwo < 90;
   }
 
   public void unlockHooks() {
@@ -374,14 +365,6 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public void setAutoBoolean(boolean a) {
     BAutomaticControl.setBoolean(a);
-  }
-
-  public boolean atFirstSetpoint() {
-    // checking if the armHeight is within an acceptable range
-    return (armEncoderHeightOne > Constants.armHeightMin - Constants.climbArmDeadband
-            && armEncoderHeightOne < Constants.armHeightMin + Constants.climbArmDeadband)
-        && (armEncoderHeightTwo > Constants.armHeightMin - Constants.climbArmDeadband
-            && armEncoderHeightTwo < Constants.armHeightMin + Constants.climbArmDeadband);
   }
 
   public void periodic() {

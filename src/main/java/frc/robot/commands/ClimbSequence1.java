@@ -30,8 +30,9 @@ public class ClimbSequence1 extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (i > 5) {
-      // climbSubsystem.deployArms();
+    climbSubsystem.retractArms();
+    if(climbSubsystem.getArmReady()){
+      climbSubsystem.weightTransfer();
     }
     climbSubsystem.resetClimbHeights();
     i++;
@@ -47,6 +48,6 @@ public class ClimbSequence1 extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return climbSubsystem.atFirstSetpoint();
+    return false;
   }
 }
