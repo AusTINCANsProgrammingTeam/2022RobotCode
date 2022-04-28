@@ -269,6 +269,8 @@ public class ShooterSubsystem extends SubsystemBase {
       }
     }
 
+    updateShooterCharge();
+
     if (targetRPM > 0) {
       if (index == 5) {
         targetRPM -= 10;
@@ -278,7 +280,5 @@ public class ShooterSubsystem extends SubsystemBase {
       }
       windFlywheel(DTRPM.getDouble(0));
     }
-
-    updateShooterCharge();
   }
 }
