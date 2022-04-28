@@ -276,6 +276,7 @@ public class ShooterSubsystem extends SubsystemBase {
       } else {
         index++;
       }
+      windFlywheel(DTRPM.getDouble(0));
     }
 
     updateShooterCharge();
