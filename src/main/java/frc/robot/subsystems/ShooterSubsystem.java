@@ -67,6 +67,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private ShooterConfig[] DistanceArray;
 
   private int index;
+  private int octoRPM;
 
   public ShooterSubsystem() {
     if (Constants.DebugMode) {
@@ -117,10 +118,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void updateShooterCharge() {
     if (buttons2[Constants.rightBaseButton1].get() == true) {
-      targetRPM += 100;
+      octoRPM += 100;
     }
     if (buttons2[Constants.rightBaseButton2].get() == true) {
-      targetRPM += 100;
+      octoRPM += 100;
     }
   }
 
@@ -240,7 +241,7 @@ public class ShooterSubsystem extends SubsystemBase {
         case LAUNCH: // aimMode used to shoot into the high goal from the launchpad
         case ATARMAC:
           adjustHood(aimMode.getAngle());
-          windFlywheel(aimMode.getRPM());
+          windFlywheel(octoRPM);
           break;
         case AUTO: // aimMode used to automatically shoot into the high goal
           windFlywheel(lookup(getDistance())[0]);
@@ -271,14 +272,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
     updateShooterCharge();
 
-    if (targetRPM > 0) {
+    if (octoRPM > 0) {
       if (index == 5) {
-        targetRPM -= 10;
+        octoRPM -= 10;
         index = 1;
       } else {
         index++;
       }
-      windFlywheel(DTRPM.getDouble(0));
     }
   }
 }

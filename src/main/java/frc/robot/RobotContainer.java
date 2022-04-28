@@ -204,6 +204,11 @@ public class RobotContainer {
       buttons2[Constants.joystickButton2].whileHeld(outtakeCommand);
     }
 
+    if (shooterSubsystem != null) {
+      buttons2[Constants.rightBaseButton1].whenPressed(OctoShooter);
+      buttons2[Constants.leftBaseButton2].whenPressed(OctoShooter);
+    }
+
     // if (combinedIntakeCDS != null) {
     buttons[Constants.XButton].whileHeld(combinedIntakeCDS);
     // } /*else {
