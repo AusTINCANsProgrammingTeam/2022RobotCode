@@ -15,10 +15,8 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
 import frc.robot.Constants.AimModes;
-import frc.robot.RobotContainer;
 import frc.robot.common.hardware.MotorController;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -60,14 +58,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private NetworkTableEntry PID_D;
   private NetworkTableEntry DSmoothRPM;
 
-  private JoystickButton[] buttons;
-  private JoystickButton[] buttons2;
-  private int shooterChargeCount = 0;
-
   private ShooterConfig[] DistanceArray;
-
-  private int index;
-  private int octoRPM;
 
   public ShooterSubsystem() {
     if (Constants.DebugMode) {
@@ -109,20 +100,6 @@ public class ShooterSubsystem extends SubsystemBase {
     DistanceArray[1] = new ShooterConfig(10, 80, 3065);
     DistanceArray[2] = new ShooterConfig(15, 82, 3420);
     // TODO:FIll lookup table
-
-    buttons = RobotContainer.getJoystickButtons1();
-    buttons2 = RobotContainer.getJoystickButtons2();
-
-    index = 1;
-  }
-
-  public void updateShooterCharge() {
-    if (buttons2[Constants.rightBaseButton1].get() == true) {
-      octoRPM += 100;
-    }
-    if (buttons2[Constants.rightBaseButton2].get() == true) {
-      octoRPM += 100;
-    }
   }
 
   private void instantiateDebugTab() {
@@ -241,7 +218,7 @@ public class ShooterSubsystem extends SubsystemBase {
         case LAUNCH: // aimMode used to shoot into the high goal from the launchpad
         case ATARMAC:
           adjustHood(aimMode.getAngle());
-          windFlywheel(octoRPM);
+          windFlywheel(aimMode.getRPM());
           break;
         case AUTO: // aimMode used to automatically shoot into the high goal
           windFlywheel(lookup(getDistance())[0]);
@@ -267,17 +244,6 @@ public class ShooterSubsystem extends SubsystemBase {
           || (flywheelPID.getI() != PID_I.getDouble(0))
           || (flywheelPID.getD() != PID_D.getDouble(0))) {
         updatePID();
-      }
-    }
-
-    updateShooterCharge();
-
-    if (octoRPM > 0) {
-      if (index == 5) {
-        octoRPM -= 10;
-        index = 1;
-      } else {
-        index++;
       }
     }
   }

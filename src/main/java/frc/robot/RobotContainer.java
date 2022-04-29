@@ -22,7 +22,6 @@ import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
-import frc.robot.commands.OctoShooter;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShooterHeld;
 import frc.robot.subsystems.CDSSubsystem;
@@ -70,7 +69,6 @@ public class RobotContainer {
   private ClimbEnable climbEnabling;
   private ClimbPeriodic ClimbPeriodic;
   private Command HaDeploy;
-  private OctoShooter OctoShooter;
 
   // auton
   private AutonModes autonModes;
@@ -174,8 +172,6 @@ public class RobotContainer {
       shooterHeldLow =
           new ShooterHeld(
               shooterSubsystem, limelightSubsystem, cdsSubsystem, (limelightSubsystem != null));
-      OctoShooter = new OctoShooter(shooterSubsystem, cdsSubsystem);
-      shooterSubsystem.setDefaultCommand(OctoShooter);
     }
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
@@ -204,42 +200,18 @@ public class RobotContainer {
       buttons2[Constants.joystickButton2].whileHeld(outtakeCommand);
     }
 
-    if (shooterSubsystem != null) {
-      buttons2[Constants.rightBaseButton1].whenPressed(OctoShooter);
-      buttons2[Constants.leftBaseButton2].whenPressed(OctoShooter);
+    if (combinedIntakeCDS != null) {
+      buttons[Constants.XButton].whileHeld(combinedIntakeCDS);
     }
 
-    // if (combinedIntakeCDS != null) {
-    buttons[Constants.XButton].whileHeld(combinedIntakeCDS);
-    // } /*else {
-    //     buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
-    //   }*/
-
-    // if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
-
-    //   buttons2[Constants.joystickTrigger].whenPressed(
-    //       new ShooterPressed(shooterSubsystem, limelightSubsystem, cdsSubsystem, false));
-
-    // // Auto Aim Shot
-    // buttons[Constants.LTriggerButton].whileHeld(
-    //     shooterHeldAuto.beforeStarting(
-    //         () -> {
-    //           shooterSubsystem.setAimMode(Constants.AimModes.TARMAC);
-    //         },
-    //         shooterSubsystem));
-    // // Fender Shot
-    // buttons[Constants.LBumper].whileHeld(
-    //     shooterHeldLow.beforeStarting(
-    //         () -> {
-    //           shooterSubsystem.setAimMode(Constants.AimModes.LOW);
-    //         },
-    //         shooterSubsystem));
-    // }
-
-    // Fix things pls
-
-    if (climbSubsystem != null) {
-      buttons2[Constants.startButton].whenPressed(climbEnabling);
+    if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
+      // Fender Shot
+      buttons2[Constants.backBaseButton1].whileHeld(
+          shooterHeldLow.beforeStarting(
+              () -> {
+                shooterSubsystem.setAimMode(Constants.AimModes.LOW);
+              },
+              shooterSubsystem));
     }
 
     // redundant since already initialized above
