@@ -41,16 +41,17 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private DifferentialDrivetrainSim m_DifferentialDrivetrainSim;
   public final Field2d m_field = new Field2d();
   private AHRS m_gyro;
-  private AnalogGyroSim m_gyroSim;
   public static ADIS16448_IMU m_gyro2; // Non-native gyro, might use later
-  private AnalogGyro m_gyro1;
   private final DifferentialDriveOdometry m_odometry;
+
+  // Simulation
+  private Encoder m_LEncoderForSim;
+  private Encoder m_REncoderForSim;
   private EncoderSim m_leftEncoderSim;
   private EncoderSim m_rightEncoderSim;
 
-  // Encoders for Sim
-  private Encoder m_LEncoderForSim;
-  private Encoder m_REncoderForSim;
+  private AnalogGyro m_gyro1;
+  private AnalogGyroSim m_gyroSim;
 
   // internal encoders
   private RelativeEncoder m_leftEncoder;
