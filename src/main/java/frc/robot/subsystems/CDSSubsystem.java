@@ -55,12 +55,15 @@ public class CDSSubsystem extends SubsystemBase {
   private int advanceTimeout = 2000; // how long CDS should run before it times out*/
 
   private int ballCount = 0;
-  private double colorThreshold = 0.1; // TODO: change during testing
+  private double colorThreshold = 0.5; // TODO: change during testing
 
   private int[] sensorStatuses;
   private boolean[] activationArray = new boolean[3];
   private Color[] colors = new Color[3];
-  private String lastBallColor;
+  private String lastFrontBallColor;
+  private String lastMiddleBallColor;
+  private String lastTopBallColor;
+
 
   private int currentProxCycle = 0;
   private int currentColorCycle = 0;
@@ -80,8 +83,12 @@ public class CDSSubsystem extends SubsystemBase {
   private NetworkTableEntry frontBallColor = CDSTab.add("Front Ball Color", "None").getEntry();
   private NetworkTableEntry middleBallColor = CDSTab.add("Middle Ball Color", "None").getEntry();
   private NetworkTableEntry topBallColor = CDSTab.add("Top Ball Color", "None").getEntry();
-  private NetworkTableEntry ifSenseBlue = CDSTab.add("Front Sense Blue", 0).getEntry();
-  private NetworkTableEntry ifSenseRed = CDSTab.add("Front Sense Red", 0).getEntry();
+  private NetworkTableEntry frontSenseBlue = CDSTab.add("Front Sense Blue",  0).getEntry();
+  private NetworkTableEntry frontSenseRed = CDSTab.add("Front Sense Red", 0).getEntry();
+  private NetworkTableEntry middleSenseBlue = CDSTab.add("Middle Sense Blue",  0).getEntry();
+  private NetworkTableEntry middleSenseRed = CDSTab.add("Middle Sense Red", 0).getEntry();
+  private NetworkTableEntry topSenseBlue = CDSTab.add("Top Sense Blue",  0).getEntry();
+  private NetworkTableEntry topSenseRed = CDSTab.add("Top Sense Red", 0).getEntry();
   // private NetworkTableEntry CDSBallCount =
   // CDSTab.add("Ball Count", 0).getEntry();
   private NetworkTableEntry frontSensorProx = CDSTab.add("Front Proximity", 0).getEntry();
@@ -281,32 +288,66 @@ public class CDSSubsystem extends SubsystemBase {
     return -1;
   }
 
-  public String senseColor() {
+  public String[] senseColor() {
     if (currentColorCycle % cycleWait == 0) {
       currentColorCycle = 0;
       colors = colorSensors.getColors();
 
-      double redRatio = colors[2].red;
-      double blueRatio = colors[2].blue;
-      ifSenseBlue.setNumber(blueRatio);
-      ifSenseRed.setNumber(redRatio);
+      double frontRedRatio = colors[2].red;
+      double frontBlueRatio = colors[2].blue;
+      double middleRedRatio = colors[1].red;
+      double middleBlueRatio = colors[1].blue;
+      double topRedRatio = colors[0].red;
+      double topBlueRatio = colors[0].blue;
+      frontSenseBlue.setNumber(frontBlueRatio);
+      frontSenseRed.setNumber(frontRedRatio);
+      middleSenseBlue.setNumber(middleBlueRatio);
+      middleSenseRed.setNumber(middleRedRatio);
+      topSenseBlue.setNumber(topBlueRatio);
+      topSenseRed.setNumber(topRedRatio);
 
-      // Only sensing colors for first sensor so that we can handle it when it's coming in and not
+      // Only sensing colors for first sensor
       // dealing with any other complexities
-      if (redRatio > colorThreshold) {
+      if (frontRedRatio > colorThreshold) {
         frontBallColor.setString("Red");
-        lastBallColor = "Red";
-      } else if (blueRatio > colorThreshold) {
+        lastFrontBallColor = "Red";
+      } else if (frontBlueRatio > colorThreshold) {
         frontBallColor.setString("Blue");
-        lastBallColor = "Blue";
+        lastFrontBallColor = "Blue";
       } else {
         frontBallColor.setString("None");
-        lastBallColor = "None";
+        lastFrontBallColor = "None";
+      }
+
+      //sensing middle color
+      if (middleRedRatio > colorThreshold) {
+        middleBallColor.setString("Red");
+        lastMiddleBallColor = "Red";
+      } else if (middleBlueRatio > colorThreshold) {
+        middleBallColor.setString("Blue");
+        lastMiddleBallColor = "Blue";
+      } else {
+        middleBallColor.setString("None");
+        lastMiddleBallColor = "None";
+      }
+
+      //sensing top color
+      if (topRedRatio > colorThreshold) {
+        topBallColor.setString("Red");
+        lastTopBallColor = "Red";
+      } else if (topBlueRatio > colorThreshold) {
+        topBallColor.setString("Blue");
+        lastTopBallColor = "Blue";
+      } else {
+        topBallColor.setString("None");
+        lastTopBallColor = "None";
       }
     }
 
     currentColorCycle++;
-    return lastBallColor;
+    String[] lastSensorColors = {lastFrontBallColor, lastMiddleBallColor, lastTopBallColor};
+
+    return lastSensorColors;
   }
 
   public String[] senseAllColors() {
@@ -390,7 +431,7 @@ public class CDSSubsystem extends SubsystemBase {
   public void changeState() {
     getSensorStatus();
     ballCount = getBallCount();
-    String[] sensedBallColors = senseAllColors();
+    String[] sensedBallColors = senseColor();
 
     String[] ballLayoutArray = new String[] {"0", "0", "0"};
     for (int i = 0; i < 3; i++) {
