@@ -43,6 +43,11 @@
     "Plot <0>": {
       "plots": [
         {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
           "height": 259,
           "series": [
             {
@@ -61,6 +66,11 @@
     "Plot <1>": {
       "plots": [
         {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
           "height": 242,
           "series": [
             {
@@ -79,6 +89,11 @@
     "Plot <2>": {
       "plots": [
         {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
           "height": 229,
           "series": [
             {
