@@ -73,7 +73,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private NetworkTableEntry sbGyroInfo;
 
   public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {
-    driveBaseSpeed = 1;
+    driveBaseSpeed = 0.5;
     driverJoystick = joystick;
 
     motorControllers = new MotorController[4];
@@ -254,8 +254,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
   // Normal Arcade Drive
   public void arcadeDrive() {
     differentialDrive.arcadeDrive(
-        driverJoystick.getRawAxis(Constants.leftJoystickY) * -driveBaseSpeed,
-        driverJoystick.getRawAxis(Constants.rightJoystickX) * Constants.driveBaseTurnRate,
+        -driverJoystick.getRawAxis(Constants.rightJoystickX) * -driveBaseSpeed,
+        -driverJoystick.getRawAxis(Constants.leftJoystickY) * Constants.driveBaseTurnRate,
         true);
     // joystick has y-axis flipped so up is negative, multiply by negative to accomodate this
   }

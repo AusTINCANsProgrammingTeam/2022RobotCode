@@ -137,19 +137,25 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void windFlywheel(double rpm) {
-
-    // Winds Flywheel using PID control to passed rpm
-    if (rpm == 0) {
-      flywheelPID.setReference(0, CANSparkMax.ControlType.kVoltage);
-    } else {
-      DTRPM.setDouble(rpm);
-      targetRPM = rpm;
-      flywheelPID.setReference(
-          rpm,
-          CANSparkMax.ControlType.kVelocity,
-          Constants.Shooter.kMaxISlot,
-          flywheelFF.calculate(rpm / 60.0));
+    if(rpm == 0){
+      flywheelController.set(0.0);
     }
+    else{
+      targetRPM = rpm;
+      flywheelController.set(1.0);
+    }
+    // // Winds Flywheel using PID control to passed rpm
+    // if (rpm == 0) {
+    //   flywheelPID.setReference(0, CANSparkMax.ControlType.kVoltage);
+    // } else {
+    //   DTRPM.setDouble(rpm);
+    //   targetRPM = rpm;
+    //   flywheelPID.setReference(
+    //       rpm,
+    //       CANSparkMax.ControlType.kVelocity,
+    //       Constants.Shooter.kMaxISlot,
+    //       flywheelFF.calculate(rpm / 60.0));
+    // }
   }
 
   public void resetIAccum() {
@@ -171,7 +177,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public boolean wheelReady() {
-    return (smoothRPM > targetRPM - 56 && smoothRPM < targetRPM + 56);
+    return smoothRPM > targetRPM;//(smoothRPM > targetRPM - 56 && smoothRPM < targetRPM + 56);
   }
 
   public void setAimMode(AimModes a) {
