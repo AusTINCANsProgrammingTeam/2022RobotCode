@@ -16,6 +16,8 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
 
+  public static final int minvoltage = 10;
+
   public enum AimModes {
     AUTO,
     // TODO: Plug real values in for these aimModes

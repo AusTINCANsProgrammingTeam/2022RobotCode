@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Auton;
 import frc.robot.commands.AutonModes;
+import frc.robot.commands.BatteryCommand;
 import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbEnable;
@@ -28,6 +29,7 @@ import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShooterHeld;
+import frc.robot.subsystems.BatterySubsystem;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveBaseSubsystem;
@@ -58,9 +60,11 @@ public class RobotContainer {
   private static IntakeSubsystem intakeSubsystem;
   private static ShooterSubsystem shooterSubsystem;
   private static LimelightSubsystem limelightSubsystem;
+  private static BatterySubsystem batterySubsystem;
 
   // commands
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
+  private BatteryCommand batteryCommand;
   private IntakeForwardCommand intakeForwardCommand;
   private IntakeReverseCommand intakeReverseCommand;
   private CDSBallManagementCommand ballManagementCommand;
@@ -145,6 +149,8 @@ public class RobotContainer {
     limelightSubsystem = new LimelightSubsystem();
 
     climbSubsystem = new ClimbSubsystem(operatorJoystick);
+
+    batterySubsystem = new BatterySubsystem();
   }
 
   private void initCommands() {
@@ -152,6 +158,10 @@ public class RobotContainer {
     if (driveBaseSubsystem != null) {
       driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
+    }
+    if (batterySubsystem != null) {
+      batteryCommand = new BatteryCommand(batterySubsystem);
+      batterySubsystem.setDefaultCommand(batteryCommand);
     }
     if (cdsSubsystem != null && shooterSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(cdsSubsystem, shooterSubsystem);
@@ -310,6 +320,13 @@ public class RobotContainer {
     return null;
   }
 
+  public static BatterySubsystem getBatterySubsystem() {
+    if (batterySubsystem != null) {
+      return batterySubsystem;
+    }
+    return null;
+  }
+
   public void pushSmartDashData() {
     SmartDashboard.putData(climbSubsystem);
     SmartDashboard.putData(driveBaseSubsystem);
@@ -317,5 +334,6 @@ public class RobotContainer {
     SmartDashboard.putData(intakeSubsystem);
     SmartDashboard.putData(shooterSubsystem);
     SmartDashboard.putData(limelightSubsystem);
+    SmartDashboard.putData(batterySubsystem);
   }
 }
