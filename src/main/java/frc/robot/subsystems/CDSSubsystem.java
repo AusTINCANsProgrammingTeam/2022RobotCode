@@ -3,7 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -21,6 +20,11 @@ import frc.robot.Robot;
 import frc.robot.common.hardware.ColorSensorMuxed;
 import frc.robot.common.hardware.ColorSensorMuxed.MeasurementRate;
 import frc.robot.common.hardware.MotorController;
+
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+
 
 public class CDSSubsystem extends SubsystemBase {
   public enum ManagementState {
@@ -50,8 +54,8 @@ public class CDSSubsystem extends SubsystemBase {
   private int ballCount = 0;
   private Color[] colors = new Color[3];
 
+  private boolean[] activationArray;
   private int[] sensorStatuses;
-  private boolean[] activationArray = new boolean[3];
   private String lastBallColor;
 
   private int currentProxCycle = 0;
@@ -104,14 +108,6 @@ public class CDSSubsystem extends SubsystemBase {
     sensorStatuses = colorSensors.getProximities();
     allianceColor = DriverStation.getAlliance().toString();
     SmartDashboard.putString("Alliance Color", allianceColor);
-    state = ManagementState.IDLE;
-    if (Robot.isSimulation()) {
-      colorSenseSim = new SimDeviceSim("REV Color Sensor V3", I2C.Port.kMXP.value, 82);
-      m_simR = colorSenseSim.getDouble("Red");
-      m_simG = colorSenseSim.getDouble("Blue");
-      m_simB = colorSenseSim.getDouble("Green");
-      m_simProx = colorSenseSim.getDouble("Proximity");
-    }
   }
 
   public void CDSToggleAll(boolean reverse) {
@@ -175,14 +171,6 @@ public class CDSSubsystem extends SubsystemBase {
     }
   }
 
-  public double getBeltSpeed() {
-    return CDSBeltController.getSpeed();
-  }
-
-  public double getWheelSpeed() {
-    return CDSWheelControllerOne.getSpeed();
-  }
-
   public void stopCDS() {
     DCDSSpeed.setDouble(0);
     // stops all motors in the CDS
@@ -210,32 +198,18 @@ public class CDSSubsystem extends SubsystemBase {
     }
   }
 
-  public boolean[] getSensorStatus() {
+  public boolean isBallPresent() {
     if (currentProxCycle % cycleWait == 0) {
       currentProxCycle = 0;
       sensorStatuses = colorSensors.getProximities();
-      // if (Constants.DebugMode) {
-      frontSensorProx.setNumber(sensorStatuses[2]);
-      middleSensorProx.setNumber(sensorStatuses[1]);
-      backSensorProx.setNumber(sensorStatuses[0]);
-      // }
 
       activationArray[0] = sensorStatuses[0] > Constants.backSensorActivation;
       activationArray[1] = sensorStatuses[1] > Constants.middleSensorActivation;
       activationArray[2] = sensorStatuses[2] > Constants.frontSensorActivation;
-
-      ballCount = 0;
-      for (boolean status : activationArray) {
-        if (status) {
-          ballCount++;
-        }
-      }
-      if (Constants.DebugMode) {
-        CDSBallCount.setNumber(ballCount);
-      }
     }
+
     currentProxCycle++;
-    return activationArray;
+    return activationArray[2];
   }
 
   public int getNextOpenSensor() {
@@ -249,7 +223,7 @@ public class CDSSubsystem extends SubsystemBase {
     return -1;
   }
 
-  public String senseColor() {
+  public String getBallColor() {
     if (currentColorCycle % cycleWait == 0) {
       currentColorCycle = 0;
       colors = colorSensors.getColors();
@@ -273,111 +247,23 @@ public class CDSSubsystem extends SubsystemBase {
     return lastBallColor;
   }
 
-  public boolean sensorsOnline() {
-    boolean isOnline = true;
-    sensorsDown = 0;
-
-    sensorStatuses = colorSensors.getProximities();
-    for (int prox : sensorStatuses) {
-      if (prox == 0) {
-        sensorsDown += 1;
-        isOnline = false;
-      }
-    }
-    return isOnline;
-  }
-
-  public int getSensorDown() {
-    return sensorsDown;
-  }
-
   public String getAllianceColor() {
     return allianceColor;
+  }
+
+  public boolean ballColorMatch() {
+    return allianceColor == lastBallColor;
   }
 
   public int getBallCount() {
     return ballCount;
   }
 
-  public ManagementState getState() {
-    return state;
-  }
-
   public boolean managementEnabled() {
     return managementOnOff.getBoolean(false);
   }
 
-  int count = 0;
-  int runCount = 0;
-
-  public void changeState() {
-    getSensorStatus();
-    ballCount = getBallCount();
-    String sensedBallColor = senseColor();
-    int currentOpenSensor = getNextOpenSensor();
-
-    boolean ballPresent =
-        activationArray[2]; // whether or not there's a ball at the centering wheels
-
-    if (managementEnabled()) {
-      switch (state) {
-        case IDLE:
-          nextOpenSensor = -1;
-          msCurrent = 0;
-
-          if ((ballCount > 2 || sensedBallColor != allianceColor) && ballPresent) {
-            state = ManagementState.EJECT;
-          }
-
-          if ((ballCount < 3 && currentOpenSensor != -1 && ballPresent)) {
-            state = ManagementState.ADVANCE;
-            nextOpenSensor = currentOpenSensor;
-          }
-
-          break;
-        case ADVANCE:
-          if (sensedBallColor != allianceColor && ballPresent) {
-            state = ManagementState.EJECT;
-            msCurrent = 0;
-          } else if (activationArray[nextOpenSensor] || msCurrent >= advanceTimeout) {
-            state = ManagementState.IDLE;
-          } else {
-            msCurrent += 20;
-          }
-
-          break;
-        case EJECT:
-          if (msCurrent >= ejectRuntime) {
-            state = ManagementState.IDLE;
-          } else {
-            msCurrent += 20;
-          }
-
-          break;
-      }
-    } else {
-      state = ManagementState.IDLE;
-    }
-    CDSState.setString(state.toString());
-  }
-
-  public void simulateColorSense() {
-    if (Robot.isSimulation()) {
-      if (simCount == 500) {
-        m_simProx.set(Constants.frontSensorActivation + 1);
-        if (allianceColor == "Blue") {
-          m_simB.set(.9);
-        } else {
-          m_simR.set(.9);
-        }
-      } else if (simCount == 1000) {
-        m_simProx.set(50);
-        m_simB.set(0);
-        m_simR.set(0);
-
-        simCount = 0;
-      }
-      simCount++;
-    }
+  public Command runAutoAdvanceCommand() {
+    return new WaitUntilCommand(new Trigger(this::isBallPresent));
   }
 }

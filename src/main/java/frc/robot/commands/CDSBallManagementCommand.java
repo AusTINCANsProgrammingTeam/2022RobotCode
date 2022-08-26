@@ -13,15 +13,14 @@ import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.CommandGroupBase;
+
 public class CDSBallManagementCommand extends CommandBase {
   /** Creates a new CDSBallManagementCommand. */
   private final CDSSubsystem CDSSubsystem;
-
   private final IntakeSubsystem intakeSubsystem;
   private final ShooterSubsystem shooterSubsystem;
-
-  private int msBeltCurrent = 0;
-  private int beltEjectRuntime = 100;
 
   private static ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private static NetworkTableEntry autoEjectRunning =
@@ -50,42 +49,6 @@ public class CDSBallManagementCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (CDSSubsystem.managementEnabled()) {
-      CDSSubsystem.ManagementState state = CDSSubsystem.getState();
-
-      switch (state) {
-        case IDLE:
-          CDSSubsystem.stopCDS();
-          intakeSubsystem.stopIntake();
-          shooterSubsystem.runCargo(0.0);
-          autoEjectRunning.setBoolean(false);
-          autoIntakeRunning.setBoolean(false);
-
-          break;
-
-        case EJECT:
-          if (msBeltCurrent <= beltEjectRuntime) {
-            CDSSubsystem.CDSBeltToggle(true, Constants.CDSBeltSpeed);
-            msBeltCurrent += 20;
-          } else {
-            CDSSubsystem.stopCDSBelt();
-          }
-
-          intakeSubsystem.toggleIntake(true);
-          CDSSubsystem.CDSWheelToggle(true);
-          autoEjectRunning.setString("true");
-
-          break;
-
-        case ADVANCE:
-          CDSSubsystem.CDSWheelToggle(false);
-          CDSSubsystem.CDSBeltToggle(false, Constants.CDSBeltSpeed);
-          shooterSubsystem.runCargo(Constants.reverseStopperWheelSpeed);
-          autoIntakeRunning.setBoolean(true);
-
-          break;
-      }
-    }
   }
 
   // Called once the command ends or is interrupted.
