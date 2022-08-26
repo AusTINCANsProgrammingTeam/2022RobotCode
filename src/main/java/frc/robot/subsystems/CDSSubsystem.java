@@ -251,8 +251,9 @@ public class CDSSubsystem extends SubsystemBase {
     return allianceColor;
   }
 
-  public boolean ballColorMatch() {
-    return allianceColor == lastBallColor;
+  //temporary function until I can figure out a better solution
+  public boolean shouldAdvance() {
+    return allianceColor == lastBallColor && isBallPresent();
   }
 
   public int getBallCount() {
@@ -263,7 +264,8 @@ public class CDSSubsystem extends SubsystemBase {
     return managementOnOff.getBoolean(false);
   }
 
+  //TODO: continue adding complexity
   public Command runAutoAdvanceCommand() {
-    return new WaitUntilCommand(new Trigger(this::isBallPresent));
+    return new WaitUntilCommand(new Trigger(this::shouldAdvance));
   }
 }
