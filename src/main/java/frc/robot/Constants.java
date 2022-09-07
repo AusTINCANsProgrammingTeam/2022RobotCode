@@ -16,7 +16,11 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
 
-  public static final int minvoltage = 10;
+  public static final int minVoltage = 11;
+  public static final int maxCurrent = 50;
+  public static final int seconds = 300;
+  public static final int count = 180000;
+
 
   public enum AimModes {
     AUTO,

@@ -25,6 +25,7 @@ public class BatterySubsystem extends SubsystemBase {
   private NetworkTableEntry sbTimer;
   private NetworkTableEntry sbTimerChange;
   private Timer timer;
+  private int currentCounter;
 
   private void init() {
     timer.reset();
@@ -34,6 +35,8 @@ public class BatterySubsystem extends SubsystemBase {
     sbTimer = btTab.add("Timer", 0).withSize(2, 2).withPosition(0, 2).getEntry();
     sbTimer = btTab.add("Change Timer", 0).withSize(2, 2).withPosition(2, 2).getEntry();
     timer.start();
+
+    currentCounter = 0;
   }
 
   public BatterySubsystem() {
@@ -45,7 +48,11 @@ public class BatterySubsystem extends SubsystemBase {
     sbInCurrent.setDouble(getInputCurrent());
     sbTimer.setDouble(getTimer());
     sbTimerChange.setBoolean(
-        checkVoltage()); // Replace checkVoltage() with checkTimer() if necessary
+        checkVoltage()); // Replace checkVoltage() with checkTimer() or checkCurrent() if necessary
+
+    if (RobotController.getInputCurrent() >= Constants.maxCurrent) {
+      currentCounter =+ 20;
+    }
   }
 
   public double getVoltage() {
@@ -57,18 +64,25 @@ public class BatterySubsystem extends SubsystemBase {
   }
 
   public double getTimer() {
-    return timer.get();
+    return Timer.getFPGATimestamp();
   }
 
   public boolean checkTimer() {
-    if (timer.hasElapsed(300)) {
+    if (timer.hasElapsed(Constants.seconds)) {
       return true;
     }
     return false;
   }
 
   public boolean checkVoltage() {
-    if (getVoltage() < Constants.minvoltage) {
+    if (getVoltage() < Constants.minVoltage) {
+      return true;
+    }
+    return false;
+  }
+
+  public boolean checkCurrent() {
+    if (currentCounter >= Constants.count) {
       return true;
     }
     return false;
