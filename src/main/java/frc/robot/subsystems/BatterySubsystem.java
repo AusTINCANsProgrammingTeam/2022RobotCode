@@ -48,7 +48,7 @@ public class BatterySubsystem extends SubsystemBase {
     sbInCurrent.setDouble(getInputCurrent());
     sbTimer.setDouble(getTimer());
     sbTimerChange.setBoolean(
-        checkVoltage()); // Replace checkVoltage() with checkTimer() or checkCurrent() if necessary
+        checkBattery()); 
 
     if (RobotController.getInputCurrent() >= Constants.maxCurrent) {
       currentCounter =+ 20;
@@ -88,5 +88,16 @@ public class BatterySubsystem extends SubsystemBase {
     return false;
   }
 
+  public boolean checkBattery() {
+    if (checkTimer()) {
+      return true;
+    } else if (checkVoltage()) {
+      return true;
+    } else if (checkCurrent()) {
+      return true;
+    }
+    return false;
+  }
+   
   public void updateSmartDashboard() {}
 }
