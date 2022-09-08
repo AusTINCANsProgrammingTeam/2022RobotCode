@@ -21,7 +21,7 @@ public class BatteryCommand extends CommandBase {
 
   @Override
   public void execute() {
-    subsystem.periodic();
+    
   }
 
   @Override

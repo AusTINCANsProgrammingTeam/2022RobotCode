@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj.DriverStation;
 
 /** Add your docs here. */
 // Put methods for controlling this subsystem
@@ -24,16 +25,21 @@ public class BatterySubsystem extends SubsystemBase {
   private NetworkTableEntry sbInCurrent;
   private NetworkTableEntry sbTimer;
   private NetworkTableEntry sbTimerChange;
-  private Timer timer;
+  private NetworkTableEntry sbTimerHighCurrent;
+  private DriverStation driverStation;
+  private Timer timer = new Timer();
+  private Timer currentTimer = new Timer();
 
   private void init() {
-    timer.reset();
+    //timer.reset(); Only uncomment this if you want the timer to reset each time the robot redeploys code
     btTab = Shuffleboard.getTab("Battery");
     sbVoltage = btTab.add("Battery Voltage", 0).withSize(2, 2).withPosition(0, 0).getEntry();
     sbInCurrent = btTab.add("Input Current", 0).withSize(2, 2).withPosition(2, 0).getEntry();
     sbTimer = btTab.add("Timer", 0).withSize(2, 2).withPosition(0, 2).getEntry();
-    sbTimer = btTab.add("Change Timer", 0).withSize(2, 2).withPosition(2, 2).getEntry();
+    sbTimerHighCurrent = btTab.add("High Current Timer", 0).withSize(2, 2).withPosition(0, 4).getEntry();
+    sbTimerChange = btTab.add("Change Timer", 0).withSize(2, 2).withPosition(4, 0).getEntry();
     timer.start();
+    currentTimer.start();
   }
 
   public BatterySubsystem() {
@@ -44,8 +50,10 @@ public class BatterySubsystem extends SubsystemBase {
     sbVoltage.setDouble(getVoltage());
     sbInCurrent.setDouble(getInputCurrent());
     sbTimer.setDouble(getTimer());
+    sbTimerHighCurrent.setDouble(getTimer());
     sbTimerChange.setBoolean(
-        checkVoltage()); // Replace checkVoltage() with checkTimer() if necessary
+        checkTimer()); // Replace checkVoltage() with checkTimer() if necessary
+    checkCurrent();
   }
 
   public double getVoltage() {
@@ -55,24 +63,47 @@ public class BatterySubsystem extends SubsystemBase {
   public double getInputCurrent() {
     return RobotController.getInputCurrent();
   }
+  public void checkCurrent() {
+    if(getInputCurrent() < Constants.maxBatteryCurrent) {
+      Timer.delay(0.02); //Was current timer, but I got a warning about it needing to be static so I changed it to this. Will this cause conflicts?
+    }
+  }
+
 
   public double getTimer() {
     return timer.get();
   }
 
   public boolean checkTimer() {
-    if (timer.hasElapsed(300)) {
+    if (currentTimer.hasElapsed(Constants.timeInSecondsHighCurrentRed)) {
+      DriverStation.reportError("Change the Battery!", true);
       return true;
+    } else if (currentTimer.hasElapsed(Constants.timeInSecondsGeneralRed)) {
+      DriverStation.reportError("Change the Battery!", true);
+      return true;
+    } else if (timer.hasElapsed(Constants.timeInSecondsHighCurrentYellow)) {
+      DriverStation.reportError("Change the Battery Soon!", true);
+      return false;
+    } else if (timer.hasElapsed(Constants.timeInSecondsGeneralYellow)) {
+      DriverStation.reportError("Change the Battery Soon!", true);
+      return false;
     }
     return false;
   }
 
-  public boolean checkVoltage() {
-    if (getVoltage() < Constants.minvoltage) {
-      return true;
+  public void checkVoltage() {
+    if (getVoltage() < Constants.minVoltageRed) {
+      DriverStation.reportError("Change the Battery!", true);
+    } else if (getVoltage() < Constants.minVoltageYellow) {
+      DriverStation.reportError("Change the Battery Soon!", true);
     }
-    return false;
+    
   }
 
   public void updateSmartDashboard() {}
+
+public void resetTimers() {
+  timer.reset();
+  currentTimer.reset();
+}
 }
