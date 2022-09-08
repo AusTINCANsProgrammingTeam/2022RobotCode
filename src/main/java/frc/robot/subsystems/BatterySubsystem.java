@@ -71,7 +71,7 @@ public class BatterySubsystem extends SubsystemBase {
 
 
   public double getTimer() {
-    return timer.get();
+    return Timer.getFPGATimestamp();
   }
 
   public boolean checkTimer() {
@@ -99,7 +99,18 @@ public class BatterySubsystem extends SubsystemBase {
     }
     
   }
-
+/* Old checkBattery function
+  public boolean checkBattery() {
+    if (checkTimer()) {
+      return true;
+    } else if (checkVoltage() < Constants.min) {
+      return true;
+    } else if (checkCurrent()) {
+      return true;
+    }
+    return false;
+  }
+*/
   public void updateSmartDashboard() {}
 
 public void resetTimers() {
