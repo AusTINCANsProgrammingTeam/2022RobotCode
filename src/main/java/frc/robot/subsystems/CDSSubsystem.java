@@ -24,7 +24,8 @@ import frc.robot.common.hardware.MotorController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 
 public class CDSSubsystem extends SubsystemBase {
   public enum ManagementState {
@@ -41,15 +42,9 @@ public class CDSSubsystem extends SubsystemBase {
   private String allianceColor;
   private ColorSensorMuxed colorSensors;
   private ManagementState state;
-  private int nextOpenSensor = -1;
 
-  private SimDeviceSim colorSenseSim;
-  private SimDouble m_simR, m_simG, m_simB, m_simProx;
-  private int simCount = 0;
-
-  private int msCurrent = 0;
-  private int ejectRuntime = 650; // amount of time auto eject will run intake backwards for in ms
-  private int advanceTimeout = 2000; // how long CDS should run before it times out
+  private boolean isRunning = false;
+  private int currentSensor = -1;
 
   private int ballCount = 0;
   private Color[] colors = new Color[3];
@@ -172,6 +167,9 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public void stopCDS() {
+    isRunning = false;
+    currentSensor = -1;
+
     DCDSSpeed.setDouble(0);
     // stops all motors in the CDS
     CDSWheelControllerOne.set(0.0);
@@ -251,21 +249,33 @@ public class CDSSubsystem extends SubsystemBase {
     return allianceColor;
   }
 
-  //temporary function until I can figure out a better solution
-  public boolean shouldAdvance() {
-    return allianceColor == lastBallColor && isBallPresent();
-  }
-
   public int getBallCount() {
     return ballCount;
   }
 
-  public boolean managementEnabled() {
-    return managementOnOff.getBoolean(false);
+  public boolean ballColorMatch() {
+    return allianceColor == lastBallColor;
   }
 
-  //TODO: continue adding complexity
+  public boolean shouldAdvance() {
+    // run if there's a ball at the sensor or there's a ball in transit
+    return ballColorMatch() && isBallPresent() && ballCount <= 2;
+  }
+
+  public boolean ballAtTarget() {
+    return activationArray[currentSensor];
+  }
+
+  public Command runIntakeCommand() {
+    currentSensor = getNextOpenSensor();
+    isRunning = true;
+
+    return new StartEndCommand(() -> CDSToggleAll(false), this::stopCDS, this);
+  }
+
   public Command runAutoAdvanceCommand() {
-    return new WaitUntilCommand(new Trigger(this::shouldAdvance));
+    return new WaitUntilCommand(new Trigger(this::shouldAdvance))
+    .andThen(runIntakeCommand())
+    .withInterrupt(new Trigger(this::ballAtTarget));
   }
 }
