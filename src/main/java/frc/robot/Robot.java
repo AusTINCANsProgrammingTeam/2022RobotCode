@@ -133,11 +133,7 @@ public class Robot extends TimedRobot {
 
   // This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-    RobotContainer.getCDSSubsystem().changeState();
-    // RobotContainer.getCDSSubsystem().simulateColorSense();
-
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {

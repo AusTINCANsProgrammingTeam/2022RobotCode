@@ -280,10 +280,9 @@ public class CDSSubsystem extends SubsystemBase {
 
     return new StartEndCommand(() -> CDSToggleAll(false), this::stopCDS, this);
   }
-
+  
   public Command runAutoAdvanceCommand() {
-    return new WaitUntilCommand(new Trigger(this::shouldAdvance))
-    .andThen(runIntakeCommand())
+    return runIntakeCommand()
     .withInterrupt(new Trigger(this::ballAtTarget))
     .withInterrupt(new Trigger(this::ballTimeout));
   }

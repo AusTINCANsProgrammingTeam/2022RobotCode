@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Auton;
 import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
@@ -153,6 +154,10 @@ public class RobotContainer {
       driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
     }
+    if (cdsSubsystem != null) {
+      Trigger autoadvanceTrigger = new Trigger(cdsSubsystem::shouldAdvance);
+      autoadvanceTrigger.whenActive(cdsSubsystem.runAutoAdvanceCommand());
+    }
     if (cdsSubsystem != null && shooterSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(cdsSubsystem, shooterSubsystem);
     }
@@ -210,7 +215,7 @@ public class RobotContainer {
 
     if (combinedIntakeCDS != null) {
       buttons[Constants.RTriggerButton].whileHeld(combinedIntakeCDS);
-    } /*else {
+        } /*else {
         buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
       }*/
 
