@@ -45,6 +45,8 @@ public class CDSSubsystem extends SubsystemBase {
 
   private boolean isRunning = false;
   private int currentSensor = -1;
+  private int msCurrent = 0;
+  private int advanceTimeout = 2500;
 
   private int ballCount = 0;
   private Color[] colors = new Color[3];
@@ -169,6 +171,7 @@ public class CDSSubsystem extends SubsystemBase {
   public void stopCDS() {
     isRunning = false;
     currentSensor = -1;
+    msCurrent = 0;
 
     DCDSSpeed.setDouble(0);
     // stops all motors in the CDS
@@ -266,6 +269,11 @@ public class CDSSubsystem extends SubsystemBase {
     return activationArray[currentSensor];
   }
 
+  public boolean ballTimeout() {
+    msCurrent += 20;
+    return msCurrent > advanceTimeout;
+  }
+
   public Command runIntakeCommand() {
     currentSensor = getNextOpenSensor();
     isRunning = true;
@@ -276,6 +284,7 @@ public class CDSSubsystem extends SubsystemBase {
   public Command runAutoAdvanceCommand() {
     return new WaitUntilCommand(new Trigger(this::shouldAdvance))
     .andThen(runIntakeCommand())
-    .withInterrupt(new Trigger(this::ballAtTarget));
+    .withInterrupt(new Trigger(this::ballAtTarget))
+    .withInterrupt(new Trigger(this::ballTimeout));
   }
 }
