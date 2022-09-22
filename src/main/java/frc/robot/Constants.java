@@ -16,14 +16,18 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
 
-  //Battery Constants
+  // Battery Constants
   public static final int minVoltageYellow = 14;
   public static final int minVoltageRed = 12;
   public static final int timeInSecondsGeneralYellow = 360;
   public static final int timeInSecondsGeneralRed = 300;
   public static final int timeInSecondsHighCurrentYellow = 360;
   public static final int timeInSecondsHighCurrentRed = 300;
-  public static final double maxBatteryCurrent = 12.3; //TODO: Put a real value here
+  public static final double maxBatteryCurrent = 12.3; // TODO: Put a real value here
+  //You have to replace this path with the computers own name and location of the .wav
+  //Also replace this whatever .wav file we are using
+  public static final String audiofilepath = "/Users/adubt/alert.wav"; 
+  
 
   public enum AimModes {
     AUTO,

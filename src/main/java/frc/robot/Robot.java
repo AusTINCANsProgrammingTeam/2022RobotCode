@@ -16,8 +16,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.Auton;
 import frc.robot.commands.AutonModes;
-import frc.robot.subsystems.BatterySubsystem;
-
 import java.util.Map;
 
 // The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -40,7 +38,6 @@ public class Robot extends TimedRobot {
   private SendableChooser<Auton> chooser = new SendableChooser<>();
 
   private RobotContainer robotContainer;
-  private BatterySubsystem batterySubsystem;
   public UsbCamera usbCamera;
 
   // This function is run when the robot is first started up and should be used
@@ -52,15 +49,14 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     // TODO: Put commands here
-    
+
     if (isReal()) {
       usbCamera = CameraServer.startAutomaticCapture();
       usbCamera.setResolution(240, 320);
     }
 
     robotContainer = new RobotContainer();
-    batterySubsystem = new BatterySubsystem();
-    batterySubsystem.resetTimers();
+
 
     chooser.setDefaultOption(
         Auton.FOURBALL.getName(), Auton.FOURBALL); // default is four ball mode for now
