@@ -57,7 +57,6 @@ public class Robot extends TimedRobot {
 
     robotContainer = new RobotContainer();
 
-
     chooser.setDefaultOption(
         Auton.FOURBALL.getName(), Auton.FOURBALL); // default is four ball mode for now
 

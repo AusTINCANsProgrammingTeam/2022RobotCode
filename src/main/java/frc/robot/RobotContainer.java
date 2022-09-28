@@ -159,10 +159,10 @@ public class RobotContainer {
       driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
     }
-    //if (batterySubsystem != null) {
+    // if (batterySubsystem != null) {
     //  batteryCommand = new BatteryCommand(batterySubsystem);
     //  batterySubsystem.setDefaultCommand(batteryCommand);
-    //}
+    // }
     if (cdsSubsystem != null && shooterSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(cdsSubsystem, shooterSubsystem);
     }

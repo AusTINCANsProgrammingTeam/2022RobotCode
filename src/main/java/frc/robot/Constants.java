@@ -24,10 +24,9 @@ public final class Constants {
   public static final int timeInSecondsHighCurrentYellow = 360;
   public static final int timeInSecondsHighCurrentRed = 300;
   public static final double maxBatteryCurrent = 12.3; // TODO: Put a real value here
-  //You have to replace this path with the computers own name and location of the .wav
-  //Also replace this whatever .wav file we are using
-  public static final String audiofilepath = "/Users/adubt/alert.wav"; 
-  
+  // You have to replace this path with the computers own name and location of the .wav
+  // Also replace this whatever .wav file we are using
+  public static final String audiofilepath = "/Users/adubt/alert.wav";
 
   public enum AimModes {
     AUTO,

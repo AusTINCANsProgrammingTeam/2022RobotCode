@@ -31,19 +31,20 @@ public class BatterySubsystem extends SubsystemBase {
   private NetworkTableEntry sbTimer;
   private NetworkTableEntry sbTimerChange;
   private NetworkTableEntry sbTimerHighCurrent;
-  //private DriverStation driverStation;
+  // private DriverStation driverStation;
   private Timer timer = new Timer();
   private Timer currentTimer = new Timer();
 
-
   public BatterySubsystem() {
-    //init();
+    // init();
     this.resetTimers();
     btTab = Shuffleboard.getTab("Battery");
-    sbVoltage = btTab.add("Current Battery Voltage", 0).withSize(2, 2).withPosition(0, 0).getEntry();
+    sbVoltage =
+        btTab.add("Current Battery Voltage", 0).withSize(2, 2).withPosition(0, 0).getEntry();
     sbInCurrent = btTab.add("Input Current", 0).withSize(2, 2).withPosition(2, 0).getEntry();
     sbTimer = btTab.add("Timer", 0).withSize(2, 2).withPosition(0, 2).getEntry();
-    sbTimerHighCurrent = btTab.add("High Current Timer", 0).withSize(2, 2).withPosition(0, 4).getEntry();
+    sbTimerHighCurrent =
+        btTab.add("High Current Timer", 0).withSize(2, 2).withPosition(0, 4).getEntry();
     sbTimerChange = btTab.add("Change Timer", 0).withSize(2, 2).withPosition(4, 0).getEntry();
     timer.start();
     currentTimer.start();
@@ -81,11 +82,11 @@ public class BatterySubsystem extends SubsystemBase {
   public boolean checkTimer() {
     if (currentTimer.hasElapsed(Constants.timeInSecondsHighCurrentRed)) {
       DriverStation.reportError("Change the Battery!", true);
-      //playAudio(Constants.audiofilepath);
+      // playAudio(Constants.audiofilepath);
       return true;
     } else if (currentTimer.hasElapsed(Constants.timeInSecondsGeneralRed)) {
       DriverStation.reportError("Change the Battery!", true);
-      //playAudio(Constants.audiofilepath);
+      // playAudio(Constants.audiofilepath);
       return true;
     } else if (timer.hasElapsed(Constants.timeInSecondsHighCurrentYellow)) {
       DriverStation.reportError("Change the Battery Soon!", true);
