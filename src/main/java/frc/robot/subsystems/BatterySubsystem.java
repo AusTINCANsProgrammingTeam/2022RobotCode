@@ -12,8 +12,10 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import java.io.File;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -34,6 +36,10 @@ public class BatterySubsystem extends SubsystemBase {
   // private DriverStation driverStation;
   private Timer timer = new Timer();
   private Timer currentTimer = new Timer();
+  public DriverStationSim driverSim;
+  // Sim variables
+  private double simVolt;
+  private double simCurrent;
 
   public BatterySubsystem() {
     // init();
@@ -48,6 +54,8 @@ public class BatterySubsystem extends SubsystemBase {
     sbTimerChange = btTab.add("Change Timer", 0).withSize(2, 2).withPosition(4, 0).getEntry();
     timer.start();
     currentTimer.start();
+    simVolt = 16;
+    driverSim.setSendError(true);
   }
 
   public void periodic() {
@@ -60,7 +68,11 @@ public class BatterySubsystem extends SubsystemBase {
   }
 
   public double getVoltage() {
-    return RobotController.getBatteryVoltage();
+    if (Robot.isSimulation()) {
+      return simVolt;
+    } else {
+      return RobotController.getBatteryVoltage();
+    }
   }
 
   public double getInputCurrent() {
@@ -145,5 +157,15 @@ public class BatterySubsystem extends SubsystemBase {
   public void resetTimers() {
     timer.reset();
     currentTimer.reset();
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    if (driverSim.getAutonomous() == true || driverSim.getEnabled() == true) {
+      // Change voltage and current
+      simVolt = 10.0;
+    } else {
+      simVolt = 0.0;
+    }
   }
 }
