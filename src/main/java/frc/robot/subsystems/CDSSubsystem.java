@@ -3,29 +3,25 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.common.hardware.ColorSensorMuxed;
 import frc.robot.common.hardware.ColorSensorMuxed.MeasurementRate;
 import frc.robot.common.hardware.MotorController;
-
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 
 public class CDSSubsystem extends SubsystemBase {
   public enum ManagementState {
@@ -68,6 +64,10 @@ public class CDSSubsystem extends SubsystemBase {
           .withSize(2, 1)
           .withPosition(3, 1)
           .getEntry();
+
+  private SimDeviceSim colorSenseSim;
+  private SimDouble m_simR, m_simG, m_simB, m_simProx;
+  private int simCount = 0;
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
   private NetworkTableEntry ballColor = CDSTab.add("Ball Color", "Blue").getEntry();
@@ -280,10 +280,10 @@ public class CDSSubsystem extends SubsystemBase {
 
     return new StartEndCommand(() -> CDSToggleAll(false), this::stopCDS, this);
   }
-  
-  public Command runAutoAdvanceCommand() {
+
+  public Command returnAutoadvanceCommand() {
     return runIntakeCommand()
-    .withInterrupt(new Trigger(this::ballAtTarget))
-    .withInterrupt(new Trigger(this::ballTimeout));
+        .withInterrupt(new Trigger(this::ballAtTarget))
+        .withInterrupt(new Trigger(this::ballTimeout));
   }
 }

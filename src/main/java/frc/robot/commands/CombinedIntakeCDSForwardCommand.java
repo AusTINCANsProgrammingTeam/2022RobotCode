@@ -17,8 +17,6 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
 
   private final ShooterSubsystem shooterSubsystem;
   private final IntakeSubsystem intakeSubsystem;
-  private final CDSBallManagementCommand ballManagement;
-
   private ManagementState lastState;
 
   public CombinedIntakeCDSForwardCommand(
@@ -33,8 +31,6 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
     intakeSubsystem = mIntakeSubsystem;
     CDSSubsystem = mCDSSubsystem;
     shooterSubsystem = mShooterSubsystem;
-
-    ballManagement = new CDSBallManagementCommand(CDSSubsystem, intakeSubsystem, shooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -52,7 +48,7 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
     shooterSubsystem.runCargo(Constants.Shooter.cargoReverse);
     intakeSubsystem.deployIntake();
   }
-  
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
