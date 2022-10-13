@@ -213,7 +213,8 @@ public class CDSSubsystem extends SubsystemBase {
 
   public int getNextOpenSensor() {
     // Starts at 0 and ends short of the centering wheel
-    // length - 1 because the last index of the array is the first sensor, which isn't a valid pointd 
+    // length - 1 because the last index of the array is the first sensor, which isn't a valid
+    // pointd
     for (int i = 0; i < activationArray.length - 1; i++) {
       if (!activationArray[i]) {
         return i;
