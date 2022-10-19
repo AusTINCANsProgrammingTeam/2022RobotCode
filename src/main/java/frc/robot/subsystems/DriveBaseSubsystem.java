@@ -254,8 +254,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
   // Normal Arcade Drive
   public void arcadeDrive() {
     differentialDrive.arcadeDrive(
-        -driverJoystick.getRawAxis(Constants.rightJoystickX) * -driveBaseSpeed,
-        -driverJoystick.getRawAxis(Constants.leftJoystickY) * Constants.driveBaseTurnRate,
+        driverJoystick.getRawAxis(Constants.leftJoystickX) * Constants.driveBaseTurnRate,
+        driverJoystick.getRawAxis(Constants.rightJoystickY) * -driveBaseSpeed,
         true);
     // joystick has y-axis flipped so up is negative, multiply by negative to accomodate this
   }

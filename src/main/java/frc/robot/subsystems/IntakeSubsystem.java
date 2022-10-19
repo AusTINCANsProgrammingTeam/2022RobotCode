@@ -75,7 +75,7 @@ public class IntakeSubsystem extends SubsystemBase {
         SmartDashboard.putString("Intake Motor Direction", "Forward");
         SmartDashboard.putNumber("Intake Motor Speed", Constants.intakeMotorSpeed);
       }
-      DIntakeSpeed.setDouble(1);
+      DIntakeSpeed.setDouble(0.5);
     }
   }
 

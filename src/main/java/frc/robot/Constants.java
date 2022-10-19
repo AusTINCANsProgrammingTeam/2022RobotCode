@@ -218,7 +218,7 @@ public final class Constants {
   public static final double intakeRetractPos = 5;
   public static final int intakeDeployCurrent = 30;
 
-  public static final double intakeMotorSpeed = 1.0;
+  public static final double intakeMotorSpeed = 0.5;
   public static final int initialBallSensorChannel = 0;
   public static final int middleBallSensorChannel = 1;
   public static final int finalBallSensorChannel = 2;
