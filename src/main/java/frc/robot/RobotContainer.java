@@ -12,9 +12,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Auton;
 import frc.robot.commands.AutonModes;
-import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbEnable;
 import frc.robot.commands.ClimbPeriodic;
@@ -63,7 +63,6 @@ public class RobotContainer {
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
   private IntakeForwardCommand intakeForwardCommand;
   private IntakeReverseCommand intakeReverseCommand;
-  private CDSBallManagementCommand ballManagementCommand;
   private CombinedIntakeCDSForwardCommand combinedIntakeCDS;
 
   private ShooterHeld shooterHeldLow, shooterHeldAuto;
@@ -153,6 +152,10 @@ public class RobotContainer {
       driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
     }
+    if (cdsSubsystem != null) {
+      Trigger autoadvanceTrigger = new Trigger(cdsSubsystem::shouldAdvance);
+      autoadvanceTrigger.whenActive(cdsSubsystem.returnAutoadvanceCommand());
+    }
     if (cdsSubsystem != null && shooterSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(cdsSubsystem, shooterSubsystem);
     }
@@ -160,15 +163,6 @@ public class RobotContainer {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, cdsSubsystem);
       outtakeCommand = new OuttakeCommand(intakeSubsystem, cdsSubsystem);
-
-      if (Constants.ballManagementEnabled) {
-        intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
-        ballManagementCommand =
-            new CDSBallManagementCommand(cdsSubsystem, intakeSubsystem, shooterSubsystem);
-        cdsSubsystem.setDefaultCommand(ballManagementCommand);
-        combinedIntakeCDS =
-            new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem);
-      }
     }
 
     if (shooterSubsystem != null && cdsSubsystem != null) {
