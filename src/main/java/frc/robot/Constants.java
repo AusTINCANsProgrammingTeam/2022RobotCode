@@ -110,7 +110,7 @@ public final class Constants {
   public static final int driveRightRearIndex = 3;
 
   public static final int driveBaseCurrentLimit = 50;
-  public static final double driveBaseTurnRate = 0.85;
+  public static final double driveBaseTurnRate = 0.5;
 
   // drive base pid values
   public static final double[] driveRightPID = {0.00045, 0.00000085, 0};

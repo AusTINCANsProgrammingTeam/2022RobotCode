@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.controller.PIDController;
@@ -137,10 +136,9 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void windFlywheel(double rpm) {
-    if(rpm == 0){
+    if (rpm == 0) {
       flywheelController.set(0.0);
-    }
-    else{
+    } else {
       targetRPM = rpm;
       flywheelController.set(1.0);
     }
@@ -177,7 +175,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public boolean wheelReady() {
-    return smoothRPM > targetRPM;//(smoothRPM > targetRPM - 56 && smoothRPM < targetRPM + 56);
+    return smoothRPM > targetRPM; // (smoothRPM > targetRPM - 56 && smoothRPM < targetRPM + 56);
   }
 
   public void setAimMode(AimModes a) {
