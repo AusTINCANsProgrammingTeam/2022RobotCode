@@ -29,6 +29,7 @@ import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShooterHeld;
+import frc.robot.subsystems.BatterySimulation;
 import frc.robot.subsystems.BatterySubsystem;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -61,6 +62,9 @@ public class RobotContainer {
   private static ShooterSubsystem shooterSubsystem;
   private static LimelightSubsystem limelightSubsystem;
   private static BatterySubsystem batterySubsystem;
+
+  // battery simulation
+  private static BatterySimulation batterySimulation;
 
   // commands
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
@@ -151,6 +155,10 @@ public class RobotContainer {
     climbSubsystem = new ClimbSubsystem(operatorJoystick);
 
     batterySubsystem = new BatterySubsystem();
+
+    if (Robot.isSimulation()) {
+      batterySimulation = new BatterySimulation(batterySubsystem);
+    } 
   }
 
   private void initCommands() {

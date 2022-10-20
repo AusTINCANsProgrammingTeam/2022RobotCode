@@ -66,8 +66,8 @@ public class BatterySubsystem extends SubsystemBase {
     sbVoltage.setDouble(getVoltage());
     // sbInCurrent.setDouble(getInputCurrent());
     sbInCurrent.setNumber(getInputCurrent()); // Just temporary, replace with line above
-    sbTimer.setDouble(getTimer());
-    sbTimerHighCurrent.setDouble(getTimer());
+    sbTimer.setDouble(timer.get());
+    sbTimerHighCurrent.setDouble(currentTimer.get());
     sbTimerChange.setBoolean(checkTimer()); // Replace checkVoltage() with checkTimer() if necessary
     checkCurrent();
     checkVoltage();
@@ -88,14 +88,11 @@ public class BatterySubsystem extends SubsystemBase {
 
   public void checkCurrent() {
     if (getInputCurrent() < Constants.maxBatteryCurrent) {
-      Timer.delay(
-          0.02); // Was current timer, but I got a warning about it needing to be static so I
+      currentTimer.stop(); // Was current timer, but I got a warning about it needing to be static so I
       // changed it to this. Will this cause conflicts?
+    } else {
+      currentTimer.start();
     }
-  }
-
-  public double getTimer() {
-    return Timer.getFPGATimestamp();
   }
 
   public boolean checkTimer() {
@@ -130,7 +127,7 @@ public class BatterySubsystem extends SubsystemBase {
   */
 
   public int getMinute() {
-    return (int) Math.floor(getTimer()/60.0);
+    return (int) Math.floor(timer.get()/60.0);
   }
 
   public void checkVoltage() {
@@ -139,6 +136,14 @@ public class BatterySubsystem extends SubsystemBase {
     } else if (getVoltage() < Constants.minVoltageYellow) {
       DriverStation.reportError("Change the Battery Soon!", true);
     } else {
+    }
+  }
+
+  public boolean checkRedVoltage() {
+    if(getVoltage() > Constants.minVoltageRed) {
+      return true;
+    } else {
+      return false;
     }
   }
   /* Old checkBattery function
@@ -182,6 +187,7 @@ public class BatterySubsystem extends SubsystemBase {
     //minutesPassed = 0;
   }
 
+  /*
   @Override
   public void simulationPeriodic() {
     if (DriverStationSim.getAutonomous() == true || DriverStationSim.getEnabled() == true) {
@@ -191,4 +197,5 @@ public class BatterySubsystem extends SubsystemBase {
       simVolt = 15.0;
     }
   }
+  */
 }
