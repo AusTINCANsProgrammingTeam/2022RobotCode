@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import static org.junit.Assert.assertEquals;
+
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -28,7 +29,7 @@ public class BatterySimulation extends SubsystemBase{
     public void simulationPeriodic() {
         RoboRioSim.setVInVoltage(RoboRioSim.getVInVoltage()-voltageToSubtract);
         if(RoboRioSim.getVInVoltage() < Constants.minVoltageRed) {
-            assert batterySubsystem.checkRedVoltage() : "Voltage check failed";
+          assertEquals(true, batterySubsystem.checkRedVoltage());
         }
     }
     
