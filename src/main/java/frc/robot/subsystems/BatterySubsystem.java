@@ -17,11 +17,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import java.io.File;
+import java.util.Map;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.JOptionPane;
-import java.util.Map;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 
 /** Add your docs here. */
 // Put methods for controlling this subsystem
@@ -30,48 +31,53 @@ public class BatterySubsystem extends SubsystemBase {
 
   private ShuffleboardTab btTab;
   private NetworkTableEntry sbVoltage;
-  private NetworkTableEntry sbInCurrent;
+  private NetworkTableEntry sbSimVoltage;
   private NetworkTableEntry sbTimer;
   private NetworkTableEntry sbTimerChange;
   private NetworkTableEntry sbTimerHighCurrent;
   // private DriverStation driverStation;
   private Timer timer = new Timer();
   private Timer currentTimer = new Timer();
-  //public DriverStationSim driverSim;
+  // public DriverStationSim driverSim;
   // Sim variables
   private double simVolt;
   private double simCurrent;
-  private boolean colorOn; //Variable for color change testing
-  //private int minutesPassed;
+  private boolean colorOn; // Variable for color change testing
+  // private int minutesPassed;
 
   public BatterySubsystem() {
     // init();
     this.resetTimers();
     btTab = Shuffleboard.getTab("Battery");
-    //Change 16 to desired value
-    Shuffleboard.getTab("Battery").addBoolean("Battery Voltage", () -> getVoltage() > Constants.minVoltageRed).withProperties(Map.of("colorWhenTrue","red")).withProperties(Map.of("colorWhenFalse","red"));
-    sbVoltage = btTab.add("Current Battery Voltage", 0).withSize(2, 2).withPosition(0, 0).getEntry();
-    sbInCurrent = btTab.add("Input Current", 0).withSize(2, 2).withPosition(2, 0).getEntry();
+    // Change 16 to desired value
+    Shuffleboard.getTab("Battery")
+        .addBoolean("Battery Voltage", () -> getVoltage() > Constants.minVoltageRed)
+        .withProperties(Map.of("colorWhenTrue", "red"))
+        .withProperties(Map.of("colorWhenFalse", "red"));
+    sbVoltage =
+        btTab.add("Current Battery Voltage", 0).withSize(2, 2).withPosition(0, 0).getEntry();
+    sbSimVoltage = btTab.add("Simulation Voltage", 0).withSize(2, 2).withPosition(2, 0).getEntry();
     sbTimer = btTab.add("Timer", 0).withSize(2, 2).withPosition(0, 2).getEntry();
-    sbTimerHighCurrent = btTab.add("High Current Timer", 0).withSize(2, 2).withPosition(0, 4).getEntry();
+    sbTimerHighCurrent =
+        btTab.add("High Current Timer", 0).withSize(2, 2).withPosition(0, 4).getEntry();
     sbTimerChange = btTab.add("Change Timer", 0).withSize(2, 2).withPosition(4, 0).getEntry();
     timer.start();
     currentTimer.start();
     simVolt = 16.0;
     DriverStationSim.setSendError(true);
-    //btTab.addBoolean("Change the battery: ", valueSupplier)
+    // btTab.addBoolean("Change the battery: ", valueSupplier)
   }
 
   public void periodic() {
     sbVoltage.setDouble(getVoltage());
     // sbInCurrent.setDouble(getInputCurrent());
-    sbInCurrent.setNumber(getInputCurrent()); // Just temporary, replace with line above
+    sbSimVoltage.setNumber(RoboRioSim.getVInVoltage()); // Just temporary, replace with line above
     sbTimer.setDouble(timer.get());
     sbTimerHighCurrent.setDouble(currentTimer.get());
     sbTimerChange.setBoolean(checkTimer()); // Replace checkVoltage() with checkTimer() if necessary
     checkCurrent();
     checkVoltage();
-    //checkMinute();
+    // checkMinute();
   }
 
   public double getVoltage() {
@@ -88,23 +94,25 @@ public class BatterySubsystem extends SubsystemBase {
 
   public void checkCurrent() {
     if (getInputCurrent() < Constants.maxBatteryCurrent) {
-      currentTimer.stop(); // Was current timer, but I got a warning about it needing to be static so I
+      //currentTimer
+      //    .stop(); // Was current timer, but I got a warning about it needing to be static so I
       // changed it to this. Will this cause conflicts?
     } else {
-      currentTimer.start();
+      //currentTimer.start();
     }
   }
+
 
   public boolean checkTimer() {
     if (currentTimer.hasElapsed(Constants.timeInSecondsHighCurrentRed)) {
       DriverStation.reportError("Change the Battery!", true);
       // playAudio(Constants.audiofilepath);
       return true;
-    } else if (currentTimer.hasElapsed(Constants.timeInSecondsGeneralRed)) {
+    } else if (timer.hasElapsed(Constants.timeInSecondsGeneralRed)) {
       DriverStation.reportError("Change the Battery!", true);
       // playAudio(Constants.audiofilepath);
       return true;
-    } else if (timer.hasElapsed(Constants.timeInSecondsHighCurrentYellow)) {
+    } else if (currentTimer.hasElapsed(Constants.timeInSecondsHighCurrentYellow)) {
       DriverStation.reportError("Change the Battery Soon!", true);
       // playAudio(Constants.audiofilepath);
       return false;
@@ -127,7 +135,19 @@ public class BatterySubsystem extends SubsystemBase {
   */
 
   public int getMinute() {
-    return (int) Math.floor(timer.get()/60.0);
+    return (int) Math.floor(timer.get() / 60.0);
+  }
+  public double getGeneralTimer() {
+    return timer.get();
+  }
+  public double getHighCurrentTimer() {
+    return currentTimer.get();
+  }
+  public void startHCTimer() {
+    currentTimer.start();
+  }
+  public void stopHCTimer() {
+    currentTimer.stop();
   }
 
   public void checkVoltage() {
@@ -140,7 +160,7 @@ public class BatterySubsystem extends SubsystemBase {
   }
 
   public boolean checkRedVoltage() {
-    if(getVoltage() > Constants.minVoltageRed) {
+    if (getVoltage() > Constants.minVoltageRed) {
       return true;
     } else {
       return false;
@@ -184,7 +204,7 @@ public class BatterySubsystem extends SubsystemBase {
   public void resetTimers() {
     timer.reset();
     currentTimer.reset();
-    //minutesPassed = 0;
+    // minutesPassed = 0;
   }
 
   /*

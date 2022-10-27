@@ -158,7 +158,7 @@ public class RobotContainer {
 
     if (Robot.isSimulation()) {
       batterySimulation = new BatterySimulation(batterySubsystem);
-    } 
+    }
   }
 
   private void initCommands() {
