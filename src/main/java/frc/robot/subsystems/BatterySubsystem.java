@@ -105,19 +105,19 @@ public class BatterySubsystem extends SubsystemBase {
 
   public boolean checkTimer() {
     if (currentTimer.hasElapsed(Constants.timeInSecondsHighCurrentRed)) {
-      DriverStation.reportError("Change the Battery!", true);
+      DriverStation.reportWarning("Change the Battery!", false);
       // playAudio(Constants.audiofilepath);
       return true;
     } else if (timer.hasElapsed(Constants.timeInSecondsGeneralRed)) {
-      DriverStation.reportError("Change the Battery!", true);
+      DriverStation.reportWarning("Change the Battery!", false);
       // playAudio(Constants.audiofilepath);
       return true;
     } else if (currentTimer.hasElapsed(Constants.timeInSecondsHighCurrentYellow)) {
-      DriverStation.reportError("Change the Battery Soon!", true);
+      DriverStation.reportWarning("Change the Battery!", false);
       // playAudio(Constants.audiofilepath);
       return false;
     } else if (timer.hasElapsed(Constants.timeInSecondsGeneralYellow)) {
-      DriverStation.reportError("Change the Battery Soon!", true);
+      DriverStation.reportWarning("Change the Battery!", false);
       // playAudio(Constants.audiofilepath);
       return false;
     }
@@ -152,9 +152,9 @@ public class BatterySubsystem extends SubsystemBase {
 
   public void checkVoltage() {
     if (getVoltage() < Constants.minVoltageRed) {
-      DriverStation.reportError("Change the Battery!", true);
+      DriverStation.reportWarning("Change the Battery!", false);
     } else if (getVoltage() < Constants.minVoltageYellow) {
-      DriverStation.reportError("Change the Battery Soon!", true);
+      DriverStation.reportWarning("Change the Battery!", false);
     } else {
     }
   }
