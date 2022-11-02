@@ -48,6 +48,10 @@ public class BatterySimulation extends SubsystemBase {
       System.out.println("Got to assert high current timer");
       assertEquals(true, batterySubsystem.checkTimer());
     }
+    //Enable the robot after 10 seconds to rest high current timer
+    if (batterySubsystem.getGeneralTimer() > 10.0 ) {
+      DriverStationSim.setEnabled(true);
+    }
 
     //Forcefully sets the voltage when enabling the robot.
     if (DriverStationSim.getAutonomous() == true || DriverStationSim.getEnabled() == true) {

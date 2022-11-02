@@ -20,6 +20,7 @@ public final class Constants {
   public static final int minVoltageYellow = 14;
   public static final int minVoltageRed = 12;
   public static final double minVoltageRedDouble = 12.0;
+  public static final int timeInSecondsSimTest = 10;
   public static final int timeInSecondsGeneralYellow = 360;
   public static final double timeInSecondsGeneralRed = 60.0; //Changed for testing
   public static final int timeInSecondsHighCurrentYellow = 360;
