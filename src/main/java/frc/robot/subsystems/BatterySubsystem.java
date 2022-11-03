@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -22,7 +23,6 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.JOptionPane;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 
 /** Add your docs here. */
 // Put methods for controlling this subsystem
@@ -40,8 +40,6 @@ public class BatterySubsystem extends SubsystemBase {
   private Timer currentTimer = new Timer();
   // public DriverStationSim driverSim;
   // Sim variables
-  private double simVolt;
-  private double simCurrent;
   private boolean colorOn; // Variable for color change testing
   // private int minutesPassed;
 
@@ -62,8 +60,7 @@ public class BatterySubsystem extends SubsystemBase {
         btTab.add("High Current Timer", 0).withSize(2, 2).withPosition(0, 4).getEntry();
     sbTimerChange = btTab.add("Change Timer", 0).withSize(2, 2).withPosition(4, 0).getEntry();
     timer.start();
-    currentTimer.start();
-    simVolt = 16.0;
+    // currentTimer.start();
     DriverStationSim.setSendError(true);
     // btTab.addBoolean("Change the battery: ", valueSupplier)
   }
@@ -82,7 +79,7 @@ public class BatterySubsystem extends SubsystemBase {
 
   public double getVoltage() {
     if (Robot.isSimulation()) {
-      return (int) simVolt;
+      return RoboRioSim.getVInVoltage();
     } else {
       return RobotController.getBatteryVoltage();
     }
@@ -94,30 +91,31 @@ public class BatterySubsystem extends SubsystemBase {
 
   public void checkCurrent() {
     if (getInputCurrent() < Constants.maxBatteryCurrent) {
-      //currentTimer
+      stopHCTimer();
+      // currentTimer
       //    .stop(); // Was current timer, but I got a warning about it needing to be static so I
       // changed it to this. Will this cause conflicts?
     } else {
-      //currentTimer.start();
+      startHCTimer();
+      // currentTimer.start();
     }
   }
 
-
   public boolean checkTimer() {
     if (currentTimer.hasElapsed(Constants.timeInSecondsHighCurrentRed)) {
-      DriverStation.reportWarning("Change the Battery!", false);
+      DriverStation.reportWarning("Change the Battery Now!", false);
       // playAudio(Constants.audiofilepath);
       return true;
     } else if (timer.hasElapsed(Constants.timeInSecondsGeneralRed)) {
-      DriverStation.reportWarning("Change the Battery!", false);
+      DriverStation.reportWarning("Change the Battery Now!", false);
       // playAudio(Constants.audiofilepath);
       return true;
     } else if (currentTimer.hasElapsed(Constants.timeInSecondsHighCurrentYellow)) {
-      DriverStation.reportWarning("Change the Battery!", false);
+      DriverStation.reportWarning("Change the Battery Soon!", false);
       // playAudio(Constants.audiofilepath);
       return false;
     } else if (timer.hasElapsed(Constants.timeInSecondsGeneralYellow)) {
-      DriverStation.reportWarning("Change the Battery!", false);
+      DriverStation.reportWarning("Change the Battery Soon!", false);
       // playAudio(Constants.audiofilepath);
       return false;
     }
@@ -137,24 +135,28 @@ public class BatterySubsystem extends SubsystemBase {
   public int getMinute() {
     return (int) Math.floor(timer.get() / 60.0);
   }
+
   public double getGeneralTimer() {
     return timer.get();
   }
+
   public double getHighCurrentTimer() {
     return currentTimer.get();
   }
+
   public void startHCTimer() {
     currentTimer.start();
   }
+
   public void stopHCTimer() {
     currentTimer.stop();
   }
 
   public void checkVoltage() {
     if (getVoltage() < Constants.minVoltageRed) {
-      DriverStation.reportWarning("Change the Battery!", false);
+      DriverStation.reportWarning("Change the Battery Now!", false);
     } else if (getVoltage() < Constants.minVoltageYellow) {
-      DriverStation.reportWarning("Change the Battery!", false);
+      DriverStation.reportWarning("Change the Battery Soon!", false);
     } else {
     }
   }
