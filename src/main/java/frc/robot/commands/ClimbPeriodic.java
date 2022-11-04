@@ -4,33 +4,37 @@
 
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClimbSubsystem;
 
 public class ClimbPeriodic extends CommandBase {
-  private final ClimbSubsystem m_subsystem;
+  private final ClimbSubsystem climbSubsystem;
+  private final Supplier<Double> climbArmSupplier;
+  private final Supplier<Double> climbPoleSupplier;
 
   /** Creates a new ClimbKeepDown. */
-  public ClimbPeriodic(ClimbSubsystem s) {
-    addRequirements(s);
-
-    m_subsystem = s;
-    // Use addRequirements() here to declare subsystem dependencies.
+  public ClimbPeriodic(ClimbSubsystem climbSubsystem, Supplier<Double> climbArmSupplier, Supplier<Double> climbPoleSupplier) {
+    addRequirements(climbSubsystem);
+    this.climbSubsystem = climbSubsystem;
+    this.climbArmSupplier = climbArmSupplier;
+    this.climbPoleSupplier = climbPoleSupplier;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.resetClimbHeights();
-    m_subsystem.climbKeepDownFunction();
+    climbSubsystem.resetClimbHeights();
+    climbSubsystem.climbKeepDownFunction();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.midClimb();
-    m_subsystem.highArms();
-    m_subsystem.periodic();
+    climbSubsystem.midClimb(climbArmSupplier.get());
+    climbSubsystem.highArms(climbPoleSupplier.get());
+    climbSubsystem.periodic();
   }
 
   // Called once the command ends or is interrupted.

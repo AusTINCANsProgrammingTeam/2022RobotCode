@@ -241,49 +241,8 @@ public final class Constants {
   public static final boolean testMode = false; // if false CDS will eject balls of wrong color
 
   public static final double reverseStopperWheelSpeed = -0.125;
-
-  // spotless:off
-  // Controller Constants {
-  public static final int portNumber0 = 0;
-  public static final int portNumber1 = 1;
-
-  // Buttons not in use
-  public static final int XButton = 1;
-  public static final int AButton = 2;
-  public static final int BButton = 3;
-  public static final int YButton = 4;
-
-  // Intake Subsystem
-  public static final int LBumper = 5; // Intake forward
-  public static final int RBumper = 6; // Intake reverse
-
-  // CDS Subsystem
-  public static final int LTriggerButton = 7; // CDS forward
-  public static final int RTriggerButton = 8; // CDS reverse
-
-  // Shooter Prime/LimeLight
-  public static final int backButton = 9; // Button starts ShooterPrime
-  public static final int startButton = 10; // Button to align LimeLight
-
-  // Shooter Subsystem mode change
-  public static final int LJoystickButton = 11; // Button for Shooter mode
-  public static final int RJoystickButton = 12; // BUtton for Shooter mode
-
-  // POV's not in use
-  public static final int POVup = 0;
-  public static final int POVdown = 180;
-  public static final int POVright = 90;
-  public static final int POVleft = 270;
-
-  // Joystick
-
-  // Unused but will easily be accidentally activated if used
-  public static final int leftJoystickX = 0;
-  public static final int leftJoystickY = 1; // arcade forward / tank left turning
-  public static final int rightJoystickX = 2; // arcade turning
-  public static final int rightJoystickY = 3; // tank right turning
-
-  // Shooter Constants
+ 
+  //ShooterConstants
   public static final class Shooter {
     // Motor IDs
     public static final int shooterID = 10; // ID of the shooter
@@ -364,11 +323,6 @@ public final class Constants {
   public static final double climbServo2Unlocked = 0;
 
   public static final double climbServoSetPoint = 0.5;
-
-  public static final double driveSpeedHigh = 1;
-  public static final double driveSpeedLow = 0.6;
-
-  public static final double controllerDeadZone = 0.1;
 
   public static final double climbSequence1Timeout = 20.0;
 

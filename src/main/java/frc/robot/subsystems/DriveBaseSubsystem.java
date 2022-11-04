@@ -17,7 +17,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -34,8 +33,6 @@ import frc.robot.Robot;
 import frc.robot.common.hardware.MotorController;
 
 public class DriveBaseSubsystem extends SubsystemBase {
-  private double driveBaseSpeed;
-  private final Joystick driverJoystick;
   private final MotorController[] motorControllers;
   private final DifferentialDrive differentialDrive;
   private DifferentialDrivetrainSim differentialDrivetrainSim;
@@ -72,9 +69,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private NetworkTableEntry sbRightPosition;
   private NetworkTableEntry sbGyroInfo;
 
-  public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {
-    driveBaseSpeed = 1;
-    driverJoystick = joystick;
+  public DriveBaseSubsystem(boolean usingExternal) {
 
     motorControllers = new MotorController[4];
     gyro = new AHRS(SPI.Port.kMXP);
@@ -247,33 +242,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
     motorControllers[Constants.driveRightFrontIndex].updateSmartDashboard();
   }
 
-  public void setDriveBaseSpeed(double driveBaseSpeed) {
-    this.driveBaseSpeed = driveBaseSpeed;
-  }
-
-  // Normal Arcade Drive
-  public void arcadeDrive() {
-    differentialDrive.arcadeDrive(
-        driverJoystick.getRawAxis(Constants.leftJoystickY) * -driveBaseSpeed,
-        driverJoystick.getRawAxis(Constants.rightJoystickX) * Constants.driveBaseTurnRate,
-        true);
-    // joystick has y-axis flipped so up is negative, multiply by negative to accomodate this
-  }
-
-  // Arcade Drive where you can only move forwards and backwards for testing
-  public void arcadeDrive(double rotation) {
-    differentialDrive.arcadeDrive(
-        driverJoystick.getRawAxis(Constants.leftJoystickY) * -driveBaseSpeed, rotation);
-  }
-
-  // TODO: Make a command to switch modes (extra)
-
-  // tank drive, not used but good to have
-  // TODO: check tankdrive if joystick axes are working
-  public void tankDrive() {
-    differentialDrive.tankDrive(
-        -1 * driverJoystick.getRawAxis(Constants.leftJoystickY),
-        -1 * driverJoystick.getRawAxis(Constants.rightJoystickY));
+  public void arcadeDrive(double speed, double rotation) {
+    differentialDrive.arcadeDrive(speed, rotation);
   }
 
   @Override

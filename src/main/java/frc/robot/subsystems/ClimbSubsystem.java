@@ -21,7 +21,6 @@ import frc.robot.common.hardware.MotorController;
 public class ClimbSubsystem extends SubsystemBase {
 
   // 1 = Right Side, 2 = Left Side
-  private Joystick climbJoystick;
   private MotorController armOne;
   private MotorController armTwo;
   private MotorController poleOne;
@@ -29,7 +28,7 @@ public class ClimbSubsystem extends SubsystemBase {
   private Servo servoOne;
   private Servo servoTwo;
 
-  private boolean climbEnable, hookLocked;
+  private boolean climbEnabled, hookLocked;
 
   private double armHeightOne;
   private double armHeightTwo;
@@ -39,9 +38,6 @@ public class ClimbSubsystem extends SubsystemBase {
   private double armEncoderHeightTwo;
   private double poleEncoderHeightOne;
   private double poleEncoderHeightTwo;
-
-  private double armJoystickAxis;
-  private double poleJoystickAxis;
 
   // 1 = Right Side, 2 = Left Side
   private ShuffleboardTab climbTab;
@@ -117,9 +113,8 @@ public class ClimbSubsystem extends SubsystemBase {
           .withWidget(BuiltInWidgets.kBooleanBox)
           .getEntry();
 
-  public ClimbSubsystem(Joystick joystick) {
-    climbJoystick = joystick;
-    climbEnable = false;
+  public ClimbSubsystem() {
+    climbEnabled = false;
 
     // Shuffle Board Widgets
     climbTab = Shuffleboard.getTab("ClimbBase");
@@ -228,9 +223,9 @@ public class ClimbSubsystem extends SubsystemBase {
     poleTwo.getPIDCtrl().setIMaxAccum(Constants.poleSetIMaxAccum, 0);
   }
 
-  public void climbEnable() {
-    climbEnable = !climbEnable;
-    if (climbEnable) {
+  public void toggleEnabled() {
+    climbEnabled = !climbEnabled;
+    if (climbEnabled) {
       armOne.setSmartCurrentLimit(Constants.climbArmHighCurrent);
       armTwo.setSmartCurrentLimit(Constants.climbArmHighCurrent);
       poleOne.setSmartCurrentLimit(Constants.climbPoleHighCurrent);
@@ -243,71 +238,49 @@ public class ClimbSubsystem extends SubsystemBase {
     }
   }
 
-  public boolean getclimbingenable() {
-    return climbEnable;
-  }
-
-  public void midClimb() {
-    if (climbEnable) {
-      armJoystickAxis = -climbJoystick.getRawAxis(Constants.leftJoystickY);
-      if (armJoystickAxis > Constants.controllerDeadZone
-          || armJoystickAxis < -Constants.controllerDeadZone) {
-        if (armJoystickAxis > 0) {
-          /*if (armHeightOne + (armJoystickAxis * (Constants.ArmUpSpeed/2)) >= Constants.ArmHeightFeather) {
-            armHeightOne = armHeightOne + (armJoystickAxis * Constants.ArmUpSpeed/2);
-          } else{*/
-          if (armHeightOne + (armJoystickAxis * Constants.armUpSpeed) >= Constants.armHeightMin) {
-            armHeightOne = armHeightOne + (armJoystickAxis * Constants.armUpSpeed);
-            // }
+  public void midClimb(double axisValue) {
+    if (climbEnabled) {
+        if (axisValue > 0) {
+          if (armHeightOne + (axisValue * Constants.armUpSpeed) >= Constants.armHeightMin) {
+            armHeightOne = armHeightOne + (axisValue * Constants.armUpSpeed);
           }
-          /*if (armHeightTwo + (armJoystickAxis * (Constants.ArmUpSpeed/2)) >= Constants.ArmHeightFeather) {
-            armHeightTwo = armHeightTwo + (armJoystickAxis * Constants.ArmUpSpeed/2);
-          } else{*/
-          if (armHeightTwo + (armJoystickAxis * Constants.armUpSpeed) >= Constants.armHeightMin) {
-            armHeightTwo = armHeightTwo + (armJoystickAxis * Constants.armUpSpeed);
-            // }
+          if (armHeightTwo + (axisValue * Constants.armUpSpeed) >= Constants.armHeightMin) {
+            armHeightTwo = armHeightTwo + (axisValue * Constants.armUpSpeed);
           }
         }
-        if (armJoystickAxis < 0) {
-          if (armHeightOne + (armJoystickAxis * Constants.armDownSpeed) <= Constants.armHeightMax) {
-            armHeightOne = armHeightOne + (armJoystickAxis * Constants.armDownSpeed);
+        if (axisValue < 0) {
+          if (armHeightOne + (axisValue * Constants.armDownSpeed) <= Constants.armHeightMax) {
+            armHeightOne = armHeightOne + (axisValue * Constants.armDownSpeed);
           }
-          if (armHeightTwo + (armJoystickAxis * Constants.armDownSpeed) <= Constants.armHeightMax) {
-            armHeightTwo = armHeightTwo + (armJoystickAxis * Constants.armDownSpeed);
+          if (armHeightTwo + (axisValue * Constants.armDownSpeed) <= Constants.armHeightMax) {
+            armHeightTwo = armHeightTwo + (axisValue * Constants.armDownSpeed);
           }
         }
       }
       armOne.getPIDCtrl().setReference(armHeightOne, CANSparkMax.ControlType.kPosition);
-
       armTwo.getPIDCtrl().setReference(armHeightTwo, CANSparkMax.ControlType.kPosition);
     }
-  }
 
-  public void highArms() {
-    poleJoystickAxis = -climbJoystick.getRawAxis(Constants.rightJoystickY);
-    if (poleJoystickAxis > Constants.controllerDeadZone
-        || poleJoystickAxis < -Constants.controllerDeadZone) {
-      if (poleJoystickAxis > 0) {
-        if (poleHeightOne + (poleJoystickAxis * Constants.poleInSpeed) <= Constants.poleHeightMax) {
-          poleHeightOne = poleHeightOne + (poleJoystickAxis * Constants.poleInSpeed);
+  public void highArms(double axisValue) {
+      if (axisValue > 0) {
+        if (poleHeightOne + (axisValue * Constants.poleInSpeed) <= Constants.poleHeightMax) {
+          poleHeightOne = poleHeightOne + (axisValue * Constants.poleInSpeed);
         }
-        if (poleHeightTwo + (poleJoystickAxis * Constants.poleInSpeed) <= Constants.poleHeightMax) {
-          poleHeightTwo = poleHeightTwo + (poleJoystickAxis * Constants.poleInSpeed);
+        if (poleHeightTwo + (axisValue * Constants.poleInSpeed) <= Constants.poleHeightMax) {
+          poleHeightTwo = poleHeightTwo + (axisValue * Constants.poleInSpeed);
         }
       }
-      if (poleJoystickAxis < 0) {
-        if (poleHeightOne + (poleJoystickAxis * Constants.poleOutSpeed)
+      if (axisValue < 0) {
+        if (poleHeightOne + (axisValue * Constants.poleOutSpeed)
             >= Constants.poleHeightMin) {
-          poleHeightOne = poleHeightOne + (poleJoystickAxis * Constants.poleOutSpeed);
+          poleHeightOne = poleHeightOne + (axisValue * Constants.poleOutSpeed);
         }
-        if (poleHeightTwo + (poleJoystickAxis * Constants.poleOutSpeed)
+        if (poleHeightTwo + (axisValue * Constants.poleOutSpeed)
             >= Constants.poleHeightMin) {
-          poleHeightTwo = poleHeightTwo + (poleJoystickAxis * Constants.poleOutSpeed);
+          poleHeightTwo = poleHeightTwo + (axisValue * Constants.poleOutSpeed);
         }
       }
-    }
     poleOne.getPIDCtrl().setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
-
     poleTwo.getPIDCtrl().setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
   }
 
@@ -385,8 +358,8 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void periodic() {
-    if (DriverStation.isDisabled() && climbEnable) {
-      climbEnable();
+    if (DriverStation.isDisabled() && climbEnabled) {
+      toggleEnabled();
     }
 
     if (DriverStation.isDisabled()) {
@@ -396,7 +369,7 @@ public class ClimbSubsystem extends SubsystemBase {
       lockHooks();
     }
 
-    BClimbEnabled.setBoolean(climbEnable);
+    BClimbEnabled.setBoolean(climbEnabled);
     DClimbHeight1.setNumber(armOne.getEncoder().getPosition());
     DClimbHeight2.setNumber(armTwo.getEncoder().getPosition());
     DClimbHeight3.setNumber(poleOne.getEncoder().getPosition());
