@@ -5,18 +5,15 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.Auton;
 import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
-import frc.robot.commands.ClimbEnable;
 import frc.robot.commands.ClimbPeriodic;
 import frc.robot.commands.ClimbSequence1;
 import frc.robot.commands.CombinedIntakeCDSForwardCommand;
@@ -46,10 +43,6 @@ public class RobotContainer {
   public static ShuffleboardTab controllerDetection;
 
   // The robot's subsystems and commands are defined here...
-  private static final Joystick driverJoystick = new Joystick(Constants.portNumber0);
-  private static final Joystick operatorJoystick = new Joystick(Constants.portNumber1);
-  private JoystickButton[] buttons = new JoystickButton[13];
-  private JoystickButton[] buttons2 = new JoystickButton[13];
 
   // subsystems
   private static ClimbSubsystem climbSubsystem;
@@ -71,9 +64,9 @@ public class RobotContainer {
   private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
   // ----------climb---------
-  private ClimbEnable climbEnabling;
+  private InstantCommand climbEnable;
   private ClimbSequence1 climbSequence1;
-  private ClimbPeriodic ClimbPeriodic;
+  private ClimbPeriodic climbPeriodic;
   private Command HaDeploy;
   private Command hookUnlock;
   private Command hookLock;
@@ -106,35 +99,12 @@ public class RobotContainer {
     initSubsystems();
     initCommands();
 
-    // initialize the button bindings
-    for (int i = 1; i < buttons.length; i++) {
-      buttons[i] = new JoystickButton(driverJoystick, i);
-      buttons2[i] = new JoystickButton(operatorJoystick, i);
-    }
     configureButtonBindings();
   }
 
-  private void controllerCheck() {
-    axisCount0 = DriverStation.getStickAxisCount(Constants.portNumber0);
-    buttonCount0 = DriverStation.getStickButtonCount(Constants.portNumber0);
-    sbaxisCount0.setDouble(axisCount0);
-    sbbuttonCount0.setDouble(buttonCount0);
-
-    axisCount1 = DriverStation.getStickAxisCount(Constants.portNumber1);
-    buttonCount1 = DriverStation.getStickButtonCount(Constants.portNumber1);
-    sbaxisCount1.setDouble(axisCount1);
-    sbbuttonCount1.setDouble(buttonCount1);
-
-    System.out.printf(
-        "axisCount0 %d buttonCount0 %d axisCount1 %d buttonCount1 %d\n ",
-        axisCount0, buttonCount0, axisCount1, buttonCount1);
-  }
-
   private void initSubsystems() {
-    // subsystems
-    controllerCheck();
 
-    driveBaseSubsystem = new DriveBaseSubsystem(driverJoystick, Constants.usingExternal);
+    driveBaseSubsystem = new DriveBaseSubsystem(Constants.usingExternal);
 
     cdsSubsystem = new CDSSubsystem();
 
@@ -144,13 +114,17 @@ public class RobotContainer {
 
     limelightSubsystem = new LimelightSubsystem();
 
-    climbSubsystem = new ClimbSubsystem(operatorJoystick);
+    climbSubsystem = new ClimbSubsystem();
   }
 
   private void initCommands() {
     // Initializes commands based on enabled subsystems
     if (driveBaseSubsystem != null) {
-      driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
+      driveBaseTeleopCommand =
+          new DriveBaseTeleopCommand(
+              driveBaseSubsystem,
+              OI.Driver.getDriveSpeedSupplier(),
+              OI.Driver.getDriveRotationSupplier());
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
     }
     if (cdsSubsystem != null && shooterSubsystem != null) {
@@ -184,12 +158,16 @@ public class RobotContainer {
     }
 
     if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
-      climbEnabling = new ClimbEnable(climbSubsystem, driveBaseSubsystem);
-      ClimbPeriodic = new ClimbPeriodic(climbSubsystem);
+      climbEnable = new InstantCommand(climbSubsystem::toggleEnabled, climbSubsystem);
+      climbPeriodic =
+          new ClimbPeriodic(
+              climbSubsystem,
+              OI.Operator.getClimbArmSupplier(),
+              OI.Operator.getClimbPoleSupplier());
       climbSequence1 = new ClimbSequence1(climbSubsystem);
       hookUnlock = new HookUnlock(climbSubsystem);
       hookLock = new HookLock(climbSubsystem);
-      climbSubsystem.setDefaultCommand(ClimbPeriodic);
+      climbSubsystem.setDefaultCommand(climbPeriodic);
     }
   }
 
@@ -200,47 +178,33 @@ public class RobotContainer {
   // it to a {@link
   // edu.wpi.first.wpilibj2.command.button.JoystickButton}.
   private void configureButtonBindings() {
-    controllerCheck();
 
     // Intake / CDS
     if (outtakeCommand != null) {
-      // spits ball out
-      buttons[Constants.RBumper].whileHeld(outtakeCommand);
+      OI.Driver.getOuttakeButton().whileHeld(outtakeCommand);
     }
 
     if (combinedIntakeCDS != null) {
-      buttons[Constants.RTriggerButton].whileHeld(combinedIntakeCDS);
-    } /*else {
-        buttons[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
-      }*/
+      OI.Driver.getIntakeButton().whileHeld(combinedIntakeCDS);
+    }
 
     if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
-      // Auto Aim Shot
-      buttons[Constants.LTriggerButton].whileHeld(
-          shooterHeldAuto.beforeStarting(
-              () -> {
-                shooterSubsystem.setAimMode(Constants.AimModes.TARMAC);
-              },
-              shooterSubsystem));
-      // Fender Shot
-      buttons[Constants.LBumper].whileHeld(
-          shooterHeldLow.beforeStarting(
-              () -> {
-                shooterSubsystem.setAimMode(Constants.AimModes.LOW);
-              },
-              shooterSubsystem));
+      OI.Driver.getShootButton()
+          .whileHeld(
+              shooterHeldLow.beforeStarting(
+                  () -> {
+                    shooterSubsystem.setAimMode(Constants.AimModes.LOW);
+                  },
+                  shooterSubsystem));
     }
 
     if (climbSubsystem != null) {
-      // enable climb and spool out arms
-      buttons2[Constants.startButton].whenPressed(climbEnabling);
-      buttons2[Constants.XButton].whileHeld(climbSequence1);
-
-      // whenHeld button for ClimbSequence2
+      OI.Operator.getEnableClimbButton().whenPressed(climbEnable);
+      OI.Operator.getAutoClimbButton().whileHeld(climbSequence1);
     }
 
-    if (outtakeCommand != null && intakeForwardCommand != null) {
-      buttons2[Constants.RTriggerButton].whileHeld(intakeForwardCommand);
+    if (outtakeCommand != null && CDSForwardCommand != null) {
+      OI.Operator.getCDSForwardButton().whileHeld(CDSForwardCommand);
     }
   }
 
