@@ -8,7 +8,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -240,46 +239,44 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public void midClimb(double axisValue) {
     if (climbEnabled) {
-        if (axisValue > 0) {
-          if (armHeightOne + (axisValue * Constants.armUpSpeed) >= Constants.armHeightMin) {
-            armHeightOne = armHeightOne + (axisValue * Constants.armUpSpeed);
-          }
-          if (armHeightTwo + (axisValue * Constants.armUpSpeed) >= Constants.armHeightMin) {
-            armHeightTwo = armHeightTwo + (axisValue * Constants.armUpSpeed);
-          }
-        }
-        if (axisValue < 0) {
-          if (armHeightOne + (axisValue * Constants.armDownSpeed) <= Constants.armHeightMax) {
-            armHeightOne = armHeightOne + (axisValue * Constants.armDownSpeed);
-          }
-          if (armHeightTwo + (axisValue * Constants.armDownSpeed) <= Constants.armHeightMax) {
-            armHeightTwo = armHeightTwo + (axisValue * Constants.armDownSpeed);
-          }
-        }
-      }
-      armOne.getPIDCtrl().setReference(armHeightOne, CANSparkMax.ControlType.kPosition);
-      armTwo.getPIDCtrl().setReference(armHeightTwo, CANSparkMax.ControlType.kPosition);
-    }
-
-  public void highArms(double axisValue) {
       if (axisValue > 0) {
-        if (poleHeightOne + (axisValue * Constants.poleInSpeed) <= Constants.poleHeightMax) {
-          poleHeightOne = poleHeightOne + (axisValue * Constants.poleInSpeed);
+        if (armHeightOne + (axisValue * Constants.armUpSpeed) >= Constants.armHeightMin) {
+          armHeightOne = armHeightOne + (axisValue * Constants.armUpSpeed);
         }
-        if (poleHeightTwo + (axisValue * Constants.poleInSpeed) <= Constants.poleHeightMax) {
-          poleHeightTwo = poleHeightTwo + (axisValue * Constants.poleInSpeed);
+        if (armHeightTwo + (axisValue * Constants.armUpSpeed) >= Constants.armHeightMin) {
+          armHeightTwo = armHeightTwo + (axisValue * Constants.armUpSpeed);
         }
       }
       if (axisValue < 0) {
-        if (poleHeightOne + (axisValue * Constants.poleOutSpeed)
-            >= Constants.poleHeightMin) {
-          poleHeightOne = poleHeightOne + (axisValue * Constants.poleOutSpeed);
+        if (armHeightOne + (axisValue * Constants.armDownSpeed) <= Constants.armHeightMax) {
+          armHeightOne = armHeightOne + (axisValue * Constants.armDownSpeed);
         }
-        if (poleHeightTwo + (axisValue * Constants.poleOutSpeed)
-            >= Constants.poleHeightMin) {
-          poleHeightTwo = poleHeightTwo + (axisValue * Constants.poleOutSpeed);
+        if (armHeightTwo + (axisValue * Constants.armDownSpeed) <= Constants.armHeightMax) {
+          armHeightTwo = armHeightTwo + (axisValue * Constants.armDownSpeed);
         }
       }
+    }
+    armOne.getPIDCtrl().setReference(armHeightOne, CANSparkMax.ControlType.kPosition);
+    armTwo.getPIDCtrl().setReference(armHeightTwo, CANSparkMax.ControlType.kPosition);
+  }
+
+  public void highArms(double axisValue) {
+    if (axisValue > 0) {
+      if (poleHeightOne + (axisValue * Constants.poleInSpeed) <= Constants.poleHeightMax) {
+        poleHeightOne = poleHeightOne + (axisValue * Constants.poleInSpeed);
+      }
+      if (poleHeightTwo + (axisValue * Constants.poleInSpeed) <= Constants.poleHeightMax) {
+        poleHeightTwo = poleHeightTwo + (axisValue * Constants.poleInSpeed);
+      }
+    }
+    if (axisValue < 0) {
+      if (poleHeightOne + (axisValue * Constants.poleOutSpeed) >= Constants.poleHeightMin) {
+        poleHeightOne = poleHeightOne + (axisValue * Constants.poleOutSpeed);
+      }
+      if (poleHeightTwo + (axisValue * Constants.poleOutSpeed) >= Constants.poleHeightMin) {
+        poleHeightTwo = poleHeightTwo + (axisValue * Constants.poleOutSpeed);
+      }
+    }
     poleOne.getPIDCtrl().setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
     poleTwo.getPIDCtrl().setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
   }

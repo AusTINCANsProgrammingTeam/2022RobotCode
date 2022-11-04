@@ -4,10 +4,9 @@
 
 package frc.robot.commands;
 
-import java.util.function.Supplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClimbSubsystem;
+import java.util.function.Supplier;
 
 public class ClimbPeriodic extends CommandBase {
   private final ClimbSubsystem climbSubsystem;
@@ -15,7 +14,10 @@ public class ClimbPeriodic extends CommandBase {
   private final Supplier<Double> climbPoleSupplier;
 
   /** Creates a new ClimbKeepDown. */
-  public ClimbPeriodic(ClimbSubsystem climbSubsystem, Supplier<Double> climbArmSupplier, Supplier<Double> climbPoleSupplier) {
+  public ClimbPeriodic(
+      ClimbSubsystem climbSubsystem,
+      Supplier<Double> climbArmSupplier,
+      Supplier<Double> climbPoleSupplier) {
     addRequirements(climbSubsystem);
     this.climbSubsystem = climbSubsystem;
     this.climbArmSupplier = climbArmSupplier;

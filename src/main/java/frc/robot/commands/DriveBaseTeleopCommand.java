@@ -4,18 +4,21 @@
 
 package frc.robot.commands;
 
-import java.util.function.Supplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveBaseSubsystem;
+import java.util.function.Supplier;
 
 public class DriveBaseTeleopCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveBaseSubsystem driveBaseSubsystem;
+
   private final Supplier<Double> speedSupplier;
   private final Supplier<Double> rotationSupplier;
 
-  public DriveBaseTeleopCommand(DriveBaseSubsystem driveBaseSubsystem, Supplier<Double> speedSupplier, Supplier<Double> rotationSupplier) {
+  public DriveBaseTeleopCommand(
+      DriveBaseSubsystem driveBaseSubsystem,
+      Supplier<Double> speedSupplier,
+      Supplier<Double> rotationSupplier) {
     addRequirements(driveBaseSubsystem);
     this.driveBaseSubsystem = driveBaseSubsystem;
     this.speedSupplier = speedSupplier;

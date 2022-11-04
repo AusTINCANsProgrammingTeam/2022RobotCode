@@ -241,8 +241,8 @@ public final class Constants {
   public static final boolean testMode = false; // if false CDS will eject balls of wrong color
 
   public static final double reverseStopperWheelSpeed = -0.125;
- 
-  //ShooterConstants
+
+  // ShooterConstants
   public static final class Shooter {
     // Motor IDs
     public static final int shooterID = 10; // ID of the shooter
