@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
+import frc.robot.common.hardware.MotorController.MotorConfig;
 
 /** Add your docs here. */
 public class IntakeSubsystem extends SubsystemBase {
@@ -34,27 +35,21 @@ public class IntakeSubsystem extends SubsystemBase {
           .withSize(2, 1)
           .getEntry();
 
-  private MotorController intakeMotorControllerOne;
-  private MotorController deployController;
-  private SparkMaxPIDController deployPID;
+  private CANSparkMax intakeMotor;
+  private CANSparkMax deployMotor;
+
+  private SparkMaxPIDController deployPIDController;
   private RelativeEncoder deployEncoder;
 
   public IntakeSubsystem() {
     intakeDeployed = false;
-    intakeMotorControllerOne = new MotorController("Intake Motor One", Constants.intakeMotorOneID);
-    deployController =
-        new MotorController(
-            "Intake Deploy", Constants.intakeDeployMotorID, Constants.intakeDeployPID);
-    deployController.setSmartCurrentLimit(Constants.intakeDeployCurrent);
-    deployPID = deployController.getPIDCtrl();
-    deployEncoder = deployController.getEncoder();
-    deployController.setIdleMode(IdleMode.kBrake);
+    intakeMotor = MotorController.constructMotor(MotorConfig.intakeMotor);
+    deployMotor = MotorController.constructMotor(MotorConfig.intakeDeploy);
+    deployPIDController = MotorController.constructPIDController(deployMotor, Constants.intakeDeployPID);
+    deployEncoder = deployMotor.getEncoder();
+    deployMotor.setIdleMode(IdleMode.kBrake);
     deployEncoder.setPosition(0);
-
-    intakeMotorControllerOne.setInverted(true);
   }
-
-  public void resetpid() {}
 
   public boolean getIntakeDeployed() {
     return intakeDeployed;
@@ -63,14 +58,14 @@ public class IntakeSubsystem extends SubsystemBase {
   public void toggleIntake(boolean reverse) {
     // only runs intake if ball count isn't too high (addresses #140)
     if (reverse) {
-      intakeMotorControllerOne.set(-Constants.intakeMotorSpeed);
+      intakeMotor.set(-Constants.intakeMotorSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("Intake Motor Direction", "Reverse");
         SmartDashboard.putNumber("Intake Motor Speed", -Constants.intakeMotorSpeed);
       }
       DIntakeSpeed.setDouble(-1);
     } else {
-      intakeMotorControllerOne.set(Constants.intakeMotorSpeed);
+      intakeMotor.set(Constants.intakeMotorSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("Intake Motor Direction", "Forward");
         SmartDashboard.putNumber("Intake Motor Speed", Constants.intakeMotorSpeed);
@@ -80,17 +75,17 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void deployIntake() {
-    deployPID.setReference(Constants.intakeDeployPos, CANSparkMax.ControlType.kPosition);
+    deployPIDController.setReference(Constants.intakeDeployPos, CANSparkMax.ControlType.kPosition);
     intakeDeployed = true;
   }
 
   public void retractIntake() {
-    deployPID.setReference(Constants.intakeRetractPos, CANSparkMax.ControlType.kPosition);
+    deployPIDController.setReference(Constants.intakeRetractPos, CANSparkMax.ControlType.kPosition);
     intakeDeployed = false;
   }
 
   public void stopIntake() {
-    intakeMotorControllerOne.set(0.0);
+    intakeMotor.set(0.0);
     DIntakeSpeed.setDouble(0);
     if (Constants.DebugMode) {
       SmartDashboard.putNumber("Intake Motor Speed", 0.0);
@@ -99,7 +94,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void periodic() {
     SmartDashboard.putBoolean("Intake Out?", intakeDeployed);
-    SmartDashboard.putNumber("Deploy Encoder", deployController.getEncoder().getPosition());
-    SmartDashboard.putNumber("Applied Output, deploy", deployController.getAppliedOutput());
+    SmartDashboard.putNumber("Deploy Encoder", deployMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("Applied Output, deploy", deployMotor.getAppliedOutput());
   }
 }

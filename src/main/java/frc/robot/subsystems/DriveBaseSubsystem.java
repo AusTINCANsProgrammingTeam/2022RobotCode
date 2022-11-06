@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -31,9 +33,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.common.hardware.MotorController;
+import frc.robot.common.hardware.MotorController.MotorConfig;
 
 public class DriveBaseSubsystem extends SubsystemBase {
-  private final MotorController[] motorControllers;
+  private final CANSparkMax leftFrontMotor;
+  private final CANSparkMax leftRearMotor;
+  private final CANSparkMax rightFrontMotor;
+  private final CANSparkMax rightRearMotor;
+  private final SparkMaxPIDController leftPIDController;
+  private final SparkMaxPIDController rightPIDController;
+
   private final DifferentialDrive differentialDrive;
   private DifferentialDrivetrainSim differentialDrivetrainSim;
   public final Field2d m_field = new Field2d();
@@ -70,8 +79,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private NetworkTableEntry sbGyroInfo;
 
   public DriveBaseSubsystem(boolean usingExternal) {
-
-    motorControllers = new MotorController[4];
     gyro = new AHRS(SPI.Port.kMXP);
     gyro.enableLogging(true);
     gyro.reset();
@@ -94,48 +101,23 @@ public class DriveBaseSubsystem extends SubsystemBase {
     // the moment
 
     // motor controllers
-    motorControllers[Constants.driveLeftFrontIndex] =
-        new MotorController(
-            "DriveBase Left Front", Constants.driveLeftFront, Constants.driveLeftPID);
-    motorControllers[Constants.driveLeftRearIndex] =
-        new MotorController("DriveBase Left Rear", Constants.driveLeftRear, Constants.driveLeftPID);
-    motorControllers[Constants.driveRightFrontIndex] =
-        new MotorController(
-            "DriveBase Right Front", Constants.driveRightFront, Constants.driveRightPID);
-    motorControllers[Constants.driveRightRearIndex] =
-        new MotorController(
-            "DriveBase Right Rear", Constants.driveRightRear, Constants.driveRightPID);
+    leftFrontMotor = MotorController.constructMotor(MotorConfig.driveLeftFront);
+    leftPIDController = MotorController.constructPIDController(leftFrontMotor, Constants.driveLeftPID);
 
-    // invert right side motors
-    motorControllers[Constants.driveLeftFrontIndex].setInverted(true);
-    motorControllers[Constants.driveLeftRearIndex].setInverted(true);
+    rightFrontMotor = MotorController.constructMotor(MotorConfig.driveRightFront);
+    rightPIDController = MotorController.constructPIDController(rightFrontMotor, Constants.driveRightPID);
 
-    motorControllers[Constants.driveLeftRearIndex].setOpenLoopRampRate(Constants.openLoopRampRate);
-    motorControllers[Constants.driveLeftFrontIndex].setOpenLoopRampRate(Constants.openLoopRampRate);
-    motorControllers[Constants.driveRightRearIndex].setOpenLoopRampRate(Constants.openLoopRampRate);
-    motorControllers[Constants.driveRightFrontIndex].setOpenLoopRampRate(
-        Constants.openLoopRampRate);
+    leftRearMotor = MotorController.constructMotor(MotorConfig.driveLeftRear);
+    leftRearMotor.follow(leftRearMotor);
 
-    motorControllers[Constants.driveLeftRearIndex].setSmartCurrentLimit(
-        Constants.driveBaseCurrentLimit);
-    motorControllers[Constants.driveLeftFrontIndex].setSmartCurrentLimit(
-        Constants.driveBaseCurrentLimit);
-    motorControllers[Constants.driveRightRearIndex].setSmartCurrentLimit(
-        Constants.driveBaseCurrentLimit);
-    motorControllers[Constants.driveRightFrontIndex].setSmartCurrentLimit(
-        Constants.driveBaseCurrentLimit);
-
-    // Forces rear motors of each side to follow the first
-    motorControllers[Constants.driveLeftRearIndex].follow(
-        motorControllers[Constants.driveLeftFrontIndex]);
-    motorControllers[Constants.driveRightRearIndex].follow(
-        motorControllers[Constants.driveRightFrontIndex]);
+    rightRearMotor = MotorController.constructMotor(MotorConfig.driveRightRear);
+    rightRearMotor.follow(rightRearMotor);
 
     // differential drive
     differentialDrive =
         new DifferentialDrive(
-            motorControllers[Constants.driveLeftFrontIndex],
-            motorControllers[Constants.driveRightFrontIndex]);
+            leftFrontMotor,
+            rightFrontMotor);
 
     this.usingExternal = usingExternal; // gets key if using external or internal encoders
     initializeEncoders();
@@ -200,13 +182,13 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private void initializeEncoders() {
     if (usingExternal) {
       // external encoders
-      leftEncoder = getLeftMotor().getAlternateEncoder(Constants.encoderCountsPerRev);
-      rightEncoder = getRightMotor().getAlternateEncoder(Constants.encoderCountsPerRev);
+      leftEncoder = leftFrontMotor.getAlternateEncoder(Constants.encoderCountsPerRev);
+      rightEncoder = rightFrontMotor.getAlternateEncoder(Constants.encoderCountsPerRev);
 
     } else {
       // internal encoders
-      leftEncoder = getLeftMotor().getEncoder();
-      rightEncoder = getRightMotor().getEncoder();
+      leftEncoder = leftFrontMotor.getEncoder();
+      rightEncoder = rightFrontMotor.getEncoder();
       // no need to invert internal encoders, automatic
 
       // calculate circumference then convert to meters
@@ -235,11 +217,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
     sbLeftPosition.setDouble(leftEncoder.getPosition()); // in meters
     sbRightPosition.setDouble(rightEncoder.getPosition());
     // }
-
-    // Update the smart dashboard here
-    // updates pid values of leaders, followers not needed
-    motorControllers[Constants.driveLeftFrontIndex].updateSmartDashboard();
-    motorControllers[Constants.driveRightFrontIndex].updateSmartDashboard();
   }
 
   public void arcadeDrive(double speed, double rotation) {
@@ -249,16 +226,16 @@ public class DriveBaseSubsystem extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     differentialDrivetrainSim.setInputs(
-        -motorControllers[Constants.driveLeftFrontIndex].get() * RobotController.getInputVoltage(),
-        -motorControllers[Constants.driveRightFrontIndex].get()
+        -leftFrontMotor.get() * RobotController.getInputVoltage(),
+        -rightFrontMotor.get()
             * RobotController.getInputVoltage());
 
     gyroSim.setAngle(-differentialDrivetrainSim.getHeading().getDegrees());
 
     differentialDrivetrainSim.update(0.01);
 
-    SmartDashboard.putNumber("LMotor", motorControllers[Constants.driveLeftFrontIndex].get());
-    SmartDashboard.putNumber("RMotor", motorControllers[Constants.driveRightFrontIndex].get());
+    SmartDashboard.putNumber("LMotor", leftFrontMotor.get());
+    SmartDashboard.putNumber("RMotor", rightFrontMotor.get());
 
     leftEncoderSim.setDistance(differentialDrivetrainSim.getLeftPositionMeters());
     leftEncoderSim.setRate(differentialDrivetrainSim.getLeftVelocityMetersPerSecond());
@@ -275,14 +252,6 @@ public class DriveBaseSubsystem extends SubsystemBase {
   public void stopDriveMotors() {
     // sets a velocity of 0 to each motor
     setSpeeds(0.0, 0.0);
-  }
-
-  private CANSparkMax getRightMotor() {
-    return motorControllers[Constants.driveRightFrontIndex];
-  }
-
-  private CANSparkMax getLeftMotor() {
-    return motorControllers[Constants.driveLeftFrontIndex];
   }
 
   private void resetEncoders() {
@@ -302,8 +271,8 @@ public class DriveBaseSubsystem extends SubsystemBase {
   }
 
   public void setSpeeds(double left, double right) {
-    getLeftMotor().set(left);
-    getRightMotor().set(right);
+    leftFrontMotor.set(left);
+    rightRearMotor.set(right);
   }
 
   // for trajectory (ramseteCommand)
@@ -333,10 +302,10 @@ public class DriveBaseSubsystem extends SubsystemBase {
     sbLeftBiconsumerSpeed.setDouble(leftSpeed);
     sbRightBiconsumerSpeed.setDouble(rightSpeed);
 
-    getLeftMotor()
+    leftFrontMotor
         .getPIDController()
         .setReference(leftSpeed, CANSparkMax.ControlType.kVelocity, 0, Constants.arbFeedForward);
-    getRightMotor()
+    rightFrontMotor
         .getPIDController()
         .setReference(rightSpeed, CANSparkMax.ControlType.kVelocity, 0, Constants.arbFeedForward);
 

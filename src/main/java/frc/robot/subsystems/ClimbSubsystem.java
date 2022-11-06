@@ -5,10 +5,10 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -17,14 +17,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.common.hardware.MotorController;
+import frc.robot.common.hardware.MotorController.MotorConfig;
 
 public class ClimbSubsystem extends SubsystemBase {
 
   // 1 = Right Side, 2 = Left Side
-  private MotorController armOne;
-  private MotorController armTwo;
-  private MotorController poleOne;
-  private MotorController poleTwo;
+  private CANSparkMax armOneMotor;
+  private CANSparkMax armTwoMotor;
+  private CANSparkMax poleOneMotor;
+  private CANSparkMax poleTwoMotor;
+
+  private SparkMaxPIDController armOnePIDController;
+  private SparkMaxPIDController armTwoPIDController;
+  private SparkMaxPIDController poleOnePIDController;
+  private SparkMaxPIDController poleTwoPIDController;
+
+
   private Servo servoOne;
   private Servo servoTwo;
 
@@ -144,53 +152,44 @@ public class ClimbSubsystem extends SubsystemBase {
     servo2 = hookServos.add("Servo 2", 1).withSize(2, 2).withPosition(2, 0).getEntry();
 
     // Arm 1 MotorController
-    armOne = new MotorController("Arm1 Motor", Constants.armMotorOne, Constants.armPosPID);
-    armOne.setSmartCurrentLimit(10);
-    armOne.getEncoder().setPosition(0);
-    armOne.setIdleMode(IdleMode.kBrake);
+    armOneMotor = MotorController.constructMotor(MotorConfig.climbArmOne);
+    armOnePIDController = MotorController.constructPIDController(armOneMotor, Constants.armPosPID);
+    armOneMotor.getEncoder().setPosition(0);
+    armOneMotor.setIdleMode(IdleMode.kBrake);
 
     // Arm 2 MotorController
-    armTwo = new MotorController("Arm2 Motor", Constants.armMotorTwo, Constants.armPosPID);
-    armTwo.setSmartCurrentLimit(10);
-    armTwo.getEncoder().setPosition(0);
-    armTwo.setIdleMode(IdleMode.kBrake);
-    armTwo.setInverted(true);
+    armTwoMotor = MotorController.constructMotor(MotorConfig.climbArmTwo);
+    armTwoPIDController = MotorController.constructPIDController(armTwoMotor, Constants.armPosPID);
+    armTwoMotor.getEncoder().setPosition(0);
+    armTwoMotor.setIdleMode(IdleMode.kBrake);
+
     // Pole 1 MotorController
-    poleOne = new MotorController("Pole1 Motor", Constants.poleMotorOne, Constants.polePosPID);
-    poleOne.setSmartCurrentLimit(10);
-    poleOne.getEncoder().setPosition(0);
-    poleOne.setIdleMode(IdleMode.kBrake);
+    poleOneMotor = MotorController.constructMotor(MotorConfig.climbPoleOne);
+    poleOnePIDController = MotorController.constructPIDController(poleOneMotor, Constants.polePosPID);
+    poleOneMotor.getEncoder().setPosition(0);
+    poleOneMotor.setIdleMode(IdleMode.kBrake);
 
     // Pole 2 MotorController
-    poleTwo = new MotorController("Pole2 Motor", Constants.poleMotorTwo, Constants.polePosPID);
-    poleTwo.setSmartCurrentLimit(10);
-    poleTwo.getEncoder().setPosition(0);
-    poleTwo.setIdleMode(IdleMode.kBrake);
-    poleTwo.setInverted(true);
+    poleTwoMotor = MotorController.constructMotor(MotorConfig.climbPoleTwo);
+    poleTwoPIDController = MotorController.constructPIDController(poleTwoMotor, Constants.polePosPID);
+    poleTwoMotor.getEncoder().setPosition(0);
+    poleTwoMotor.setIdleMode(IdleMode.kBrake);
 
     // set the max output on each pid controller
     // range is plus minus the max output
-    armOne.getPIDCtrl().setOutputRange(-Constants.climbMaxOutput, Constants.climbMaxOutput);
-    armTwo.getPIDCtrl().setOutputRange(-Constants.climbMaxOutput, Constants.climbMaxOutput);
-    poleOne.getPIDCtrl().setOutputRange(-Constants.climbMaxOutput, Constants.climbMaxOutput);
-    poleTwo.getPIDCtrl().setOutputRange(-Constants.climbMaxOutput, Constants.climbMaxOutput);
+    armOnePIDController.setOutputRange(-Constants.climbMaxOutput, Constants.climbMaxOutput);
+    armTwoPIDController.setOutputRange(-Constants.climbMaxOutput, Constants.climbMaxOutput);
+    poleOnePIDController.setOutputRange(-Constants.climbMaxOutput, Constants.climbMaxOutput);
+    poleTwoPIDController.setOutputRange(-Constants.climbMaxOutput, Constants.climbMaxOutput);
 
     // set pid values
-    armOne.getPIDCtrl().setP(Constants.armVelocityPID[0], Constants.armVelPIDSlot);
-    armOne.getPIDCtrl().setI(Constants.armVelocityPID[1], Constants.armVelPIDSlot);
-    armOne.getPIDCtrl().setD(Constants.armVelocityPID[2], Constants.armVelPIDSlot);
+    armOnePIDController.setP(Constants.armVelocityPID[0], Constants.armVelPIDSlot);
+    armOnePIDController.setI(Constants.armVelocityPID[1], Constants.armVelPIDSlot);
+    armOnePIDController.setD(Constants.armVelocityPID[2], Constants.armVelPIDSlot);
 
-    armTwo.getPIDCtrl().setP(Constants.armVelocityPID[0], Constants.armVelPIDSlot);
-    armTwo.getPIDCtrl().setI(Constants.armVelocityPID[1], Constants.armVelPIDSlot);
-    armTwo.getPIDCtrl().setD(Constants.armVelocityPID[2], Constants.armVelPIDSlot);
-
-    armOne.getPIDCtrl().setP(Constants.armPosPID[0], Constants.armPosPIDSlot);
-    armOne.getPIDCtrl().setI(Constants.armPosPID[1], Constants.armPosPIDSlot);
-    armOne.getPIDCtrl().setD(Constants.armPosPID[2], Constants.armPosPIDSlot);
-
-    armTwo.getPIDCtrl().setP(Constants.armPosPID[0], Constants.armPosPIDSlot);
-    armTwo.getPIDCtrl().setI(Constants.armPosPID[1], Constants.armPosPIDSlot);
-    armTwo.getPIDCtrl().setD(Constants.armPosPID[2], Constants.armPosPIDSlot);
+    armTwoPIDController.setP(Constants.armVelocityPID[0], Constants.armVelPIDSlot);
+    armTwoPIDController.setI(Constants.armVelocityPID[1], Constants.armVelPIDSlot);
+    armTwoPIDController.setD(Constants.armVelocityPID[2], Constants.armVelPIDSlot);
 
     resetClimbHeights();
 
@@ -202,39 +201,39 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void resetClimbHeights() {
-    armHeightOne = armOne.getEncoder().getPosition();
-    armHeightTwo = armTwo.getEncoder().getPosition();
+    armHeightOne = armOneMotor.getEncoder().getPosition();
+    armHeightTwo = armTwoMotor.getEncoder().getPosition();
 
-    poleHeightOne = poleOne.getEncoder().getPosition();
-    poleHeightTwo = poleTwo.getEncoder().getPosition();
+    poleHeightOne = poleOneMotor.getEncoder().getPosition();
+    poleHeightTwo = poleTwoMotor.getEncoder().getPosition();
   }
 
   public void climbKeepDownFunction() {
-    armOne.getPIDCtrl().setReference(armHeightOne, CANSparkMax.ControlType.kPosition);
-    armOne.getPIDCtrl().setIMaxAccum(Constants.armSetIMaxAccum, 0);
+    armOnePIDController.setReference(armHeightOne, CANSparkMax.ControlType.kPosition);
+    armOnePIDController.setIMaxAccum(Constants.armSetIMaxAccum, 0);
 
-    armTwo.getPIDCtrl().setReference(armHeightTwo, CANSparkMax.ControlType.kPosition);
-    armTwo.getPIDCtrl().setIMaxAccum(Constants.armSetIMaxAccum, 0);
+    armTwoPIDController.setReference(armHeightTwo, CANSparkMax.ControlType.kPosition);
+    armTwoPIDController.setIMaxAccum(Constants.armSetIMaxAccum, 0);
 
-    poleOne.getPIDCtrl().setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
-    poleOne.getPIDCtrl().setIMaxAccum(Constants.poleSetIMaxAccum, 0);
+    poleOnePIDController.setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
+    poleOnePIDController.setIMaxAccum(Constants.poleSetIMaxAccum, 0);
 
-    poleTwo.getPIDCtrl().setReference(poleHeightTwo, CANSparkMax.ControlType.kPosition);
-    poleTwo.getPIDCtrl().setIMaxAccum(Constants.poleSetIMaxAccum, 0);
+    poleTwoPIDController.setReference(poleHeightTwo, CANSparkMax.ControlType.kPosition);
+    poleTwoPIDController.setIMaxAccum(Constants.poleSetIMaxAccum, 0);
   }
 
   public void toggleEnabled() {
     climbEnabled = !climbEnabled;
     if (climbEnabled) {
-      armOne.setSmartCurrentLimit(Constants.climbArmHighCurrent);
-      armTwo.setSmartCurrentLimit(Constants.climbArmHighCurrent);
-      poleOne.setSmartCurrentLimit(Constants.climbPoleHighCurrent);
-      poleTwo.setSmartCurrentLimit(Constants.climbPoleHighCurrent);
+      armOneMotor.setSmartCurrentLimit(Constants.climbArmHighCurrent);
+      armTwoMotor.setSmartCurrentLimit(Constants.climbArmHighCurrent);
+      poleOneMotor.setSmartCurrentLimit(Constants.climbPoleHighCurrent);
+      poleTwoMotor.setSmartCurrentLimit(Constants.climbPoleHighCurrent);
     } else {
-      armOne.setSmartCurrentLimit(Constants.climbArmLowCurrent);
-      armTwo.setSmartCurrentLimit(Constants.climbArmLowCurrent);
-      poleOne.setSmartCurrentLimit(Constants.climbPoleLowCurrent);
-      poleTwo.setSmartCurrentLimit(Constants.climbPoleLowCurrent);
+      armOneMotor.setSmartCurrentLimit(Constants.climbArmLowCurrent);
+      armTwoMotor.setSmartCurrentLimit(Constants.climbArmLowCurrent);
+      poleOneMotor.setSmartCurrentLimit(Constants.climbPoleLowCurrent);
+      poleTwoMotor.setSmartCurrentLimit(Constants.climbPoleLowCurrent);
     }
   }
 
@@ -257,8 +256,8 @@ public class ClimbSubsystem extends SubsystemBase {
           }
         }
       }
-      armOne.getPIDCtrl().setReference(armHeightOne, CANSparkMax.ControlType.kPosition);
-      armTwo.getPIDCtrl().setReference(armHeightTwo, CANSparkMax.ControlType.kPosition);
+      armOnePIDController.setReference(armHeightOne, CANSparkMax.ControlType.kPosition);
+      armTwoPIDController.setReference(armHeightTwo, CANSparkMax.ControlType.kPosition);
     }
 
   public void highArms(double axisValue) {
@@ -280,56 +279,48 @@ public class ClimbSubsystem extends SubsystemBase {
           poleHeightTwo = poleHeightTwo + (axisValue * Constants.poleOutSpeed);
         }
       }
-    poleOne.getPIDCtrl().setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
-    poleTwo.getPIDCtrl().setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
+    poleOnePIDController.setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
+    poleTwoPIDController.setReference(poleHeightOne, CANSparkMax.ControlType.kPosition);
   }
 
   // called at the start of auton
   public void retractPoles() {
-    poleOne.getPIDCtrl().setReference(Constants.poleHeightMax, CANSparkMax.ControlType.kPosition);
-    poleTwo.getPIDCtrl().setReference(Constants.poleHeightMax, CANSparkMax.ControlType.kPosition);
+    poleOnePIDController.setReference(Constants.poleHeightMax, CANSparkMax.ControlType.kPosition);
+    poleTwoPIDController.setReference(Constants.poleHeightMax, CANSparkMax.ControlType.kPosition);
   }
 
   // functions for ClimbSequence1
   public void deployArms() {
     if (armEncoderHeightOne > Constants.armHeightFeather1
         || armEncoderHeightTwo > Constants.armHeightFeather1) {
-      armOne
-          .getPIDCtrl()
+      armOnePIDController
           .setReference(
               Constants.armFeatherRPM1, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
-      armTwo
-          .getPIDCtrl()
+      armTwoPIDController
           .setReference(
               Constants.armFeatherRPM1, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
     } else if (armEncoderHeightOne > Constants.armHeightFeather2
         || armEncoderHeightTwo > Constants.armHeightFeather2) {
-      armOne
-          .getPIDCtrl()
+      armOnePIDController
           .setReference(
               Constants.armFeatherRPM2, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
-      armTwo
-          .getPIDCtrl()
+      armTwoPIDController
           .setReference(
               Constants.armFeatherRPM2, CANSparkMax.ControlType.kVelocity, Constants.armVelPIDSlot);
     } else {
-      armOne
-          .getPIDCtrl()
+      armOnePIDController
           .setReference(
               Constants.armHeightMin, CANSparkMax.ControlType.kPosition, Constants.armPosPIDSlot);
-      armTwo
-          .getPIDCtrl()
+      armTwoPIDController
           .setReference(
               Constants.armHeightMin, CANSparkMax.ControlType.kPosition, Constants.armPosPIDSlot);
     }
   }
 
   public void deployPoles() {
-    poleOne
-        .getPIDCtrl()
+    poleOnePIDController
         .setReference(Constants.poleHeightDeploy, CANSparkMax.ControlType.kPosition);
-    poleTwo
-        .getPIDCtrl()
+    poleTwoPIDController
         .setReference(Constants.poleHeightDeploy, CANSparkMax.ControlType.kPosition);
   }
 
@@ -370,23 +361,18 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     BClimbEnabled.setBoolean(climbEnabled);
-    DClimbHeight1.setNumber(armOne.getEncoder().getPosition());
-    DClimbHeight2.setNumber(armTwo.getEncoder().getPosition());
-    DClimbHeight3.setNumber(poleOne.getEncoder().getPosition());
-    DClimbHeight4.setNumber(poleTwo.getEncoder().getPosition());
+    DClimbHeight1.setNumber(armOneMotor.getEncoder().getPosition());
+    DClimbHeight2.setNumber(armTwoMotor.getEncoder().getPosition());
+    DClimbHeight3.setNumber(poleOneMotor.getEncoder().getPosition());
+    DClimbHeight4.setNumber(poleTwoMotor.getEncoder().getPosition());
 
-    armEncoderHeightOne = armOne.getEncoder().getPosition();
-    armEncoderHeightTwo = armTwo.getEncoder().getPosition();
-    poleEncoderHeightOne = poleOne.getEncoder().getPosition();
-    poleEncoderHeightTwo = poleTwo.getEncoder().getPosition();
+    armEncoderHeightOne = armOneMotor.getEncoder().getPosition();
+    armEncoderHeightTwo = armTwoMotor.getEncoder().getPosition();
+    poleEncoderHeightOne = poleOneMotor.getEncoder().getPosition();
+    poleEncoderHeightTwo = poleTwoMotor.getEncoder().getPosition();
 
-    SmartDashboard.putNumber("arm vel", armOne.getEncoder().getVelocity());
-    SmartDashboard.putNumber("arm pos", armOne.getEncoder().getPosition());
-    SmartDashboard.putNumber("arm output", armOne.getAppliedOutput());
-
-    armOne.updateSmartDashboard();
-    armTwo.updateSmartDashboard();
-    poleOne.updateSmartDashboard();
-    poleTwo.updateSmartDashboard();
+    SmartDashboard.putNumber("arm vel", armOneMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("arm pos", armOneMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("arm output", armOneMotor.getAppliedOutput());
   }
 }

@@ -80,37 +80,21 @@ public final class Constants {
     }
   }
 
+  public static final class MotorDefaults{
+    //Constants to use as default values for Motor Controllers
+    public static final int kCurrentLimit = 40;
+    public static final double kOpenLoopRampRate = 0.2;
+  }
+
   // TODO: when true, shooter is over shooting
   public static final boolean DebugMode = false; // TODO: change to false for competition time
-
-  // motor controller constants
-  public static final int defaultCurrentLimit = 40;
-
-  // DRIVEBASE Constants
 
   // Constants for wheel motors
   public static final double wheelRadius = 2; // radius of wheel, use for calculating angular values
   // Rate at which the motors reach maximum speed; TODO: tune for optimal performance
-  public static final double openLoopRampRate = 0.2;
   public static final double gearRatio = 6.2; // 10.75 : 1 gear ratio <--- kitbot
   // 10.75 motor rotations : 1 wheel rotation
   public static final double inchesInMeter = 39.3701;
-
-  // Actual IDs on robot, used to activate the right motors
-
-  public static final int driveLeftFront = 13; // 13 on real robot, 1 on kitbot
-  public static final int driveLeftRear = 14; // 14 on real robot, 2 on kitbot
-  public static final int driveRightFront = 6; // 6 on real robot,  3 on kitbot
-  public static final int driveRightRear = 7; // 7 on real robot,  4 on kitbot
-
-  // This is used for organizational purposes (Note numbers 0-3 to distinguish between the 4 motors)
-  public static final int driveLeftFrontIndex = 0;
-  public static final int driveLeftRearIndex = 1;
-  public static final int driveRightFrontIndex = 2;
-  public static final int driveRightRearIndex = 3;
-
-  public static final int driveBaseCurrentLimit = 50;
-  public static final double driveBaseTurnRate = 0.85;
 
   // drive base pid values
   public static final double[] driveRightPID = {0.00045, 0.00000085, 0};
@@ -211,8 +195,6 @@ public final class Constants {
   public static final int encoderCountsPerRev = 8192;
 
   // Intake Constants
-  public static final int intakeMotorOneID = 1;
-  public static final int intakeDeployMotorID = 8;
   public static final double[] intakeDeployPID = {0.25, 0, 1};
   public static final double intakeDeployPos = 72;
   public static final double intakeRetractPos = 5;
@@ -228,9 +210,6 @@ public final class Constants {
   public static final boolean ballManagementEnabled =
       true; // TODO: turning it on messes with shooter on the test bot
 
-  public static final int CDSBeltID = 3;
-  public static final int CDSWheelControllerOneID = 2;
-  public static final int CDSWheelControllerTwoID = 9;
   public static final double CDSBeltSpeed = .75;
   public static final double CDSAutoBeltSpeed = .75;
   public static final double CDSWheelControllerSpeed = 0.80;
@@ -242,14 +221,7 @@ public final class Constants {
 
   public static final double reverseStopperWheelSpeed = -0.125;
  
-  //ShooterConstants
   public static final class Shooter {
-    // Motor IDs
-    public static final int shooterID = 10; // ID of the shooter
-    public static final int shooter2ID = 11; // ID of the second shooter motor
-    // public static final int hoodID = 0; // ID of the hood;
-    public static final int shooterCargoID = 4;
-
     // LL Placement
     public static final double highHeight =
         8.0 + 8.0 / 12.0; // Height of the high goal in ft from the carpet
@@ -267,9 +239,7 @@ public final class Constants {
 
     // PID settings
     // 2.5e-4, 2.5e-7, 2e-6, 1e-4
-    public static final double kPIDFArray[] = {1.4e-09, 3.0E-8, 0};
-    // public static final double kPIDFArray[] = {0.000003, 0.00000004, 0};
-    // public static final double kPIDFArray[] = {2.5e-8, 5.5e-8, 0}; 7e-9
+    public static final double kPIDArray[] = {1.4e-09, 3.0E-8, 0};
     public static final double kMaxIAccum = 0.9;
     public static final int kMaxISlot = 0;
     public static final double kMaxOutput = 1.0;
@@ -282,15 +252,6 @@ public final class Constants {
   }
 
   // Climb Constants
-
-  // mode
-
-  // climb motor ids
-  public static final int armMotorOne = 5;
-  public static final int armMotorTwo = 12;
-  public static final int poleMotorOne = 15;
-  public static final int poleMotorTwo = 16;
-
   public static final int armHeightMax = 132;
   public static final int armHeightMin = 0;
   public static final int armHeightFeather1 = -20;
@@ -304,8 +265,8 @@ public final class Constants {
   public static final double[] armPosPID = {0.125, 0, 0};
   public static final double[] armVelocityPID = {4e-5, 0, 0};
   public static final double[] polePosPID = {0.125, 0, 0};
-  public static final int armPosPIDSlot = 1;
-  public static final int armVelPIDSlot = 2;
+  public static final int armPosPIDSlot = 0;
+  public static final int armVelPIDSlot = 1;
 
   public static final double climbMaxOutput = 1.0;
   public static final int climbPoleLowCurrent = 15;

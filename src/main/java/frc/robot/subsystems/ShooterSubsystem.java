@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -18,19 +17,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.AimModes;
 import frc.robot.common.hardware.MotorController;
+import frc.robot.common.hardware.MotorController.MotorConfig;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-  private MotorController flywheelController;
-  private MotorController flywheel2Controller;
-  private SimpleMotorFeedforward flywheelFF;
-  private SparkMaxPIDController flywheelPID;
-  private PIDController flywheelWPID;
-  private RelativeEncoder flywheelEncoder;
-  private MotorController hoodController;
-  private SparkMaxPIDController hoodPID;
-  private RelativeEncoder hoodEncoder;
-  private MotorController stopperController;
+  private CANSparkMax shooterMotor;
+  private CANSparkMax shooterTwoMotor;
+  private SimpleMotorFeedforward shooterFF;
+  private SparkMaxPIDController shooterPIDController;
+  private RelativeEncoder shooterEncoder;
+  private CANSparkMax stopperWheelMotor;
 
   private AimModes aimMode;
   private double targetRPM;
@@ -67,32 +63,19 @@ public class ShooterSubsystem extends SubsystemBase {
     smoothRPM = 0;
     aimMode = AimModes.TEST;
     // Initializes the SparkMAX for the flywheel motors
-    flywheelController =
-        new MotorController("Flywheel", Constants.Shooter.shooterID, Constants.Shooter.kPIDFArray);
-    flywheel2Controller = new MotorController("Flywheel 2", Constants.Shooter.shooter2ID);
-    flywheelFF =
+    shooterMotor = MotorController.constructMotor(MotorConfig.shooterOne);
+    shooterMotor = MotorController.constructMotor(MotorConfig.shooterTwo);
+    shooterPIDController = MotorController.constructPIDController(shooterMotor, Constants.Shooter.kPIDArray);
+    shooterPIDController.setIMaxAccum(Constants.Shooter.kMaxIAccum, Constants.Shooter.kMaxISlot);
+    shooterPIDController.setOutputRange(Constants.Shooter.kMinOutput, Constants.Shooter.kMaxOutput);
+    shooterFF =
         new SimpleMotorFeedforward(
             Constants.Shooter.kSg, Constants.Shooter.kVg, Constants.Shooter.kAg);
-    flywheelPID = flywheelController.getPIDCtrl();
-    flywheelEncoder = flywheelController.getEncoder();
-    flywheelController.enableVoltageCompensation(11);
-    flywheel2Controller.enableVoltageCompensation(11);
-    flywheel2Controller.follow(flywheelController, true);
-
-    // Initializes the SparkMAX for the hood TODO: Set this up when possible
-    /*hoodController = new  MotorController("Hood", Constants.hoodID);
-    hoodPID = hoodController.getPID();
-    hoodEncoder = hoodController.getEncoder();*/
-    // Initializes the SparkMAX for the cargo stopper
-    stopperController = new MotorController("Shooter Cargo", Constants.Shooter.shooterCargoID);
-    // Initializes PID for the hood TODO: Set this up when possible
-    /*hoodPID.setP(0.0);
-    hoodPID.setI(0.0);
-    hoodPID.setD(0.0);
-    hoodPID.setOutputRange(0, 1);*/
-    // Initializes Additional PID for the shooter
-    flywheelPID.setIMaxAccum(Constants.Shooter.kMaxIAccum, Constants.Shooter.kMaxISlot);
-    flywheelPID.setOutputRange(Constants.Shooter.kMinOutput, Constants.Shooter.kMaxOutput);
+    shooterEncoder = shooterMotor.getEncoder();
+    shooterMotor.enableVoltageCompensation(11);
+    shooterTwoMotor.enableVoltageCompensation(11);
+    shooterTwoMotor.follow(shooterMotor, true);
+    stopperWheelMotor = MotorController.constructMotor(MotorConfig.stopperWheel);
 
     // flywheelPID.setFF(Constants.Shooter.kF);
 
@@ -106,16 +89,16 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private void instantiateDebugTab() {
     shooterTab = Shuffleboard.getTab("Shooter Tab");
-    PID_P = shooterTab.add("PID P", Constants.Shooter.kPIDFArray[0]).withPosition(0, 1).getEntry();
-    PID_I = shooterTab.add("PID I", Constants.Shooter.kPIDFArray[1]).withPosition(0, 2).getEntry();
-    PID_D = shooterTab.add("PID D", Constants.Shooter.kPIDFArray[2]).withPosition(0, 3).getEntry();
+    PID_P = shooterTab.add("PID P", Constants.Shooter.kPIDArray[0]).withPosition(0, 1).getEntry();
+    PID_I = shooterTab.add("PID I", Constants.Shooter.kPIDArray[1]).withPosition(0, 2).getEntry();
+    PID_D = shooterTab.add("PID D", Constants.Shooter.kPIDArray[2]).withPosition(0, 3).getEntry();
   }
 
   public void updatePID() {
     if (Constants.DebugMode) {
-      flywheelPID.setP(PID_P.getDouble(0));
-      flywheelPID.setI(PID_I.getDouble(0));
-      flywheelPID.setD(PID_D.getDouble(0));
+      shooterPIDController.setP(PID_P.getDouble(0));
+      shooterPIDController.setI(PID_I.getDouble(0));
+      shooterPIDController.setD(PID_D.getDouble(0));
     }
   }
 
@@ -140,21 +123,21 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // Winds Flywheel using PID control to passed rpm
     if (rpm == 0) {
-      flywheelPID.setReference(0, CANSparkMax.ControlType.kVoltage);
+      shooterPIDController.setReference(0, CANSparkMax.ControlType.kVoltage);
     } else {
       DTRPM.setDouble(rpm);
       targetRPM = rpm;
-      flywheelPID.setReference(
+      shooterPIDController.setReference(
           rpm,
           CANSparkMax.ControlType.kVelocity,
           Constants.Shooter.kMaxISlot,
-          flywheelFF.calculate(rpm / 60.0));
+          shooterFF.calculate(rpm / 60.0));
     }
   }
 
   public void resetIAccum() {
-    if (flywheelEncoder.getVelocity() < 500) {
-      flywheelPID.setIAccum(0);
+    if (shooterEncoder.getVelocity() < 500) {
+      shooterPIDController.setIAccum(0);
     }
   }
 
@@ -163,7 +146,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void runCargo(double speed) {
-    stopperController.set(speed);
+    stopperWheelMotor.set(speed);
   }
 
   public boolean wheelReady(int low, int high) {
@@ -235,16 +218,16 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    currentRPM = flywheelEncoder.getVelocity();
+    currentRPM = shooterEncoder.getVelocity();
     smoothRPM = Constants.Shooter.kA * currentRPM + smoothRPM * (1 - Constants.Shooter.kA);
 
     DSmoothRPM.setDouble(smoothRPM);
     DRPM.setDouble(currentRPM);
 
     if (Constants.DebugMode) {
-      if ((flywheelPID.getP() != PID_P.getDouble(0))
-          || (flywheelPID.getI() != PID_I.getDouble(0))
-          || (flywheelPID.getD() != PID_D.getDouble(0))) {
+      if ((shooterPIDController.getP() != PID_P.getDouble(0))
+          || (shooterPIDController.getI() != PID_I.getDouble(0))
+          || (shooterPIDController.getD() != PID_D.getDouble(0))) {
         updatePID();
       }
     }

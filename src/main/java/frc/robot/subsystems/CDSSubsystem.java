@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -20,6 +21,7 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.common.hardware.ColorSensorMuxed;
 import frc.robot.common.hardware.ColorSensorMuxed.MeasurementRate;
+import frc.robot.common.hardware.MotorController.MotorConfig;
 import frc.robot.common.hardware.MotorController;
 
 public class CDSSubsystem extends SubsystemBase {
@@ -31,9 +33,10 @@ public class CDSSubsystem extends SubsystemBase {
 
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private MotorController CDSBeltController;
-  private MotorController CDSWheelControllerOne;
-  private MotorController CDSWheelControllerTwo;
+  private CANSparkMax CDSBeltMotor;
+  private CANSparkMax singulatorOneMotor;
+  private CANSparkMax singulatorTwoMotor;
+
   private String allianceColor;
   private ColorSensorMuxed colorSensors;
   private ManagementState state;
@@ -85,19 +88,14 @@ public class CDSSubsystem extends SubsystemBase {
           .getEntry();
 
   public CDSSubsystem() {
-    // BManualCDS.setBoolean(Constants.); TODO: setup when manual cds toggle is merged
-    CDSBeltController = new MotorController("CDS Motor", Constants.CDSBeltID);
-    CDSBeltController.setInverted(true);
-    CDSWheelControllerOne =
-        new MotorController("Wheel Motor Controller 1", Constants.CDSWheelControllerOneID);
-    CDSWheelControllerTwo =
-        new MotorController("Wheel Motor Controller 2", Constants.CDSWheelControllerTwoID);
+    CDSBeltMotor = MotorController.constructMotor(MotorConfig.CDSBelt);
+    singulatorOneMotor = MotorController.constructMotor(MotorConfig.singulatorOne);
+    singulatorTwoMotor = MotorController.constructMotor(MotorConfig.singulatorTwo);
 
-    CDSWheelControllerOne.setInverted(true);
-    CDSWheelControllerTwo.follow(CDSWheelControllerOne, true);
+    singulatorTwoMotor.follow(singulatorOneMotor, true);
 
-    CDSBeltController.setIdleMode(IdleMode.kBrake);
-    CDSWheelControllerOne.setIdleMode(IdleMode.kCoast);
+    CDSBeltMotor.setIdleMode(IdleMode.kBrake);
+    singulatorOneMotor.setIdleMode(IdleMode.kCoast);
 
     colorSensors = new ColorSensorMuxed(1, 2, 0); // front to back color sensor ports on new robotn
     colorSensors.configureMeasurementRates(MeasurementRate.kRate40Hz);
@@ -116,27 +114,27 @@ public class CDSSubsystem extends SubsystemBase {
 
   public void CDSToggleAll(boolean reverse) {
     if (reverse) {
-      CDSWheelControllerOne.set(-Constants.CDSWheelControllerSpeed);
+      singulatorOneMotor.set(-Constants.CDSWheelControllerSpeed);
       DCDSSpeed.setDouble(-1);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Wheel Direction", "Reverse");
         SmartDashboard.putNumber("CDS Wheel Speed 2", -Constants.CDSWheelControllerSpeed);
       }
 
-      CDSBeltController.set(-Constants.CDSBeltSpeed);
+      CDSBeltMotor.set(-Constants.CDSBeltSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Belt Direction 3", "Reverse");
         SmartDashboard.putNumber("CDS Belt Speed 2", -Constants.CDSBeltSpeed);
       }
     } else {
       DCDSSpeed.setDouble(1);
-      CDSWheelControllerOne.set(Constants.CDSWheelControllerSpeed);
+      singulatorOneMotor.set(Constants.CDSWheelControllerSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Wheel Direction", "Forward");
         SmartDashboard.putNumber("CDS Wheel Speed 3", Constants.CDSWheelControllerSpeed);
       }
 
-      CDSBeltController.set(Constants.CDSBeltSpeed);
+      CDSBeltMotor.set(Constants.CDSBeltSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Belt Direction 4", "Forward");
         SmartDashboard.putNumber("CDS Belt Speed 3", Constants.CDSBeltSpeed);
@@ -146,10 +144,10 @@ public class CDSSubsystem extends SubsystemBase {
 
   public void CDSWheelToggle(boolean reverse) {
     if (reverse) {
-      CDSWheelControllerOne.set(-Constants.CDSWheelControllerSpeed);
+      singulatorOneMotor.set(-Constants.CDSWheelControllerSpeed);
       SmartDashboard.putString("CDS Wheel Direction", "Reverse");
     } else {
-      CDSWheelControllerOne.set(Constants.CDSWheelControllerSpeed);
+      singulatorOneMotor.set(Constants.CDSWheelControllerSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Wheel Direction", "Forward");
         SmartDashboard.putNumber("CDS Wheel Speed 4", Constants.CDSWheelControllerSpeed);
@@ -160,14 +158,14 @@ public class CDSSubsystem extends SubsystemBase {
   public void CDSBeltToggle(boolean reverse, double beltSpeed) {
     DCDSSpeed.setDouble(-1);
     if (reverse) {
-      CDSBeltController.set(-beltSpeed);
+      CDSBeltMotor.set(-beltSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Belt Direction 5", "Reverse");
         SmartDashboard.putNumber("CDS Belt Speed 4", -beltSpeed);
       }
     } else {
       DCDSSpeed.setDouble(1);
-      CDSBeltController.set(beltSpeed);
+      CDSBeltMotor.set(beltSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Belt Direction 6", "Forward");
         SmartDashboard.putNumber("CDS Belt Speed 5", beltSpeed);
@@ -176,18 +174,18 @@ public class CDSSubsystem extends SubsystemBase {
   }
 
   public double getBeltSpeed() {
-    return CDSBeltController.getSpeed();
+    return CDSBeltMotor.get();
   }
 
   public double getWheelSpeed() {
-    return CDSWheelControllerOne.getSpeed();
+    return singulatorOneMotor.get();
   }
 
   public void stopCDS() {
     DCDSSpeed.setDouble(0);
     // stops all motors in the CDS
-    CDSWheelControllerOne.set(0.0);
-    CDSBeltController.set(0.0);
+    singulatorOneMotor.set(0.0);
+    CDSBeltMotor.set(0.0);
     if (Constants.DebugMode) {
       SmartDashboard.putNumber("CDS Wheel Speed 5", 0.0);
       SmartDashboard.putNumber("CDS Belt Speed 6", 0.0);
@@ -196,7 +194,7 @@ public class CDSSubsystem extends SubsystemBase {
 
   public void stopCDSWheel() {
     // Stops only the centering wheels
-    CDSWheelControllerOne.set(0.0);
+    singulatorOneMotor.set(0.0);
     if (Constants.DebugMode) {
       SmartDashboard.putNumber("CDS Wheel Speed 6", 0.0);
     }
@@ -204,7 +202,7 @@ public class CDSSubsystem extends SubsystemBase {
 
   public void stopCDSBelt() {
     // Stops only the belt
-    CDSBeltController.set(0.0);
+    CDSBeltMotor.set(0.0);
     if (Constants.DebugMode) {
       SmartDashboard.putNumber("CDS Belt Speed", 0.0);
     }
