@@ -5,14 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Auton;
 import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
@@ -25,14 +22,12 @@ import frc.robot.commands.HookLock;
 import frc.robot.commands.HookUnlock;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
-import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShooterHeld;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 // This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -53,7 +48,6 @@ public class RobotContainer {
   private static CDSSubsystem cdsSubsystem;
   private static IntakeSubsystem intakeSubsystem;
   private static ShooterSubsystem shooterSubsystem;
-  private static LimelightSubsystem limelightSubsystem;
 
   // commands
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
@@ -62,10 +56,9 @@ public class RobotContainer {
   private CDSBallManagementCommand ballManagementCommand;
   private CombinedIntakeCDSForwardCommand combinedIntakeCDS;
 
-  private ShooterHeld shooterHeldLow, shooterHeldAuto;
+  private ShooterHeld shooterHeld;
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
-  private LimelightAlign limelightAlign;
   // ----------climb---------
   private InstantCommand climbEnable;
   private ClimbSequence1 climbSequence1;
@@ -115,8 +108,6 @@ public class RobotContainer {
 
     shooterSubsystem = new ShooterSubsystem();
 
-    limelightSubsystem = new LimelightSubsystem();
-
     climbSubsystem = new ClimbSubsystem();
   }
 
@@ -147,15 +138,7 @@ public class RobotContainer {
     }
 
     if (shooterSubsystem != null && cdsSubsystem != null) {
-      shooterHeldAuto =
-          new ShooterHeld(
-              shooterSubsystem, limelightSubsystem, cdsSubsystem, (limelightSubsystem != null));
-      shooterHeldLow =
-          new ShooterHeld(
-              shooterSubsystem, limelightSubsystem, cdsSubsystem, (limelightSubsystem != null));
-    }
-    if (limelightSubsystem != null && driveBaseSubsystem != null) {
-      limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
+      shooterHeld = new ShooterHeld(shooterSubsystem, cdsSubsystem);
     }
 
     if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
@@ -187,13 +170,8 @@ public class RobotContainer {
       OI.Driver.getIntakeButton().whileHeld(combinedIntakeCDS);
     }
 
-    if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
-      OI.Driver.getShootButton().whileHeld(
-          shooterHeldLow.beforeStarting(
-              () -> {
-                shooterSubsystem.setAimMode(Constants.AimModes.LOW);
-              },
-              shooterSubsystem));
+    if (shooterSubsystem != null && shooterHeld != null && shooterHeld != null) {
+      OI.Driver.getShootButton().whileHeld(shooterHeld);
     }
 
     if (climbSubsystem != null) {
@@ -248,7 +226,6 @@ public class RobotContainer {
             mode,
             driveBaseSubsystem,
             shooterSubsystem,
-            limelightSubsystem,
             cdsSubsystem,
             intakeSubsystem,
             climbSubsystem);
@@ -278,6 +255,5 @@ public class RobotContainer {
     SmartDashboard.putData(cdsSubsystem);
     SmartDashboard.putData(intakeSubsystem);
     SmartDashboard.putData(shooterSubsystem);
-    SmartDashboard.putData(limelightSubsystem);
   }
 }

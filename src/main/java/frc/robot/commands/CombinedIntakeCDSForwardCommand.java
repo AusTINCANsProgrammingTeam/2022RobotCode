@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.CDSSubsystem.ManagementState;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -51,7 +52,7 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
       CDSSubsystem.CDSBeltToggle(false, Constants.CDSBeltSpeed);
       CDSSubsystem.CDSWheelToggle(false);
       intakeSubsystem.toggleIntake(false);
-      shooterSubsystem.runCargo(Constants.Shooter.cargoReverse);
+      shooterSubsystem.runCargo(ShooterConstants.cargoReverse);
       intakeSubsystem.deployIntake();
 
     } else {

@@ -16,70 +16,6 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
 
-  public enum AimModes {
-    AUTO,
-    // TODO: Plug real values in for these aimModes
-    LOW(1500.0, 0.0) {
-      @Override
-      public AimModes previous() {
-        return values()[values().length - 1];
-      }
-    },
-    EJECT(1500.0, 0.0),
-    LAUNCH(0.0, 0.0),
-    TARMAC(1400.0, 0.0),
-    ATARMAC(1400.0, 0.0),
-    TEST {
-      @Override
-      public AimModes next() {
-        return values()[0];
-      }
-    };
-
-    private final double RPM;
-    private final double angle;
-    private final double distance;
-
-    AimModes() {
-      // Used for auto mode ONLY
-      this.RPM = 0.0;
-      this.angle = 0.0;
-      this.distance = 0.0;
-    }
-
-    AimModes(double rpm, double a) {
-      this.RPM = rpm;
-      this.angle = a;
-      this.distance = 0.0;
-    }
-
-    AimModes(double dist) {
-      this.RPM = 0.0;
-      this.angle = 0.0;
-      this.distance = dist;
-    }
-
-    public final double getRPM() {
-      return RPM;
-    }
-
-    public final double getAngle() {
-      return angle;
-    }
-
-    public final double getDistance() {
-      return distance;
-    }
-
-    public AimModes next() {
-      return values()[ordinal() + 1];
-    }
-
-    public AimModes previous() {
-      return values()[ordinal() - 1];
-    }
-  }
-
   public static final class MotorDefaults{
     //Constants to use as default values for Motor Controllers
     public static final int kCurrentLimit = 40;
@@ -221,7 +157,7 @@ public final class Constants {
 
   public static final double reverseStopperWheelSpeed = -0.125;
  
-  public static final class Shooter {
+  public static final class ShooterConstants {
     // LL Placement
     public static final double highHeight =
         8.0 + 8.0 / 12.0; // Height of the high goal in ft from the carpet
@@ -237,8 +173,9 @@ public final class Constants {
     public static final double cargoForward = 1.0;
     public static final double cargoReverse = -0.4;
 
+    public static final double fenderRPM = 1400;
+
     // PID settings
-    // 2.5e-4, 2.5e-7, 2e-6, 1e-4
     public static final double kPIDArray[] = {1.4e-09, 3.0E-8, 0};
     public static final double kMaxIAccum = 0.9;
     public static final int kMaxISlot = 0;

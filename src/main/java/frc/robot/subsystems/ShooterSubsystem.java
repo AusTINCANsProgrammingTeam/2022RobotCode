@@ -9,13 +9,12 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.AimModes;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.common.hardware.MotorController;
 import frc.robot.common.hardware.MotorController.MotorConfig;
 
@@ -28,7 +27,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private RelativeEncoder shooterEncoder;
   private CANSparkMax stopperWheelMotor;
 
-  private AimModes aimMode;
   private double targetRPM;
   private double currentRPM;
   private double smoothRPM;
@@ -54,23 +52,20 @@ public class ShooterSubsystem extends SubsystemBase {
   private NetworkTableEntry PID_D;
   private NetworkTableEntry DSmoothRPM;
 
-  private ShooterConfig[] DistanceArray;
-
   public ShooterSubsystem() {
     if (Constants.DebugMode) {
       instantiateDebugTab();
     }
     smoothRPM = 0;
-    aimMode = AimModes.TEST;
     // Initializes the SparkMAX for the flywheel motors
     shooterMotor = MotorController.constructMotor(MotorConfig.shooterOne);
     shooterMotor = MotorController.constructMotor(MotorConfig.shooterTwo);
-    shooterPIDController = MotorController.constructPIDController(shooterMotor, Constants.Shooter.kPIDArray);
-    shooterPIDController.setIMaxAccum(Constants.Shooter.kMaxIAccum, Constants.Shooter.kMaxISlot);
-    shooterPIDController.setOutputRange(Constants.Shooter.kMinOutput, Constants.Shooter.kMaxOutput);
+    shooterPIDController = MotorController.constructPIDController(shooterMotor, ShooterConstants.kPIDArray);
+    shooterPIDController.setIMaxAccum(ShooterConstants.kMaxIAccum, ShooterConstants.kMaxISlot);
+    shooterPIDController.setOutputRange(ShooterConstants.kMinOutput, ShooterConstants.kMaxOutput);
     shooterFF =
         new SimpleMotorFeedforward(
-            Constants.Shooter.kSg, Constants.Shooter.kVg, Constants.Shooter.kAg);
+          ShooterConstants.kSg, ShooterConstants.kVg, ShooterConstants.kAg);
     shooterEncoder = shooterMotor.getEncoder();
     shooterMotor.enableVoltageCompensation(11);
     shooterTwoMotor.enableVoltageCompensation(11);
@@ -79,19 +74,14 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // flywheelPID.setFF(Constants.Shooter.kF);
 
-    DistanceArray = new ShooterConfig[3];
-    DistanceArray[0] = new ShooterConfig(5, 64, 2263);
-    DistanceArray[1] = new ShooterConfig(10, 80, 3065);
-    DistanceArray[2] = new ShooterConfig(15, 82, 3420);
-    // TODO:FIll lookup table
     DSmoothRPM = shooterTab.add("Smooth RPM", 0.0).getEntry();
   }
 
   private void instantiateDebugTab() {
     shooterTab = Shuffleboard.getTab("Shooter Tab");
-    PID_P = shooterTab.add("PID P", Constants.Shooter.kPIDArray[0]).withPosition(0, 1).getEntry();
-    PID_I = shooterTab.add("PID I", Constants.Shooter.kPIDArray[1]).withPosition(0, 2).getEntry();
-    PID_D = shooterTab.add("PID D", Constants.Shooter.kPIDArray[2]).withPosition(0, 3).getEntry();
+    PID_P = shooterTab.add("PID P", ShooterConstants.kPIDArray[0]).withPosition(0, 1).getEntry();
+    PID_I = shooterTab.add("PID I", ShooterConstants.kPIDArray[1]).withPosition(0, 2).getEntry();
+    PID_D = shooterTab.add("PID D", ShooterConstants.kPIDArray[2]).withPosition(0, 3).getEntry();
   }
 
   public void updatePID() {
@@ -102,37 +92,30 @@ public class ShooterSubsystem extends SubsystemBase {
     }
   }
 
-  public void adjustHood(double a) {
-    // Adjusts Hood using PID control to passed angle a
-    // hoodPID.setReference(a, CANSparkMax.ControlType.kPosition); TODO: Set this up when possible
-  }
-
-  public double[] lookup(double Currentdistance) {
-    if (Currentdistance < DistanceArray[0].getDistance()) {
-      return DistanceArray[0].getVelocityAndAngle();
-    }
-    for (int i = 1; i < DistanceArray.length; i++) {
-      if (Currentdistance >= DistanceArray[i].getDistance()) {
-        return ShooterConfig.interpolate(DistanceArray[i - 1], DistanceArray[i], Currentdistance);
-      }
-    }
-    return DistanceArray[DistanceArray.length - 1].getVelocityAndAngle();
-  }
-
-  public void windFlywheel(double rpm) {
-
-    // Winds Flywheel using PID control to passed rpm
-    if (rpm == 0) {
-      shooterPIDController.setReference(0, CANSparkMax.ControlType.kVoltage);
+  private double getTargetRPM() {
+    // Check if override is active, return corresponding RPM
+    if (BOverride.getBoolean(false)) {
+      SAimMode.setString("OVERRIDE");
+      return DTRPM.getDouble(0);
     } else {
-      DTRPM.setDouble(rpm);
-      targetRPM = rpm;
-      shooterPIDController.setReference(
-          rpm,
-          CANSparkMax.ControlType.kVelocity,
-          Constants.Shooter.kMaxISlot,
-          shooterFF.calculate(rpm / 60.0));
+      SAimMode.setString("NORMAL");
+      return ShooterConstants.fenderRPM;
     }
+  }
+
+  public void windShooter() {
+    // Wind shooter using PID control to target RPM
+    targetRPM = getTargetRPM();
+    DTRPM.setDouble(targetRPM);
+    shooterPIDController.setReference(
+        targetRPM,
+        CANSparkMax.ControlType.kVelocity,
+        ShooterConstants.kMaxISlot,
+        shooterFF.calculate(targetRPM / 60.0));
+  }
+  
+  public void stopShooter(){
+    shooterPIDController.setReference(0, CANSparkMax.ControlType.kVoltage);
   }
 
   public void resetIAccum() {
@@ -157,69 +140,11 @@ public class ShooterSubsystem extends SubsystemBase {
     return (smoothRPM > targetRPM - 56 && smoothRPM < targetRPM + 56);
   }
 
-  public void setAimMode(AimModes a) {
-    aimMode = a;
-    SAimMode.setString(aimMode.toString());
-  }
-
-  public AimModes getAimMode() {
-    return aimMode;
-  }
-
-  public void cycleAimModeNext() {
-    aimMode.next();
-    SAimMode.setString(aimMode.toString());
-  }
-
-  public void cycleAimModePrevious() {
-    aimMode.previous();
-    SAimMode.setString(aimMode.toString());
-  }
-
-  public double getTY() {
-    // Returns TY, the vertical angle of the target from the limelight
-    return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
-  }
-
-  public double getDistance() {
-    // Uses Limelight to find distance to High Goal
-    return (Constants.Shooter.highHeight - Constants.Shooter.LLHeight)
-        / Math.tan(Math.toRadians((getTY() + Constants.Shooter.LLAngle))); // Return distance in ft
-  }
-
-  public void prime() {
-    // Check what aimMode is active, gets distance if AUTO, winds flywheel, adjusts
-    // hood correspondingly
-    if (BOverride.getBoolean(false)) {
-      windFlywheel(DTRPM.getDouble(0));
-      SAimMode.setString("OVERRIDE");
-    } else {
-      SAimMode.setString(aimMode.toString());
-      switch (aimMode) {
-        case EJECT: // aimMode used to eject unwanted balls from the shooter
-        case LOW: // aimMode used to dump into the low goal from ~1ft
-        case TARMAC: // aimMode used to shoot into the high goal from ~2ft
-        case LAUNCH: // aimMode used to shoot into the high goal from the launchpad
-        case ATARMAC:
-          adjustHood(aimMode.getAngle());
-          windFlywheel(aimMode.getRPM());
-          break;
-        case AUTO: // aimMode used to automatically shoot into the high goal
-          windFlywheel(lookup(getDistance())[0]);
-          // TODO: Also adjust hood here
-          break;
-        case TEST: // aimMode to take a RPM from the dashboard
-          windFlywheel(DTRPM.getDouble(0));
-          break;
-      }
-    }
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     currentRPM = shooterEncoder.getVelocity();
-    smoothRPM = Constants.Shooter.kA * currentRPM + smoothRPM * (1 - Constants.Shooter.kA);
+    smoothRPM = ShooterConstants.kA * currentRPM + smoothRPM * (1 - ShooterConstants.kA);
 
     DSmoothRPM.setDouble(smoothRPM);
     DRPM.setDouble(currentRPM);

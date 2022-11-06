@@ -6,31 +6,22 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.CDSSubsystem;
-import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShooterPressed extends CommandBase {
   private ShooterSubsystem m_ShooterSubsystem;
-  private LimelightSubsystem m_LimelightSubsystem;
   private CDSSubsystem m_CDSSubsystem;
   private int i;
-  private boolean LLEnabled;
 
   /** Creates a new ShooterPressed. */
   public ShooterPressed(
       ShooterSubsystem shooterSubsystem,
-      LimelightSubsystem limelightSubsystem,
-      CDSSubsystem cdsSubsystem,
-      boolean llEnabled) {
+      CDSSubsystem cdsSubsystem) {
     addRequirements(shooterSubsystem);
-    if (llEnabled) {
-      addRequirements(limelightSubsystem);
-    }
     m_ShooterSubsystem = shooterSubsystem;
-    m_LimelightSubsystem = limelightSubsystem;
     m_CDSSubsystem = cdsSubsystem;
-    LLEnabled = llEnabled;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -44,14 +35,14 @@ public class ShooterPressed extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_ShooterSubsystem.prime();
+    m_ShooterSubsystem.windShooter();
     if (m_ShooterSubsystem.wheelReady() || i > 0) {
       // If below will bypass the LL check if the stopper is already running, or the LL is disabled.
       // Otherwise, alignment is checked.
-      if (i > 0 || !LLEnabled || m_LimelightSubsystem.calculatePID() == 0.0) {
+      if (i > 0) {
         // if (i == 0) {
         m_CDSSubsystem.CDSBeltToggle(false, Constants.CDSAutoBeltSpeed);
-        m_ShooterSubsystem.runCargo(Constants.Shooter.cargoForward);
+        m_ShooterSubsystem.runCargo(ShooterConstants.cargoForward);
         m_ShooterSubsystem.setCargoBoolean(true);
         // }
         i++;
@@ -59,7 +50,7 @@ public class ShooterPressed extends CommandBase {
     } else if (i == 0) {
       // when wheel is not ready and i is still 0
       m_CDSSubsystem.stopCDS();
-      m_ShooterSubsystem.runCargo(Constants.Shooter.cargoReverse);
+      m_ShooterSubsystem.runCargo(ShooterConstants.cargoReverse);
       m_ShooterSubsystem.setCargoBoolean(false);
     }
   }
@@ -69,7 +60,7 @@ public class ShooterPressed extends CommandBase {
   public void end(boolean interrupted) {
     m_CDSSubsystem.stopCDS();
     m_ShooterSubsystem.runCargo(0);
-    m_ShooterSubsystem.windFlywheel(0);
+    m_ShooterSubsystem.stopShooter();
     m_ShooterSubsystem.setCargoBoolean(false);
   }
 
