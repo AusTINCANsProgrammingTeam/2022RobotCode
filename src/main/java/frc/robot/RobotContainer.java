@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -74,25 +73,8 @@ public class RobotContainer {
   private AutonModes autonModes;
   private Command chosenAutonMode = null;
 
-  // Controller Check VariablesdefaultValue
-  private NetworkTableEntry sbaxisCount1;
-  private NetworkTableEntry sbbuttonCount0;
-  private NetworkTableEntry sbbuttonCount1;
-  private NetworkTableEntry sbaxisCount0;
-  private int axisCount0;
-  private int buttonCount0;
-  private int axisCount1;
-  private int buttonCount1;
-
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
-    controllerDetection = Shuffleboard.getTab("Controller Detector");
-
-    sbaxisCount0 = controllerDetection.add("Port0 AxisCount", 0).withSize(2, 2).getEntry();
-    sbbuttonCount0 = controllerDetection.add("Port0 ButtonCount", 0).withSize(2, 2).getEntry();
-    sbaxisCount1 = controllerDetection.add("Port1 AxisCount", 0).withSize(2, 2).getEntry();
-    sbbuttonCount1 = controllerDetection.add("Port1 ButtonCount", 0).withSize(2, 2).getEntry();
-
     debugTab = Shuffleboard.getTab("debug");
 
     initSubsystems();
@@ -159,7 +141,6 @@ public class RobotContainer {
   // it to a {@link
   // edu.wpi.first.wpilibj2.command.button.JoystickButton}.
   private void configureButtonBindings() {
-
     // Intake / CDS
     if (combinedIntake != null) {
       OI.Driver.getIntakeButton().whileHeld(combinedIntake);
