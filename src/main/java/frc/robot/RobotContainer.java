@@ -42,16 +42,15 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   // subsystems
-  private static ClimbSubsystem climbSubsystem;
   private static DriveBaseSubsystem driveBaseSubsystem;
-  private static CDSSubsystem CDSSubsystem;
   private static IntakeSubsystem intakeSubsystem;
-  private static ShooterSubsystem shooterSubsystem;
+  private static CDSSubsystem CDSSubsystem;
   private static StopperSubsystem stopperSubsystem;
+  private static ShooterSubsystem shooterSubsystem;
+  private static ClimbSubsystem climbSubsystem;
 
   // commands
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
-  private ShooterHeld shooterHeld;
 
   private IntakeForward intakeForwardCommand;
   private CDSForward CDSForwardCommand;
@@ -61,7 +60,8 @@ public class RobotContainer {
   private CDSReverse CDSReverseCommand;
   private ParallelCommandGroup combinedOuttake;
 
-  // ----------climb---------
+  private ShooterHeld shooterHeld;
+
   private InstantCommand climbEnable;
   private ClimbSequence1 climbSequence1;
   private ClimbPeriodic climbPeriodic;
@@ -84,45 +84,33 @@ public class RobotContainer {
   }
 
   private void initSubsystems() {
-
     driveBaseSubsystem = new DriveBaseSubsystem(Constants.usingExternal);
-
-    CDSSubsystem = new CDSSubsystem();
-
     intakeSubsystem = new IntakeSubsystem();
-
-    shooterSubsystem = new ShooterSubsystem();
-
-    climbSubsystem = new ClimbSubsystem();
-    
+    CDSSubsystem = new CDSSubsystem();
     stopperSubsystem = new StopperSubsystem();
+    shooterSubsystem = new ShooterSubsystem();
+    climbSubsystem = new ClimbSubsystem();
   }
 
   private void initCommands() {
     // Initializes commands based on enabled subsystems
-    if (driveBaseSubsystem != null) {
       driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem, 
         OI.Driver.getDriveSpeedSupplier(), 
         OI.Driver.getDriveRotationSupplier());
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
-    }
-    if (intakeSubsystem != null) {
+
       intakeForwardCommand = new IntakeForward(intakeSubsystem);
       intakeReverseCommand = new IntakeReverse(intakeSubsystem);
-    }
-    if (CDSSubsystem != null && stopperSubsystem != null) {
+
       CDSForwardCommand = new CDSForward(CDSSubsystem, stopperSubsystem);
       CDSReverseCommand = new CDSReverse(CDSSubsystem, stopperSubsystem);
-    }
-    if (intakeSubsystem != null && CDSSubsystem != null && stopperSubsystem != null) {
+
       combinedIntake = new ParallelCommandGroup(intakeForwardCommand, CDSForwardCommand);
       combinedOuttake = new ParallelCommandGroup(intakeReverseCommand, CDSReverseCommand);
-    }
-    if (shooterSubsystem != null && CDSSubsystem != null) {
-      shooterHeld = new ShooterHeld(shooterSubsystem, CDSSubsystem, stopperSubsystem);
-    }
 
-    if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
+      shooterHeld = new ShooterHeld(shooterSubsystem, CDSSubsystem, stopperSubsystem);
+
+    if (climbSubsystem != null) {
       climbEnable = new InstantCommand(climbSubsystem::toggleEnabled, climbSubsystem);
       climbPeriodic = new ClimbPeriodic(climbSubsystem, 
         OI.Operator.getClimbArmSupplier(), 
@@ -141,26 +129,20 @@ public class RobotContainer {
   // it to a {@link
   // edu.wpi.first.wpilibj2.command.button.JoystickButton}.
   private void configureButtonBindings() {
-    // Intake / CDS
-    if (combinedIntake != null) {
+      //Driver Controls
       OI.Driver.getIntakeButton().whileHeld(combinedIntake);
-    }
-    if (combinedOuttake != null) {
       OI.Driver.getOuttakeButton().whileHeld(combinedOuttake);
-    }
-    if (shooterSubsystem != null && shooterHeld != null) {
+
       OI.Driver.getShootButton().whileHeld(shooterHeld);
-    }
-    if (climbSubsystem != null) {
-      OI.Operator.getEnableClimbButton().whenPressed(climbEnable);
-      OI.Operator.getAutoClimbButton().whileHeld(climbSequence1);
-    }
-    if(CDSForwardCommand != null) {
+
+      //Operator Controls
+      if (climbSubsystem != null) {
+        OI.Operator.getEnableClimbButton().whenPressed(climbEnable);
+        OI.Operator.getAutoClimbButton().whileHeld(climbSequence1);
+      }
+
       OI.Operator.getCDSForwardButton().whileHeld(CDSForwardCommand);
-    }
-    if (combinedOuttake != null) {
       OI.Operator.getOuttakeButton().whileHeld(combinedOuttake);
-    }
   }
 
   public Command getAutonomousCommand(Auton mode) {
