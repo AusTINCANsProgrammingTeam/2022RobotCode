@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -19,6 +20,8 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.StopperSubsystem;
+
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -27,9 +30,10 @@ public class AutonModes {
   // subsystems
   private DriveBaseSubsystem driveBaseSubsystem;
   private ShooterSubsystem shooterSubsystem;
-  private CDSSubsystem cdsSubsystem;
+  private CDSSubsystem CDSSubsystem;
   private IntakeSubsystem intakeSubsystem;
   private ClimbSubsystem climbSubsystem;
+  private StopperSubsystem stopperSubsystem;
 
   private Auton mode;
   private Command autonCommand;
@@ -44,12 +48,13 @@ public class AutonModes {
       ShooterSubsystem shooter,
       CDSSubsystem cds,
       IntakeSubsystem intake,
-      ClimbSubsystem climb) {
+      ClimbSubsystem climb,
+      StopperSubsystem stopperSubsystem) {
 
     this.mode = mode;
     this.driveBaseSubsystem = drive;
     this.shooterSubsystem = shooter;
-    this.cdsSubsystem = cds;
+    this.CDSSubsystem = cds;
     this.intakeSubsystem = intake;
     this.climbSubsystem = climb;
 
@@ -109,7 +114,7 @@ public class AutonModes {
       parallels[i] =
           new ParallelDeadlineGroup(
               ramsetes[i],
-              new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem));
+              new ParallelCommandGroup(new IntakeForwardCommand(intakeSubsystem), new CDSForwardCommand(CDSSubsystem, stopperSubsystem)));
     }
     parallels[0] =
         parallels[0].alongWith(new InstantCommand(climbSubsystem::retractPoles, climbSubsystem));
@@ -146,7 +151,7 @@ public class AutonModes {
         autonCommand =
             new SequentialCommandGroup(
                 new WaitCommand(initialWaitTime),
-                new ShooterPressed(shooterSubsystem, cdsSubsystem),
+                new ShooterPressed(shooterSubsystem, CDSSubsystem, stopperSubsystem),
                 parallels[0]);
         break;
 
@@ -156,7 +161,7 @@ public class AutonModes {
                 new WaitCommand(initialWaitTime),
                 parallels[0],
                 parallels[1],
-                new ShooterPressed(shooterSubsystem, cdsSubsystem));
+                new ShooterPressed(shooterSubsystem, CDSSubsystem, stopperSubsystem));
         break;
 
       case TWOBALLSTEAL1:
@@ -165,11 +170,11 @@ public class AutonModes {
                 new WaitCommand(initialWaitTime),
                 parallels[0],
                 parallels[1],
-                new ShooterPressed(shooterSubsystem, cdsSubsystem),
+                new ShooterPressed(shooterSubsystem, CDSSubsystem, stopperSubsystem),
                 parallels[2],
                 parallels[3],
                 new ParallelDeadlineGroup(
-                    new WaitCommand(1.5), new OuttakeCommand(intakeSubsystem, cdsSubsystem)));
+                    new WaitCommand(1.5), new ParallelCommandGroup(new IntakeReverseCommand(intakeSubsystem), new CDSReverseCommand(CDSSubsystem, stopperSubsystem))));
         break;
 
       case TWOBALLSTEAL2: // same as twoBallSteal1 for now (placeholder)
@@ -178,11 +183,11 @@ public class AutonModes {
                 new WaitCommand(initialWaitTime),
                 parallels[0],
                 parallels[1],
-                new ShooterPressed(shooterSubsystem, cdsSubsystem),
+                new ShooterPressed(shooterSubsystem, CDSSubsystem, stopperSubsystem),
                 parallels[2],
                 parallels[3],
                 new ParallelDeadlineGroup(
-                    new WaitCommand(1.5), new OuttakeCommand(intakeSubsystem, cdsSubsystem)));
+                    new WaitCommand(1.5), new ParallelCommandGroup(new IntakeReverseCommand(intakeSubsystem), new CDSReverseCommand(CDSSubsystem, stopperSubsystem))));
         break;
 
       case THREEBALL:
@@ -193,11 +198,12 @@ public class AutonModes {
                 parallels[1],
                 new ShooterPressed(
                     shooterSubsystem,
-                    cdsSubsystem
+                    CDSSubsystem,
+                    stopperSubsystem
                 ), // shoot the two acquired balls
                 parallels[2], // grab last ball
                 parallels[3], // come back to shoot
-                new ShooterPressed(shooterSubsystem, cdsSubsystem));
+                new ShooterPressed(shooterSubsystem, CDSSubsystem, stopperSubsystem));
         break;
 
       case FOURBALL:
@@ -205,10 +211,10 @@ public class AutonModes {
             new SequentialCommandGroup(
                 parallels[0],
                 parallels[1],
-                new ShooterPressed(shooterSubsystem, cdsSubsystem),
+                new ShooterPressed(shooterSubsystem, CDSSubsystem, stopperSubsystem),
                 parallels[2],
                 parallels[3],
-                new ShooterPressed(shooterSubsystem, cdsSubsystem));
+                new ShooterPressed(shooterSubsystem, CDSSubsystem, stopperSubsystem));
         break;
 
       case FIVEBALL: // placeholder as fourball for now
@@ -216,10 +222,10 @@ public class AutonModes {
             new SequentialCommandGroup(
                 parallels[0],
                 parallels[1],
-                new ShooterPressed(shooterSubsystem, cdsSubsystem),
+                new ShooterPressed(shooterSubsystem, CDSSubsystem, stopperSubsystem),
                 parallels[2],
                 parallels[3],
-                new ShooterPressed(shooterSubsystem, cdsSubsystem));
+                new ShooterPressed(shooterSubsystem, CDSSubsystem, stopperSubsystem));
         break;
 
       default:

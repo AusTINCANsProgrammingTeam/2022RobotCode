@@ -25,7 +25,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private SimpleMotorFeedforward shooterFF;
   private SparkMaxPIDController shooterPIDController;
   private RelativeEncoder shooterEncoder;
-  private CANSparkMax stopperWheelMotor;
 
   private double targetRPM;
   private double currentRPM;
@@ -35,8 +34,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private NetworkTableEntry DTRPM = operatorTab.add("T-RPM", 0).withPosition(0, 2).getEntry();
   private NetworkTableEntry DRPM =
       operatorTab.add("RPM", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).getEntry();
-  private NetworkTableEntry BCargoRunning =
-      operatorTab.add("Flywheel Ready", false).withPosition(2, 0).getEntry();
   private NetworkTableEntry SAimMode =
       operatorTab.add("Aim Mode", "TEST").withPosition(2, 1).getEntry();
   private NetworkTableEntry BOverride =
@@ -70,7 +67,6 @@ public class ShooterSubsystem extends SubsystemBase {
     shooterMotor.enableVoltageCompensation(11);
     shooterTwoMotor.enableVoltageCompensation(11);
     shooterTwoMotor.follow(shooterMotor, true);
-    stopperWheelMotor = MotorController.constructMotor(MotorConfig.stopperWheel);
 
     // flywheelPID.setFF(Constants.Shooter.kF);
 
@@ -122,14 +118,6 @@ public class ShooterSubsystem extends SubsystemBase {
     if (shooterEncoder.getVelocity() < 500) {
       shooterPIDController.setIAccum(0);
     }
-  }
-
-  public void setCargoBoolean(boolean a) {
-    BCargoRunning.setBoolean(a);
-  }
-
-  public void runCargo(double speed) {
-    stopperWheelMotor.set(speed);
   }
 
   public boolean wheelReady(int low, int high) {

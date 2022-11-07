@@ -5,25 +5,28 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.StopperSubsystem;
 
 public class ShooterHeld extends CommandBase {
   private ShooterSubsystem m_ShooterSubsystem;
   private CDSSubsystem m_CDSSubsystem;
+  private StopperSubsystem stopperSubsystem;
   private int i;
 
   /** Creates a new ShooterHeld. */
   public ShooterHeld(
       ShooterSubsystem shooterSubsystem,
-      CDSSubsystem CDSSubsystem) {
+      CDSSubsystem CDSSubsystem,
+      StopperSubsystem stopperSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(CDSSubsystem);
     addRequirements(shooterSubsystem);
+    addRequirements(stopperSubsystem);
     m_ShooterSubsystem = shooterSubsystem;
     m_CDSSubsystem = CDSSubsystem;
+    this.stopperSubsystem = stopperSubsystem;
   }
 
   // Called when the command is initially scheduled.
@@ -42,9 +45,8 @@ public class ShooterHeld extends CommandBase {
       // Otherwise, alignment is checked.
       if (i > 0) {
         // if (i > 1) {
-        m_CDSSubsystem.CDSBeltToggle(false, Constants.CDSBeltSpeed);
-        m_ShooterSubsystem.runCargo(ShooterConstants.cargoForward);
-        m_ShooterSubsystem.setCargoBoolean(true);
+        m_CDSSubsystem.runBelt(false);
+        stopperSubsystem.forward();
         // }
         // i++;
         /*if (i >= 50) { // 1000 miliseconds delay TODO: Use a CDS method for this when possible
@@ -65,9 +67,8 @@ public class ShooterHeld extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_ShooterSubsystem.runCargo(0);
+    stopperSubsystem.stop();
     m_ShooterSubsystem.stopShooter();
-    m_ShooterSubsystem.setCargoBoolean(false);
     m_CDSSubsystem.stopCDS();
   }
 

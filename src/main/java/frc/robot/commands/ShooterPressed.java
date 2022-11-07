@@ -5,24 +5,26 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.StopperSubsystem;
 
 public class ShooterPressed extends CommandBase {
   private ShooterSubsystem m_ShooterSubsystem;
   private CDSSubsystem m_CDSSubsystem;
+  private StopperSubsystem stopperSubsystem;
   private int i;
 
   /** Creates a new ShooterPressed. */
   public ShooterPressed(
       ShooterSubsystem shooterSubsystem,
-      CDSSubsystem cdsSubsystem) {
+      CDSSubsystem cdsSubsystem,
+      StopperSubsystem stopperSubsystem) {
     addRequirements(shooterSubsystem);
+    addRequirements(stopperSubsystem);
+    addRequirements(cdsSubsystem);
     m_ShooterSubsystem = shooterSubsystem;
     m_CDSSubsystem = cdsSubsystem;
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -41,17 +43,15 @@ public class ShooterPressed extends CommandBase {
       // Otherwise, alignment is checked.
       if (i > 0) {
         // if (i == 0) {
-        m_CDSSubsystem.CDSBeltToggle(false, Constants.CDSAutoBeltSpeed);
-        m_ShooterSubsystem.runCargo(ShooterConstants.cargoForward);
-        m_ShooterSubsystem.setCargoBoolean(true);
+        m_CDSSubsystem.runBelt(false);
+        stopperSubsystem.forward();
         // }
         i++;
       }
     } else if (i == 0) {
       // when wheel is not ready and i is still 0
       m_CDSSubsystem.stopCDS();
-      m_ShooterSubsystem.runCargo(ShooterConstants.cargoReverse);
-      m_ShooterSubsystem.setCargoBoolean(false);
+      stopperSubsystem.forward();
     }
   }
 
@@ -59,9 +59,8 @@ public class ShooterPressed extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_CDSSubsystem.stopCDS();
-    m_ShooterSubsystem.runCargo(0);
+    stopperSubsystem.stop();
     m_ShooterSubsystem.stopShooter();
-    m_ShooterSubsystem.setCargoBoolean(false);
   }
 
   // Returns true when the command should end.

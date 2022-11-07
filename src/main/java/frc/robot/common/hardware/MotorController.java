@@ -15,7 +15,7 @@ public class MotorController {
         driveRightRear(7,50,true),
         //Intake
         intakeMotor(1,true),
-        intakeDeploy(8),
+        intakeDeploy(8,30),
         //CDS
         CDSBelt(3,true),
         singulatorOne(2,true),
