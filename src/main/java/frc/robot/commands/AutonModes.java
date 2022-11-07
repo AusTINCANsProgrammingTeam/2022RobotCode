@@ -114,7 +114,7 @@ public class AutonModes {
       parallels[i] =
           new ParallelDeadlineGroup(
               ramsetes[i],
-              new ParallelCommandGroup(new IntakeForwardCommand(intakeSubsystem), new CDSForwardCommand(CDSSubsystem, stopperSubsystem)));
+              new ParallelCommandGroup(new IntakeForward(intakeSubsystem), new CDSForward(CDSSubsystem, stopperSubsystem)));
     }
     parallels[0] =
         parallels[0].alongWith(new InstantCommand(climbSubsystem::retractPoles, climbSubsystem));
@@ -174,7 +174,7 @@ public class AutonModes {
                 parallels[2],
                 parallels[3],
                 new ParallelDeadlineGroup(
-                    new WaitCommand(1.5), new ParallelCommandGroup(new IntakeReverseCommand(intakeSubsystem), new CDSReverseCommand(CDSSubsystem, stopperSubsystem))));
+                    new WaitCommand(1.5), new ParallelCommandGroup(new IntakeReverse(intakeSubsystem), new CDSReverse(CDSSubsystem, stopperSubsystem))));
         break;
 
       case TWOBALLSTEAL2: // same as twoBallSteal1 for now (placeholder)
@@ -187,7 +187,7 @@ public class AutonModes {
                 parallels[2],
                 parallels[3],
                 new ParallelDeadlineGroup(
-                    new WaitCommand(1.5), new ParallelCommandGroup(new IntakeReverseCommand(intakeSubsystem), new CDSReverseCommand(CDSSubsystem, stopperSubsystem))));
+                    new WaitCommand(1.5), new ParallelCommandGroup(new IntakeReverse(intakeSubsystem), new CDSReverse(CDSSubsystem, stopperSubsystem))));
         break;
 
       case THREEBALL:

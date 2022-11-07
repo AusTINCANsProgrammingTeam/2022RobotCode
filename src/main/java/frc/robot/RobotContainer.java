@@ -12,15 +12,15 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants.Auton;
 import frc.robot.commands.AutonModes;
-import frc.robot.commands.CDSForwardCommand;
-import frc.robot.commands.CDSReverseCommand;
+import frc.robot.commands.CDSForward;
+import frc.robot.commands.CDSReverse;
 import frc.robot.commands.ClimbPeriodic;
 import frc.robot.commands.ClimbSequence1;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.HookLock;
 import frc.robot.commands.HookUnlock;
-import frc.robot.commands.IntakeForwardCommand;
-import frc.robot.commands.IntakeReverseCommand;
+import frc.robot.commands.IntakeForward;
+import frc.robot.commands.IntakeReverse;
 import frc.robot.commands.ShooterHeld;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -53,12 +53,12 @@ public class RobotContainer {
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
   private ShooterHeld shooterHeld;
 
-  private IntakeForwardCommand intakeForwardCommand;
-  private CDSForwardCommand CDSForwardCommand;
+  private IntakeForward intakeForwardCommand;
+  private CDSForward CDSForwardCommand;
   private ParallelCommandGroup combinedIntake;
 
-  private IntakeReverseCommand intakeReverseCommand;
-  private CDSReverseCommand CDSReverseCommand;
+  private IntakeReverse intakeReverseCommand;
+  private CDSReverse CDSReverseCommand;
   private ParallelCommandGroup combinedOuttake;
 
   // ----------climb---------
@@ -107,12 +107,12 @@ public class RobotContainer {
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
     }
     if (intakeSubsystem != null) {
-      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
-      intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
+      intakeForwardCommand = new IntakeForward(intakeSubsystem);
+      intakeReverseCommand = new IntakeReverse(intakeSubsystem);
     }
     if (CDSSubsystem != null && stopperSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, stopperSubsystem);
-      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, stopperSubsystem);
+      CDSForwardCommand = new CDSForward(CDSSubsystem, stopperSubsystem);
+      CDSReverseCommand = new CDSReverse(CDSSubsystem, stopperSubsystem);
     }
     if (intakeSubsystem != null && CDSSubsystem != null && stopperSubsystem != null) {
       combinedIntake = new ParallelCommandGroup(intakeForwardCommand, CDSForwardCommand);

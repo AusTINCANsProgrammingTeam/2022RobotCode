@@ -5,25 +5,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.CDSSubsystem;
-import frc.robot.subsystems.StopperSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
-public class CDSReverseCommand extends CommandBase {
-  private CDSSubsystem CDSSubsystem;
-  private StopperSubsystem stopperSubsystem;
+public class IntakeForward extends CommandBase {
+  private final IntakeSubsystem intakeSubsystem;
 
-  public CDSReverseCommand(CDSSubsystem CDSSubsystem, StopperSubsystem stopperSubsystem) {
-    addRequirements(CDSSubsystem);
-    addRequirements(stopperSubsystem);
-    this.CDSSubsystem = CDSSubsystem;
-    this.stopperSubsystem = stopperSubsystem;
+  public IntakeForward(IntakeSubsystem intakeSubsystem) {
+    addRequirements(intakeSubsystem);
+    this.intakeSubsystem = intakeSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    CDSSubsystem.runCDS(true);
-    stopperSubsystem.reverse();
+    intakeSubsystem.runIntake(false);
+    intakeSubsystem.deployIntake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -33,8 +29,8 @@ public class CDSReverseCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    CDSSubsystem.stopCDS();
-    stopperSubsystem.stop();
+    intakeSubsystem.stopIntake();
+    intakeSubsystem.retractIntake();
   }
 
   // Returns true when the command should end.
