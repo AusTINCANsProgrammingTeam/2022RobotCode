@@ -15,10 +15,8 @@ import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.CDSReverseCommand;
 import frc.robot.commands.ClimbPeriodic;
-import frc.robot.commands.ClimbSequence1;
+import frc.robot.commands.DeployClimb;
 import frc.robot.commands.DriveBaseTeleopCommand;
-import frc.robot.commands.HookLock;
-import frc.robot.commands.HookUnlock;
 import frc.robot.commands.IntakeForwardCommand;
 import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.ShooterHeld;
@@ -61,13 +59,9 @@ public class RobotContainer {
   private CDSReverseCommand CDSReverseCommand;
   private ParallelCommandGroup combinedOuttake;
 
-  // ----------climb---------
   private InstantCommand climbEnable;
-  private ClimbSequence1 climbSequence1;
+  private DeployClimb deployClimb;
   private ClimbPeriodic climbPeriodic;
-  private Command HaDeploy;
-  private Command hookUnlock;
-  private Command hookLock;
 
   // auton
   private AutonModes autonModes;
@@ -127,9 +121,7 @@ public class RobotContainer {
       climbPeriodic = new ClimbPeriodic(climbSubsystem, 
         OI.Operator.getClimbArmSupplier(), 
         OI.Operator.getClimbPoleSupplier());
-      climbSequence1 = new ClimbSequence1(climbSubsystem);
-      hookUnlock = new HookUnlock(climbSubsystem);
-      hookLock = new HookLock(climbSubsystem);
+      deployClimb = new DeployClimb(climbSubsystem);
       climbSubsystem.setDefaultCommand(climbPeriodic);
     }
   }
@@ -153,7 +145,7 @@ public class RobotContainer {
     }
     if (climbSubsystem != null) {
       OI.Operator.getEnableClimbButton().whenPressed(climbEnable);
-      OI.Operator.getAutoClimbButton().whileHeld(climbSequence1);
+      OI.Operator.getDeployClimbButton().whileHeld(deployClimb);
     }
     if(CDSForwardCommand != null) {
       OI.Operator.getCDSForwardButton().whileHeld(CDSForwardCommand);

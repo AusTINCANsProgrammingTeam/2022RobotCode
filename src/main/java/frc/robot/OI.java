@@ -48,7 +48,7 @@ public class OI {
         private static final Joystick kJoystick = new Joystick(OI.kOperatorJoystickPort);
 
         private static final int kEnableClimbButtonID = 10; //Toggle the ability to manipulate climb arms
-        private static final int kAutoClimbButtonID = 1; //Automatically deploy climb arms
+        private static final int kDeployClimbButtonID = 1; //Automatically deploy climb arms
         private static final int kCDSForwardButtonID = 8; //Run the CDS forward
         private static final int kOuttakeButtonID = 6; //Run the CDS and intake backwards
 
@@ -70,8 +70,8 @@ public class OI {
             return new JoystickButton(kJoystick, kEnableClimbButtonID);
         }
 
-        public static JoystickButton getAutoClimbButton(){
-            return new JoystickButton(kJoystick, kAutoClimbButtonID);
+        public static JoystickButton getDeployClimbButton(){
+            return new JoystickButton(kJoystick, kDeployClimbButtonID);
         }
 
         public static JoystickButton getCDSForwardButton(){
