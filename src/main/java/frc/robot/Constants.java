@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static final boolean competitionRobot = true; //Set based on whether the competition robot or practice robot is in use
 
   public static final class MotorDefaults{
     //Constants to use as default values for Motor Controllers
@@ -158,49 +159,35 @@ public final class Constants {
     public static final double kAg = 0.0087876;
   }
 
-  // Climb Constants
-  public static final int armHeightMax = 132;
-  public static final int armHeightMin = 0;
-  public static final int armHeightFeather1 = -20;
-  public static final int armHeightFeather2 = -35;
-  public static final int armFeatherRPM1 = -5000;
-  public static final int armFeatherRPM2 = -6000;
-  public static final double poleHeightMax = 6;
-  public static final int poleHeightMin = -60;
-  public static final int poleHeightDeploy = -12;
+  public static final class ClimbConstants {
+    public static final int armMaxPosition = 132;
+    public static final int armMinPosition = 0;
+    public static final int poleMaxPosition = 6;
+    public static final int poleMinPosition = -60;
+    public static final int poleDeployPosition = -12;
 
-  public static final double[] armPosPID = {0.125, 0, 0};
-  public static final double[] armVelocityPID = {4e-5, 0, 0};
-  public static final double[] polePosPID = {0.125, 0, 0};
-  public static final int armPosPIDSlot = 0;
-  public static final int armVelPIDSlot = 1;
+    public static final double[] armPIDArray = {0.125, 0, 0};
+    public static final double armIMaxAccum = 0.45;
+    public static final double[] polePIDArray = {0.125, 0, 0};
+    public static final double poleIMaxAccum = 0.25;
 
-  public static final double climbMaxOutput = 1.0;
-  public static final int climbPoleLowCurrent = 15;
-  public static final int climbArmLowCurrent = 10;
-  public static final int climbPoleHighCurrent = 50;
-  public static final int climbArmHighCurrent = 60;
+    public static final double PIDMaxOutput = 1.0;
 
-  // servo for hooks
-  // TODO: find the real ids as well as make sure the set point is correct
-  public static final int climbServoIDOne = 0;
-  public static final int climbServoIDTwo = 1;
-  public static final double climbServo1Locked = 0.35;
-  public static final double climbServo1Unlocked = 1;
-  public static final double climbServo2Locked = 0.65;
-  public static final double climbServo2Unlocked = 0;
+    public static final int armLowCurrent = 10;
+    public static final int armHighCurrent = 60;
+    public static final int poleLowCurrent = 15;
+    public static final int poleHighCurrent = 50;
 
-  public static final double climbServoSetPoint = 0.5;
+    public static final int servoOneID = 0;
+    public static final int servoTwoID = 1;
+    public static final double servoOneLocked = 0.35;
+    public static final double servoOneUnlocked = 1;
+    public static final double servoTwoLocked = 0.65;
+    public static final double servoTwoUnlocked = 0;
 
-  public static final double climbSequence1Timeout = 20.0;
-
-  public static final double armUpSpeed = -1;
-  public static final double armDownSpeed = -0.65;
-  public static final double poleInSpeed = 0.5;
-  public static final double poleOutSpeed = 0.6;
-
-  public static final double armSetIMaxAccum = 0.45;
-  public static final double poleSetIMaxAccum = 0.25;
-
-  public static final int climbArmDeadband = 1;
+    public static final double armUpSpeed = -1;
+    public static final double armDownSpeed = -0.65;
+    public static final double poleInSpeed = 0.5;
+    public static final double poleOutSpeed = 0.6;
+  }
 }

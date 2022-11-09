@@ -9,13 +9,12 @@ import java.util.function.Supplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClimbSubsystem;
 
-public class ClimbPeriodic extends CommandBase {
+public class ClimbControl extends CommandBase {
   private final ClimbSubsystem climbSubsystem;
   private final Supplier<Double> climbArmSupplier;
   private final Supplier<Double> climbPoleSupplier;
 
-  /** Creates a new ClimbKeepDown. */
-  public ClimbPeriodic(ClimbSubsystem climbSubsystem, Supplier<Double> climbArmSupplier, Supplier<Double> climbPoleSupplier) {
+  public ClimbControl(ClimbSubsystem climbSubsystem, Supplier<Double> climbArmSupplier, Supplier<Double> climbPoleSupplier) {
     addRequirements(climbSubsystem);
     this.climbSubsystem = climbSubsystem;
     this.climbArmSupplier = climbArmSupplier;
@@ -25,8 +24,7 @@ public class ClimbPeriodic extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    climbSubsystem.resetClimbHeights();
-    climbSubsystem.climbKeepDownFunction();
+    climbSubsystem.holdPosition();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -34,7 +32,6 @@ public class ClimbPeriodic extends CommandBase {
   public void execute() {
     climbSubsystem.midClimb(climbArmSupplier.get());
     climbSubsystem.highArms(climbPoleSupplier.get());
-    climbSubsystem.periodic();
   }
 
   // Called once the command ends or is interrupted.

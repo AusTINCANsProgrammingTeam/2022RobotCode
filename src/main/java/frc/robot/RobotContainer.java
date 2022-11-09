@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -14,8 +12,7 @@ import frc.robot.Constants.Auton;
 import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSForward;
 import frc.robot.commands.CDSReverse;
-import frc.robot.commands.ClimbPeriodic;
-import frc.robot.commands.DeployClimb;
+import frc.robot.commands.ClimbControl;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.IntakeForward;
 import frc.robot.commands.IntakeReverse;
@@ -34,11 +31,6 @@ import frc.robot.subsystems.StopperSubsystem;
 // subsystems, commands, and button mappings) should be declared here.
 
 public class RobotContainer {
-  public static ShuffleboardTab debugTab;
-  public static ShuffleboardTab controllerDetection;
-
-  // The robot's subsystems and commands are defined here...
-
   // subsystems
   private static DriveBaseSubsystem driveBaseSubsystem;
   private static IntakeSubsystem intakeSubsystem;
@@ -50,19 +42,19 @@ public class RobotContainer {
   // commands
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
 
-  private IntakeForward intakeForwardCommand;
-  private CDSForward CDSForwardCommand;
+  private IntakeForward intakeForward;
+  private CDSForward CDSForward;
   private ParallelCommandGroup combinedIntake;
 
-  private IntakeReverse intakeReverseCommand;
-  private CDSReverse CDSReverseCommand;
+  private IntakeReverse intakeReverse;
+  private CDSReverse CDSReverse;
   private ParallelCommandGroup combinedOuttake;
 
   private ShooterHeld shooterHeld;
 
-  private InstantCommand climbEnable;
-  private DeployClimb deployClimb;
-  private ClimbPeriodic climbPeriodic;
+  private InstantCommand enableClimb;
+  private ParallelCommandGroup deployClimb;
+  private ClimbControl climbControl;
 
   // auton
   private AutonModes autonModes;
@@ -70,49 +62,46 @@ public class RobotContainer {
 
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
-    debugTab = Shuffleboard.getTab("debug");
-
-    initSubsystems();
-    initCommands();
-
+    initializeSubsystems();
+    initializeCommands();
     configureButtonBindings();
   }
 
-  private void initSubsystems() {
+  private void initializeSubsystems() {
     driveBaseSubsystem = new DriveBaseSubsystem(Constants.usingExternal);
     intakeSubsystem = new IntakeSubsystem();
     CDSSubsystem = new CDSSubsystem();
     stopperSubsystem = new StopperSubsystem();
     shooterSubsystem = new ShooterSubsystem();
-    climbSubsystem = new ClimbSubsystem();
+    climbSubsystem = Constants.competitionRobot ? new ClimbSubsystem() : null;
   }
 
-  private void initCommands() {
+  private void initializeCommands() {
     // Initializes commands based on enabled subsystems
       driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem, 
         OI.Driver.getDriveSpeedSupplier(), 
         OI.Driver.getDriveRotationSupplier());
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
 
-      intakeForwardCommand = new IntakeForward(intakeSubsystem);
-      intakeReverseCommand = new IntakeReverse(intakeSubsystem);
+      intakeForward = new IntakeForward(intakeSubsystem);
+      intakeReverse = new IntakeReverse(intakeSubsystem);
 
-      CDSForwardCommand = new CDSForward(CDSSubsystem, stopperSubsystem);
-      CDSReverseCommand = new CDSReverse(CDSSubsystem, stopperSubsystem);
+      CDSForward = new CDSForward(CDSSubsystem, stopperSubsystem);
+      CDSReverse = new CDSReverse(CDSSubsystem, stopperSubsystem);
 
-      combinedIntake = new ParallelCommandGroup(intakeForwardCommand, CDSForwardCommand);
-      combinedOuttake = new ParallelCommandGroup(intakeReverseCommand, CDSReverseCommand);
+      combinedIntake = new ParallelCommandGroup(intakeForward, CDSForward);
+      combinedOuttake = new ParallelCommandGroup(intakeReverse, CDSReverse);
 
       shooterHeld = new ShooterHeld(shooterSubsystem, CDSSubsystem, stopperSubsystem);
 
-    if (climbSubsystem != null) {
-      climbEnable = new InstantCommand(climbSubsystem::toggleEnabled, climbSubsystem);
-      climbPeriodic = new ClimbPeriodic(climbSubsystem, 
-        OI.Operator.getClimbArmSupplier(), 
-        OI.Operator.getClimbPoleSupplier());
-      deployClimb = new DeployClimb(climbSubsystem);
-      climbSubsystem.setDefaultCommand(climbPeriodic);
-    }
+      if (climbSubsystem != null) {
+        enableClimb = new InstantCommand(climbSubsystem::toggleEnabled, climbSubsystem);
+        climbControl = new ClimbControl(climbSubsystem, 
+          OI.Operator.getClimbArmSupplier(), 
+          OI.Operator.getClimbPoleSupplier());
+        deployClimb = new ParallelCommandGroup(new InstantCommand(climbSubsystem::unlockHooks), new InstantCommand(climbSubsystem::deployPoles));
+        climbSubsystem.setDefaultCommand(climbControl);
+      }
   }
 
   // Use this method to define your button->command mappings. Buttons can be
@@ -130,11 +119,11 @@ public class RobotContainer {
 
       //Operator Controls
       if (climbSubsystem != null) {
-        OI.Operator.getEnableClimbButton().whenPressed(climbEnable);
+        OI.Operator.getEnableClimbButton().whenPressed(enableClimb);
         OI.Operator.getDeployClimbButton().whileHeld(deployClimb);
       }
 
-      OI.Operator.getCDSForwardButton().whileHeld(CDSForwardCommand);
+      OI.Operator.getCDSForwardButton().whileHeld(CDSForward);
       OI.Operator.getOuttakeButton().whileHeld(combinedOuttake);
   }
 
