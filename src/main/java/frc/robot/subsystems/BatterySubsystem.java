@@ -8,12 +8,12 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -31,6 +31,7 @@ public class BatterySubsystem extends SubsystemBase {
 
   private ShuffleboardTab btTab;
   private NetworkTableEntry sbVoltage;
+  private NetworkTableEntry sbInputCurrent;
   private NetworkTableEntry sbSimVoltage;
   private NetworkTableEntry sbTimer;
   private NetworkTableEntry sbTimerChange;
@@ -42,6 +43,7 @@ public class BatterySubsystem extends SubsystemBase {
   // Sim variables
   private boolean colorOn; // Variable for color change testing
   // private int minutesPassed;
+  private PowerDistribution powerDistribution = new PowerDistribution(1, ModuleType.kRev);
 
   public BatterySubsystem() {
     // init();
@@ -54,6 +56,8 @@ public class BatterySubsystem extends SubsystemBase {
         .withProperties(Map.of("colorWhenFalse", "red"));
     sbVoltage =
         btTab.add("Current Battery Voltage", 0).withSize(2, 2).withPosition(0, 0).getEntry();
+    sbInputCurrent =
+        btTab.add("Battery Input Current", 0).withSize(2, 2).withPosition(0, 0).getEntry();
     sbSimVoltage = btTab.add("Simulation Voltage", 0).withSize(2, 2).withPosition(2, 0).getEntry();
     sbTimer = btTab.add("Timer", 0).withSize(2, 2).withPosition(0, 2).getEntry();
     sbTimerHighCurrent =
@@ -67,8 +71,9 @@ public class BatterySubsystem extends SubsystemBase {
 
   public void periodic() {
     sbVoltage.setDouble(getVoltage());
+    sbInputCurrent.setDouble(getInputCurrent());
     // sbInCurrent.setDouble(getInputCurrent());
-    sbSimVoltage.setNumber(RoboRioSim.getVInVoltage()); // Just temporary, replace with line above
+    sbSimVoltage.setNumber(powerDistribution.getVoltage()); // Just temporary, replace with line above
     sbTimer.setDouble(timer.get());
     sbTimerHighCurrent.setDouble(currentTimer.get());
     sbTimerChange.setBoolean(checkTimer()); // Replace checkVoltage() with checkTimer() if necessary
@@ -78,15 +83,15 @@ public class BatterySubsystem extends SubsystemBase {
   }
 
   public double getVoltage() {
-    if (Robot.isSimulation()) {
-      return RoboRioSim.getVInVoltage();
-    } else {
-      return RobotController.getBatteryVoltage();
-    }
+      return powerDistribution.getVoltage();
   }
 
   public double getInputCurrent() {
-    return RobotController.getInputCurrent();
+    if (Robot.isSimulation()) {
+      return powerDistribution.getCurrent(1);
+    } else {
+      return powerDistribution.getTotalCurrent();
+    }
   }
 
   public void checkCurrent() {

@@ -4,26 +4,27 @@ import static org.junit.Assert.assertEquals;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj.simulation.PDPSim;
 
 public class BatterySimulation extends SubsystemBase {
 
   private double voltageToSubtract = 0.05;
   private BatterySubsystem batterySubsystem;
+  private PDPSim pdpSim = new PDPSim(1);
 
   public BatterySimulation(BatterySubsystem batterySubsystem) {
     this.batterySubsystem = batterySubsystem;
-    RoboRioSim.setVInVoltage(14.0);
+    pdpSim.setVoltage(14.0);
   }
 
   @Override
   public void simulationPeriodic() {
     double now = Timer.getFPGATimestamp();
     if (now >= 0 && now < 5.0) {
-      RoboRioSim.setVInVoltage(RoboRioSim.getVInVoltage() - voltageToSubtract);
-      if (RoboRioSim.getVInVoltage() < Constants.minVoltageRedDouble) {
+      pdpSim.setVoltage(pdpSim.getVoltage() - voltageToSubtract);
+      if (pdpSim.getVoltage() < Constants.minVoltageRedDouble) {
         System.out.println("Got to assert voltage");
         assertEquals(false, batterySubsystem.checkRedVoltage());
       }
@@ -44,10 +45,10 @@ public class BatterySimulation extends SubsystemBase {
     }
 
     // Forcefully sets current when robot is enabled to simulate use
-    if (DriverStationSim.getAutonomous() == true || DriverStationSim.getEnabled() == true) {
-      RoboRioSim.setVInCurrent(Constants.simCurrentHigh);
+    if (DriverStationSim.getEnabled() == true) {
+      pdpSim.setCurrent(1, Constants.simCurrentHigh);
     } else {
-      RoboRioSim.setVInCurrent(Constants.simCurrentLow);
+      pdpSim.setCurrent(1, Constants.simCurrentLow);
     }
   }
 }
