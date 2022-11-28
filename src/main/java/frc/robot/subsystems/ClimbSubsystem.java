@@ -41,7 +41,7 @@ public class ClimbSubsystem extends SubsystemBase {
   private Servo servoOne;
   private Servo servoTwo;
 
-  private boolean climbEnabled, hookLocked;
+  private boolean climbEnabled;
 
   private double armOnePosition;
   private double armTwoPosition;
@@ -137,6 +137,7 @@ public class ClimbSubsystem extends SubsystemBase {
     servoOne = new Servo(ClimbConstants.servoOneID);
     servoTwo = new Servo(ClimbConstants.servoTwoID);
 
+    deployIndicator.setBoolean(false);
     lockHooks();
   }
 
@@ -215,34 +216,26 @@ public class ClimbSubsystem extends SubsystemBase {
     poleOnePIDController.setReference(poleOnePosition, ControlType.kPosition);
     poleTwoPIDController.setReference(poleOnePosition, ControlType.kPosition);
   }
-
-  // called at the start of auton
+  
   public void retractPoles() {
     poleOnePIDController.setReference(ClimbConstants.poleMaxPosition, ControlType.kPosition);
     poleTwoPIDController.setReference(ClimbConstants.poleMaxPosition, ControlType.kPosition);
   }
 
   public void deployPoles() {
-    poleOnePIDController
-        .setReference(ClimbConstants.poleDeployPosition, ControlType.kPosition);
-    poleTwoPIDController
-        .setReference(ClimbConstants.poleDeployPosition, ControlType.kPosition);
+    poleOnePIDController.setReference(ClimbConstants.poleDeployPosition, ControlType.kPosition);
+    poleTwoPIDController.setReference(ClimbConstants.poleDeployPosition, ControlType.kPosition);
   }
 
   public void unlockHooks() {
-    hookLocked = false;
+    deployIndicator.setBoolean(true);
     servoOne.set(ClimbConstants.servoOneUnlocked);
     servoTwo.set(ClimbConstants.servoTwoUnlocked);
   }
 
   public void lockHooks() {
-    hookLocked = true;
-    servoOne.set(ClimbConstants.servoOneUnlocked);
-    servoTwo.set(ClimbConstants.servoTwoUnlocked);
-  }
-
-  public void setAutoBoolean(boolean a) {
-    deployIndicator.setBoolean(a);
+    servoOne.set(ClimbConstants.servoOneLocked);
+    servoTwo.set(ClimbConstants.servoTwoLocked);
   }
 
   public void periodic() {
@@ -259,10 +252,6 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     if (DriverStation.isDisabled()) {
-      hookLocked = true;
-    }
-
-    if (hookLocked) {
       lockHooks();
     }
   }
