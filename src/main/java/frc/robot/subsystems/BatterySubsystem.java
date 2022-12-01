@@ -10,20 +10,21 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+//import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import java.io.File;
 import java.util.Map;
+/* Audio imports, not needed right now
+import java.io.File;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.JOptionPane;
-
+*/
 /** Add your docs here. */
 // Put methods for controlling this subsystem
 // here. Call these from Commands.
@@ -36,50 +37,40 @@ public class BatterySubsystem extends SubsystemBase {
   private NetworkTableEntry sbTimer;
   private NetworkTableEntry sbTimerChange;
   private NetworkTableEntry sbTimerHighCurrent;
-  // private DriverStation driverStation;
   private Timer timer = new Timer();
   private Timer currentTimer = new Timer();
-  // public DriverStationSim driverSim;
-  // Sim variables
-  private boolean colorOn; // Variable for color change testing
-  // private int minutesPassed;
-  private PowerDistribution powerDistribution = new PowerDistribution(1, ModuleType.kRev);
+  //private PowerDistribution powerDistribution = new PowerDistribution(1, ModuleType.kRev);
+  private PowerDistribution powerDistribution = new PowerDistribution();
 
   public BatterySubsystem() {
-    // init();
     this.resetTimers();
     btTab = Shuffleboard.getTab("Battery");
-    // Change 16 to desired value
     Shuffleboard.getTab("Battery")
-        .addBoolean("Battery Voltage", () -> getVoltage() > Constants.minVoltageRed)
+        .addBoolean("Battery Voltage Check", () -> getVoltage() > Constants.minVoltageRed)
         .withProperties(Map.of("colorWhenTrue", "red"))
         .withProperties(Map.of("colorWhenFalse", "red"));
     sbVoltage =
-        btTab.add("Current Battery Voltage", 0).withSize(2, 2).withPosition(0, 0).getEntry();
+        btTab.add("Battery Voltage", 0).withSize(2, 1).withPosition(0, 0).getEntry();
     sbInputCurrent =
-        btTab.add("Battery Input Current", 0).withSize(2, 2).withPosition(0, 0).getEntry();
-    sbSimVoltage = btTab.add("Simulation Voltage", 0).withSize(2, 2).withPosition(2, 0).getEntry();
-    sbTimer = btTab.add("Timer", 0).withSize(2, 2).withPosition(0, 2).getEntry();
+        btTab.add("Battery Input Current", 0).withSize(2, 1).withPosition(0, 0).getEntry();
+    sbSimVoltage = btTab.add("Simulation Voltage", 0).withSize(2, 1).withPosition(2, 0).getEntry();
+    sbTimer = btTab.add("Timer", 0).withSize(2, 1).withPosition(0, 2).getEntry();
     sbTimerHighCurrent =
-        btTab.add("High Current Timer", 0).withSize(2, 2).withPosition(0, 4).getEntry();
-    sbTimerChange = btTab.add("Change Timer", 0).withSize(2, 2).withPosition(4, 0).getEntry();
+        btTab.add("High Current Timer", 0).withSize(2, 1).withPosition(0, 0).getEntry();
+    sbTimerChange = btTab.add("Change Timer", 0).withSize(2, 1).withPosition(4, 0).getEntry();
     timer.start();
-    // currentTimer.start();
     DriverStationSim.setSendError(true);
-    // btTab.addBoolean("Change the battery: ", valueSupplier)
   }
 
   public void periodic() {
     sbVoltage.setDouble(getVoltage());
     sbInputCurrent.setDouble(getInputCurrent());
-    // sbInCurrent.setDouble(getInputCurrent());
-    sbSimVoltage.setNumber(powerDistribution.getVoltage()); // Just temporary, replace with line above
+    sbSimVoltage.setNumber(powerDistribution.getVoltage());
     sbTimer.setDouble(timer.get());
     sbTimerHighCurrent.setDouble(currentTimer.get());
     sbTimerChange.setBoolean(checkTimer()); // Replace checkVoltage() with checkTimer() if necessary
     checkCurrent();
     checkVoltage();
-    // checkMinute();
   }
 
   public double getVoltage() {
@@ -97,45 +88,31 @@ public class BatterySubsystem extends SubsystemBase {
   public void checkCurrent() {
     if (getInputCurrent() < Constants.maxBatteryCurrent) {
       stopHCTimer();
-      // currentTimer
-      //    .stop(); // Was current timer, but I got a warning about it needing to be static so I
-      // changed it to this. Will this cause conflicts?
     } else {
       startHCTimer();
-      // currentTimer.start();
     }
   }
 
   public boolean checkTimer() {
     if (currentTimer.hasElapsed(Constants.timeInSecondsHighCurrentRed)) {
-      DriverStation.reportWarning("Change the Battery Now!", false);
-      // playAudio(Constants.audiofilepath);
+      DriverStation.reportWarning("Change the Battery Now! (HCTR)", false);
       return true;
     } else if (timer.hasElapsed(Constants.timeInSecondsGeneralRed)) {
-      DriverStation.reportWarning("Change the Battery Now!", false);
+      DriverStation.reportWarning("Change the Battery Now! (GTR)", false);
       // playAudio(Constants.audiofilepath);
       return true;
     } else if (currentTimer.hasElapsed(Constants.timeInSecondsHighCurrentYellow)) {
-      DriverStation.reportWarning("Change the Battery Soon!", false);
+      DriverStation.reportWarning("Change the Battery Soon! (HCTY)", false);
       // playAudio(Constants.audiofilepath);
       return false;
     } else if (timer.hasElapsed(Constants.timeInSecondsGeneralYellow)) {
-      DriverStation.reportWarning("Change the Battery Soon!", false);
+      DriverStation.reportWarning("Change the Battery Soon! (GTY)", false);
       // playAudio(Constants.audiofilepath);
       return false;
     }
     return false;
   }
 
-  /*
-  public void checkMinute() {
-    double check = (getTimer() % 60.0);
-    if (check > 0 & check < 0.025 & getTimer() > 1.0) {
-      minutesPassed += 1;
-    } else {
-    }
-  }
-  */
 
   public int getMinute() {
     return (int) Math.floor(timer.get() / 60.0);
@@ -159,9 +136,9 @@ public class BatterySubsystem extends SubsystemBase {
 
   public void checkVoltage() {
     if (getVoltage() < Constants.minVoltageRed) {
-      DriverStation.reportWarning("Change the Battery Now!", false);
+      DriverStation.reportWarning("Change the Battery Now! (VR)", false);
     } else if (getVoltage() < Constants.minVoltageYellow) {
-      DriverStation.reportWarning("Change the Battery Soon!", false);
+      DriverStation.reportWarning("Change the Battery Soon! (VY)", false);
     } else {
     }
   }
@@ -172,6 +149,10 @@ public class BatterySubsystem extends SubsystemBase {
     } else {
       return false;
     }
+  }
+  public void resetTimers() {
+    timer.reset();
+    currentTimer.reset();
   }
   /* Old checkBattery function
     public boolean checkBattery() {
@@ -185,6 +166,9 @@ public class BatterySubsystem extends SubsystemBase {
       return false;
     }
   */
+  /* This playaudio is an interesting way to remind people to change the battery, but it may require more
+  work than it is worth.
+
   static void playAudio(String location) {
     try {
       File path = new File(location);
@@ -205,24 +189,10 @@ public class BatterySubsystem extends SubsystemBase {
       ex.printStackTrace();
     }
   }
-
-  public void updateSmartDashboard() {}
-
-  public void resetTimers() {
-    timer.reset();
-    currentTimer.reset();
-    // minutesPassed = 0;
-  }
-
-  /*
-  @Override
-  public void simulationPeriodic() {
-    if (DriverStationSim.getAutonomous() == true || DriverStationSim.getEnabled() == true) {
-      // Change voltage and current
-      simVolt = 10.0;
-    } else {
-      simVolt = 15.0;
-    }
-  }
   */
+  //public void updateSmartDashboard() {}
+
+  //TODO: Find a way to make these not reset every redeploy. Possibly make them save their values to a file, then
+  // retrieve that file when the robot starts.
+ 
 }
