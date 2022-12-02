@@ -25,9 +25,7 @@ public final class Constants {
   public static final double timeInSecondsGeneralRed = 600.0; // Changed for testing
   public static final double timeInSecondsHighCurrentYellow = 120.0;
   public static final double timeInSecondsHighCurrentRed = 180.0;
-  public static final double simCurrentLow = 10.0;
-  public static final double simCurrentHigh = 13.0;
-  public static final double maxBatteryCurrent = 10; // TODO: Put a real value here
+  public static final double highBatteryCurrentThreshold = 10; // TODO: Put a real value here
 
   public enum AimModes {
     AUTO,

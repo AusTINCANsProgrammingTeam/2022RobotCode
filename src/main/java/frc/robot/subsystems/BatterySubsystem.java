@@ -3,14 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-
-// import edu.wpi.first.wpilibj2.*;
-
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Timer;
-//import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
@@ -18,18 +15,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import java.util.Map;
-/* Audio imports, not needed right now
-import java.io.File;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.swing.JOptionPane;
-*/
 /** Add your docs here. */
 // Put methods for controlling this subsystem
 // here. Call these from Commands.
 public class BatterySubsystem extends SubsystemBase {
 
+  private double storedGeneralTime;
+  private double storedHighCurrentTime;
   private ShuffleboardTab btTab;
   private NetworkTableEntry sbVoltage;
   private NetworkTableEntry sbInputCurrent;
@@ -39,16 +31,17 @@ public class BatterySubsystem extends SubsystemBase {
   private NetworkTableEntry sbTimerHighCurrent;
   private Timer timer = new Timer();
   private Timer currentTimer = new Timer();
-  //private PowerDistribution powerDistribution = new PowerDistribution(1, ModuleType.kRev);
   private PowerDistribution powerDistribution = new PowerDistribution();
 
   public BatterySubsystem() {
+    
+    //Reset timers
     this.resetTimers();
     //Adds tab battery
     btTab = Shuffleboard.getTab("Battery");
     //Color tab for the red voltage level
     Shuffleboard.getTab("Battery")
-        .addBoolean("Voltage Red", () -> getVoltage() < Constants.minVoltageRed)
+        .addBoolean("Voltage Red", () -> checkRedVoltage())
         .withPosition(2,1)
         .withProperties(Map.of("colorWhenFalse", "black"))
         .withProperties(Map.of("colorWhenTrue", "red"));
@@ -107,8 +100,8 @@ public class BatterySubsystem extends SubsystemBase {
     sbVoltage.setDouble(getVoltage());
     sbInputCurrent.setDouble(getInputCurrent());
     sbSimVoltage.setNumber(powerDistribution.getVoltage());
-    sbTimer.setDouble(timer.get());
-    sbTimerHighCurrent.setDouble(currentTimer.get());
+    sbTimer.setDouble(getGeneralTimer());
+    sbTimerHighCurrent.setDouble(getHighCurrentTimer());
     sbTimerChange.setBoolean(checkTimer()); // Replace checkVoltage() with checkTimer() if necessary
     checkCurrent();
     checkVoltage();
@@ -128,7 +121,7 @@ public class BatterySubsystem extends SubsystemBase {
 
   //If the current is below a certain level, stops the high current timer
   public void checkCurrent() {
-    if (getInputCurrent() < Constants.maxBatteryCurrent) {
+    if (getInputCurrent() < Constants.highBatteryCurrentThreshold) {
       stopHCTimer();
     } else {
       startHCTimer();
@@ -142,38 +135,32 @@ public class BatterySubsystem extends SubsystemBase {
       return true;
     } else if (timer.hasElapsed(Constants.timeInSecondsGeneralRed)) {
       DriverStation.reportWarning("Change the Battery Now! (GTR)", false);
-      // playAudio(Constants.audiofilepath);
       return true;
     } else if (currentTimer.hasElapsed(Constants.timeInSecondsHighCurrentYellow)) {
       DriverStation.reportWarning("Change the Battery Soon! (HCTY)", false);
-      // playAudio(Constants.audiofilepath);
       return false;
     } else if (timer.hasElapsed(Constants.timeInSecondsGeneralYellow)) {
       DriverStation.reportWarning("Change the Battery Soon! (GTY)", false);
-      // playAudio(Constants.audiofilepath);
       return false;
     }
     return false;
   }
 
-
-  public int getMinute() {
-    return (int) Math.floor(timer.get() / 60.0);
-  }
-
   public double getGeneralTimer() {
-    return timer.get();
+    Preferences.setDouble("Battery General Timer", timer.get()+storedGeneralTime);
+    return timer.get()+storedGeneralTime;
   }
 
   public double getHighCurrentTimer() {
-    return currentTimer.get();
+    Preferences.setDouble("Battery High Current Timer", currentTimer.get()+storedHighCurrentTime);
+    return currentTimer.get()+storedHighCurrentTime;
   }
 
-  public void startHCTimer() {
+  private void startHCTimer() {
     currentTimer.start();
   }
 
-  public void stopHCTimer() {
+  private void stopHCTimer() {
     currentTimer.stop();
   }
 
@@ -187,53 +174,20 @@ public class BatterySubsystem extends SubsystemBase {
   }
 
   public boolean checkRedVoltage() {
-    if (getVoltage() > Constants.minVoltageRed) {
-      return true;
-    } else {
-      return false;
-    }
+    return getVoltage() > Constants.minVoltageRed;
   }
   public void resetTimers() {
+    //Add a key to store timer values if there isn't one already
+    if (!Preferences.containsKey("Battery General Timer")) {
+      Preferences.setDouble("Battery General Timer", 0.0);
+      Preferences.setDouble("Battery High Current Timer", 0.0);
+    } else {
+      storedGeneralTime = Preferences.getDouble("Battery General Timer", 0.0);
+      storedHighCurrentTime = Preferences.getDouble("Battery High Current Timer", 0.0);
+    }
     timer.reset();
     currentTimer.reset();
   }
-  /* Old checkBattery function
-    public boolean checkBattery() {
-      if (checkTimer()) {
-        return true;
-      } else if (checkVoltage() < Constants.min) {
-        return true;
-      } else if (checkCurrent()) {
-        return true;
-      }
-      return false;
-    }
-  */
-  /* This playaudio is an interesting way to remind people to change the battery, but it may require more
-  work than it is worth.
-
-  static void playAudio(String location) {
-    try {
-      File path = new File(location);
-      if (path.exists()) {
-        AudioInputStream audioInput = AudioSystem.getAudioInputStream(path);
-        Clip clip = AudioSystem.getClip();
-        clip.open(audioInput);
-        clip.start();
-        clip.loop(2);
-
-        JOptionPane.showMessageDialog(null, "Change the battery!");
-        System.out.println("Done");
-
-      } else {
-        System.out.println("No file detected");
-      }
-    } catch (Exception ex) {
-      ex.printStackTrace();
-    }
-  }
-  */
-  //public void updateSmartDashboard() {}
 
   //TODO: Find a way to make these not reset every redeploy. Possibly make them save their values to a file, then
   // retrieve that file when the robot starts.
