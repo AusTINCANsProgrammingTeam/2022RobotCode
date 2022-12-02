@@ -46,18 +46,45 @@ public class BatterySubsystem extends SubsystemBase {
     this.resetTimers();
     btTab = Shuffleboard.getTab("Battery");
     Shuffleboard.getTab("Battery")
-        .addBoolean("Battery Voltage Check", () -> getVoltage() > Constants.minVoltageRed)
+        .addBoolean("Voltage Red", () -> getVoltage() < Constants.minVoltageRed)
+        .withPosition(2,1)
+        .withProperties(Map.of("colorWhenFalse", "black"))
+        .withProperties(Map.of("colorWhenTrue", "red"));
+    Shuffleboard.getTab("Battery")
+        .addBoolean("Voltage Yellow", () -> getVoltage() > Constants.minVoltageYellow)
+        .withPosition(3,1)
+        .withProperties(Map.of("colorWhenFalse", "black"))
+        .withProperties(Map.of("colorWhenTrue", "yellow"));
+    Shuffleboard.getTab("Battery")
+        .addBoolean("Timer Red", () -> getGeneralTimer() > Constants.timeInSecondsGeneralRed)
+        .withPosition(2,2)
+        .withProperties(Map.of("colorWhenFalse", "black"))
+        .withProperties(Map.of("colorWhenTrue", "light red"));
+    Shuffleboard.getTab("Battery")
+        .addBoolean("Timer Yellow", () -> getGeneralTimer() > Constants.timeInSecondsGeneralYellow)
+        .withPosition(3,2)
+        .withProperties(Map.of("colorWhenFalse", "black"))
+        .withProperties(Map.of("colorWhenTrue", "light yellow"));
+    Shuffleboard.getTab("Battery")
+        .addBoolean("HC Red", () -> getHighCurrentTimer() > Constants.timeInSecondsHighCurrentRed)
+        .withPosition(2,3)
+        .withProperties(Map.of("colorWhenFalse", "black"))
         .withProperties(Map.of("colorWhenTrue", "red"))
-        .withProperties(Map.of("colorWhenFalse", "red"));
+        ;
+    Shuffleboard.getTab("Battery")
+        .addBoolean("HC Yellow", () -> getHighCurrentTimer() > Constants.timeInSecondsHighCurrentYellow)
+        .withPosition(3,3)
+        .withProperties(Map.of("colorWhenFalse", "black"))
+        .withProperties(Map.of("colorWhenTrue", "yellow"));
     sbVoltage =
-        btTab.add("Battery Voltage", 0).withSize(2, 1).withPosition(0, 0).getEntry();
+        btTab.add("Battery Voltage", 0).withSize(2, 1).withPosition(2, 0).getEntry();
     sbInputCurrent =
-        btTab.add("Battery Input Current", 0).withSize(2, 1).withPosition(0, 0).getEntry();
-    sbSimVoltage = btTab.add("Simulation Voltage", 0).withSize(2, 1).withPosition(2, 0).getEntry();
+        btTab.add("Battery Input Current", 0).withSize(2, 1).withPosition(4, 0).getEntry();
+    sbSimVoltage = btTab.add("Simulation Voltage", 0).withSize(2, 1).withPosition(0, 0).getEntry();
     sbTimer = btTab.add("Timer", 0).withSize(2, 1).withPosition(0, 2).getEntry();
     sbTimerHighCurrent =
-        btTab.add("High Current Timer", 0).withSize(2, 1).withPosition(0, 0).getEntry();
-    sbTimerChange = btTab.add("Change Timer", 0).withSize(2, 1).withPosition(4, 0).getEntry();
+        btTab.add("High Current Timer", 0).withSize(2, 1).withPosition(0, 1).getEntry();
+    sbTimerChange = btTab.add("Change Timer", 0).withSize(0, 1).withPosition(4, 0).getEntry();
     timer.start();
     DriverStationSim.setSendError(true);
   }
