@@ -44,52 +44,66 @@ public class BatterySubsystem extends SubsystemBase {
 
   public BatterySubsystem() {
     this.resetTimers();
+    //Adds tab battery
     btTab = Shuffleboard.getTab("Battery");
+    //Color tab for the red voltage level
     Shuffleboard.getTab("Battery")
         .addBoolean("Voltage Red", () -> getVoltage() < Constants.minVoltageRed)
         .withPosition(2,1)
         .withProperties(Map.of("colorWhenFalse", "black"))
         .withProperties(Map.of("colorWhenTrue", "red"));
+    //Color tab for the yellow voltage level
     Shuffleboard.getTab("Battery")
         .addBoolean("Voltage Yellow", () -> getVoltage() > Constants.minVoltageYellow)
         .withPosition(3,1)
         .withProperties(Map.of("colorWhenFalse", "black"))
         .withProperties(Map.of("colorWhenTrue", "yellow"));
+    //Color tab for the red timer level
     Shuffleboard.getTab("Battery")
         .addBoolean("Timer Red", () -> getGeneralTimer() > Constants.timeInSecondsGeneralRed)
         .withPosition(2,2)
         .withProperties(Map.of("colorWhenFalse", "black"))
         .withProperties(Map.of("colorWhenTrue", "light red"));
+    //Color tab for the yellow timer level
     Shuffleboard.getTab("Battery")
         .addBoolean("Timer Yellow", () -> getGeneralTimer() > Constants.timeInSecondsGeneralYellow)
         .withPosition(3,2)
         .withProperties(Map.of("colorWhenFalse", "black"))
         .withProperties(Map.of("colorWhenTrue", "light yellow"));
+    //Color tab for the red high current timer level
     Shuffleboard.getTab("Battery")
         .addBoolean("HC Red", () -> getHighCurrentTimer() > Constants.timeInSecondsHighCurrentRed)
         .withPosition(2,3)
         .withProperties(Map.of("colorWhenFalse", "black"))
-        .withProperties(Map.of("colorWhenTrue", "red"))
-        ;
+        .withProperties(Map.of("colorWhenTrue", "red"));
+    //Color tab for the yellow high current timer level
     Shuffleboard.getTab("Battery")
         .addBoolean("HC Yellow", () -> getHighCurrentTimer() > Constants.timeInSecondsHighCurrentYellow)
         .withPosition(3,3)
         .withProperties(Map.of("colorWhenFalse", "black"))
         .withProperties(Map.of("colorWhenTrue", "yellow"));
+    //Adds voltage reader tab
     sbVoltage =
         btTab.add("Battery Voltage", 0).withSize(2, 1).withPosition(2, 0).getEntry();
+    //Adds current reader tab
     sbInputCurrent =
         btTab.add("Battery Input Current", 0).withSize(2, 1).withPosition(4, 0).getEntry();
+    //Adds sim voltage reader tab
     sbSimVoltage = btTab.add("Simulation Voltage", 0).withSize(2, 1).withPosition(0, 0).getEntry();
+    //Adds general timer reader tab
     sbTimer = btTab.add("Timer", 0).withSize(2, 1).withPosition(0, 2).getEntry();
+    //Adds high current timer reader tab
     sbTimerHighCurrent =
         btTab.add("High Current Timer", 0).withSize(2, 1).withPosition(0, 1).getEntry();
+    //Adds timer change reader tab
     sbTimerChange = btTab.add("Change Timer", 0).withSize(0, 1).withPosition(4, 0).getEntry();
+    //Starts general timer
     timer.start();
     DriverStationSim.setSendError(true);
   }
 
   public void periodic() {
+    //Sets shuffleboard tabs to their respective values
     sbVoltage.setDouble(getVoltage());
     sbInputCurrent.setDouble(getInputCurrent());
     sbSimVoltage.setNumber(powerDistribution.getVoltage());
@@ -112,6 +126,7 @@ public class BatterySubsystem extends SubsystemBase {
     }
   }
 
+  //If the current is below a certain level, stops the high current timer
   public void checkCurrent() {
     if (getInputCurrent() < Constants.maxBatteryCurrent) {
       stopHCTimer();
@@ -120,6 +135,7 @@ public class BatterySubsystem extends SubsystemBase {
     }
   }
 
+  //Displays alerts based on the state of the timer
   public boolean checkTimer() {
     if (currentTimer.hasElapsed(Constants.timeInSecondsHighCurrentRed)) {
       DriverStation.reportWarning("Change the Battery Now! (HCTR)", false);
