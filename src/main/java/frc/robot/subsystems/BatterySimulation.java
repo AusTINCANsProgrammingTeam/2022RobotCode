@@ -4,9 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
+import edu.wpi.first.wpilibj.simulation.PDPSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import edu.wpi.first.wpilibj.simulation.PDPSim;
 
 public class BatterySimulation extends SubsystemBase {
 
@@ -28,12 +28,13 @@ public class BatterySimulation extends SubsystemBase {
         System.out.println("Got to assert voltage");
         assertEquals(false, batterySubsystem.checkRedVoltage());
       }
-    } else if (now >= 5.0 && now < Constants.timeInSecondsHighCurrentRed+5.0) {
+    } else if (now >= 5.0 && now < Constants.timeInSecondsHighCurrentRed + 5.0) {
       if (batterySubsystem.getHighCurrentTimer() > Constants.timeInSecondsHighCurrentRed) {
         System.out.println("Got to assert high current timer");
         assertEquals(true, batterySubsystem.checkTimer());
       }
-    } else if (now >= Constants.timeInSecondsHighCurrentRed+5.0 && now < Constants.timeInSecondsGeneralRed+5.0) {
+    } else if (now >= Constants.timeInSecondsHighCurrentRed + 5.0
+        && now < Constants.timeInSecondsGeneralRed + 5.0) {
       if (batterySubsystem.getGeneralTimer() > Constants.timeInSecondsGeneralRed) {
         System.out.println("Got to assert general timer");
         assertEquals(true, batterySubsystem.checkTimer());
@@ -46,9 +47,9 @@ public class BatterySimulation extends SubsystemBase {
 
     // Forcefully sets current when robot is enabled to simulate use
     if (DriverStationSim.getEnabled() == true) {
-      pdpSim.setCurrent(1, Constants.highBatteryCurrentThreshold+1);
+      pdpSim.setCurrent(1, Constants.highBatteryCurrentThreshold + 1);
     } else {
-      pdpSim.setCurrent(1, Constants.highBatteryCurrentThreshold-1);
+      pdpSim.setCurrent(1, Constants.highBatteryCurrentThreshold - 1);
     }
   }
 }
