@@ -24,6 +24,7 @@ import java.util.Map;
 // project.
 
 public class Robot extends TimedRobot {
+  public static final boolean isCompetition = false;
   private Command autonomousCommand;
 
   // Shuffleboard for auton config

@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Auton;
 import frc.robot.commands.AutonModes;
-import frc.robot.commands.BatteryCommand;
 import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbEnable;
@@ -68,7 +67,6 @@ public class RobotContainer {
 
   // commands
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
-  private BatteryCommand batteryCommand;
   private IntakeForwardCommand intakeForwardCommand;
   private IntakeReverseCommand intakeReverseCommand;
   private CDSBallManagementCommand ballManagementCommand;
@@ -153,11 +151,11 @@ public class RobotContainer {
     limelightSubsystem = new LimelightSubsystem();
 
     climbSubsystem = new ClimbSubsystem(operatorJoystick);
-
-    batterySubsystem = new BatterySubsystem();
-
-    if (Robot.isSimulation()) {
-      batterySimulation = new BatterySimulation(batterySubsystem);
+    if (!Robot.isCompetition) {
+      batterySubsystem = new BatterySubsystem();
+      if (Robot.isSimulation()) {
+        batterySimulation = new BatterySimulation(batterySubsystem);
+      }
     }
   }
 
@@ -167,10 +165,6 @@ public class RobotContainer {
       driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem);
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
     }
-    // if (batterySubsystem != null) {
-    //  batteryCommand = new BatteryCommand(batterySubsystem);
-    //  batterySubsystem.setDefaultCommand(batteryCommand);
-    // }
     if (cdsSubsystem != null && shooterSubsystem != null) {
       CDSForwardCommand = new CDSForwardCommand(cdsSubsystem, shooterSubsystem);
     }

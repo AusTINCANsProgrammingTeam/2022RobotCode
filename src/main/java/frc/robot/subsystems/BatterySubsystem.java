@@ -24,6 +24,7 @@ public class BatterySubsystem extends SubsystemBase {
 
   private double storedGeneralTime;
   private double storedHighCurrentTime;
+  private double storedVoltage;
   private ShuffleboardTab btTab;
   private NetworkTableEntry sbVoltage;
   private NetworkTableEntry sbInputCurrent;
@@ -107,6 +108,7 @@ public class BatterySubsystem extends SubsystemBase {
     sbTimerChange.setBoolean(checkTimer()); // Replace checkVoltage() with checkTimer() if necessary
     checkCurrent();
     checkVoltage();
+    updateStoredVoltage();
   }
 
   public double getVoltage() {
@@ -124,9 +126,9 @@ public class BatterySubsystem extends SubsystemBase {
   // If the current is below a certain level, stops the high current timer
   public void checkCurrent() {
     if (getInputCurrent() < Constants.highBatteryCurrentThreshold) {
-      stopHCTimer();
+      currentTimer.stop();
     } else {
-      startHCTimer();
+      currentTimer.start();
     }
   }
 
@@ -153,17 +155,13 @@ public class BatterySubsystem extends SubsystemBase {
     return timer.get() + storedGeneralTime;
   }
 
+  public void updateStoredVoltage() {
+    Preferences.setDouble("Battery Voltage", getVoltage());
+  }
+
   public double getHighCurrentTimer() {
     Preferences.setDouble("Battery High Current Timer", currentTimer.get() + storedHighCurrentTime);
     return currentTimer.get() + storedHighCurrentTime;
-  }
-
-  private void startHCTimer() {
-    currentTimer.start();
-  }
-
-  private void stopHCTimer() {
-    currentTimer.stop();
   }
 
   public void checkVoltage() {
@@ -181,19 +179,19 @@ public class BatterySubsystem extends SubsystemBase {
 
   public void resetTimers() {
     // Add a key to store timer values if there isn't one already
+    if (!Preferences.containsKey("Battery Voltage")) {
+      Preferences.setDouble("Battery Voltage", 0.0);
+    }
     if (!Preferences.containsKey("Battery General Timer")) {
       Preferences.setDouble("Battery General Timer", 0.0);
       Preferences.setDouble("Battery High Current Timer", 0.0);
     } else {
-      storedGeneralTime = Preferences.getDouble("Battery General Timer", 0.0);
-      storedHighCurrentTime = Preferences.getDouble("Battery High Current Timer", 0.0);
+      if(storedVoltage < getVoltage()) {
+        storedGeneralTime = Preferences.getDouble("Battery General Timer", 0.0);
+        storedHighCurrentTime = Preferences.getDouble("Battery High Current Timer", 0.0);
+      }
     }
     timer.reset();
     currentTimer.reset();
   }
-
-  // TODO: Find a way to make these not reset every redeploy. Possibly make them save their values
-  // to a file, then
-  // retrieve that file when the robot starts.
-
 }
