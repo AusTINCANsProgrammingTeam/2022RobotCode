@@ -186,7 +186,7 @@ public class BatterySubsystem extends SubsystemBase {
       Preferences.setDouble("Battery General Timer", 0.0);
       Preferences.setDouble("Battery High Current Timer", 0.0);
     } else {
-      if(storedVoltage < getVoltage()) {
+      if (storedVoltage < getVoltage()) {
         storedGeneralTime = Preferences.getDouble("Battery General Timer", 0.0);
         storedHighCurrentTime = Preferences.getDouble("Battery High Current Timer", 0.0);
       }
