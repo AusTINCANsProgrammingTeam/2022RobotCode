@@ -101,7 +101,7 @@ public class BatterySubsystem extends SubsystemBase {
     sbSimVoltage.setNumber(powerDistribution.getVoltage());
     sbTimer.setDouble(getGeneralTimer());
     sbTimerHighCurrent.setDouble(getHighCurrentTimer());
-    sbTimerChange.setBoolean(checkTimer()); 
+    sbTimerChange.setBoolean(checkTimer());
     checkCurrent();
     checkVoltage();
   }
