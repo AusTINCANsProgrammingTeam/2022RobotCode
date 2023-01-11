@@ -17,14 +17,10 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import java.util.Map;
 
-/** Add your docs here. */
-// Put methods for controlling this subsystem
-// here. Call these from Commands.
 public class BatterySubsystem extends SubsystemBase {
 
   private double storedGeneralTime;
   private double storedHighCurrentTime;
-  // private double storedVoltage;
   private ShuffleboardTab btTab;
   private NetworkTableEntry sbVoltage;
   private NetworkTableEntry sbInputCurrent;
@@ -32,7 +28,6 @@ public class BatterySubsystem extends SubsystemBase {
   private NetworkTableEntry sbTimer;
   private NetworkTableEntry sbTimerChange;
   private NetworkTableEntry sbTimerHighCurrent;
-  // private NetworkTableEntry sbStoredVoltage;
   private Timer timer = new Timer();
   private Timer currentTimer = new Timer();
   private PowerDistribution powerDistribution = new PowerDistribution();
@@ -92,9 +87,6 @@ public class BatterySubsystem extends SubsystemBase {
     // Adds high current timer reader tab
     sbTimerHighCurrent =
         btTab.add("High Current Timer", 0).withSize(2, 1).withPosition(0, 1).getEntry();
-    // Stored voltage tab for debug purposes
-    // sbStoredVoltage = btTab.add("Stored Voltage", 0).withSize(2, 1).withPosition(0,
-    // 1).getEntry();
     // Adds timer change reader tab
     sbTimerChange = btTab.add("Change Timer", 0).withSize(0, 1).withPosition(4, 0).getEntry();
     // Starts general timer
@@ -105,16 +97,13 @@ public class BatterySubsystem extends SubsystemBase {
   public void periodic() {
     // Sets shuffleboard tabs to their respective values
     sbVoltage.setDouble(getVoltage());
-    // sbInputCurrent.setDouble(getInputCurrent());
     sbInputCurrent.setDouble(getInputCurrent());
     sbSimVoltage.setNumber(powerDistribution.getVoltage());
     sbTimer.setDouble(getGeneralTimer());
     sbTimerHighCurrent.setDouble(getHighCurrentTimer());
-    sbTimerChange.setBoolean(checkTimer()); // Replace checkVoltage() with checkTimer() if necessary
-    // sbStoredVoltage.setDouble(storedVoltage);
+    sbTimerChange.setBoolean(checkTimer()); 
     checkCurrent();
     checkVoltage();
-    // updateStoredVoltage();
   }
 
   public double getVoltage() {
@@ -139,6 +128,10 @@ public class BatterySubsystem extends SubsystemBase {
   }
 
   // Displays alerts based on the state of the timer
+  // HCTR = High Current Timer Red
+  // GTR = General Timer Red
+  // HCTY = High Current Timer Yellow
+  // GTY = General Timer Yellow
   public boolean checkTimer() {
     if (currentTimer.hasElapsed(Constants.timeInSecondsHighCurrentRed)) {
       DriverStation.reportWarning("Change the Battery Now! (HCTR)", false);
@@ -161,11 +154,6 @@ public class BatterySubsystem extends SubsystemBase {
     return timer.get() + storedGeneralTime;
   }
 
-  // public void updateStoredVoltage() {
-  //  storedVoltage = getVoltage();
-  //  Preferences.setDouble("Battery Voltage", storedVoltage);
-  // }
-
   public double getHighCurrentTimer() {
     Preferences.setDouble("Battery High Current Timer", currentTimer.get() + storedHighCurrentTime);
     return currentTimer.get() + storedHighCurrentTime;
@@ -185,25 +173,15 @@ public class BatterySubsystem extends SubsystemBase {
   }
 
   public void resetTimers() {
-    // Keeping timer values only works across redeploys, reboots always set them to 0
+    // Note: Keeping timer values only works across redeploys, reboots always set them to 0
+
     // Add a key to store timer values if there isn't one already
-    // if (!Preferences.containsKey("Battery Voltage")) {
-    //  Preferences.setDouble("Battery Voltage", 0.0);
-    //  storedVoltage = 0.0;
-    // } else {
-    //  storedVoltage = Preferences.getDouble("Battery Voltage", 0.0);
-    // }
     if (!Preferences.containsKey("Battery General Timer")) {
       Preferences.setDouble("Battery General Timer", 0.0);
       Preferences.setDouble("Battery High Current Timer", 0.0);
     } else {
-      // if (storedVoltage + 0.3 < getVoltage()) {
       storedGeneralTime = Preferences.getDouble("Battery General Timer", 0.0);
       storedHighCurrentTime = Preferences.getDouble("Battery High Current Timer", 0.0);
-      // } else {
-      //  storedGeneralTime = 0.0;
-      //  storedHighCurrentTime = 0.0;
-      // }
     }
     timer.reset();
     currentTimer.reset();
