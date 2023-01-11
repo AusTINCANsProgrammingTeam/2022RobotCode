@@ -28,6 +28,8 @@ import frc.robot.commands.IntakeReverseCommand;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ShooterHeld;
+import frc.robot.subsystems.BatterySimulation;
+import frc.robot.subsystems.BatterySubsystem;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveBaseSubsystem;
@@ -58,6 +60,10 @@ public class RobotContainer {
   private static IntakeSubsystem intakeSubsystem;
   private static ShooterSubsystem shooterSubsystem;
   private static LimelightSubsystem limelightSubsystem;
+  private static BatterySubsystem batterySubsystem;
+
+  // battery simulation
+  private static BatterySimulation batterySimulation;
 
   // commands
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
@@ -145,6 +151,12 @@ public class RobotContainer {
     limelightSubsystem = new LimelightSubsystem();
 
     climbSubsystem = new ClimbSubsystem(operatorJoystick);
+    if (!Robot.isCompetition) {
+      batterySubsystem = new BatterySubsystem();
+      if (Robot.isSimulation()) {
+        batterySimulation = new BatterySimulation(batterySubsystem);
+      }
+    }
   }
 
   private void initCommands() {
@@ -310,6 +322,13 @@ public class RobotContainer {
     return null;
   }
 
+  public static BatterySubsystem getBatterySubsystem() {
+    if (batterySubsystem != null) {
+      return batterySubsystem;
+    }
+    return null;
+  }
+
   public void pushSmartDashData() {
     SmartDashboard.putData(climbSubsystem);
     SmartDashboard.putData(driveBaseSubsystem);
@@ -317,5 +336,6 @@ public class RobotContainer {
     SmartDashboard.putData(intakeSubsystem);
     SmartDashboard.putData(shooterSubsystem);
     SmartDashboard.putData(limelightSubsystem);
+    SmartDashboard.putData(batterySubsystem);
   }
 }

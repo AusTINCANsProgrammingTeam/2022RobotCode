@@ -2,7 +2,7 @@ import edu.wpi.first.gradlerio.deploy.roborio.RoboRIO
 
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2022.3.1"
+    id "edu.wpi.first.GradleRIO" version "2022.4.1"
     id "com.diffplug.spotless" version "6.1.0"
 }
 
@@ -74,7 +74,7 @@ dependencies {
     nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
     simulationRelease wpi.sim.enableRelease()
 
-    testImplementation 'junit:junit:4.12'
+    implementation 'junit:junit:4.12'
 }
 
 // Simulation configuration (e.g. environment variables).
@@ -140,4 +140,7 @@ spotless {
 
 afterEvaluate {
     tasks.getByName('spotlessCheck').dependsOn(tasks.getByName('spotlessApply'))
+}
+test {
+    useJUnit()
 }

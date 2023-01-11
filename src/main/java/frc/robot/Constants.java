@@ -16,6 +16,17 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
 
+  // Battery Constants
+  public static final double minVoltageYellow = 11.0;
+  public static final double minVoltageRed = 12.0;
+  public static final double minVoltageRedDouble = 10.0;
+  public static final int timeInSecondsSimTest = 5;
+  public static final double timeInSecondsGeneralYellow = 360.0;
+  public static final double timeInSecondsGeneralRed = 600.0; // Changed for testing
+  public static final double timeInSecondsHighCurrentYellow = 120.0;
+  public static final double timeInSecondsHighCurrentRed = 180.0;
+  public static final double highBatteryCurrentThreshold = 10; // TODO: Put a real value here
+
   public enum AimModes {
     AUTO,
     // TODO: Plug real values in for these aimModes

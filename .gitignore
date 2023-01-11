@@ -5,6 +5,10 @@
 # Prerequisites
 *.d
 
+# Ignore networktables changes
+networktables.ini
+networktables.ini.bak
+
 # Compiled Object files
 *.slo
 *.lo
