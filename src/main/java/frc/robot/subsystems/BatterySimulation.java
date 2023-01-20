@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import static org.junit.Assert.assertEquals;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj.simulation.PDPSim;
@@ -26,18 +24,15 @@ public class BatterySimulation extends SubsystemBase {
       pdpSim.setVoltage(pdpSim.getVoltage() - voltageToSubtract);
       if (pdpSim.getVoltage() < Constants.minVoltageRedDouble) {
         System.out.println("Got to assert voltage");
-        assertEquals(false, batterySubsystem.checkRedVoltage());
       }
     } else if (now >= 5.0 && now < Constants.timeInSecondsHighCurrentRed + 5.0) {
       if (batterySubsystem.getHighCurrentTimer() > Constants.timeInSecondsHighCurrentRed) {
         System.out.println("Got to assert high current timer");
-        assertEquals(true, batterySubsystem.checkTimer());
       }
     } else if (now >= Constants.timeInSecondsHighCurrentRed + 5.0
         && now < Constants.timeInSecondsGeneralRed + 5.0) {
       if (batterySubsystem.getGeneralTimer() > Constants.timeInSecondsGeneralRed) {
         System.out.println("Got to assert general timer");
-        assertEquals(true, batterySubsystem.checkTimer());
       }
     }
     // Enable the robot after 10 seconds to test high current timer

@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -30,7 +31,7 @@ public class Robot extends TimedRobot {
   // Shuffleboard for auton config
   private ShuffleboardTab configTab =
       Shuffleboard.getTab("Config"); // all auton settings located here
-  private NetworkTableEntry waitTimeSlider =
+  private GenericEntry waitTimeSlider =
       configTab
           .add("Wait Time", Constants.defaultInitialWaitTime)
           .withWidget(BuiltInWidgets.kNumberSlider)
@@ -108,8 +109,8 @@ public class Robot extends TimedRobot {
   // This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    AutonModes.setWaitTime(waitTimeSlider.getDouble(Constants.defaultInitialWaitTime));
-    autonomousCommand = robotContainer.getAutonomousCommand(chooser.getSelected());
+    //AutonModes.setWaitTime(waitTimeSlider.getDouble(Constants.defaultInitialWaitTime));
+    //autonomousCommand = robotContainer.getAutonomousCommand(chooser.getSelected());
 
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {

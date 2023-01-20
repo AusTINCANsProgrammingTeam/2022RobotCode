@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -22,12 +23,12 @@ public class BatterySubsystem extends SubsystemBase {
   private double storedGeneralTime;
   private double storedHighCurrentTime;
   private ShuffleboardTab btTab;
-  private NetworkTableEntry sbVoltage;
-  private NetworkTableEntry sbInputCurrent;
-  private NetworkTableEntry sbSimVoltage;
-  private NetworkTableEntry sbTimer;
-  private NetworkTableEntry sbTimerChange;
-  private NetworkTableEntry sbTimerHighCurrent;
+  private GenericEntry sbVoltage;
+  private GenericEntry sbInputCurrent;
+  private GenericEntry sbSimVoltage;
+  private GenericEntry sbTimer;
+  private GenericEntry sbTimerChange;
+  private GenericEntry sbTimerHighCurrent;
   private Timer timer = new Timer();
   private Timer currentTimer = new Timer();
   private PowerDistribution powerDistribution = new PowerDistribution();
@@ -98,7 +99,7 @@ public class BatterySubsystem extends SubsystemBase {
     // Sets shuffleboard tabs to their respective values
     sbVoltage.setDouble(getVoltage());
     sbInputCurrent.setDouble(getInputCurrent());
-    sbSimVoltage.setNumber(powerDistribution.getVoltage());
+    sbSimVoltage.setDouble(powerDistribution.getVoltage());
     sbTimer.setDouble(getGeneralTimer());
     sbTimerHighCurrent.setDouble(getHighCurrentTimer());
     sbTimerChange.setBoolean(checkTimer());

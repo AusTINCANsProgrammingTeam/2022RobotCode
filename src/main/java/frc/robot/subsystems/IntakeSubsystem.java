@@ -8,6 +8,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -26,7 +28,7 @@ public class IntakeSubsystem extends SubsystemBase {
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
   private ShuffleboardTab intakeTab = Shuffleboard.getTab("Intake Tab");
 
-  private NetworkTableEntry DIntakeSpeed =
+  private GenericEntry DIntakeSpeed =
       operatorTab
           .add("Intake Speed", 0)
           .withWidget(BuiltInWidgets.kNumberBar)

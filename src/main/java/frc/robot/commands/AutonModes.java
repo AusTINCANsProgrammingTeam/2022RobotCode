@@ -59,9 +59,9 @@ public class AutonModes {
     this.intakeSubsystem = intake;
     this.climbSubsystem = climb;
 
-    initializeAutonCommand();
+    //initializeAutonCommand();
   }
-
+/* 
   private Trajectory[] getTrajectories(Constants.Auton mode) {
     String[] pathNames = mode.getPaths();
 
@@ -80,7 +80,7 @@ public class AutonModes {
     }
     return trajectories;
   }
-
+ 
   private Command[] getRamseteCommands(Trajectory... trajectories) {
     Command[] ramseteCommands = new Command[trajectories.length];
     for (int i = 0; i < trajectories.length; i++) {
@@ -125,14 +125,14 @@ public class AutonModes {
 
   private void initializeAutonCommand() {
     Trajectory[] trajectories = getTrajectories(this.mode);
-    Command[] ramsetes = getRamseteCommands(trajectories);
-    CommandGroupBase[] parallels = getParallelCommands(ramsetes);
+    //Command[] ramsetes = getRamseteCommands(trajectories);
+    //CommandGroupBase[] parallels = getParallelCommands(ramsetes);
 
     switch (mode) {
       case TEST:
         int i = 0;
-        while (i < ramsetes.length) {
-          autonCommand = autonCommand.andThen(ramsetes[i]); // adding ramsetes on to each other
+        //while (i < ramsetes.length) {
+          //autonCommand = autonCommand.andThen(ramsetes[i]); // adding ramsetes on to each other
           i++;
         }
         break;
@@ -240,5 +240,5 @@ public class AutonModes {
 
   public static void setWaitTime(double waitTime) {
     initialWaitTime = waitTime; // get value from shuffleboard, units in seconds
-  }
+  }*/
 }

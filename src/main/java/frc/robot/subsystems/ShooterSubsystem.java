@@ -9,6 +9,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -36,16 +37,16 @@ public class ShooterSubsystem extends SubsystemBase {
   private double targetRPM;
   private double currentRPM;
   private double smoothRPM;
-
+ 
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
-  private NetworkTableEntry DTRPM = operatorTab.add("T-RPM", 0).withPosition(0, 2).getEntry();
-  private NetworkTableEntry DRPM =
+  private GenericEntry DTRPM = operatorTab.add("T-RPM", 0).withPosition(0, 2).getEntry();
+  private GenericEntry DRPM =
       operatorTab.add("RPM", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).getEntry();
-  private NetworkTableEntry BCargoRunning =
+  private GenericEntry BCargoRunning =
       operatorTab.add("Flywheel Ready", false).withPosition(2, 0).getEntry();
-  private NetworkTableEntry SAimMode =
+  private GenericEntry SAimMode =
       operatorTab.add("Aim Mode", "TEST").withPosition(2, 1).getEntry();
-  private NetworkTableEntry BOverride =
+  private GenericEntry BOverride =
       operatorTab
           .add("Override", false)
           .withPosition(1, 2)
@@ -53,10 +54,10 @@ public class ShooterSubsystem extends SubsystemBase {
           .getEntry();
 
   private ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter Tab");
-  private NetworkTableEntry PID_P;
-  private NetworkTableEntry PID_I;
-  private NetworkTableEntry PID_D;
-  private NetworkTableEntry DSmoothRPM;
+  private GenericEntry PID_P;
+  private GenericEntry PID_I;
+  private GenericEntry PID_D;
+  private GenericEntry DSmoothRPM;
 
   private ShooterConfig[] DistanceArray;
 

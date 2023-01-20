@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -89,10 +90,10 @@ public class RobotContainer {
   private Command chosenAutonMode = null;
 
   // Controller Check VariablesdefaultValue
-  private NetworkTableEntry sbaxisCount1;
-  private NetworkTableEntry sbbuttonCount0;
-  private NetworkTableEntry sbbuttonCount1;
-  private NetworkTableEntry sbaxisCount0;
+  private GenericEntry sbaxisCount1;
+  private GenericEntry sbbuttonCount0;
+  private GenericEntry sbbuttonCount1;
+  private GenericEntry sbaxisCount0;
   private int axisCount0;
   private int buttonCount0;
   private int axisCount1;
@@ -256,7 +257,7 @@ public class RobotContainer {
     }
   }
 
-  public Command getAutonomousCommand(Auton mode) {
+  /*public Command getAutonomousCommand(Auton mode) {
     switch (mode) {
       case TEST:
         System.out.println(Auton.TEST.getName() + " mode selected.");
@@ -303,7 +304,8 @@ public class RobotContainer {
             intakeSubsystem,
             climbSubsystem);
     return autonMode.getAutonCommand();
-  }
+  
+  }*/
 
   // TODO: create get methods for other subsystems to pass into TabContainer, or
   // find a more

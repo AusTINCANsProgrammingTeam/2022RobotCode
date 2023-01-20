@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.hal.SimDouble;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
@@ -60,7 +61,7 @@ public class CDSSubsystem extends SubsystemBase {
 
   private int sensorsDown = 0;
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
-  private NetworkTableEntry DCDSSpeed =
+  private GenericEntry DCDSSpeed =
       operatorTab
           .add("CDS Speed", 0)
           .withWidget(BuiltInWidgets.kNumberBar)
@@ -69,15 +70,15 @@ public class CDSSubsystem extends SubsystemBase {
           .getEntry();
 
   private ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
-  private NetworkTableEntry ballColor = CDSTab.add("Ball Color", "Blue").getEntry();
+  private GenericEntry ballColor = CDSTab.add("Ball Color", "Blue").getEntry();
   // private NetworkTableEntry CDSBallCount =
   // CDSTab.add("Ball Count", 0).getEntry();
-  private NetworkTableEntry frontSensorProx = CDSTab.add("Front Proximity", 0).getEntry();
-  private NetworkTableEntry middleSensorProx = CDSTab.add("Middle Proximity", 0).getEntry();
-  private NetworkTableEntry backSensorProx = CDSTab.add("Back Proximity", 0).getEntry();
-  private NetworkTableEntry CDSBallCount = CDSTab.add("Ball Count", 0).getEntry();
-  private NetworkTableEntry CDSState = CDSTab.add("CDS State", "IDLE").getEntry();
-  private NetworkTableEntry managementOnOff =
+  private GenericEntry frontSensorProx = CDSTab.add("Front Proximity", 0).getEntry();
+  private GenericEntry middleSensorProx = CDSTab.add("Middle Proximity", 0).getEntry();
+  private GenericEntry backSensorProx = CDSTab.add("Back Proximity", 0).getEntry();
+  private GenericEntry CDSBallCount = CDSTab.add("Ball Count", 0).getEntry();
+  private GenericEntry CDSState = CDSTab.add("CDS State", "IDLE").getEntry();
+  private GenericEntry managementOnOff =
       operatorTab
           .add("Auto CDS", false)
           .withWidget(BuiltInWidgets.kToggleButton)
@@ -215,9 +216,9 @@ public class CDSSubsystem extends SubsystemBase {
       currentProxCycle = 0;
       sensorStatuses = colorSensors.getProximities();
       // if (Constants.DebugMode) {
-      frontSensorProx.setNumber(sensorStatuses[2]);
-      middleSensorProx.setNumber(sensorStatuses[1]);
-      backSensorProx.setNumber(sensorStatuses[0]);
+      frontSensorProx.setInteger(sensorStatuses[2]);
+      middleSensorProx.setInteger(sensorStatuses[1]);
+      backSensorProx.setInteger(sensorStatuses[0]);
       // }
 
       activationArray[0] = sensorStatuses[0] > Constants.backSensorActivation;
@@ -231,7 +232,7 @@ public class CDSSubsystem extends SubsystemBase {
         }
       }
       if (Constants.DebugMode) {
-        CDSBallCount.setNumber(ballCount);
+        CDSBallCount.setInteger(ballCount);
       }
     }
     currentProxCycle++;

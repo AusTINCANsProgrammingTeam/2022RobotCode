@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.AnalogGyro;
@@ -56,7 +57,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
   private RelativeEncoder rightEncoder;
   private SimpleMotorFeedforward simpleMotorFF;
 
-  private final DifferentialDriveOdometry odometry;
+  //private final DifferentialDriveOdometry odometry;
   public static AHRS gyro;
 
   private boolean usingExternal;
@@ -64,12 +65,12 @@ public class DriveBaseSubsystem extends SubsystemBase {
   // shuffleboard
   // each box on the shuffleboard, sb stands for shuffleboard
   private ShuffleboardTab dtTab;
-  private NetworkTableEntry sbLeftEncoderSpeed;
-  private NetworkTableEntry sbRightEncoderSpeed;
-  private NetworkTableEntry sbLeftBiconsumerSpeed;
-  private NetworkTableEntry sbRightBiconsumerSpeed;
-  private NetworkTableEntry sbLeftPosition;
-  private NetworkTableEntry sbRightPosition;
+  private GenericEntry sbLeftEncoderSpeed;
+  private GenericEntry sbRightEncoderSpeed;
+  private GenericEntry sbLeftBiconsumerSpeed;
+  private GenericEntry sbRightBiconsumerSpeed;
+  private GenericEntry sbLeftPosition;
+  private GenericEntry sbRightPosition;
   private NetworkTableEntry sbGyroInfo;
 
   public DriveBaseSubsystem(Joystick joystick, boolean usingExternal) {
@@ -175,7 +176,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
     resetEncoders(); // reset encoders to reset position and velocity values
 
-    odometry = new DifferentialDriveOdometry(gyro.getRotation2d());
+    //odometry = new DifferentialDriveOdometry(gyro.getRotation2d());
     // if (Constants.DebugMode) {
     initShuffleboard();
     // }
@@ -232,7 +233,7 @@ public class DriveBaseSubsystem extends SubsystemBase {
     double leftPosition = leftEncoder.getPosition();
     double rightPosition = rightEncoder.getPosition();
 
-    odometry.update(gyro.getRotation2d(), leftPosition, rightPosition);
+    //odometry.update(gyro.getRotation2d(), leftPosition, rightPosition);
 
     // if (Constants.DebugMode) {
     sbLeftEncoderSpeed.setDouble(leftEncoder.getVelocity());
@@ -296,10 +297,10 @@ public class DriveBaseSubsystem extends SubsystemBase {
     rightEncoderSim.setRate(differentialDrivetrainSim.getRightVelocityMetersPerSecond());
     gyroSim.setAngle(-differentialDrivetrainSim.getHeading().getDegrees());
 
-    odometry.update(
-        gyro.getRotation2d(), leftEncoderSim.getDistance(), rightEncoderSim.getDistance());
+    //odometry.update(
+        //gyro.getRotation2d(), leftEncoderSim.getDistance(), rightEncoderSim.getDistance());
 
-    m_field.setRobotPose(odometry.getPoseMeters());
+    //m_field.setRobotPose(odometry.getPoseMeters());
   }
 
   public void stopDriveMotors() {
@@ -322,14 +323,14 @@ public class DriveBaseSubsystem extends SubsystemBase {
 
   public void resetOdometry(Pose2d pose) {
     resetEncoders(); // reset encoders
-    odometry.resetPosition(pose, gyro.getRotation2d());
+    //odometry.resetPosition(gyro.getRotation2d(), pose);
   }
 
-  public Pose2d getPose() {
+  //public Pose2d getPose() {
     // Pose2d positionPose = odometry.getPoseMeters();
     // return new Pose2d(positionPose.getX(), positionPose.getY(), gyro.getRotation2d());
-    return odometry.getPoseMeters();
-  }
+    // return odometry.getPoseMeters();
+  //}
 
   public void setSpeeds(double left, double right) {
     getLeftMotor().set(left);

@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -24,9 +25,9 @@ public class CDSBallManagementCommand extends CommandBase {
   private int beltEjectRuntime = 100;
 
   private static ShuffleboardTab CDSTab = Shuffleboard.getTab("CDS Tab");
-  private static NetworkTableEntry autoEjectRunning =
+  private static GenericEntry autoEjectRunning =
       CDSTab.add("Auto Eject Running", false).getEntry();
-  private static NetworkTableEntry autoIntakeRunning =
+  private static GenericEntry autoIntakeRunning =
       CDSTab.add("Auto Intake Running", false).getEntry();
 
   public CDSBallManagementCommand(

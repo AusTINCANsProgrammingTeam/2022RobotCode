@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -47,70 +49,70 @@ public class ClimbSubsystem extends SubsystemBase {
   private ShuffleboardTab climbTab;
 
   // Arm 1
-  private NetworkTableEntry sbArmSpeedOne;
-  private NetworkTableEntry sbArmTargettedOne;
+  private GenericEntry sbArmSpeedOne;
+  private GenericEntry sbArmTargettedOne;
   private NetworkTableEntry sbarmHeightOne;
 
   // Arm 2
-  private NetworkTableEntry sbArmSpeedTwo;
-  private NetworkTableEntry sbArmTargettedTwo;
+  private GenericEntry sbArmSpeedTwo;
+  private GenericEntry sbArmTargettedTwo;
   private NetworkTableEntry sbarmHeightTwo;
 
   // Pole 1
   private NetworkTableEntry sbpoleHeightOne;
-  private NetworkTableEntry sbPoleSpeedOne;
-  private NetworkTableEntry sbPoleTargettedOne;
+  private GenericEntry sbPoleSpeedOne;
+  private GenericEntry sbPoleTargettedOne;
 
   // Pole 2
   private NetworkTableEntry sbpoleHeightTwo;
-  private NetworkTableEntry sbPoleSpeedTwo;
-  private NetworkTableEntry sbPoleTargettedTwo;
+  private GenericEntry sbPoleSpeedTwo;
+  private GenericEntry sbPoleTargettedTwo;
 
   // hook Servos
   private ShuffleboardTab hookServos;
-  private NetworkTableEntry servo1;
-  private NetworkTableEntry servo2;
+  private GenericEntry servo1;
+  private GenericEntry servo2;
 
   // Other
   private NetworkTableEntry sbClimbEnable; // Displays ClimbEnable Boolean
 
   // Operator Tab
   private ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator View");
-  private NetworkTableEntry DClimbHeight1 =
+  private GenericEntry DClimbHeight1 =
       operatorTab
           .add("Arm Height 1", 0)
           .withWidget(BuiltInWidgets.kNumberBar)
           .withSize(2, 1)
           .withPosition(6, 0)
           .getEntry();
-  private NetworkTableEntry DClimbHeight2 =
+  private GenericEntry DClimbHeight2 =
       operatorTab
           .add("Arm Height 2", 0)
           .withWidget(BuiltInWidgets.kNumberBar)
           .withSize(2, 1)
           .withPosition(6, 1)
           .getEntry();
-  private NetworkTableEntry DClimbHeight3 =
+  private GenericEntry DClimbHeight3 =
       operatorTab
           .add("Pole Height 1", 0)
           .withWidget(BuiltInWidgets.kNumberBar)
           .withSize(2, 1)
           .withPosition(8, 0)
           .getEntry();
-  private NetworkTableEntry DClimbHeight4 =
+  private GenericEntry DClimbHeight4 =
       operatorTab
           .add("Pole Height 2", 0)
           .withWidget(BuiltInWidgets.kNumberBar)
           .withSize(2, 1)
           .withPosition(8, 1)
           .getEntry();
-  private NetworkTableEntry BClimbEnabled =
+  private GenericEntry BClimbEnabled =
       operatorTab
           .add("Climb Enabled", false)
           .withPosition(5, 0)
           .withWidget(BuiltInWidgets.kBooleanBox)
           .getEntry();
-  private NetworkTableEntry BAutomaticControl =
+  private GenericEntry BAutomaticControl =
       operatorTab
           .add("Auto Climb Active", false)
           .withPosition(5, 1)
@@ -397,10 +399,10 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     BClimbEnabled.setBoolean(climbEnable);
-    DClimbHeight1.setNumber(armOne.getEncoder().getPosition());
-    DClimbHeight2.setNumber(armTwo.getEncoder().getPosition());
-    DClimbHeight3.setNumber(poleOne.getEncoder().getPosition());
-    DClimbHeight4.setNumber(poleTwo.getEncoder().getPosition());
+    DClimbHeight1.setDouble(armOne.getEncoder().getPosition());
+    DClimbHeight2.setDouble(armTwo.getEncoder().getPosition());
+    DClimbHeight3.setDouble(poleOne.getEncoder().getPosition());
+    DClimbHeight4.setDouble(poleTwo.getEncoder().getPosition());
 
     armEncoderHeightOne = armOne.getEncoder().getPosition();
     armEncoderHeightTwo = armTwo.getEncoder().getPosition();

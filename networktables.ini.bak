@@ -1,0 +1,4 @@
+[NetworkTables Storage 3.0]
+string "/Preferences/.type"="RobotPreferences"
+double "/Preferences/Battery General Timer"=53.8004
+double "/Preferences/Battery High Current Timer"=0
